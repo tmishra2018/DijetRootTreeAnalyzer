@@ -31,10 +31,10 @@ Instructions:
    cmsenv	
    
 2) Download the code:
-   git clone https://github.com/CMSDIJET/DijetRootAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
+   git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
 
 3) Generate the rootNtupleClass:
-   cd rootNtupleAnalyzerV2/
+   cd CMSDIJET/DijetRootTreeAnalyzer
    ./scripts/make_rootNtupleClass.sh
       (you will be asked for input arguments)
    i.e.
