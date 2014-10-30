@@ -27,51 +27,51 @@ Instructions:
 -------------
 
 1) Environment setup:
-   cd CMSSW_7_1_0/src/ 
-   cmsenv	
+    cd CMSSW_7_1_0/src/ 
+    cmsenv	
    
 2) Download the code:
-   git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
+    git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
 
-3) Generate the rootNtupleClass:
-   cd CMSDIJET/DijetRootTreeAnalyzer
-   ./scripts/make_rootNtupleClass.sh
-      (you will be asked for input arguments)
-   i.e.
-   ./scripts/make_rootNtupleClass.sh -f dijetTree_signal.root -t dijets/events
-   where the rootfile has been produced by the DijetRootTreeMaker
+3) Remove analysisClass.C
+    rm src/analysisClass.C
 
-4) Remove analysisClass.C
-   rm src/analysisClass.C
-
-5) Make a symbolic link analysisClass.C by:
- 
-   ln -s analysisClass_myCodeWide.C src/analysisClass.C 
+4) Make a symbolic link analysisClass.C by:
+    ln -s analysisClass_myCodeWide.C src/analysisClass.C 
    or 
-   ln -s analysisClass_myCodeAK8.C src/analysisClass.C
+    ln -s analysisClass_myCodeAK8.C src/analysisClass.C
    or
-   ln -s analysisClass_myCodeCA8.C src/analysisClass.C
+    ln -s analysisClass_myCodeCA8.C src/analysisClass.C
 
+5) Compile to test that all is OK so far:
+    make clean
+    make
 
-6) Compile to test that all is OK so far:
-   make clean
-
-7) Run:
-   ./main
+6) Run:
+    ./main
       (you will be asked for input arguments)
    i.e.
-   ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events data/output/rootFile data/output/cutEfficiencyFile
+    ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events data/output/rootFile data/output/cutEfficiencyFile
 
-8) All the produced files are in the directory data/output
+7) All the produced files are in the directory data/output
 
-Note:
-  one can have several analyses in a directory, such as
+Notes:
+
+1) to generate the rootNtupleClass:
+    cd CMSDIJET/DijetRootTreeAnalyzer
+    ./scripts/make_rootNtupleClass.sh
+      (you will be asked for input arguments)
+   i.e.
+    ./scripts/make_rootNtupleClass.sh -f dijetTree_signal.root -t dijets/events
+   where the rootfile has been produced by the DijetRootTreeMaker
+ 
+2) one can have several analyses in a directory, such as
     src/analysisClass_myCode1.C
     src/analysisClass_myCode2.C
     src/analysisClass_myCode3.C
-  and move the symbolic link to the one to be used:
+   and move the symbolic link to the one to be used:
     ln -sf analysisClass_myCode2.C src/analysisClass.C
-  and compile/run as above.
+   and compile/run as above.
 
 
 More details:
