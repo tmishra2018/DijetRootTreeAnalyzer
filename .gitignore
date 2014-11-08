@@ -45,6 +45,7 @@ Thumbs.db
 *.png
 *.pdf
 *.eps
+*.svg
 
 # Rootfiles
 #################
