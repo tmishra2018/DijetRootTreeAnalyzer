@@ -29,38 +29,17 @@ Instructions:
 1) Environment setup:
     cd CMSSW_7_1_0/src/ 
     cmsenv	
-   
+
+(or the most recent release)   
+
 2) Download the code:
     git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
 
 3) Go inside:
     cd CMSDIJET/DijetRootTreeAnalyzer
 
-4) Remove analysisClass.C
-    rm src/analysisClass.C
-
-5) Make a symbolic link analysisClass.C by:
-    ln -s analysisClass_myCodeWide.C src/analysisClass.C 
-   or 
-    ln -s analysisClass_myCodeAK8.C src/analysisClass.C
-   or
-    ln -s analysisClass_myCodeCA8.C src/analysisClass.C
-
-6) Compile to test that all is OK so far:
-    make clean
-    make
-
-7) Run:
-    ./main
-      (you will be asked for input arguments)
-   i.e.
-    ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events data/output/rootFile data/output/cutEfficiencyFile
-
-8) All the produced files are in the directory data/output
-
-Notes:
-
-1) to generate the rootNtupleClass (you do not need to unless the ntuple format changes):
+=======
+4) to generate the rootNtupleClass (you do not need to unless the ntuple format changes):
     cd CMSDIJET/DijetRootTreeAnalyzer
     ./scripts/make_rootNtupleClass.sh
       (you will be asked for input arguments)
@@ -68,8 +47,33 @@ Notes:
     ./scripts/make_rootNtupleClass.sh -f dijetTree_signal.root -t dijets/events
    where the rootfile has been produced by the DijetRootTreeMaker
    Note that there could be minor glitches and then you can fix by hand.
- 
-2) one can have several analyses in a directory, such as
+=======
+
+5) Remove analysisClass.C
+    rm src/analysisClass.C
+
+6) Make a symbolic link analysisClass.C by:
+    ln -s analysisClass_myCodeWide.C src/analysisClass.C 
+   or 
+    ln -s analysisClass_myCodeAK8.C src/analysisClass.C
+   or
+    ln -s analysisClass_myCodeCA8.C src/analysisClass.C
+
+7) Compile to test that all is OK so far:
+    make clean
+    make
+
+8) Run:
+    ./main
+      (you will be asked for input arguments)
+   i.e.
+    ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events data/output/rootFile data/output/cutEfficiencyFile
+
+9) All the produced files are in the directory data/output
+
+Notes:
+
+1) one can have several analyses in a directory, such as
     src/analysisClass_myCode1.C
     src/analysisClass_myCode2.C
     src/analysisClass_myCode3.C
