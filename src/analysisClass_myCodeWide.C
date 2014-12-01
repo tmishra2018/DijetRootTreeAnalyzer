@@ -31,12 +31,12 @@ void analysisClass::Loop()
    
    //////////book histos here
 
-  //////////book histos here
-
    TH1F *h_nJetFinal = new TH1F ("h_nJetFinal","",10,0,10);
    h_nJetFinal->Sumw2();      
    TH1F *h_nVtx = new TH1F ("h_nVtx","",30,0,30);
-   h_nVtx->Sumw2();   
+   h_nVtx->Sumw2(); 
+   TH1F *h_trueVtx = new TH1F ("h_trueVtx","",40,0,40);
+   h_trueVtx->Sumw2();  
    TH1F *h_pT1stJet = new TH1F ("h_pT1stJet","",100,0,3000);
    h_pT1stJet->Sumw2();
    TH1F *h_pT2ndJet = new TH1F ("h_pT2ndJet","",100,0,3000);
@@ -47,6 +47,8 @@ void analysisClass::Loop()
    h_eta2ndJet->Sumw2();
    TH1F *h_DijetMass = new TH1F ("h_DijetMass","",600,0,6000);
    h_DijetMass->Sumw2();
+   TH1F *h_DeltaETAjj = new TH1F ("h_DeltaETAjj","",120,0,3.);
+   h_DeltaETAjj->Sumw2();
 
    /////////initialize variables
 
@@ -58,6 +60,7 @@ void analysisClass::Loop()
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   //for (Long64_t jentry=0; jentry<10;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -66,37 +69,39 @@ void analysisClass::Loop()
 
      ////////////////////// User's code starts here ///////////////////////
 
-     ///Stuff to be done every event
+     ///Stuff to be done for every event
  
      Int_t no_jets_ak4=jetPtAK4->size();
      vector<TLorentzVector> widejets;
      TLorentzVector currentJet, wj1_tmp, wj1, wj2_tmp, wj2, v_jet_ak4,wdijet,wj1math,wj2math;
-     double wideJetDeltaR_ = 1.1;
+     double wideJetDeltaR_ = getPreCutValue1("DeltaR");
 
      resetCuts();
-   
-   if(no_jets_ak4>=2){
-    if(!(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") && idTAK4->at(0) == getPreCutValue1("tightJetID"))){
-      std::cout << " JET 0 FAIL " << jetEtaAK4->at(0) << " JET 0  ID " << idTAK4->at(0) << std::endl;
-    }
-      if(!(fabs(jetEtaAK4->at(1)) < getPreCutValue1("jetFidRegion") && idTAK4->at(1) == getPreCutValue1("tightJetID"))){
-      std::cout << " JET 1 FAIL " << jetEtaAK4->at(1) << " JET 1  ID " << idTAK4->at(1) << std::endl;
-
-  }  
-}
+/*   
      if(no_jets_ak4>=2){
-     if( fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") && idTAK4->at(0) == getPreCutValue1("tightJetID")){
-      if( fabs(jetEtaAK4->at(1)) < getPreCutValue1("jetFidRegion") && idTAK4->at(1) == getPreCutValue1("tightJetID")){
-        TLorentzVector jet1, jet2;
-        jet1.SetPtEtaPhiM(jetPtAK4->at(0),jetEtaAK4->at(0),jetPhiAK4->at(0),jetMassAK4->at(0));
-        jet2.SetPtEtaPhiM(jetPtAK4->at(1),jetEtaAK4->at(1),jetPhiAK4->at(1),jetMassAK4->at(1));
+       if(!(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") && idTAK4->at(0) == getPreCutValue1("tightJetID"))){
+         std::cout << " JET 0 FAIL " << jetEtaAK4->at(0) << " JET 0  ID " << idTAK4->at(0) << std::endl;
+       }
+       if(!(fabs(jetEtaAK4->at(1)) < getPreCutValue1("jetFidRegion") && idTAK4->at(1) == getPreCutValue1("tightJetID"))){
+         std::cout << " JET 1 FAIL " << jetEtaAK4->at(1) << " JET 1  ID " << idTAK4->at(1) << std::endl;
+       }  
+     }
+*/
+     if(no_jets_ak4>=2){
+       if(abs(jetEtaAK4->at(0)-jetEtaAK4->at(1)) < getPreCutValue1("deltaEtaCut")){
+         if(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") && idTAK4->at(0) == getPreCutValue1("tightJetID") && jetPtAK4->at(0) > getPreCutValue1("pt0Cut")){
+          if(fabs(jetEtaAK4->at(1)) < getPreCutValue1("jetFidRegion") && idTAK4->at(1) == getPreCutValue1("tightJetID") && jetPtAK4->at(1) > getPreCutValue1("pt1Cut")){
+            TLorentzVector jet1, jet2;
+            jet1.SetPtEtaPhiM(jetPtAK4->at(0),jetEtaAK4->at(0),jetPhiAK4->at(0),jetMassAK4->at(0));
+            jet2.SetPtEtaPhiM(jetPtAK4->at(1),jetEtaAK4->at(1),jetPhiAK4->at(1),jetMassAK4->at(1));
 
-        for(Long64_t ijet=0; ijet<no_jets_ak4; ijet++){ //jet loop for ak4
-         TLorentzVector currentJet;
-        
-         if( fabs(jetEtaAK4->at(ijet)) < getPreCutValue1("jetFidRegion") && idTAK4->at(ijet) == getPreCutValue1("tightJetID")){
-           TLorentzVector currentJet;
-           currentJet.SetPtEtaPhiM(jetPtAK4->at(ijet),jetEtaAK4->at(ijet),jetPhiAK4->at(ijet),jetMassAK4->at(ijet));          
+            for(Long64_t ijet=0; ijet<no_jets_ak4; ijet++){ //jet loop for ak4
+              TLorentzVector currentJet;
+
+              if(fabs(jetEtaAK4->at(ijet)) < getPreCutValue1("jetFidRegion") && idTAK4->at(ijet) == getPreCutValue1("tightJetID") && jetPtAK4->at(ijet) > getPreCutValue1("ptCut")){
+                TLorentzVector currentJet;
+                currentJet.SetPtEtaPhiM(jetPtAK4->at(ijet),jetEtaAK4->at(ijet),jetPhiAK4->at(ijet),jetMassAK4->at(ijet));   
+       
                 double DeltaR1 = currentJet.DeltaR(jet1);
                 double DeltaR2 = currentJet.DeltaR(jet2);
 
@@ -107,20 +112,20 @@ void analysisClass::Loop()
                         wj2_tmp += currentJet;
                 }
          
+              } // if AK4 jet passes fid and jetid.
+            } //end of ak4 jet loop
 
-         } // if AK4 jet passes fid and jetid.
-       } //end of ak4 jet loop
+            //if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0) 
+            //std::cout << " wj1_tmp.Pt() IN  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " <<  wj2_tmp.Pt()  << std::endl;
 
-       if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0) 
-    std::cout << " wj1_tmp.Pt() IN  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " <<  wj2_tmp.Pt()  << std::endl;
-
-      } //fid and jet id
-     } //fid and jet id
+         } //fid, jet id, pt cut
+        } //fid, jet id, pt cut
+      }//deltaEta cut
     } // end of two jets.
 
-//
-    if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0)     std::cout << " wj1_tmp.Pt()  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " << wj2_tmp.Pt()  << "  no_jets_ak4 " << no_jets_ak4 << std::endl;
-//
+
+    //if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0)     std::cout << " wj1_tmp.Pt()  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " << wj2_tmp.Pt()  << "  no_jets_ak4 " << no_jets_ak4 << std::endl;
+
     double MJJWide,DeltaEtaJJWide,DeltaPhiJJWide;
 
     if( wj1_tmp.Pt()>0 && wj2_tmp.Pt() >0 ){
@@ -147,8 +152,21 @@ void analysisClass::Loop()
         widejets.push_back( wj2math );
    }
 
-     fillVariableWithValue("nJetFinal",widejets.size()) ;
-     fillVariableWithValue("nVtx",nvtx) ;
+     fillVariableWithValue("nJetFinal",widejets.size());
+     fillVariableWithValue("nVtx",nvtx);
+     fillVariableWithValue("trueVtx",PileupInteractions->at(12));
+     fillVariableWithValue("neutralHadronEnergyFraction_j1", jetNhfAK4->at(0));    
+     fillVariableWithValue("photonEnergyFraction_j1", jetPhfAK4->at(0));    
+     fillVariableWithValue("electronEnergyFraction_j1", jetElfAK4->at(0));         
+     fillVariableWithValue("muonEnergyFraction_j1", jetMufAK4->at(0));    
+     fillVariableWithValue("chargedHadronMultiplicity_j1", jetChfAK4->at(0));    
+     fillVariableWithValue("neutralHadronEnergyFraction_j2", jetNhfAK4->at(1));    
+     fillVariableWithValue("photonEnergyFraction_j2", jetPhfAK4->at(1));    
+     fillVariableWithValue("electronEnergyFraction_j2", jetElfAK4->at(1));         
+     fillVariableWithValue("muonEnergyFraction_j2", jetMufAK4->at(1));    
+     fillVariableWithValue("chargedHadronMultiplicity_j2", jetChfAK4->at(1));    
+     fillVariableWithValue("jetIdT1",idTAK4->at(0));
+     fillVariableWithValue("jetIdT2",idTAK4->at(1));
 
      if( widejets.size() >= 1 )
 
@@ -161,6 +179,9 @@ void analysisClass::Loop()
        {
          fillVariableWithValue( "pT2ndJet", widejets[1].Pt() );
          fillVariableWithValue( "eta2ndJet", widejets[1].Eta());
+
+         // Calculate deltaETAjj
+	 fillVariableWithValue( "deltaETAjj", DeltaEtaJJWide ) ;
 
          // Calculate Mjj
          fillVariableWithValue( "Dijet_MassW", wdijet.M() ) ;
@@ -201,7 +222,7 @@ void analysisClass::Loop()
       h_pT1stJet->Fill(widejets[0].Pt());
       h_pT2ndJet->Fill(widejets[1].Pt());
       h_eta1stJet->Fill(widejets[0].Eta());
-      h_eta2ndJet->Fill(widejets[0].Eta());
+      h_eta2ndJet->Fill(widejets[1].Eta());
      }
      ////////////////////// User's code ends here ///////////////////////
 
@@ -210,6 +231,7 @@ void analysisClass::Loop()
    //////////write histos 
 
    h_nVtx->Write();
+   h_trueVtx->Write();
    h_nJetFinal->Write();
    h_pT1stJet->Write();
    h_pT2ndJet->Write();
