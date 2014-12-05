@@ -49,27 +49,24 @@ Instructions:
    Note that there could be minor glitches and then you can fix by hand.
 =======
 
-5) Remove analysisClass.C
-    rm src/analysisClass.C
-
-6) Make a symbolic link analysisClass.C by:
-    ln -s analysisClass_myCodeWide.C src/analysisClass.C 
+5) Make a symbolic link analysisClass.C by:
+    ln -sf analysisClass_myCodeWide.C src/analysisClass.C 
    or 
-    ln -s analysisClass_myCodeAK8.C src/analysisClass.C
+    ln -sf analysisClass_myCodeAK8.C src/analysisClass.C
    or
-    ln -s analysisClass_myCodeCA8.C src/analysisClass.C
+    ln -sf analysisClass_myCodeCA8.C src/analysisClass.C
 
-7) Compile to test that all is OK so far:
+6) Compile to test that all is OK so far:
     make clean
     make
 
-8) Run:
+7) Run:
     ./main
       (you will be asked for input arguments)
    i.e.
     ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events data/output/rootFile data/output/cutEfficiencyFile
 
-9) All the produced files are in the directory data/output
+8) All the produced files are in the directory data/output
 
 Notes:
 
