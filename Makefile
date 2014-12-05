@@ -4,7 +4,8 @@ FLAGS =
 FLAGS += -DSAVE_ALL_HISTOGRAMS 
 # FLAGS += -DCREATE_OPT_CUT_FILE
 ROOTLIBS = `root-config --glibs --cflags` -lMinuit 
-INC= -I.. -I. -I./include  -I${CLHEP}/include
+scram = $(shell cd ${CMSSW_BASE}; scram tool tag $(1) $(2))
+INC= -I.. -I. -I./include  -I${CLHEP}/include -I$(call scram,boost,INCLUDE) -I$(call scram,fastjet,INCLUDE)
 ROOTINC= -I${ROOTSYS}/include
 LIBS= -L.  ${ROOTLIBS} -L${CLHEP}/lib -L${CLHEP}/lib
 SRC= ./src
@@ -19,7 +20,7 @@ EXE = main
 all: ${EXE}
 
 main: $(SRC)/main.o $(SELECTIONLIB) 
-	$(COMP) $(INC) $(ROOTINC) $(LIBS) $(FLAGS) -o $@  $(SELECTIONLIB) $(SRC)/$@.o
+	$(COMP) $(INC) $(ROOTINC) $(LIBS) $(FLAGS) `$(call scram,fastjet,FASTJET_BASE)/bin/fastjet-config --cxxflags --plugins --libs` -o $@  $(SELECTIONLIB) $(SRC)/$@.o
 
 clean:
 	rm -f src/*.o *.lo core core.*

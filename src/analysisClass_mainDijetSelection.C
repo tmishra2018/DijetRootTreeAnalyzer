@@ -13,6 +13,16 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
 {
   std::cout << "analysisClass::analysisClass(): begins " << std::endl;
 
+  string jetAlgo = getPreCutString1("jetAlgo");
+  double rParam = getPreCutValue1("DeltaR");
+
+  if( jetAlgo == "AntiKt" )
+    fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::antikt_algorithm, rParam) );
+  else if( jetAlgo == "Kt" )
+    fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::kt_algorithm, rParam) );
+  else 
+    fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::cambridge_algorithm, rParam) );
+
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;
 }
 
@@ -71,10 +81,9 @@ void analysisClass::Loop()
 
      ///Stuff to be done for every event
  
-     Int_t no_jets_ak4=jetPtAK4->size();
+     size_t no_jets_ak4=jetPtAK4->size();
      vector<TLorentzVector> widejets;
-     TLorentzVector currentJet, wj1_tmp, wj1, wj2_tmp, wj2, v_jet_ak4, wdijet, wj1math, wj2math;
-     double wideJetDeltaR_ = getPreCutValue1("DeltaR");
+     TLorentzVector wj1, wj2, wdijet;
 
      resetCuts();
    
@@ -87,82 +96,113 @@ void analysisClass::Loop()
      //  }  
      // }
 
-     if(no_jets_ak4>=2)
+     if( int(getPreCutValue1("useFastJet"))==1 )
+     {
+       // vector of ak4 jets used for wide jet clustering
+       std::vector<fastjet::PseudoJet> fjInputs;
+
+       for(size_t j=0; j<no_jets_ak4; ++j)
        {
-	 if(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") 
-	    && jetPtAK4->at(0) > getPreCutValue1("pt0Cut"))
-	   {
-	     if(fabs(jetEtaAK4->at(1)) < getPreCutValue1("jetFidRegion") 
-		&& jetPtAK4->at(1) > getPreCutValue1("pt1Cut"))
-	       {
-		 TLorentzVector jet1, jet2;
-		 jet1.SetPtEtaPhiM(jetPtAK4->at(0),jetEtaAK4->at(0),jetPhiAK4->at(0),jetMassAK4->at(0));
-		 jet2.SetPtEtaPhiM(jetPtAK4->at(1),jetEtaAK4->at(1),jetPhiAK4->at(1),jetMassAK4->at(1));
-		 
-		 for(Long64_t ijet=0; ijet<no_jets_ak4; ijet++)
-		   { //jet loop for ak4
-		     TLorentzVector currentJet;
-		     
-		     if(fabs(jetEtaAK4->at(ijet)) < getPreCutValue1("jetFidRegion") 
-			&& idTAK4->at(ijet) == getPreCutValue1("tightJetID") 
-			&& jetPtAK4->at(ijet) > getPreCutValue1("ptCut"))
-		       {
-			 TLorentzVector currentJet;
-			 currentJet.SetPtEtaPhiM(jetPtAK4->at(ijet),jetEtaAK4->at(ijet),jetPhiAK4->at(ijet),jetMassAK4->at(ijet));   
-			 
-			 double DeltaR1 = currentJet.DeltaR(jet1);
-			 double DeltaR2 = currentJet.DeltaR(jet2);
-			 
-			 if(DeltaR1 < DeltaR2 && DeltaR1 < wideJetDeltaR_)
-			   {
-			     wj1_tmp += currentJet;
-			   }
-			 else if(DeltaR2 < wideJetDeltaR_)
-			   {
-			     wj2_tmp += currentJet;
-			   }			 
-		       } // if AK4 jet passes fid and jetid.
-		   } //end of ak4 jet loop		     
+	 if( !(jetEtaAK4->at(j) < getPreCutValue1("jetFidRegion")
+	       && idTAK4->at(j) == getPreCutValue1("tightJetID")) ) continue;
 
-		 // if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0) 
-		 // std::cout << " wj1_tmp.Pt() IN  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " <<  wj2_tmp.Pt()  << std::endl;		     
+	 if( j==0 && !(jetPtAK4->at(j) > getPreCutValue1("pt0Cut")) ) continue;
+	 else if( j==1 && !(jetPtAK4->at(j) > getPreCutValue1("pt1Cut")) ) continue;
+	 else if( !(jetPtAK4->at(j) > getPreCutValue1("ptCut")) ) continue;
 
-	       } //fid, jet id, pt cut
-	   } //fid, jet id, pt cut
-       } // end of two jets.
-     
+	 TLorentzVector tempJet;
+	 tempJet.SetPtEtaPhiM(jetPtAK4->at(j),jetEtaAK4->at(j),jetPhiAK4->at(j),jetMassAK4->at(j));
 
-     // if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0)     std::cout << " wj1_tmp.Pt()  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " << wj2_tmp.Pt()  << "  no_jets_ak4 " << no_jets_ak4 << std::endl;
+	 fjInputs.push_back(fastjet::PseudoJet(tempJet.Px(),tempJet.Py(),tempJet.Pz(),tempJet.E()));
+       }
+
+       fjClusterSeq = ClusterSequencePtr( new fastjet::ClusterSequence( fjInputs, *fjJetDefinition ) );
+
+       std::vector<fastjet::PseudoJet> inclusiveWideJets = fastjet::sorted_by_pt( fjClusterSeq->inclusive_jets(0.) );
+
+       if( inclusiveWideJets.size()>1 )
+       {
+	 wj1.SetPxPyPzE(inclusiveWideJets.at(0).px(), inclusiveWideJets.at(0).pz(), inclusiveWideJets.at(0).pz(), inclusiveWideJets.at(0).e());
+	 wj2.SetPxPyPzE(inclusiveWideJets.at(1).px(), inclusiveWideJets.at(1).pz(), inclusiveWideJets.at(1).pz(), inclusiveWideJets.at(1).e());
+       }
+     }
+     else
+     {
+       TLorentzVector wj1_tmp, wj2_tmp;
+       double wideJetDeltaR_ = getPreCutValue1("DeltaR");
+
+       if(no_jets_ak4>=2)
+	 {
+	   if(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") 
+	      && jetPtAK4->at(0) > getPreCutValue1("pt0Cut"))
+	     {
+	       if(fabs(jetEtaAK4->at(1)) < getPreCutValue1("jetFidRegion") 
+		  && jetPtAK4->at(1) > getPreCutValue1("pt1Cut"))
+		 {
+		   TLorentzVector jet1, jet2;
+		   jet1.SetPtEtaPhiM(jetPtAK4->at(0),jetEtaAK4->at(0),jetPhiAK4->at(0),jetMassAK4->at(0));
+		   jet2.SetPtEtaPhiM(jetPtAK4->at(1),jetEtaAK4->at(1),jetPhiAK4->at(1),jetMassAK4->at(1));
+		   
+		   for(Long64_t ijet=0; ijet<no_jets_ak4; ijet++)
+		     { //jet loop for ak4
+		       TLorentzVector currentJet;
+		       
+		       if(fabs(jetEtaAK4->at(ijet)) < getPreCutValue1("jetFidRegion") 
+			  && idTAK4->at(ijet) == getPreCutValue1("tightJetID") 
+			  && jetPtAK4->at(ijet) > getPreCutValue1("ptCut"))
+			 {
+			   TLorentzVector currentJet;
+			   currentJet.SetPtEtaPhiM(jetPtAK4->at(ijet),jetEtaAK4->at(ijet),jetPhiAK4->at(ijet),jetMassAK4->at(ijet));   
+			   
+			   double DeltaR1 = currentJet.DeltaR(jet1);
+			   double DeltaR2 = currentJet.DeltaR(jet2);
+			   
+			   if(DeltaR1 < DeltaR2 && DeltaR1 < wideJetDeltaR_)
+			     {
+			       wj1_tmp += currentJet;
+			     }
+			   else if(DeltaR2 < wideJetDeltaR_)
+			     {
+			       wj2_tmp += currentJet;
+			     }			 
+			 } // if AK4 jet passes fid and jetid.
+		     } //end of ak4 jet loop		     
+
+		   // if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0) 
+		   // std::cout << " wj1_tmp.Pt() IN  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " <<  wj2_tmp.Pt()  << std::endl;		     
+
+		 } //fid, jet id, pt cut
+	     } //fid, jet id, pt cut
+	 } // end of two jets.
+	 
+       // Re-order the wide jets in pt
+       if( wj1_tmp.Pt() > wj2_tmp.Pt())
+	 {
+	   wj1 = wj1_tmp;
+	   wj2 = wj2_tmp;
+	 }
+       else
+	 {
+	   wj1 = wj2_tmp;
+	   wj2 = wj1_tmp;
+	 }
+     }
 
      double MJJWide = 0; 
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
-     if( wj1_tmp.Pt()>0 && wj2_tmp.Pt()>0 )
-       {
-	 // Re-order the wide jets in pt
-	 if( wj1_tmp.Pt() > wj2_tmp.Pt())
-	   {
-	     wj1 = wj1_tmp;
-	     wj2 = wj2_tmp;
-	   }
-	 else
-	   {
-	     wj1 = wj2_tmp;
-	     wj2 = wj1_tmp;
-	   }
-	 
-	 // Create dijet system
-	 wdijet = wj1 + wj2;
-	 MJJWide = wdijet.M();
-	 DeltaEtaJJWide = fabs(wj1.Eta()-wj2.Eta());
-	 DeltaPhiJJWide = fabs(wj1.DeltaPhi(wj2));
-	 
-	 // Put widejets in the container
-	 wj1math.SetPtEtaPhiM(wj1.Pt(), wj1.Eta(), wj1.Phi(), wj1.M());
-	 wj2math.SetPtEtaPhiM(wj2.Pt(), wj2.Eta(), wj2.Phi(), wj2.M());  
-	 widejets.push_back( wj1math );
-	 widejets.push_back( wj2math );
-       }
+     if( wj1.Pt()>0 && wj2.Pt()>0 )
+     {
+       // Create dijet system
+       wdijet = wj1 + wj2;
+       MJJWide = wdijet.M();
+       DeltaEtaJJWide = fabs(wj1.Eta()-wj2.Eta());
+       DeltaPhiJJWide = fabs(wj1.DeltaPhi(wj2));
+
+       // Put widejets in the container
+       widejets.push_back( wj1 );
+       widejets.push_back( wj2 );
+     }
 
 
      //== Fill Variables ==
