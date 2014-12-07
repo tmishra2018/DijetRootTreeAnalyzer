@@ -64,9 +64,9 @@ Instructions:
     ./main
       (you will be asked for input arguments)
    i.e.
-    ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events data/output/rootFile data/output/cutEfficiencyFile
+    ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events output/rootFile output/cutEfficiencyFile
 
-8) All the produced files are in the directory data/output
+8) All the produced files are in the directory output
 
 Notes:
 
@@ -137,7 +137,7 @@ uncommenting the following line in the Makefile
 
 - Automatic cut efficiency:
 the absolute and relative efficiency is calculated for each cut and stored in an output file
-(named data/output/cutEfficiencyFile.dat if the code is executed following the examples)
+(named output/cutEfficiencyFile.dat if the code is executed following the examples)
 
 The user has the option to implement a good run list using a JSON file.  This requires two edits to the cut 
 file and one edit to the analysisClass.C file.
