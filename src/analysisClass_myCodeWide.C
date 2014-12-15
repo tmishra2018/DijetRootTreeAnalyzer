@@ -33,9 +33,9 @@ void analysisClass::Loop()
 
    TH1F *h_nJetFinal = new TH1F ("h_nJetFinal","",10,0,10);
    h_nJetFinal->Sumw2();      
-   TH1F *h_nVtx = new TH1F ("h_nVtx","",30,0,30);
+   TH1F *h_nVtx = new TH1F ("h_nVtx","",40,0,40);
    h_nVtx->Sumw2(); 
-   TH1F *h_trueVtx = new TH1F ("h_trueVtx","",40,0,40);
+   TH1F *h_trueVtx = new TH1F ("h_trueVtx","",50,0,50);
    h_trueVtx->Sumw2();  
    TH1F *h_pT1stJet = new TH1F ("h_pT1stJet","",100,0,3000);
    h_pT1stJet->Sumw2();
@@ -70,13 +70,14 @@ void analysisClass::Loop()
      ////////////////////// User's code starts here ///////////////////////
 
      ///Stuff to be done for every event
- 
+
      Int_t no_jets_ak4=jetPtAK4->size();
      vector<TLorentzVector> widejets;
      TLorentzVector currentJet, wj1_tmp, wj1, wj2_tmp, wj2, v_jet_ak4,wdijet,wj1math,wj2math;
      double wideJetDeltaR_ = getPreCutValue1("DeltaR");
 
      resetCuts();
+
 /*   
      if(no_jets_ak4>=2){
        if(!(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") && idTAK4->at(0) == getPreCutValue1("tightJetID"))){
@@ -123,7 +124,6 @@ void analysisClass::Loop()
       }//deltaEta cut
     } // end of two jets.
 
-
     //if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0)     std::cout << " wj1_tmp.Pt()  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " << wj2_tmp.Pt()  << "  no_jets_ak4 " << no_jets_ak4 << std::endl;
 
     double MJJWide,DeltaEtaJJWide,DeltaPhiJJWide;
@@ -154,25 +154,20 @@ void analysisClass::Loop()
 
      fillVariableWithValue("nJetFinal",widejets.size());
      fillVariableWithValue("nVtx",nvtx);
-     fillVariableWithValue("trueVtx",PileupInteractions->at(12));
-     fillVariableWithValue("neutralHadronEnergyFraction_j1", jetNhfAK4->at(0));    
-     fillVariableWithValue("photonEnergyFraction_j1", jetPhfAK4->at(0));    
-     fillVariableWithValue("electronEnergyFraction_j1", jetElfAK4->at(0));         
-     fillVariableWithValue("muonEnergyFraction_j1", jetMufAK4->at(0));    
-     fillVariableWithValue("chargedHadronMultiplicity_j1", jetChfAK4->at(0));    
-     fillVariableWithValue("neutralHadronEnergyFraction_j2", jetNhfAK4->at(1));    
-     fillVariableWithValue("photonEnergyFraction_j2", jetPhfAK4->at(1));    
-     fillVariableWithValue("electronEnergyFraction_j2", jetElfAK4->at(1));         
-     fillVariableWithValue("muonEnergyFraction_j2", jetMufAK4->at(1));    
-     fillVariableWithValue("chargedHadronMultiplicity_j2", jetChfAK4->at(1));    
-     fillVariableWithValue("jetIdT1",idTAK4->at(0));
-     fillVariableWithValue("jetIdT2",idTAK4->at(1));
+     //cout<<PileupInteractions->at(12)<<endl;
+     //fillVariableWithValue("trueVtx",PileupInteractions->at(12));
 
      if( widejets.size() >= 1 )
-
        {
          fillVariableWithValue( "pT1stJet", widejets[0].Pt() );
          fillVariableWithValue( "eta1stJet", widejets[0].Eta());
+
+         fillVariableWithValue( "phi_j1", widejets[0].Phi());
+	 fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfAK4->at(0));
+	 fillVariableWithValue( "chargedHadEnFrac_j1", jetChfAK4->at(0));
+	 fillVariableWithValue( "photonEnFrac_j1", jetPhfAK4->at(0));
+	 fillVariableWithValue( "eleEnFract_j1", jetElfAK4->at(0));
+	 fillVariableWithValue( "muEnFract_j1", jetMufAK4->at(0));
        }
 
      if( widejets.size() >= 2 )
@@ -187,27 +182,36 @@ void analysisClass::Loop()
          fillVariableWithValue( "Dijet_MassW", wdijet.M() ) ;
          fillVariableWithValue( "Dijet_MassA", mjjAK8 ) ;  
          fillVariableWithValue( "Dijet_MassC", mjjCA8 ) ;
-      if(wdijet.M()<1){
-         std::cout << " INV MASS IS " << wdijet.M() << std::endl;
-         std::cout << " Delta Eta IS " << DeltaEtaJJWide << " n is  " << widejets.size() << std::endl;
-         std::cout << " INV MASS FROM NTUPLE AK8 " << mjjAK8 << std::endl;
-         std::cout << " INV MASS FROM NTUPLE CA8 " << mjjCA8 << std::endl;
-        }
-       }
-  
+         if(wdijet.M()<1){
+           std::cout << " INV MASS IS " << wdijet.M() << std::endl;
+           std::cout << " Delta Eta IS " << DeltaEtaJJWide << " n is  " << widejets.size() << std::endl;
+           std::cout << " INV MASS FROM NTUPLE AK8 " << mjjAK8 << std::endl;
+           std::cout << " INV MASS FROM NTUPLE CA8 " << mjjCA8 << std::endl;
+          }
+
+        fillVariableWithValue( "phi_j2", widejets[1].Phi());
+        fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(1));
+        fillVariableWithValue( "chargedHadEnFrac_j2", jetChfAK4->at(1));
+        fillVariableWithValue( "photonEnFrac_j2", jetPhfAK4->at(1));
+        fillVariableWithValue( "eleEnFract_j2", jetElfAK4->at(1));
+        fillVariableWithValue( "muEnFract_j2", jetMufAK4->at(1));
+        fillVariableWithValue( "deltaPHIjj", DeltaPhiJJWide ) ;
+
+     }
+
      // Evaluate cuts (but do not apply them)
      evaluateCuts();
-     
+
      // optional call to fill a skim with the full content of the input roottuple
      if( passedCut("nJetFinal") ) fillSkimTree();
-     
+
      // optional call to fill a skim with a subset of the variables defined in the cutFile (use flag SAVE)
      if( passedCut("nJetFinal") ) fillReducedSkimTree();
 
      // reject events that did not pass level 0 cuts
      if( !passedCut("0") ) continue;
      // ......
-     
+
      // reject events that did not pass level 1 cuts
      if( !passedCut("1") ) continue;
      // ......
