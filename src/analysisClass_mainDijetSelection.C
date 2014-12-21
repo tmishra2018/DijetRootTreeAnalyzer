@@ -13,7 +13,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
 {
   std::cout << "analysisClass::analysisClass(): begins " << std::endl;
 
-  string jetAlgo = getPreCutString1("jetAlgo");
+  std::string jetAlgo = getPreCutString1("jetAlgo");
   double rParam = getPreCutValue1("DeltaR");
 
   if( jetAlgo == "AntiKt" )
@@ -23,6 +23,25 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   else 
     fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::cambridge_algorithm, rParam) );
 
+  // For JECs
+  if( int(getPreCutValue1("useJECs"))==1 )
+  {
+    std::string L1Path = "/afs/cern.ch/user/f/ferencek/public/JEC_txt_files/PHYS14_25_V2/PHYS14_25_V2_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "/afs/cern.ch/user/f/ferencek/public/JEC_txt_files/PHYS14_25_V2/PHYS14_25_V2_L2Relative_AK4PFchs.txt"; 
+    std::string L3Path = "/afs/cern.ch/user/f/ferencek/public/JEC_txt_files/PHYS14_25_V2/PHYS14_25_V2_L3Absolute_AK4PFchs.txt";
+    
+    L1Par = new JetCorrectorParameters(L1Path);
+    L2Par = new JetCorrectorParameters(L2Path);
+    L3Par = new JetCorrectorParameters(L3Path);
+
+    std::vector<JetCorrectorParameters> vPar;
+    vPar.push_back(*L1Par);
+    vPar.push_back(*L2Par);
+    vPar.push_back(*L3Par);
+
+    JetCorrector = new FactorizedJetCorrector(vPar);
+  }
+  
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;
 }
 

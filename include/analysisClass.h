@@ -18,7 +18,9 @@
 // typedefs
 typedef boost::shared_ptr<fastjet::ClusterSequence>  ClusterSequencePtr;
 typedef boost::shared_ptr<fastjet::JetDefinition>    JetDefPtr;
-
+// For JECs
+#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+#include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 
 using namespace std;
 
@@ -30,6 +32,11 @@ public :
 private :
   ClusterSequencePtr  fjClusterSeq;
   JetDefPtr           fjJetDefinition;
+  // For JECs
+  JetCorrectorParameters *L1Par;
+  JetCorrectorParameters *L2Par;
+  JetCorrectorParameters *L3Par;
+  FactorizedJetCorrector *JetCorrector;
 };
 
 #endif
