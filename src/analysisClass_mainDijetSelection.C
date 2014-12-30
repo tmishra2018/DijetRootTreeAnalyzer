@@ -213,6 +213,11 @@ void analysisClass::Loop()
      fillVariableWithValue("nVtx",nvtx);     
      fillVariableWithValue("nJet",widejets.size());
 
+     // Trigger
+     int NtriggerBits = triggerResult->size();
+     if( NtriggerBits > 0)
+       fillVariableWithValue("passHLT",triggerResult->at(0));// HLT_PFHT900_v*    
+
      if( no_jets_ak4 >=1 )
        fillVariableWithValue("IdTight_j1",idTAK4->at(0));
 
@@ -276,10 +281,10 @@ void analysisClass::Loop()
      if( passedAllPreviousCuts("mjj") && passedCut("mjj") ) 
        {
 	 fillReducedSkimTree();
-
+	 
 	 // ===== Take a look at this =====
 	 // //Example on how to investigate quickly the data
-	 // if(getVariableValue("mjj")>4000)
+ 	 // if(getVariableValue("mjj")>4000)
 	 //   {
 	 //     //fast creation and filling of histograms
 	 //     CreateAndFillUserTH1D("h_dphijj_mjjgt4000", 100, 0, 3.15, getVariableValue("deltaPHIjj"));
@@ -288,6 +293,16 @@ void analysisClass::Loop()
 	 //   }
 
        }
+
+     // ===== Example of mjj spectrum after HLT selection =====
+     // if( passedAllPreviousCuts("mjj") )
+     //   {
+     // 	 if(getVariableValue("passHLT")>0)
+     // 	   {
+     // 	     //fast creation and filling of histograms
+     // 	     CreateAndFillUserTH1D("h_mjj_passHLT", getHistoNBins("mjj"), getHistoMin("mjj"), getHistoMax("mjj"), getVariableValue("mjj"));
+     // 	   }
+     //   }
 
      // reject events that did not pass level 0 cuts
      //if( !passedCut("0") ) continue;
