@@ -122,8 +122,8 @@ void analysisClass::Loop()
 
        if( inclusiveWideJets.size()>1 )
        {
-	 wj1.SetPxPyPzE(inclusiveWideJets.at(0).px(), inclusiveWideJets.at(0).pz(), inclusiveWideJets.at(0).pz(), inclusiveWideJets.at(0).e());
-	 wj2.SetPxPyPzE(inclusiveWideJets.at(1).px(), inclusiveWideJets.at(1).pz(), inclusiveWideJets.at(1).pz(), inclusiveWideJets.at(1).e());
+	 wj1.SetPxPyPzE(inclusiveWideJets.at(0).px(), inclusiveWideJets.at(0).py(), inclusiveWideJets.at(0).pz(), inclusiveWideJets.at(0).e());
+	 wj2.SetPxPyPzE(inclusiveWideJets.at(1).px(), inclusiveWideJets.at(1).py(), inclusiveWideJets.at(1).pz(), inclusiveWideJets.at(1).e());
        }
      }
      else
