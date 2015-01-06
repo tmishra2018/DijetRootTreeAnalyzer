@@ -8,8 +8,8 @@ usage = "usage: To be run from DijetRootTreeAnalyzer/ :  python scripts/submit_b
 
 parser = optparse.OptionParser("submitAllGJetsID.py")
 parser.add_option('-q', '--queue',       action='store',     dest='queue',       
-                  help='run in batch in queue specified as option (default -q cmsan)', 
-                  default='cmsan',
+                  help='run in batch in queue specified as option (default -q cmslong)', 
+                  default='cmslong',
                   metavar="QUEUE")
 
 parser.add_option("-i", "--input", dest="input",
@@ -19,6 +19,10 @@ parser.add_option("-i", "--input", dest="input",
 parser.add_option("-o", "--output", dest="output",
                   help="the directory OUTDIR contains the output of the program",
                   metavar="OUTDIR")
+
+parser.add_option("-m", "--match", dest="match",
+                  help="run only the samples containing this string in the name",
+                  default="")
 
 parser.add_option('-I', '--interactive',      
                   action='store_true',
@@ -33,7 +37,10 @@ parser.add_option('-I', '--interactive',
 os.system("mkdir -p batch")
 pwd = os.environ['PWD']
 
-os.system("ls "+opt.input+" > config/lists_to_run.txt")
+if not opt.match:
+    os.system("ls "+opt.input+" > config/lists_to_run.txt")
+else:
+    os.system("ls "+opt.input+" | grep "+opt.match+"  > config/lists_to_run.txt")
 
 ins = open("config/lists_to_run.txt", "r") 
 for line in  ins:
@@ -42,7 +49,7 @@ for line in  ins:
     line = line.rstrip('\n')
     sample = sample.rstrip('\n')
 
-    command = "./main "+opt.input+"/"+line+" config/cutFile_mainDijetSelection.txt dijets/events output/rootfile_"+sample+" output/cutEfficiencyFile_"+sample
+    command = "./main "+opt.input+"/"+line+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+"/rootfile_"+sample+" "+opt.output+"/cutEfficiencyFile_"+sample
     print "submit "+command
     print ""
     
