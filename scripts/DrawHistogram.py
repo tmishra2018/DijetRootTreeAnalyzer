@@ -66,11 +66,15 @@ for f in fileNames:
   print ('processed events: %s' % Nev)
   wt = 1.0
   #if i_f < 3:
-  wt = LUMI*float(xsecs[i_f])/Nev
 
   h_allCuts = TH1F("h_allCuts", "", bins, xmin, xmax)
   tree = inf.Get('rootTupleTree/tree')
-  tree.Project(h_allCuts.GetName(), var,'')
+  tree.Project(h_allCuts.GetName(), var,'deltaETAjj < 1.3')
+  Npassed = h_allCuts.GetEntries()
+  eff = float(Npassed)/Nev
+  print('eff : %f' % eff)
+  wt = LUMI*float(xsecs[i_f])*eff/Nev
+  print('weight : %f' % wt)
   h_allCuts.Scale(wt)
   h_allCuts.Rebin(rebin)
   h_allCuts.SetDirectory(0)
