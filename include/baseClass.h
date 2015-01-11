@@ -221,7 +221,7 @@ class baseClass : public rootNtupleClass {
   map<std::string , TH1D*> userTH1Ds_;
   map<std::string , TH2D*> userTH2Ds_;
   void init();
-  void readInputList();
+  int readInputList();
   void readCutFile();
   bool fillCutHistos();
   bool writeCutHistos();

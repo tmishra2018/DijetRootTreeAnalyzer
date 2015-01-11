@@ -54,7 +54,7 @@ void baseClass::init()
 {
   //STDOUT("begins");
   tree_ = NULL;
-  readInputList();
+  int processedEvents = readInputList();
   readCutFile();
   if(tree_ == NULL){
     STDOUT("baseClass::init(): ERROR: tree_ = NULL ");
@@ -78,9 +78,10 @@ void baseClass::init()
     
     skim_file_ = new TFile((*outputFileName_ + "_skim.root").c_str(),"RECREATE");
     skim_tree_ = fChain->CloneTree(0);
-    hCount_ = new TH1I("EventCounter","Event Counter",2,-0.5,1.5);
+    hCount_ = new TH1I("EventCounter","Event Counter",3,-0.5,2.5);
     hCount_->GetXaxis()->SetBinLabel(1,"all events");
-    hCount_->GetXaxis()->SetBinLabel(2,"passed");
+    hCount_->GetXaxis()->SetBinLabel(2,"events analyzed");
+    hCount_->GetXaxis()->SetBinLabel(3,"passed");
   }
 
   // Reduced Skim stuff
@@ -92,9 +93,10 @@ void baseClass::init()
 
     reduced_skim_file_ = new TFile((*outputFileName_ + "_reduced_skim.root").c_str(),"RECREATE");
     reduced_skim_tree_= new TTree("tree","Reduced Skim");
-    hReducedCount_ = new TH1I("EventCounter","Event Counter",2,-0.5,1.5);
+    hReducedCount_ = new TH1I("EventCounter","Event Counter",3,-0.5,2.5);
     hReducedCount_->GetXaxis()->SetBinLabel(1,"all events");
-    hReducedCount_->GetXaxis()->SetBinLabel(2,"passed");
+    hReducedCount_->GetXaxis()->SetBinLabel(2,"analyzed events");
+    hReducedCount_->GetXaxis()->SetBinLabel(3,"passed");
     for (map<string, cut>::iterator cc = cutName_cut_.begin(); cc != cutName_cut_.end(); cc++)
       {
 	cut * c = & (cc->second);
@@ -109,7 +111,7 @@ void baseClass::init()
   //STDOUT("ends");
 }
 
-void baseClass::readInputList()
+int baseClass::readInputList()
 {
 
   TChain *chain = new TChain(treeName_->c_str());
@@ -120,6 +122,12 @@ void baseClass::readInputList()
   pileupDataFileWasUsed_ = false;
   NBeforeSkim_ = 0;
   int NBeforeSkim;
+
+  TFile* input_file;
+  TH1F *TriggerPass;
+  TH1F* TriggerPass_sum;
+  int count_line = 0;
+  TDirectoryFile* dir;
 
   STDOUT("baseClass::readinputList(): inputList_ =  "<< *inputList_ );
 
@@ -132,19 +140,52 @@ void baseClass::readInputList()
           if (pName[0] == '#') continue;
 	  //if (pName[0] == ' ') continue; // do we want to skip lines that start with a space?
 	  if (pName[0] == '\n') continue;// simple protection against blank lines
+	  count_line += 1; 
           STDOUT("Adding file: " << pName);
           chain->Add(pName);
 	  NBeforeSkim = getGlobalInfoNstart(pName);
 	  NBeforeSkim_ = NBeforeSkim_ + NBeforeSkim;
 	  STDOUT("Initial number of events: NBeforeSkim, NBeforeSkim_ = "<<NBeforeSkim<<", "<<NBeforeSkim_);
-        }
+
+	  //giulia test to count processed events
+	  TFile *f = TFile::Open(pName);
+	  string s0 = "dijets/TriggerPass";
+	  TriggerPass = (TH1F*)f->Get(s0.c_str());  
+	  if(f) STDOUT("file exists!");
+	  if(TriggerPass){
+	    STDOUT("object exists");
+	  }
+	  else{
+	    STDOUT("ERROR: object doesn't exist!!"); 
+	  }
+	  TriggerPass->Print();
+	  TriggerPass->SetName("TriggerPass");
+	  if(count_line == 1) {
+	    STDOUT("sono nell'if" << endl);
+	    TriggerPass_sum = (TH1F*)TriggerPass->Clone("TriggerPass_sum");
+	  }
+	  else 
+	    TriggerPass_sum->Add(TriggerPass);
+
+	  STDOUT( "processed events file " << count_line <<": " << TriggerPass->GetBinContent(1) << endl);
+	}
+      STDOUT("###############################################");
+      STDOUT("total processed events: " << TriggerPass_sum->GetBinContent(1) << endl);
+      //end giulia test
+
       tree_ = chain;
+      int entries = chain->GetEntries();
+      STDOUT("chain entries = " << entries);
       STDOUT("baseClass::readInputList: Finished reading list: " << *inputList_ );
+  
+      return TriggerPass_sum->GetBinContent(1);
     }
   else
     {
       STDOUT("baseClass::readInputList: ERROR opening inputList:" << *inputList_ );
+      return 0;
       exit (1);
+      
     }
   is.close();
 
@@ -1019,7 +1060,6 @@ bool baseClass::writeCutEfficFile()
 
   // Set bin labels for event counter histogram
   int bincounter=1;
-
   eventcuts_->GetXaxis()->SetBinLabel(bincounter,"NoCuts");
   ++bincounter;
 
@@ -1294,8 +1334,8 @@ int baseClass::getGlobalInfoNstart(char *pName)
   int NBeforeSkim = 0;
   STDOUT(pName<<"  "<< NBeforeSkim)
   TFile *f = TFile::Open(pName);
-  string s1 = "LJFilter/EventCount/EventCounter";
-  string s2 = "LJFilterPAT/EventCount/EventCounter";
+  string s1 = "DijetFilter/EventCount/EventCounter";
+  string s2 = "DijetFilterPAT/EventCount/EventCounter";
   TH1I* hCount1 = (TH1I*)f->Get(s1.c_str());
   TH1I* hCount2 = (TH1I*)f->Get(s2.c_str());
   if( !hCount1 && !hCount2 )
@@ -1523,13 +1563,16 @@ bool baseClass::writeSkimTree()
   if(!produceSkim_) return ret;
   
   skim_file_->cd();
-  TDirectory *dir1 = skim_file_->mkdir("LJFilter");
+  TDirectory *dir1 = skim_file_->mkdir("DijetFilter");
   TDirectory *dir2 = dir1->mkdir("EventCount");
-  skim_file_->cd("LJFilter/EventCount");
+  skim_file_->cd("DijetFilter/EventCount");
   int nEntRoottuple = fChain->GetEntriesFast();
   int nEntTot = (skimWasMade_ ? NBeforeSkim_ : nEntRoottuple );
-  hCount_->SetBinContent(1,nEntTot);
-  hCount_->SetBinContent(2,NAfterSkim_);
+  int processedEvents = readInputList();
+  skim_file_->cd("DijetFilter/EventCount");
+  hCount_->SetBinContent(1,processedEvents);
+  hCount_->SetBinContent(2,nEntTot);
+  hCount_->SetBinContent(3,NAfterSkim_);
   hCount_->Write();
 
   if ( fChain -> GetEntries() == 0 ){
@@ -1562,13 +1605,16 @@ bool baseClass::writeReducedSkimTree()
   reduced_skim_tree_->Write();
 
   reduced_skim_file_->cd();
-  TDirectory *dir1 = reduced_skim_file_->mkdir("LJFilter");
+  TDirectory *dir1 = reduced_skim_file_->mkdir("DijetFilter");
   TDirectory *dir2 = dir1->mkdir("EventCount");
-  reduced_skim_file_->cd("LJFilter/EventCount");
+  reduced_skim_file_->cd("DijetFilter/EventCount");
   int nEntRoottuple = fChain->GetEntriesFast();
   int nEntTot = (skimWasMade_ ? NBeforeSkim_ : nEntRoottuple );
-  hReducedCount_->SetBinContent(1,nEntTot);
-  hReducedCount_->SetBinContent(2,NAfterReducedSkim_);
+  int processedEvents = readInputList();
+  reduced_skim_file_->cd("DijetFilter/EventCount");
+  hReducedCount_->SetBinContent(1,processedEvents);
+  hReducedCount_->SetBinContent(2,nEntTot);
+  hReducedCount_->SetBinContent(3,NAfterReducedSkim_);
   hReducedCount_->Write();
 
   // Any failure mode to implement?
