@@ -73,7 +73,8 @@ for f in fileNames:
   Npassed = h_allCuts.GetEntries()
   eff = float(Npassed)/Nev
   print('eff : %f' % eff)
-  wt = LUMI*float(xsecs[i_f])*eff/Nev
+  print('(not using efficincy in the weight)')
+  wt = LUMI*float(xsecs[i_f])/Nev
   print('weight : %f' % wt)
   h_allCuts.Scale(wt)
   h_allCuts.Rebin(rebin)
