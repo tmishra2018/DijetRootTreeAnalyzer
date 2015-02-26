@@ -72,7 +72,11 @@ void AddBkgData(RooWorkspace*, Float_t);
 //void SigModelFitConvBW(RooWorkspace*, Float_t, Double_t);
 
 //RooFitResult* BkgModelFitExpPARFunc(RooWorkspace*, Bool_t, Float_t, Int_t, bool); 
+//giulia debug
 RooFitResult*  BkgModelFitDiJetFunc(RooWorkspace*, Bool_t, Float_t, Int_t, bool);
+//void  BkgModelFitDiJetFunc(RooWorkspace*, Bool_t, Float_t, Int_t, bool);
+
+
 //RooFitResult* BkgModelFitDiJetEXPFunc(RooWorkspace*, Bool_t, Float_t, Int_t, bool);
 //RooFitResult* BkgModelFitDiJetEXPOLFunc(RooWorkspace*, Bool_t, Float_t, Int_t, bool);
 //RooFitResult* BkgModelFitExpolFunc(RooWorkspace*, Bool_t, Float_t, bool);
@@ -182,6 +186,7 @@ void runfits(const Float_t mass=5000., Bool_t dobands = false,  std::string mode
   //do the fit and write result on a file
   TFile* file_result;
   for(int c=0; c<NCAT;c++){
+    //BkgModelFitDiJetFunc(w, dobandsHere, mass, c, blind);
     fitresults = BkgModelFitDiJetFunc(w, dobandsHere, mass, c, blind);
     file_result = new TFile(TString::Format("roofit_result_cat%d.root",c),"recreate");
     file_result->cd();
@@ -359,7 +364,7 @@ void AddBkgData(RooWorkspace* w, Float_t mass) {
   //(*w->var("Dijet_MassW")).setRange(MINmass, MAXmass);
   
   // common preselection cut
-  TString mainCut = TString::Format(" mjj > 1100 && TMath::Abs(eta_j1)<2.5 && TMath::Abs(eta_j2)<2.5 && pt_j1>30 && pt_j2>30 ");  
+  TString mainCut = TString::Format(" mjj > 1118 && TMath::Abs(eta_j1)<2.5 && TMath::Abs(eta_j2)<2.5 && pt_j1>30 && pt_j2>30 ");  
 
   // Create dataset
   RooDataSet* Data[9];
@@ -409,7 +414,7 @@ void AddBkgData(RooWorkspace* w, Float_t mass) {
     cout << endl;
   
     // Construct formula to calculate weight for events
-    wFunc[i] = new RooFormulaVar(TString::Format("w"),"luminosity weight","@0*@1*@2*1.3/@3",RooArgSet(*lumi,*xsec[i],*eff[i],*Ngen[i])) ;
+    wFunc[i] = new RooFormulaVar(TString::Format("w"),"luminosity weight","@0*@1*1.3/@2",RooArgSet(*lumi,*xsec[i],*Ngen[i])) ;
 
     //
     // Add column with variable w to previously generated dataset

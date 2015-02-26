@@ -1,4 +1,5 @@
 RooFitResult* BkgModelFitDiJetFunc(RooWorkspace* w, Bool_t dobands, Float_t mass, Int_t c,  bool blind) {
+//void BkgModelFitDiJetFunc(RooWorkspace* w, Bool_t dobands, Float_t mass, Int_t c,  bool blind) {
 
   //Int_t ncat = NCAT;
   std::cout<<"isBlind: "<<blind<<std::endl;
@@ -84,19 +85,39 @@ RooFitResult* BkgModelFitDiJetFunc(RooWorkspace* w, Bool_t dobands, Float_t mass
     h_data_binned_w_mjj->SetBinContent(i,h_data_binned_mjj->GetBinContent(i)/h_data_binned_w_mjj->GetBinWidth(i));
   }
 
+  TCanvas c1;
+  c1.cd();
+  c1.SetLogy(1);
+  h_data_binned_mjj->Draw()  ;
+  c1.SaveAs("databinned_debug.png");
+
+
+
   TH1F* h_pseudodata_binned_mjj = new TH1F("h_pseudodata_binned_mjj","", nbins, Xmin, Xmax);
   for(int i=1; i<=h_data_binned_mjj->GetNbinsX(); i++){
     h_pseudodata_binned_mjj->SetBinContent(i,RooRandom::randomGenerator()->Poisson(h_data_binned_mjj->GetBinContent(i)));
     h_pseudodata_binned_mjj->SetBinError(i,TMath::Sqrt(h_data_binned_mjj->GetBinContent(i)));
-    //cout << "bin" << i << "content : " << h_pseudodata_binned_mjj->GetBinContent(i) << endl; 
+    cout << "bin" << i << "content : " << h_pseudodata_binned_mjj->GetBinContent(i) <<  "  error : " << h_pseudodata_binned_mjj->GetBinError(i) << endl; 
   }
+  TCanvas c2;
+  c2.SetLogy(1);
+  c2.cd();
+  h_pseudodata_binned_mjj->Draw();
+  c2.SaveAs("pseudodatabinned_debug.png");
+
+
   TH1F* h_pseudodata_binned_w_mjj = new TH1F("h_pseudodata_binned_w_mjj","", nbins, Xmin, Xmax);
   for(int i=1; i<=h_data_binned_mjj->GetNbinsX(); i++){
     h_pseudodata_binned_w_mjj->SetBinContent(i,h_pseudodata_binned_mjj->GetBinContent(i)/h_pseudodata_binned_w_mjj->GetBinWidth(i));
     h_pseudodata_binned_w_mjj->SetBinError(i,TMath::Sqrt(h_pseudodata_binned_mjj->GetBinContent(i)/h_pseudodata_binned_w_mjj->GetBinWidth(i)));
-    //cout << "random bin " << i << " content : " << h_pseudodata_binned_w_mjj->GetBinContent(i) <<endl;
+    cout << "random bin " << i << " content : " << h_pseudodata_binned_w_mjj->GetBinContent(i) <<"  error : " << h_pseudodata_binned_w_mjj->GetBinError(i) << endl;
   }
-   
+  TCanvas c3;
+  c3.SetLogy(1);
+  c3.cd();
+  h_pseudodata_binned_w_mjj->Draw(); 
+  c3.SaveAs("pseudodatabinned_w_debug.png");
+
   RooDataHist* pseudoDataBinned = new RooDataHist(TString::Format("pseudodata_cat0"),"",RooArgSet(*mjj),h_pseudodata_binned_mjj) ;
   RooDataHist* pseudoDataBinned_w = new RooDataHist(TString::Format("pseudodata_w_cat0"),"",RooArgSet(*mjj),h_pseudodata_binned_w_mjj) ;
   fitresult = DijetMassBkgTmp0->fitTo(*pseudoDataBinned, RooFit::Range(minMassFit,maxMassFit),RooFit::FitOptions("MHTER"), RooFit::SumW2Error(kTRUE), RooFit::Save(kTRUE));
@@ -104,21 +125,22 @@ RooFitResult* BkgModelFitDiJetFunc(RooWorkspace* w, Bool_t dobands, Float_t mass
   w->import(*DijetMassBkgTmp0);
 
   //*****************plot histogram rebinned **************************
-  const int nMassBins = 103;
-  double massBoundaries[nMassBins+1] = {1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
-  TH1F* h_data_reBinned_mjj = (TH1F*)h_pseudodata_binned_mjj->Clone("h_data_reBinned_mjj");
-  h_data_reBinned_mjj->Rebin(nMassBins,"h_data_reBinned_mjj",massBoundaries);
-  int nbins_rebin = h_data_reBinned_mjj->GetNbinsX();
-  double Xmin_rebin = h_data_reBinned_mjj->GetBinLowEdge(1);
-  double Xmax_rebin = h_data_reBinned_mjj->GetBinLowEdge(nbins_rebin+1);
-
-  TH1F* h_data_reBinned_w_mjj = new TH1F("h_data_reBinned_w_mjj","",nbins_rebin,Xmin_rebin,Xmax_rebin);
-  for(int i=1; i<=h_data_reBinned_mjj->GetNbinsX(); i++){
-    h_data_reBinned_w_mjj->SetBinContent(i,h_data_reBinned_mjj->GetBinContent(i)/h_data_reBinned_w_mjj->GetBinWidth(i));
-    h_data_reBinned_w_mjj->SetBinError(i,TMath::Sqrt(h_data_reBinned_mjj->GetBinContent(i)/h_data_reBinned_w_mjj->GetBinWidth(i)));
-    cout << "new bin " << i << " content : " << h_pseudodata_binned_w_mjj->GetBinContent(i) <<endl;
-  }  
-  
+  //debug
+  //  const int nMassBins = 103;
+//  double massBoundaries[nMassBins+1] = {1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
+//  TH1F* h_data_reBinned_mjj = (TH1F*)h_pseudodata_binned_mjj->Clone("h_data_reBinned_mjj");
+//  h_data_reBinned_mjj->Rebin(nMassBins,"h_data_reBinned_mjj",massBoundaries);
+//  int nbins_rebin = h_data_reBinned_mjj->GetNbinsX();
+//  double Xmin_rebin = h_data_reBinned_mjj->GetBinLowEdge(1);
+//  double Xmax_rebin = h_data_reBinned_mjj->GetBinLowEdge(nbins_rebin+1);
+//
+//  TH1F* h_data_reBinned_w_mjj = new TH1F("h_data_reBinned_w_mjj","",nbins_rebin,Xmin_rebin,Xmax_rebin);
+//  for(int i=1; i<=h_data_reBinned_mjj->GetNbinsX(); i++){
+//    h_data_reBinned_w_mjj->SetBinContent(i,h_data_reBinned_mjj->GetBinContent(i)/h_data_reBinned_w_mjj->GetBinWidth(i));
+//    h_data_reBinned_w_mjj->SetBinError(i,TMath::Sqrt(h_data_reBinned_mjj->GetBinContent(i)/h_data_reBinned_w_mjj->GetBinWidth(i)));
+//    cout << "new bin " << i << " content : " << h_pseudodata_binned_w_mjj->GetBinContent(i) <<endl;
+//  }  
+//  
   //RooBinning abins(nMassBins,massBoundaries,"mjj_binning") ;
   //RooRealVar* mjj_binned = new RooRealVar("mjj_binned","",1,14000);
   //mjj_binned->setBinning(abins) ;
@@ -139,7 +161,7 @@ RooFitResult* BkgModelFitDiJetFunc(RooWorkspace* w, Bool_t dobands, Float_t mass
   //dataBinned_1GeV->plotOn(plotDijetMassBkg);      
   //dataBinned->plotOn(plotDijetMassBkg,RooFit::MarkerColor(kPink));     
   //pseudoDataBinned->plotOn(plotDijetMassBkg);
-  pseudoDataBinned_w->plotOn(plotDijetMassBkg);
+  pseudoDataBinned_w->plotOn(plotDijetMassBkg, RooFit::Range(minMassFit,maxMassFit));
   //pseudodata_reBinned_w_mjj->plotOn(plotDijetMassBkg,RooFit::Range(minMassFit,maxMassFit));
   //plotDijetMassBkg->addPlotable(roo_h_pseudodata_reBinned_w_mjj,"P");
 
@@ -336,5 +358,5 @@ RooFitResult* BkgModelFitDiJetFunc(RooWorkspace* w, Bool_t dobands, Float_t mass
   cout << "return result:" << endl; 
   fitresult->Print("V");
 
-  return fitresult;
+return fitresult;
 }
