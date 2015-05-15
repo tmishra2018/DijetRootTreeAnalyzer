@@ -19,10 +19,6 @@ parser.add_option("-i", "--inputList", dest="inputList",
                   help="list of all datasets to be used (full path required)",
                   metavar="LIST")
 
-parser.add_option("-c", "--code", dest="analysisCode",
-                  help="name of the CODE.C code used to generate the rootfiles (which is the beginning of the root file names before ___)",
-                  metavar="CODE")
-
 parser.add_option("-d", "--inputDir", dest="inputDir",
                   help="the directory INDIR contains the rootfiles with the histograms to be combined (full path required)",
                   metavar="INDIR")
@@ -45,7 +41,7 @@ parser.add_option("-s", "--sampleListForMerging", dest="sampleListForMerging",
 
 (options, args) = parser.parse_args()
 
-if len(sys.argv)<14:
+if len(sys.argv)<12:
     print usage
     sys.exit()
 
@@ -301,8 +297,8 @@ for n, lin in enumerate( open( options.inputList ) ):
     dataset_mod = string.split( string.split(lin, "/" )[-1], ".")[0]
     print dataset_mod + " ... "
 
-    inputRootFile = options.inputDir + "/" + options.analysisCode + "___" + dataset_mod + ".root"
-    inputDataFile = options.inputDir + "/" + options.analysisCode + "___" + dataset_mod + ".dat"
+    inputRootFile = options.inputDir + "/rootfile_" + dataset_mod + ".root"
+    inputDataFile = options.inputDir + "/cutEfficiencyFile_" + dataset_mod + ".dat"
 
     #print inputRootFile
     #print inputDataFile
@@ -470,7 +466,7 @@ for n, lin in enumerate( open( options.inputList ) ):
 
     #---End of the loop over datasets---#
 
-outputTableFile = open(options.outputDir + "/" + options.analysisCode + "_tables.dat",'w')
+outputTableFile = open(options.outputDir + "/tables.dat",'w')
 
 for S,sample in enumerate( dictSamples ):
     #print "current sample is: ", sample
@@ -483,7 +479,7 @@ for S,sample in enumerate( dictSamples ):
 
 outputTableFile.close
 
-print "output tables at: ", options.outputDir + "/" + options.analysisCode + "_tables.dat"
+print "output tables at: ", options.outputDir + "/tables.dat"
 
 #---TODO: CREATE LATEX TABLE (PYTEX?) ---#
 
