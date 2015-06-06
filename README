@@ -27,7 +27,7 @@ Instructions:
 -------------
 
 1) Environment setup:
-    cd CMSSW_7_1_0/src/ 
+    cd CMSSW_7_4_4/src/ 
     cmsenv	
 
 (or the most recent release)   
