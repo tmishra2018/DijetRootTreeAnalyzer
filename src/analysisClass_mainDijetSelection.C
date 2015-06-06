@@ -263,8 +263,23 @@ void analysisClass::Loop()
 	 //    //std::cout << " INV MASS FROM NTUPLE CA8 " << mjjCA8 << std::endl;
        }
 
+     //find intime BX
+     int idx_InTimeBX=-1;
+     for(size_t j=0; j<PileupOriginBX->size(); ++j)
+       {
+	 //cout << PileupOriginBX->at(j) << endl;	 
+	 if(PileupOriginBX->at(j)==0)
+	   {
+	     idx_InTimeBX = j;
+	     //cout << "idx_InTimeBX: " << idx_InTimeBX << endl; 
+	   }
+       }    
+
      //no cuts on these variables, just to store in output
-     fillVariableWithValue("trueVtx",PileupInteractions->at(12));
+     if(idx_InTimeBX > -1 )
+       fillVariableWithValue("trueVtx",PileupInteractions->at(idx_InTimeBX));
+     else
+       fillVariableWithValue("trueVtx",999);
      fillVariableWithValue("MET",met);
      double METoverHTAK4=double(met/htAK4);
      fillVariableWithValue("METoverHTAK4",METoverHTAK4);

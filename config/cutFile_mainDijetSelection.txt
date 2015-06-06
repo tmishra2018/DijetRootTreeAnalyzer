@@ -65,7 +65,6 @@ MET		     -inf           +inf                -               -               1  
 METoverHTAK4	     -inf	    +inf		-		-		1	1000 0 10000      SAVE
 HTAK4                -inf           +inf                -               -               1       500 0 10000       SAVE
 ptHat                -inf           +inf                -               -               1       500 0 10000       SAVE
-weight               -inf           +inf                -               -              1       500 0 100          SAVE
 deltaPHIjj           -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
 phi_j1  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
 neutrHadEnFrac_j1    -inf           +inf                -               -               1       100 0 1           SAVE
