@@ -1,5 +1,5 @@
 COMP=g++
-FLAGS =
+FLAGS = -std=c++11
 #FLAGS += -DUSE_EXAMPLE
 FLAGS += -DSAVE_ALL_HISTOGRAMS 
 # FLAGS += -DCREATE_OPT_CUT_FILE
@@ -7,7 +7,7 @@ ROOTLIBS = `root-config --glibs --cflags` -lMinuit
 scram = $(shell cd ${CMSSW_BASE}; scram tool tag $(1) $(2))
 INC= -I.. -I. -I./include  -I${CLHEP}/include -I$(call scram,boost,INCLUDE) -I$(call scram,fastjet,INCLUDE)
 ROOTINC= -I${ROOTSYS}/include
-LIBS= -L.  ${ROOTLIBS} -L${CLHEP}/lib -L${CLHEP}/lib
+LIBS= -L.  ${ROOTLIBS} -L${CLHEP}/lib
 SRC= ./src
 SELECTIONLIB=$(SRC)/rootNtupleClass.o $(SRC)/baseClass.o $(SRC)/analysisClass.o $(SRC)/jsonParser.o $(SRC)/pileupReweighter.o $(SRC)/qcdFitter.o $(SRC)/qcdFitter_V1.o  $(SRC)/likelihoodGetter.o $(SRC)/eventListHelper.o
 EXE = main
