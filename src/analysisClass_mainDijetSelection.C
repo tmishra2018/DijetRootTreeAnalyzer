@@ -105,7 +105,40 @@ void analysisClass::Loop()
      TLorentzVector wj1, wj2, wdijet;
 
      resetCuts();
-   
+
+     std::vector<double> jecFactors;
+     // new JECs could change the jet pT ordering. the vector below
+     // holds sorted jet indices after the new JECs had been applied
+     std::vector<unsigned> sortedJetIdx;
+     if( int(getPreCutValue1("useJECs"))==1 )
+     {
+       // sort jets by increasing pT
+       std::multimap<double, unsigned> sortedJets;
+       for(size_t j=0; j<no_jets_ak4; ++j)
+       {
+	 JetCorrector->setJetEta(jetEtaAK4->at(j));
+	 JetCorrector->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
+	 JetCorrector->setJetA(jetAreaAK4->at(j));
+	 JetCorrector->setRho(rho);
+
+	 double correction = JetCorrector->getCorrection();
+
+	 jecFactors.push_back(correction);
+	 sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j))*correction, j));
+       }
+       // get jet indices in decreasing pT order
+       for(std::multimap<double, unsigned>::const_reverse_iterator it = sortedJets.rbegin(); it != sortedJets.rend(); ++it)
+	 sortedJetIdx.push_back(it->second);
+     }
+     else
+     {
+       for(size_t j=0; j<no_jets_ak4; ++j)
+       {
+	 jecFactors.push_back(jetJecAK4->at(j));
+	 sortedJetIdx.push_back(j);
+       }
+     }
+
      // if(no_jets_ak4>=2){
      //  if(!(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") && idTAK4->at(0) == getPreCutValue1("tightJetID"))){
      //    std::cout << " JET 0 FAIL " << jetEtaAK4->at(0) << " JET 0  ID " << idTAK4->at(0) << std::endl;
@@ -125,12 +158,12 @@ void analysisClass::Loop()
 	 if( !(jetEtaAK4->at(j) < getPreCutValue1("jetFidRegion")
 	       && idTAK4->at(j) == getPreCutValue1("tightJetID")) ) continue;
 
-	 if( j==0 && !(jetPtAK4->at(j) > getPreCutValue1("pt0Cut")) ) continue;
-	 else if( j==1 && !(jetPtAK4->at(j) > getPreCutValue1("pt1Cut")) ) continue;
-	 else if( !(jetPtAK4->at(j) > getPreCutValue1("ptCut")) ) continue;
+	 if( j==0 && !((jecFactors[j]/jetJecAK4->at(sortedJetIdx[j]))*jetPtAK4->at(sortedJetIdx[j]) > getPreCutValue1("pt0Cut")) ) continue;
+	 else if( j==1 && !((jecFactors[j]/jetJecAK4->at(sortedJetIdx[j]))*jetPtAK4->at(sortedJetIdx[j]) > getPreCutValue1("pt1Cut")) ) continue;
+	 else if( !((jecFactors[j]/jetJecAK4->at(sortedJetIdx[j]))*jetPtAK4->at(sortedJetIdx[j]) > getPreCutValue1("ptCut")) ) continue;
 
 	 TLorentzVector tempJet;
-	 tempJet.SetPtEtaPhiM(jetPtAK4->at(j),jetEtaAK4->at(j),jetPhiAK4->at(j),jetMassAK4->at(j));
+	 tempJet.SetPtEtaPhiM((jecFactors[j]/jetJecAK4->at(sortedJetIdx[j]))*jetPtAK4->at(sortedJetIdx[j]),jetEtaAK4->at(j),jetPhiAK4->at(j),jetMassAK4->at(j));
 
 	 fjInputs.push_back(fastjet::PseudoJet(tempJet.Px(),tempJet.Py(),tempJet.Pz(),tempJet.E()));
        }
@@ -153,14 +186,14 @@ void analysisClass::Loop()
        if(no_jets_ak4>=2)
 	 {
 	   if(fabs(jetEtaAK4->at(0)) < getPreCutValue1("jetFidRegion") 
-	      && jetPtAK4->at(0) > getPreCutValue1("pt0Cut"))
+	      && (jecFactors[0]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) > getPreCutValue1("pt0Cut"))
 	     {
 	       if(fabs(jetEtaAK4->at(1)) < getPreCutValue1("jetFidRegion") 
-		  && jetPtAK4->at(1) > getPreCutValue1("pt1Cut"))
+		  && (jecFactors[1]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) > getPreCutValue1("pt1Cut"))
 		 {
 		   TLorentzVector jet1, jet2;
-		   jet1.SetPtEtaPhiM(jetPtAK4->at(0),jetEtaAK4->at(0),jetPhiAK4->at(0),jetMassAK4->at(0));
-		   jet2.SetPtEtaPhiM(jetPtAK4->at(1),jetEtaAK4->at(1),jetPhiAK4->at(1),jetMassAK4->at(1));
+		   jet1.SetPtEtaPhiM((jecFactors[0]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]),jetEtaAK4->at(0),jetPhiAK4->at(0),jetMassAK4->at(0));
+		   jet2.SetPtEtaPhiM((jecFactors[1]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]),jetEtaAK4->at(1),jetPhiAK4->at(1),jetMassAK4->at(1));
 		   
 		   for(Long64_t ijet=0; ijet<no_jets_ak4; ijet++)
 		     { //jet loop for ak4
@@ -168,10 +201,10 @@ void analysisClass::Loop()
 		       
 		       if(fabs(jetEtaAK4->at(ijet)) < getPreCutValue1("jetFidRegion") 
 			  && idTAK4->at(ijet) == getPreCutValue1("tightJetID") 
-			  && jetPtAK4->at(ijet) > getPreCutValue1("ptCut"))
+			  && (jecFactors[ijet]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) > getPreCutValue1("ptCut"))
 			 {
 			   TLorentzVector currentJet;
-			   currentJet.SetPtEtaPhiM(jetPtAK4->at(ijet),jetEtaAK4->at(ijet),jetPhiAK4->at(ijet),jetMassAK4->at(ijet));   
+			   currentJet.SetPtEtaPhiM((jecFactors[ijet]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]),jetEtaAK4->at(ijet),jetPhiAK4->at(ijet),jetMassAK4->at(ijet));   
 			   
 			   double DeltaR1 = currentJet.DeltaR(jet1);
 			   double DeltaR2 = currentJet.DeltaR(jet2);
