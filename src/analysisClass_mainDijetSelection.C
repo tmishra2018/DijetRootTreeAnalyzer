@@ -88,8 +88,8 @@ void analysisClass::Loop()
    ////// If the root version is updated and rootNtupleClass regenerated,     /////
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-   //for (Long64_t jentry=0; jentry<1000;jentry++) {
+   //for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   for (Long64_t jentry=0; jentry<100000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -264,49 +264,64 @@ void analysisClass::Loop()
      fillVariableWithValue("lumi",lumi);     
      fillVariableWithValue("nVtx",nvtx);     
      fillVariableWithValue("nJet",widejets.size());
+     fillVariableWithValue("metSig",metSig);
 
      // Trigger
      int NtriggerBits = triggerResult->size();
      if( NtriggerBits > 0)
        fillVariableWithValue("passHLT",triggerResult->at(0));// HLT_PFHT900_v*    
 
-     if( no_jets_ak4 >=1 )
-       fillVariableWithValue("IdTight_j1",idTAK4->at(0));
+     if( no_jets_ak4 >=1 ){
+       fillVariableWithValue( "IdTight_j1",idTAK4->at(0));
+       fillVariableWithValue( "pTAK4_j1", jetPtAK4->at(0) );
+       fillVariableWithValue( "etaAK4_j1", jetEtaAK4->at(0));
+       fillVariableWithValue( "phiAK4_j1", jetPhiAK4->at(0));
+     }
+     if( no_jets_ak4 >=2 ){
+       fillVariableWithValue( "IdTight_j2",idTAK4->at(1));
+       fillVariableWithValue( "pTAK4_j2", jetPtAK4->at(1) );
+       fillVariableWithValue( "etaAK4_j2", jetEtaAK4->at(1));
+       fillVariableWithValue( "phiAK4_j2", jetPhiAK4->at(1));
+       fillVariableWithValue( "Dijet_MassAK4", mjjAK4) ; 
+       fillVariableWithValue( "CosThetaStarAK4", TMath::TanH( (jetEtaAK4->at(0)-jetEtaAK4->at(1))/2 )); 
+     }
 
-     if( no_jets_ak4 >=2 )
-       fillVariableWithValue("IdTight_j2",idTAK4->at(1));
-
-     if( widejets.size() >= 1 )
-       {
-         fillVariableWithValue( "pT_j1", widejets[0].Pt() );
-         fillVariableWithValue( "eta_j1", widejets[0].Eta());
+     if( widejets.size() >= 1 ){
+         fillVariableWithValue( "pTWJ_j1", widejets[0].Pt() );
+         fillVariableWithValue( "etaWJ_j1", widejets[0].Eta());
 
 	 //no cuts on these variables, just to store in output
-         fillVariableWithValue( "phi_j1", widejets[0].Phi());
+         fillVariableWithValue( "phiWJ_j1", widejets[0].Phi());
          fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfAK4->at(0));
          fillVariableWithValue( "chargedHadEnFrac_j1", jetChfAK4->at(0));
          fillVariableWithValue( "photonEnFrac_j1", jetPhfAK4->at(0));
          fillVariableWithValue( "eleEnFract_j1", jetElfAK4->at(0));
          fillVariableWithValue( "muEnFract_j1", jetMufAK4->at(0));
+         fillVariableWithValue( "chargedMult_j1", chMultAK4->at(0));
+         fillVariableWithValue( "neutrMult_j1", neMultAK4->at(0));
+         fillVariableWithValue( "photonMult_j1", phoMultAK4->at(0));
        }
 
-     if( widejets.size() >= 2 )
-       {
-         fillVariableWithValue( "pT_j2", widejets[1].Pt() );
-         fillVariableWithValue( "eta_j2", widejets[1].Eta());
+     if( widejets.size() >= 2 ){
+         fillVariableWithValue( "pTWJ_j2", widejets[1].Pt() );
+         fillVariableWithValue( "etaWJ_j2", widejets[1].Eta());
 	 fillVariableWithValue( "deltaETAjj", DeltaEtaJJWide ) ;
          fillVariableWithValue( "mjj", MJJWide ) ;
+         fillVariableWithValue( "CosThetaStarWJ", TMath::TanH( (widejets[0].Eta()-widejets[1].Eta())/2 )); 
 
 	 //no cuts on these variables, just to store in output
-         fillVariableWithValue( "phi_j2", widejets[1].Phi());	
+         fillVariableWithValue( "phiWJ_j2", widejets[1].Phi());	
          fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(1));
          fillVariableWithValue( "chargedHadEnFrac_j2", jetChfAK4->at(1));
          fillVariableWithValue( "photonEnFrac_j2", jetPhfAK4->at(1));
          fillVariableWithValue( "eleEnFract_j2", jetElfAK4->at(1));
          fillVariableWithValue( "muEnFract_j2", jetMufAK4->at(1));
+         fillVariableWithValue( "chargedMult_j2", chMultAK4->at(1));
+         fillVariableWithValue( "neutrMult_j2", neMultAK4->at(1));
+         fillVariableWithValue( "photonMult_j2", phoMultAK4->at(1));
 	 fillVariableWithValue( "deltaPHIjj", DeltaPhiJJWide ) ;
 
-	 //fillVariableWithValue( "Dijet_MassA", mjjAK8 ) ;  
+	 //fillVariableWithValue( "Dijet_MassAK8", mjjAK8 ) ;  
 	 //fillVariableWithValue( "Dijet_MassC", mjjCA8 ) ;
 	 // if(wdijet.M()<1){
 	 //    std::cout << " INV MASS IS " << wdijet.M() << std::endl;
