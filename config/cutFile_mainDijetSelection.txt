@@ -50,10 +50,10 @@ nVtx                  1             +inf                -               -       
 IdTight_j1            0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
 IdTight_j2            0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
 nJet	      	      1     	    +inf		-		-		1	31 -0.5 30.5      SAVE
-pTAK4_j1	      60	    +inf		-	        -	        1	500 0 5000        SAVE
-etaAK4_j1            -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
-pTAK4_j2	      30	    +inf		-	        -	        1	500 0 5000        SAVE
-etaAK4_j2            -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
+pTWJ_j1	      	      60	    +inf		-	        -	        1	500 0 5000        SAVE
+etaWJ_j1             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
+pTWJ_j2	      	      30	    +inf		-	        -	        1	500 0 5000        SAVE
+etaWJ_j2             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 deltaETAjj            0             +inf                -               -               1       100 0. 3.         SAVE
 mjj            	     -inf           +inf                -               -               1       1000 0 10000      SAVE
 
@@ -69,9 +69,9 @@ METoverHTAK4	     -inf	    +inf		-		-		1	1000 0 10000      SAVE
 HTAK4                -inf           +inf                -               -               1       500 0 10000       SAVE
 ptHat                -inf           +inf                -               -               1       500 0 10000       SAVE
 deltaPHIjj           -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
+pTAK4_j1	     -inf	    +inf		-	        -	        1	500 0 5000        SAVE
+etaAK4_j1            -inf           +inf                -               -               1       50  -2.5 2.5      SAVE
 phiAK4_j1  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
-pTWJ_j1	      	      60	    +inf		-	        -	        1	500 0 5000        SAVE
-etaWJ_j1             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 phiWJ_j1  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
 neutrHadEnFrac_j1    -inf           +inf                -               -               1       100 0 1           SAVE
 chargedHadEnFrac_j1  -inf           +inf                -               -               1       100 0 1           SAVE
@@ -81,9 +81,9 @@ muEnFract_j1         -inf           +inf                -               -       
 chargedMult_j1       -inf	    +inf		-		-		1	100 0 100         SAVE 
 neutrMult_j1         -inf	    +inf		-		-		1	100 0 100         SAVE 
 photonMult_j1        -inf	    +inf		-		-		1	100 0 100         SAVE 
+pTAK4_j2	     -inf	    +inf		-	        -	        1	500 0 5000        SAVE
+etaAK4_j2            -inf           +inf                -               -               1       50  -2.5 2.5      SAVE
 phiAK4_j2  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
-pTWJ_j2	      	      30	    +inf		-	        -	        1	500 0 5000        SAVE
-etaWJ_j2             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 phiWJ_j2  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
 neutrHadEnFrac_j2    -inf           +inf                -               -               1       100 0 1           SAVE
 chargedHadEnFrac_j2  -inf           +inf                -               -               1       100 0 1           SAVE

@@ -306,9 +306,9 @@ void analysisClass::Loop()
          fillVariableWithValue( "etaWJ_j2", widejets[1].Eta());
 	 fillVariableWithValue( "deltaETAjj", DeltaEtaJJWide ) ;
          fillVariableWithValue( "mjj", MJJWide ) ;
-         fillVariableWithValue( "CosThetaStarWJ", TMath::TanH( (widejets[0].Eta()-widejets[1].Eta())/2 )); 
 
 	 //no cuts on these variables, just to store in output
+         fillVariableWithValue( "CosThetaStarWJ", TMath::TanH( (widejets[0].Eta()-widejets[1].Eta())/2 )); 
          fillVariableWithValue( "phiWJ_j2", widejets[1].Phi());	
          fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(1));
          fillVariableWithValue( "chargedHadEnFrac_j2", jetChfAK4->at(1));
