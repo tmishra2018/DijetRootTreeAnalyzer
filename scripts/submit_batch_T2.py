@@ -38,7 +38,9 @@ os.system("mkdir -p batch")
 pwd = os.environ['PWD']
 
 if not opt.match:
+    print opt.input
     os.system("ls "+opt.input+" > config/lists_to_run.txt")
+    os.system("cat config/lists_to_run.txt")
 else:
     os.system("ls "+opt.input+" | grep "+opt.match+"  > config/lists_to_run.txt")
 
@@ -57,7 +59,7 @@ for line in  ins:
     outputname = "batch/submit_"+sample+".src"
     outputfile = open(outputname,'w')
     outputfile.write('#!/bin/bash\n')
-    outputfile.write('export SCRAM_ARCH=slc6_amd64_gcc481\n')
+    outputfile.write('export SCRAM_ARCH=slc6_amd64_gcc491\n')
     outputfile.write('cd '+pwd+' \n')
     outputfile.write('eval `scramv1 runtime -sh`\n')
     outputfile.write(command+"\n")
