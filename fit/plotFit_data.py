@@ -20,7 +20,7 @@ parser.add_argument("-o", "--output", type=str, dest="output", default="./",
 args = parser.parse_args()
 print args
 ############
-ROOT.gStyle.SetOptFit(0000)
+gStyle.SetOptFit(0000)
 gROOT.Reset()
 setTDRStyle()
 gROOT.ForceStyle()
@@ -34,7 +34,7 @@ massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156
 massBins = array("d",massBins_list)
 
 inputFileData = TFile("/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_2_1_DiJet/src/CMSDIJET/DijetRootTreeAnalyzer/test_fit/dijetFitResults_FuncType0_nParFit4_MC_1fb-1_Dinko.root")
-inputFitRes = TFile("mlfitgoldenDataset.root")
+inputFitRes = TFile("/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_2_1_combine/src/CMSDIJET/StatisticalTools/scripts/mlfitgoldenDataset.root")
 hist_mass = inputFileData.Get("hist_mass")
 hist_binned = inputFileData.Get("hist_binned")
 tree_fit_b = inputFitRes.Get("tree_fit_b")
