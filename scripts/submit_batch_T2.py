@@ -57,7 +57,8 @@ for line in  ins:
     outputname = "batch/submit_"+sample+".src"
     outputfile = open(outputname,'w')
     outputfile.write('#!/bin/bash\n')
-    outputfile.write('export SCRAM_ARCH=slc6_amd64_gcc481\n')
+    #outputfile.write('export SCRAM_ARCH=slc6_amd64_gcc481\n')
+    outputfile.write('export SCRAM_ARCH=slc6_amd64_gcc491\n')
     outputfile.write('cd '+pwd+' \n')
     outputfile.write('eval `scramv1 runtime -sh`\n')
     outputfile.write(command+"\n")
