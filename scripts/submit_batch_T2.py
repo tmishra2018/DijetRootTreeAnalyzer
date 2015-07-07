@@ -38,7 +38,9 @@ os.system("mkdir -p batch")
 pwd = os.environ['PWD']
 
 if not opt.match:
+    print opt.input
     os.system("ls "+opt.input+" > config/lists_to_run.txt")
+    os.system("cat config/lists_to_run.txt")
 else:
     os.system("ls "+opt.input+" | grep "+opt.match+"  > config/lists_to_run.txt")
 
