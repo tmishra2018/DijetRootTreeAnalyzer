@@ -275,12 +275,16 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_j1", jetPtAK4->at(0) );
        fillVariableWithValue( "etaAK4_j1", jetEtaAK4->at(0));
        fillVariableWithValue( "phiAK4_j1", jetPhiAK4->at(0));
+       fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(0));
+       fillVariableWithValue( "jetJecAK4_j1", jetJecAK4->at(0));
      }
      if( no_jets_ak4 >=2 ){
        fillVariableWithValue( "IdTight_j2",idTAK4->at(1));
        fillVariableWithValue( "pTAK4_j2", jetPtAK4->at(1) );
        fillVariableWithValue( "etaAK4_j2", jetEtaAK4->at(1));
        fillVariableWithValue( "phiAK4_j2", jetPhiAK4->at(1));
+       fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(1));
+       fillVariableWithValue( "jetJecAK4_j2", jetJecAK4->at(1));  
        fillVariableWithValue( "Dijet_MassAK4", mjjAK4) ; 
        fillVariableWithValue( "CosThetaStarAK4", TMath::TanH( (jetEtaAK4->at(0)-jetEtaAK4->at(1))/2 )); 
      }
@@ -296,6 +300,8 @@ void analysisClass::Loop()
          fillVariableWithValue( "photonEnFrac_j1", jetPhfAK4->at(0));
          fillVariableWithValue( "eleEnFract_j1", jetElfAK4->at(0));
          fillVariableWithValue( "muEnFract_j1", jetMufAK4->at(0));
+         fillVariableWithValue( "neutrElectromFrac_j1", jetNemfAK4->at(0));
+         fillVariableWithValue( "chargedElectromFrac_j1", jetCemfAK4->at(0));
          fillVariableWithValue( "chargedMult_j1", chMultAK4->at(0));
          fillVariableWithValue( "neutrMult_j1", neMultAK4->at(0));
          fillVariableWithValue( "photonMult_j1", phoMultAK4->at(0));
@@ -315,6 +321,8 @@ void analysisClass::Loop()
          fillVariableWithValue( "photonEnFrac_j2", jetPhfAK4->at(1));
          fillVariableWithValue( "eleEnFract_j2", jetElfAK4->at(1));
          fillVariableWithValue( "muEnFract_j2", jetMufAK4->at(1));
+         fillVariableWithValue( "neutrElectromFrac_j2", jetNemfAK4->at(1));
+         fillVariableWithValue( "chargedElectromFrac_j2", jetCemfAK4->at(1));
          fillVariableWithValue( "chargedMult_j2", chMultAK4->at(1));
          fillVariableWithValue( "neutrMult_j2", neMultAK4->at(1));
          fillVariableWithValue( "photonMult_j2", phoMultAK4->at(1));
