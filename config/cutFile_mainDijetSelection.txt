@@ -78,9 +78,13 @@ chargedHadEnFrac_j1  -inf           +inf                -               -       
 photonEnFrac_j1      -inf           +inf                -               -               1       100 0 1           SAVE
 eleEnFract_j1        -inf           +inf                -               -               1       100 0 1           SAVE
 muEnFract_j1         -inf           +inf                -               -               1       100 0 1           SAVE
+neutrElectromFrac_j1    -inf        +inf                -               -               1       100 0 1           SAVE
+chargedElectromFrac_j1  -inf        +inf                -               -               1       100 0 1           SAVE
 chargedMult_j1       -inf	    +inf		-		-		1	100 0 100         SAVE 
 neutrMult_j1         -inf	    +inf		-		-		1	100 0 100         SAVE 
 photonMult_j1        -inf	    +inf		-		-		1	100 0 100         SAVE 
+jetPtAK4matchCaloJet_j1 -inf        +inf                 -	        -	        1	500 0 5000        SAVE
+jetJecAK4_j1            -inf        +inf                -               -               1       90  0 3           SAVE
 pTAK4_j2	     -inf	    +inf		-	        -	        1	500 0 5000        SAVE
 etaAK4_j2            -inf           +inf                -               -               1       50  -2.5 2.5      SAVE
 phiAK4_j2  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
@@ -90,12 +94,16 @@ chargedHadEnFrac_j2  -inf           +inf                -               -       
 photonEnFrac_j2      -inf           +inf                -               -               1       100 0 1           SAVE
 eleEnFract_j2        -inf           +inf                -               -               1       100 0 1           SAVE
 muEnFract_j2         -inf           +inf                -               -               1       100 0 1           SAVE
+neutrElectromFrac_j2   -inf         +inf                -               -               1       100 0 1           SAVE
+chargedElectromFrac_j2 -inf         +inf                -               -               1       100 0 1           SAVE
 chargedMult_j2       -inf	    +inf		-		-		1	100 0 100         SAVE 
 neutrMult_j2         -inf	    +inf		-		-		1	100 0 100         SAVE 
 photonMult_j2        -inf	    +inf		-		-		1	100 0 100         SAVE 
+jetPtAK4matchCaloJet_j2 -inf        +inf                 -	        -	        1	500 0 5000        SAVE
+jetJecAK4_j2            -inf        +inf                -               -               1       90  0 3           SAVE
 CosThetaStarWJ	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE	
 CosThetaStarAK4	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 Dijet_MassAK4  	     -inf           +inf                -               -               1       1000 0 10000      SAVE	
-#Dijet_MassAK8  	     -inf           +inf                -               -               1       1000 0 10000      SAVE
+#Dijet_MassAK8    	-inf           +inf                -               -               1       1000 0 10000      SAVE
 
 
