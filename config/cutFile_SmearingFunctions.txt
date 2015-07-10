@@ -62,7 +62,7 @@ Parton2_pdgId	      -inf       +inf		    -	            -	            1        35
 Diparton_pT	      0          +inf		    -	            -	            1        1000 0 10000        SAVE
 Diparton_Eta	      -inf       +inf		    -	            -	            1        100 -4 4        SAVE
 Diparton_Phi	      -inf       +inf		    -	            -	            1        100 -4 4        SAVE
-Diparton_M	      -inf       +inf		    -	            -	            1        1000  0 10000        SAVE
+Diparton_M	      -inf       +inf		    -	            -	            1        100  0 10000        SAVE
 GenWideJet1_pT	      0          +inf		    -	            -	            1        500 0 5000        SAVE
 GenWideJet1_Eta	      -inf       +inf		    -	            -	            1        100 -4 4        SAVE
 GenWideJet1_Phi	      -inf       +inf		    -	            -	            1        100 -4 4        SAVE
