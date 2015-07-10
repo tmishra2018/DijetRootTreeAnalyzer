@@ -1,0 +1,10 @@
+python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "mjj [GeV]" --bins 13999 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3. --logy
+python DrawFromTree_data.py --var pTWJ_j1 --xmin 30 --xmax 1000 --xtitle "pT(j1) [GeV]" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3. --logy
+python DrawFromTree_data.py --var pTWJ_j2 --xmin 30 --xmax 1000 --xtitle "pT(j2) [GeV]" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3. --logy
+python DrawFromTree_data.py --var etaWJ_j1 --xmin -3 --xmax 3 --xtitle "#eta(j1)" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3.
+python DrawFromTree_data.py --var etaWJ_j2 --xmin -3 --xmax 3 --xtitle "#eta(j2)" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3.
+python DrawFromTree_data.py --var deltaETAjj --xmin 0 --xmax 2 --xtitle "#Delta#eta(jj)" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3.
+python DrawFromTree_data.py --var deltaPHIjj --xmin 0 --xmax 3.14 --xtitle "#Delta#phi(jj)" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3.
+python DrawFromTree_data.py --var chargedHadEnFrac_j1 --xmin 0 --xmax 1 --xtitle "Charged hadron En. fraction" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi . --logy
+python DrawFromTree_data.py --var neutrHadEnFrac_j1 --xmin 0 --xmax 1 --xtitle "Neutral hadron En.fraction" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3. --logy
+python DrawFromTree_data.py --var photonEnFrac_j1  --xmin 0 --xmax 1 --xtitle "Photon En. fraction" --bins 200 --rebin 5 --outputDir plots_4TeV_09_07_15/ --inputList list_for_plots_4TeV_09_07_15.txt --lumi 3. --logy
