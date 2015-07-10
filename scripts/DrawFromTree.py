@@ -111,9 +111,9 @@ for f in fileNames:
   print('weight : %f' % wt)
   h_allCuts.Scale(wt)
   h_allCuts.SetDirectory(0)
-  h_allCuts.SetFillColor(ROOT.kBlue-9)
-  h_allCuts.SetLineColor(ROOT.kBlue-9)
-  h_allCuts.SetMarkerColor(ROOT.kBlue-9)
+  h_allCuts.SetFillColor(9)
+  h_allCuts.SetLineColor(9)
+  h_allCuts.SetMarkerColor(9)
   hist_allCuts.append(h_allCuts)
    
   i_f += 1
@@ -156,6 +156,8 @@ print ("bkg integral all cuts = %f" % NQCD_allCuts)
 
 
 #----- Drawing  and save on file -----------------------
+
+os.system("mkdir -p "+options.outputDir)
 
 outFile = TFile(outputDir+"histo_signal_bkg_"+var+"_fromTree.root", "recreate")
 outFile.cd()
