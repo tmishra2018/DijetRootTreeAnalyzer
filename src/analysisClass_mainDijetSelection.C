@@ -89,7 +89,7 @@ void analysisClass::Loop()
      10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
 
 
-   char* HLTname[50] = {"noTrig","PFHT350","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900"};
+   char* HLTname[50] = {"noTrig","PFHT475","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900"};
    TH1F* h_mjj_HLTpass[5];
    char name_histoHLT[50];
    for (int i=0; i<5; i++){  
@@ -395,11 +395,11 @@ void analysisClass::Loop()
 	 && passedCut("mjj") 
 	 && passedCut("deltaETAjj") ){
 
-       h_mjj_HLTpass[0] -> Fill(MJJWide); //PFHT350
-       if(triggerResult->at(5)) h_mjj_HLTpass[1] -> Fill(MJJWide); //PFHT350
-       if(triggerResult->at(0)) h_mjj_HLTpass[2] -> Fill(MJJWide); //PFHT800
-       if(triggerResult->at(10)) h_mjj_HLTpass[3] -> Fill(MJJWide); //PFHT650MJJ900
-       if(triggerResult->at(0) || triggerResult->at(10)) h_mjj_HLTpass[4] -> Fill(MJJWide); //PFHT800 && PFHT650MJJ900
+       h_mjj_HLTpass[0] -> Fill(MJJWide); 
+       if(triggerResult->at(3)) h_mjj_HLTpass[1] -> Fill(MJJWide); //PFHT475
+       if(triggerResult->at(3) && triggerResult->at(0)) h_mjj_HLTpass[2] -> Fill(MJJWide); //PFHT800
+       if(triggerResult->at(3) && triggerResult->at(10)) h_mjj_HLTpass[3] -> Fill(MJJWide); //PFHT650MJJ900
+       if(triggerResult->at(3) && (triggerResult->at(0) || triggerResult->at(10))) h_mjj_HLTpass[4] -> Fill(MJJWide); //PFHT800 && PFHT650MJJ900
 
        //std::cout << "triggerResult->at(3) = " << triggerResult->at(3) << "  triggerResult->at(0) = " << triggerResult->at(0) << "  triggerResult->at(5) = " << triggerResult->at(5) << std::endl;
      }
