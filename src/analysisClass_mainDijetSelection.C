@@ -369,10 +369,17 @@ void analysisClass::Loop()
        }    
 
      //no cuts on these variables, just to store in output
+     bool isData = 0;
      if(idx_InTimeBX > -1 )
-       fillVariableWithValue("trueVtx",PileupInteractions->at(idx_InTimeBX));
+       {
+	 fillVariableWithValue("trueVtx",PileupInteractions->at(idx_InTimeBX));
+	 isData = 0; // is MC
+       }
      else
-       fillVariableWithValue("trueVtx",999);
+       {
+	 fillVariableWithValue("trueVtx",999);
+	 isData = 1;// is Data
+       }
      fillVariableWithValue("MET",met);
      double METoverHTAK4=double(met/htAK4);
      fillVariableWithValue("METoverHTAK4",METoverHTAK4);
@@ -396,11 +403,14 @@ void analysisClass::Loop()
 	 && passedCut("deltaETAjj") ){
 
        h_mjj_HLTpass[0] -> Fill(MJJWide); 
-       if(triggerResult->at(3)) h_mjj_HLTpass[1] -> Fill(MJJWide); //PFHT475
-       if(triggerResult->at(3) && triggerResult->at(0)) h_mjj_HLTpass[2] -> Fill(MJJWide); //PFHT800
-       if(triggerResult->at(3) && triggerResult->at(10)) h_mjj_HLTpass[3] -> Fill(MJJWide); //PFHT650MJJ900
-       if(triggerResult->at(3) && (triggerResult->at(0) || triggerResult->at(10))) h_mjj_HLTpass[4] -> Fill(MJJWide); //PFHT800 && PFHT650MJJ900
 
+       if(isData) // only run on data
+	 {
+	   if(triggerResult->at(3)) h_mjj_HLTpass[1] -> Fill(MJJWide); //PFHT475
+	   if(triggerResult->at(3) && triggerResult->at(0)) h_mjj_HLTpass[2] -> Fill(MJJWide); //PFHT800
+	   if(triggerResult->at(3) && triggerResult->at(10)) h_mjj_HLTpass[3] -> Fill(MJJWide); //PFHT650MJJ900
+	   if(triggerResult->at(3) && (triggerResult->at(0) || triggerResult->at(10))) h_mjj_HLTpass[4] -> Fill(MJJWide); //PFHT800 && PFHT650MJJ900
+	 }
        //std::cout << "triggerResult->at(3) = " << triggerResult->at(3) << "  triggerResult->at(0) = " << triggerResult->at(0) << "  triggerResult->at(5) = " << triggerResult->at(5) << std::endl;
      }
 
