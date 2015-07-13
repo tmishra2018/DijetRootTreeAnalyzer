@@ -79,6 +79,25 @@ void analysisClass::Loop()
    // TH1F *h_DeltaETAjj = new TH1F ("h_DeltaETAjj","",120,0,3.);
    // h_DeltaETAjj->Sumw2();
 
+   // variable binning for mjj trigger efficiency plots
+   const int nMassBins = 103;
+
+   double massBoundaries[nMassBins+1] = {1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325,
+     354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687,
+     1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509,
+     4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 
+     10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
+
+
+   char* HLTname[50] = {"noTrig","PFHT350","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900"};
+   TH1F* h_mjj_HLTpass[5];
+   char name_histoHLT[50];
+   for (int i=0; i<5; i++){  
+     sprintf(name_histoHLT,"h_mjj_HLTpass_%s",HLTname[i]);
+     h_mjj_HLTpass[i]= new TH1F(name_histoHLT,"",103,massBoundaries);
+   }
+  
+
    /////////initialize variables
 
    Long64_t nentries = fChain->GetEntriesFast();
@@ -268,7 +287,7 @@ void analysisClass::Loop()
      // Trigger
      int NtriggerBits = triggerResult->size();
      if( NtriggerBits > 0)
-       fillVariableWithValue("passHLT",triggerResult->at(0));// HLT_PFHT900_v*    
+       fillVariableWithValue("passHLT",triggerResult->at(0));// HLT_PFHT800_v*    
 
      if( no_jets_ak4 >=1 ){
        fillVariableWithValue( "IdTight_j1",idTAK4->at(0));
@@ -279,7 +298,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "jetJecAK4_j1", jetJecAK4->at(0));
      }
      if( no_jets_ak4 >=2 ){
-       fillVariableWithValue( "IdTight_j2",idTAK4->at(1));
+     fillVariableWithValue( "IdTight_j2",idTAK4->at(1));
        fillVariableWithValue( "pTAK4_j2", jetPtAK4->at(1) );
        fillVariableWithValue( "etaAK4_j2", jetEtaAK4->at(1));
        fillVariableWithValue( "phiAK4_j2", jetPhiAK4->at(1));
@@ -365,15 +384,34 @@ void analysisClass::Loop()
      
      // optional call to fill a skim with the full content of the input roottuple
      //if( passedCut("nJetFinal") ) fillSkimTree();
-     
+     if( passedCut("nVtx") 
+	 && passedCut("IdTight_j1")
+	 && passedCut("IdTight_j2")
+	 && passedCut("nJet")
+	 && passedCut("pTAK4_j1")
+	 && passedCut("etaAK4_j1")
+	 && passedCut("pTAK4_j2")
+	 && passedCut("etaAK4_j2")
+	 && passedCut("mjj") 
+	 && passedCut("deltaETAjj") ){
+
+       h_mjj_HLTpass[0] -> Fill(MJJWide); //PFHT350
+       if(triggerResult->at(5)) h_mjj_HLTpass[1] -> Fill(MJJWide); //PFHT350
+       if(triggerResult->at(0)) h_mjj_HLTpass[2] -> Fill(MJJWide); //PFHT800
+       if(triggerResult->at(10)) h_mjj_HLTpass[3] -> Fill(MJJWide); //PFHT650MJJ900
+       if(triggerResult->at(0) || triggerResult->at(10)) h_mjj_HLTpass[4] -> Fill(MJJWide); //PFHT800 && PFHT650MJJ900
+
+       //std::cout << "triggerResult->at(3) = " << triggerResult->at(3) << "  triggerResult->at(0) = " << triggerResult->at(0) << "  triggerResult->at(5) = " << triggerResult->at(5) << std::endl;
+     }
+
      // optional call to fill a skim with a subset of the variables defined in the cutFile (use flag SAVE)
      if( passedAllPreviousCuts("mjj") && passedCut("mjj") ) 
        {
 	 fillReducedSkimTree();
-	 
+
 	 // ===== Take a look at this =====
 	 // //Example on how to investigate quickly the data
- 	 // if(getVariableValue("mjj")>4000)
+	 // if(getVariableValue("mjj")>4000)
 	 //   {
 	 //     //fast creation and filling of histograms
 	 //     CreateAndFillUserTH1D("h_dphijj_mjjgt4000", 100, 0, 3.15, getVariableValue("deltaPHIjj"));
@@ -418,6 +456,9 @@ void analysisClass::Loop()
    } // End loop over events
 
    //////////write histos 
+   for (int i=0; i<5; i++){
+     h_mjj_HLTpass[i]->Write();
+   }
 
    // h_nVtx->Write();
    // h_trueVtx->Write();
@@ -437,4 +478,4 @@ void analysisClass::Loop()
    // //one could also do:   const TH1F& h = getHisto_noCuts_or_skim// and use h
 
    std::cout << "analysisClass::Loop() ends" <<std::endl;   
-}
+   }
