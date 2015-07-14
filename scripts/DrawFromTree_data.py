@@ -61,13 +61,13 @@ inputList = options.inputList
 lumi = options.lumi
 #############################
 
-CMS_lumi.extraText = "Simulation Preliminary"
+CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = str(options.lumi)+" pb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 iPos = 11
 iPeriod = 0
 #######################
-minX_mass = 119.
-maxX_mass = 1607. 
+minX_mass = 1118.
+maxX_mass = 3704. 
 
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
     
@@ -101,14 +101,14 @@ for line in lines:
   ii+=1
 
 #---- open the files --------------------
-var1 = ""
-if var=="pTWJ_j1" : var1 = "pT_j1"
-elif var=="pTWJ_j2" : var1 = "pT_j2"
-elif var=="etaWJ_j1" : var1 = "eta_j2"
-elif var=="etaWJ_j2" : var1 = "eta_j2"
-elif var=="phiWJ_j1" : var1 = "phi_j1"
-elif var=="phiWJ_j2" : var1 = "phi_j2"
-else : var1 = var
+#var1 = ""
+#if var=="pTWJ_j1" : var1 = "pT_j1"
+#elif var=="pTWJ_j2" : var1 = "pT_j2"
+#elif var=="etaWJ_j1" : var1 = "eta_j2"
+#elif var=="etaWJ_j2" : var1 = "eta_j2"
+#elif var=="phiWJ_j1" : var1 = "phi_j1"
+#elif var=="phiWJ_j2" : var1 = "phi_j2"
+#else : var1 = var
 
 i_f = 0
 for f in fileNames:
@@ -123,7 +123,7 @@ for f in fileNames:
   h_allCuts = TH1F("h_allCuts", "", bins, xmin, xmax)
   h_allCuts.Sumw2()
   tree = inf.Get('rootTupleTree/tree')
-  tree.Project(h_allCuts.GetName(), var,'deltaETAjj < 1.3')
+  tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118')
   Npassed = h_allCuts.GetEntries()
   eff = float(Npassed)/Nev
   print('eff : %f' % eff)
@@ -149,19 +149,11 @@ h_dat.SetName("h_dat")
 h_dat.SetMarkerColor(kBlack)
 h_dat.SetLineColor(kBlack)
 
-#kFactor = NDAT/NQCD
-kFactor = 1.3
-print ("kFactor = %f" % kFactor)
-
                                       
-#for i in range(0,len(fileNames)) :
-for i in range(0,9) :
-  hist_allCuts[i].Scale(kFactor)
- 
 NQCD_allCuts = hist_allCuts[0].Integral()
 
 #for i in range(0,len(fileNames)) :
-for i in range(0,9) :
+for i in range(1,9) :
   NQCD_allCuts += hist_allCuts[i].Integral()
     
 hist_allCutsQCD = hist_allCuts[0].Clone('hist_allCutsQCD')
@@ -177,6 +169,13 @@ hsQCD_allCuts = THStack('QCD_allCuts','QCD_allCuts')
 for i in range(0,9) :
   hsQCD_allCuts.Add(hist_allCuts[i])
 
+NDAT = h_dat.GetEntries()
+NQCD = hist_allCutsQCD.Integral()
+kFactor = NDAT/NQCD
+#kFactor = 1.
+print ("kFactor = %f" % kFactor)
+
+hist_allCutsQCD.Scale(kFactor)
 
 
 print ("---- After scaling signal to bkg (if not plotting mjj) -----")
@@ -195,6 +194,7 @@ integral_qcd = hist_allCutsQCD.Integral()
 #else:
 #  hist_allCutsQCD.Scale(0)
 #  print("QCD scaled to 0!")
+
 #rebin only for plot
 hist_allCutsQCD.Write()
 h_dat.Write()
@@ -207,26 +207,52 @@ if var=="mjj":
   h_dat_rebin = h_dat.Rebin(len(massBins_list)-1,var+"_data_rebin",massBins)
   hist_allCutsQCD_rebin.GetXaxis().SetRangeUser(minX_mass,maxX_mass)  
   h_dat_rebin.GetXaxis().SetRangeUser(minX_mass,maxX_mass)  
+  ## add last bin overflow
+  lastbin = h_dat_rebin.FindBin(maxX_mass-1.)
+  h_dat_rebin.SetBinContent(lastbin,h_dat_rebin.Integral(lastbin,len(massBins_list)))
+  hist_allCutsQCD_rebin.SetBinContent(lastbin,hist_allCutsQCD_rebin.Integral(lastbin,len(massBins_list)))
+
 else :
   hist_allCutsQCD.Rebin(rebin)
   h_dat.Rebin(rebin)
   hist_allCutsQCD_rebin = hist_allCutsQCD.Clone(var+"_rebin")
   h_dat_rebin = h_dat.Clone(var+"_data_rebin")
+  ## add last bin overflow
+  h_dat_rebin.SetBinContent(
+      h_dat_rebin.GetNbinsX(),
+      h_dat_rebin.GetBinContent(h_dat_rebin.GetNbinsX()) + h_dat_rebin.GetBinContent(h_dat_rebin.GetNbinsX()+1)
+      )
+  hist_allCutsQCD_rebin.SetBinContent(
+      hist_allCutsQCD_rebin.GetNbinsX(), 
+      hist_allCutsQCD_rebin.GetBinContent(hist_allCutsQCD_rebin.GetNbinsX()) + hist_allCutsQCD_rebin.GetBinContent(hist_allCutsQCD_rebin.GetNbinsX()+1)
+      )
+
 
 can_allCuts = TCanvas('can_allCuts_'+var,'can_allCuts_'+var,600,600)
 
 leg = TLegend(0.6, 0.7, 0.85, 0.85)
 leg.SetLineColor(0)
 leg.SetFillColor(0)
-leg.AddEntry(hist_allCutsQCD_rebin, "QCD", "l")
+leg.SetFillStyle(0)
+leg.AddEntry(hist_allCutsQCD_rebin, "QCD", "f")
 leg.AddEntry(h_dat_rebin, "data", "p")
 
 can_allCuts.cd()
+
+#----- pad 1 -----------
+pad1 = TPad("pad1", "pad1",0.01,0.13,0.99,0.99)  
+pad1.SetRightMargin(0.1)
+
+pad1.Draw()
+pad1.Clear()
+pad1.cd()
+
 max = hist_allCutsQCD_rebin.GetBinContent(hist_allCutsQCD_rebin.GetMaximumBin())
 
 if logy:
   gPad.SetLogy()
-  hist_allCutsQCD_rebin.SetMaximum(1000.*max)  
+  hist_allCutsQCD_rebin.SetMaximum(10.*max)  
+  h_dat_rebin.SetMaximum(10.*max)
 
 #hist_allCutsQCD.Reset()
 hist_allCutsQCD_rebin.GetXaxis().SetTitle(xtitle)
@@ -244,6 +270,51 @@ leg.Draw()
 CMS_lumi.CMS_lumi(can_allCuts, iPeriod, iPos)
 
 gPad.RedrawAxis()
+
+#-------pad 2------
+pad2 = TPad("pad2", "pad2",0.01,0.001,0.99,0.25)
+pad2.SetGrid()
+	      
+pad2.SetTopMargin(0)
+pad2.SetBottomMargin(0.4)
+pad2.SetRightMargin(0.1)
+pad2.Draw()	       
+pad2.cd()
+
+
+ratio = h_dat_rebin.Clone("ratio")
+ratio.Divide(hist_allCutsQCD_rebin)
+ratio.SetFillColor(0)
+ratio.SetLineColor(kBlack)
+ratio.SetMarkerColor(kBlack)
+ratio.GetYaxis().SetRangeUser(0., 2.)
+ratio.GetYaxis().SetNdivisions(4, kTRUE)
+ratio.GetYaxis().SetTitleFont(42)
+ratio.GetYaxis().SetTitle("data / MC")
+ratio.GetXaxis().SetTitleSize(0.2)
+ratio.GetXaxis().SetLabelSize(0.16)
+ratio.GetYaxis().SetLabelSize(0.16)
+ratio.GetYaxis().SetTitleSize(0.15)
+#ratio.GetYaxis().SetTitleOffset(0.65)
+ratio.GetXaxis().SetTitleOffset(0.8)
+ratio.Draw("p")
+
+#RedrawAxis
+pad1.cd()
+gPad.RedrawAxis()
+pad2.cd()
+gPad.RedrawAxis()
+
+can_allCuts.Write()   
+if(logy):
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.C')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.png')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.pdf')
+
+else:
+  can_allCuts.SaveAs(outputDir+var+'_allCuts.C')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts.png')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts.pdf')
 
 
 can_allCuts.Write()   
