@@ -126,11 +126,18 @@ elif var=="phiWJ_j1" : var1 = "phi_j1"
 elif var=="phiWJ_j2" : var1 = "phi_j2"
 else : var1 = var
 
+dataset1 = []
+dataset2 = []
+
 i_f = 0
 for f in fileNames:
   inf = TFile.Open(f)
   print inf.GetName()
-  
+  dataset1.append ( os.path.basename(fileNames[i_f]) )
+  dataset1[i_f] = dataset1[i_f].split("rootfile_")[1]
+  dataset1[i_f] = dataset1[i_f].split("_reduced_skim.root")[0]
+  dataset1[i_f] = dataset1[i_f].split("__")[0]
+
   Nev = inf.Get('DijetFilter/EventCount/EventCounter').GetBinContent(1)
   print ('processed events list1 : %s' % Nev)
   wt = 1.0
@@ -160,6 +167,10 @@ i_f = 0
 for f in fileNames2:
   inf = TFile.Open(f)
   print inf.GetName()
+  dataset2.append ( os.path.basename(fileNames[i_f]) )
+  dataset2[i_f] = dataset2[i_f].split("rootfile_")[1]
+  dataset2[i_f] = dataset2[i_f].split("_reduced_skim.root")[0]
+  dataset2[i_f] = dataset2[i_f].split("__")[0]
   
   Nev = inf.Get('DijetFilter/EventCount/EventCounter').GetBinContent(1)
   print ('processed events list 2: %s' % Nev)
@@ -185,19 +196,19 @@ for f in fileNames2:
 
 
 #kFactor = NDAT/NQCD
-kFactor = 1.3
+kFactor = 1.
 print ("kFactor = %f" % kFactor)
 
                                       
-for i in range(0,len(fileNames)) :
+for i in range(0,9) :
   hist_allCuts[i].Scale(kFactor)
   hist_allCuts_2[i].Scale(kFactor)
 
 
 NQCD_allCuts = hist_allCuts[0].Integral()
-NQCD_allCuts_2 = hist_allCuts_2[i].Integral()
+NQCD_allCuts_2 = hist_allCuts_2[0].Integral()
 
-for i in range(0,len(fileNames)) :
+for i in range(0,9) :
   NQCD_allCuts += hist_allCuts[i].Integral()
   NQCD_allCuts_2 += hist_allCuts_2[i].Integral()
   
@@ -205,7 +216,7 @@ for i in range(0,len(fileNames)) :
 hist_allCutsQCD = hist_allCuts[0].Clone(name1)
 hist_allCutsQCD_2 = hist_allCuts_2[0].Clone(name2)
 
-for i in range(1,len(fileNames)):
+for i in range(1,9):
   hist_allCutsQCD.Add(hist_allCuts[i])
   hist_allCutsQCD_2.Add(hist_allCuts_2[i])
 
@@ -214,8 +225,14 @@ for i in range(1,len(fileNames)):
 #for i in range(0,len(fileNames)) :
 #  hsQCD_allCuts.Add(hist_allCuts[i])
 
+for i in range(9,len(fileNames)) :
+  hist_allCuts[i].Scale(1./hist_allCuts[i].Integral())
+  hist_allCuts[i].SetName("h_"+dataset1[i])
+  hist_allCuts_2[i].Scale(1./hist_allCuts_2[i].Integral())
+  hist_allCuts_2[i].SetName("h_"+dataset2[i])
 
-print ("---- After scaling signal to bkg (if not plotting mjj) -----")
+
+##print ("---- After scaling signal to bkg (if not plotting mjj) -----")
 print ("bkg integral all cuts = %f" % NQCD_allCuts)
 print ("bkg integral all cuts 2 = %f" % NQCD_allCuts_2)
 
@@ -226,12 +243,17 @@ outFile = TFile(outputDir+"histo_signal_bkg_"+var+".root", "recreate")
 outFile.cd()
 hist_allCutsQCD.Write()
 hist_allCutsQCD_2.Write()
+for i in range(9, len(fileNames)):
+  hist_allCuts[i].Write()
+  hist_allCuts_2[i].Write()
+
 
 can_allCuts = TCanvas('can_allCuts_'+var,'can_allCuts_'+var,900,600)
 
 leg = TLegend(0.6, 0.7, 0.85, 0.85)
 leg.SetLineColor(0)
 leg.SetFillColor(0)
+leg.SetFillStyle(0)
 leg.SetBorderSize(0)
 leg.AddEntry(hist_allCutsQCD, name1, "f")
 leg.AddEntry(hist_allCutsQCD_2, name2, "l")
@@ -242,7 +264,6 @@ can_allCuts.cd()
 pad1 = TPad("pad1", "pad1",0.01,0.13,0.75,1.)  
 pad1.SetRightMargin(0.1)
 
-pad1.SetLogy()
 pad1.Draw()
 pad1.cd()
 pad1.Clear()
@@ -265,6 +286,19 @@ hist_allCutsQCD.GetYaxis().SetTitleFont(42)
 hist_allCutsQCD.GetYaxis().SetTitleSize(0.04)
 hist_allCutsQCD.GetYaxis().SetTitle(title_y)
 
+###
+title_y = "arb. units"
+for i in range(9,len(fileNames)):
+  hist_allCuts[i].GetXaxis().SetRangeUser(xmin,xmax)
+  hist_allCuts[i].GetXaxis().SetTitle(xtitle)
+  hist_allCuts[i].GetXaxis().SetTitleFont(42)
+  hist_allCuts[i].GetXaxis().SetTitleSize(0.05)
+  hist_allCuts[i].GetXaxis().SetLabelSize(0)
+  hist_allCuts[i].GetYaxis().SetTitleFont(42)
+  hist_allCuts[i].GetYaxis().SetTitleSize(0.04)
+  hist_allCuts[i].GetYaxis().SetTitle(title_y)
+
+
 #maximumBin = array('f',  [hist_allCutsQCD.GetBinContent(hist_allCutsQCD.GetMaximumBin()), hist_allCutsSig_1000.GetBinContent(hist_allCutsSig_1000.GetMaximumBin()), hist_allCutsSig_5000.GetBinContent(hist_allCutsSig_5000.GetMaximumBin()), hist_allCutsSig_8000.GetBinContent(hist_allCutsSig_8000.GetMaximumBin())])
 #max = TMath.MaxElement(4, maximumBin)
 #hist_allCutsQCD.SetMaximum(1.2*max)
@@ -272,17 +306,32 @@ hist_allCutsQCD.GetYaxis().SetTitle(title_y)
 #hist_allCutsQCD.Rebin()
 #hist_allCutsQCD_PHYS14_feb15.Rebin()
 
+hist_allCuts_rebin =[]
+hist_allCuts_2_rebin =[]
 
 if var=="mjj":
   hist_allCutsQCD_rebin = hist_allCutsQCD.Rebin(len(massBins_list)-1,name1+"_rebin",massBins)
   hist_allCutsQCD_2_rebin = hist_allCutsQCD_2.Rebin(len(massBins_list)-1,name2+"_rebin",massBins)
   hist_allCutsQCD_rebin.GetXaxis().SetRangeUser(minX_mass,maxX_mass)  
   hist_allCutsQCD_2_rebin.GetXaxis().SetRangeUser(minX_mass,maxX_mass)  
+  #hist_allCutsQCD_rebin.GetYaxis().SetRangeUser(0.1,1000000)
+  #hist_allCutsQCD_2_rebin.GetYaxis().SetRangeUser(0.1,1000000)
+  for i in range(9,len(fileNames)):
+    hist_allCuts_rebin.append( hist_allCuts[i].Rebin(len(massBins_list)-1,dataset1[i]+"_"+name1+"_rebin",massBins) )
+    hist_allCuts_2_rebin.append( hist_allCuts_2[i].Rebin(len(massBins_list)-1,dataset2[i]+"_"+name2+"_rebin",massBins) )
+    hist_allCuts_rebin[i-9].GetXaxis().SetRangeUser(1,10430)
+    hist_allCuts_2_rebin[i-9].GetXaxis().SetRangeUser(1,10430)
+
 else :
   hist_allCutsQCD.Rebin(rebin)
   hist_allCutsQCD_2.Rebin(rebin)
   hist_allCutsQCD_rebin = hist_allCutsQCD.Clone(name1+"_rebin")
   hist_allCutsQCD_2_rebin = hist_allCutsQCD_2.Clone(name2+"_rebin")
+  for i in range(9,len(fileNames)):
+    hist_allCuts[i].Rebin(rebin)
+    hist_allCuts_2[i].Rebin(rebin)
+    hist_allCuts_rebin.append(hist_allCuts[i].Clone(dataset1[i]+"_"+name1+"_rebin")) 
+    hist_allCuts_2_rebin.append(hist_allCuts_2[i].Clone(dataset2[i]+"_"+name2+"_rebin"))
 
 hist_allCutsQCD_rebin.Draw("hist")
 hist_allCutsQCD_2_rebin.Draw("hist same")
@@ -323,6 +372,49 @@ ratio.Draw()
 can_allCuts.Write()   
 can_allCuts.SaveAs(outputDir+var+'_allCuts.png')
 can_allCuts.SaveAs(outputDir+var+'_allCuts.svg')
+
+######
+# do the same for all signals
+####
+for i in range(9, len(fileNames)):
+
+  pad1.cd()
+  pad1.Clear()
+  hist_allCuts_rebin[i-9].Draw("hist")
+  hist_allCuts_2_rebin[i-9].Draw("hist same")
+  leg.Draw()
+  #gPad.RedrawAxis()
+  #draw the lumi text on the canvas
+  #CMS_lumi.CMS_lumi(pad1, iPeriod, iPos)
+
+  can_allCuts.cd()
+  #-------pad 2------
+  pad2.cd()
+  pad2.Clear()
+  ratio = hist_allCuts_rebin[i-9].Clone("ratio")
+  ratio.Divide(hist_allCuts_2_rebin[i-9])
+  ratio.SetFillColor(0)
+  ratio.SetLineColor(kBlack)
+  ratio.SetMarkerColor(kBlack)
+  ratio.Draw("p")
+  ratio.GetYaxis().SetRangeUser(0., 2.)
+  ratio.GetYaxis().SetNdivisions(4, kTRUE)
+  ratio.GetYaxis().SetTitleFont(42)
+  ratio.GetYaxis().SetTitle("#frac{"+name1+"}{"+name2+"}")
+  ratio.GetXaxis().SetTitleSize(0.2)
+  ratio.GetXaxis().SetLabelSize(0.16)
+  ratio.GetYaxis().SetLabelSize(0.16)
+  ratio.GetYaxis().SetTitleSize(0.15)
+  #ratio.GetYaxis().SetTitleOffset(0.65)
+  ratio.GetXaxis().SetTitleOffset(0.8)
+  ratio.Draw()
+
+  can_allCuts.SetName("c_"+fileNames[i])   
+  can_allCuts.Write()   
+  can_allCuts.SaveAs(outputDir+dataset1[i]+"_"+var+'_allCuts.png')
+  can_allCuts.SaveAs(outputDir+dataset1[i]+"_"+var+'_allCuts.pdf')
+
+
 can_allCuts.Close()
 
 outFile.Close()
