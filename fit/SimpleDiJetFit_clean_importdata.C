@@ -8,7 +8,9 @@ void SimpleDiJetFitV1()
   // Set TDR Style	
   gROOT->ProcessLine(".L tdrStyle.C");
   gROOT->ProcessLine("setTDRStyle()");
+ 
   gStyle->SetOptFit(1111); 
+  gROOT->ForceStyle();
 
   gRandom = new TRandom3(0);
   gRandom->SetSeed(0);
@@ -23,10 +25,10 @@ void SimpleDiJetFitV1()
   //h_w_giulia->Scale(0.0182*1000/100000);
   //h_w_giulia->SetName("h_w_giulia");
   TFile* signal_sample = new TFile("/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_2_1_DiJet/src/CMSDIJET/DijetRootTreeAnalyzer/test_fit/Resonance_Shapes_qg_PU20_13TeV_newJEC.root", "read");
-  TH1F* h_sig = (TH1F*)signal_sample->Get("h_qg_1000");
+  TH1F* h_sig = (TH1F*)signal_sample->Get("h_qg_2000");
   const Int_t nbins_sig = h_sig->GetNbinsX();
   double integral = h_sig->Integral();
-  h_sig->Scale(0.200*0.4101E+03/integral);
+  h_sig->Scale(5.608*0.1121E+02/integral);
   //cout << "n bins x sig : " << nbins_sig << endl;
   double massBinsSig[nbins_sig+1];
 //-------------
@@ -37,32 +39,37 @@ void SimpleDiJetFitV1()
   TH1D* h_w = new TH1D("h_w","", h_sig->GetNbinsX(), massBinsSig);
   for (int i=1; i<nbins_sig+1; i++ ){
     double bincontent = h_sig->GetBinContent(i)/h_sig->GetBinWidth(i);
-    cout << "content bin " << i << " = " << bincontent << endl;
+    //cout << "content bin " << i << " = " << bincontent << endl;
     h_w->SetBinContent(i, bincontent );
   } 
   h_w->Print();
   //cout << "maximum bin h_sig : " << h_sig->GetMaximumBin() << "  maximum bin h_w: " << h_w->GetMaximumBin() << endl; 
   //cout << "maximum bin h_sig center: " << h_sig->GetBinCenter(h_sig->GetMaximumBin()) << "  maximum bin h_w center: " << h_w->GetBinCenter(h_w->GetMaximumBin()) << endl; 
   
-  
+  //pseudodata
+  //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_2_1_DiJet/src/CMSDIJET/DijetRootTreeAnalyzer/test_fit/dijetFitResults_FuncType0_nParFit4_MC_1fb-1_Dinko.root";
   
   // data all  
   //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_run245155/histo_data_mjj_fromTree.root";
   //char input_root_file[500] = "../scripts/histo_data_mjj_fromTree_run246908_247398.root";
   //char input_root_file[500] = "/cmshome/fpreiato/CMSSW_7_4_3/src/CMSDIJET/DijetRootTreeAnalyzer/output/Data2015/UnstableBeam/Plot/histo_data_mjj_fromTree.root";
   //char input_root_file[500] = "../scripts/histo_data_mjj_fromTree_run246908_247398.root";
-  char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_Complete0T/histo_data_mjj_fromTree.root";
+  //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_Complete0T/histo_data_mjj_fromTree.root";
+char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_withSF_13_07_15/histo_data_mjj_fromTree.root";
 
   char fileNameSuffix[500] = "data"; //i.e. run period
   //char fileNameSuffix[500] = "MC_10fb-1"; //i.e. run period
 
   //char input_1Dhistogram[500] = "hist_allCutsQCD";
+  //char input_1Dhistogram[500] = "hist_mass_1GeV";
   char input_1Dhistogram[500] = "h_dat";
-  double minX_mass = 119.;
+  double minX_mass = 1118.;
   //1 fb -1
-  double maxX_mass = 1607.;
+  //double maxX_mass = 6099.;
   //10 fb-1
   //double maxX_mass = 7000.;
+  ////////
+  double maxX_mass = 3416.;
 
 
   //Fit functions
@@ -101,6 +108,7 @@ void SimpleDiJetFitV1()
     binerror = hist_binned->GetBinError(i);
     hist_mass->SetBinContent(i,bincontent/binwidth);   
     hist_mass->SetBinError(i,binerror/binwidth);   
+    cout << "content bin " << i << " = " <<  hist_mass->GetBinContent(i) << endl;
   }
 
   //hist_mass->Draw();
@@ -122,19 +130,21 @@ void SimpleDiJetFitV1()
       //M1Bkg->SetParameter(0,0.00073);
       //10 fb-1
       //M1Bkg->SetParameter(0,0.0073);
-      //0.7 pb-1
-      M1Bkg->SetParameter(0,0.00000073);
-      M1Bkg->SetParameter(1,5.241);
-      M1Bkg->SetParameter(2,7.01);
+      // pb-1
+      M1Bkg->SetParameter(0,0.08);
+      M1Bkg->SetParameter(1,28);
+      M1Bkg->SetParameter(2,2.8);
       M1Bkg->SetParameter(3,0.2595);
 
       //1 fb-1
-      M1Bkg->SetParLimits(0,0,0.3);
+      M1Bkg->SetParLimits(0,0.,10);
       //10 fb-1
       //M1Bkg->SetParLimits(0,0,1.);
-      M1Bkg->SetParLimits(1,0,8.);
-      M1Bkg->SetParLimits(2,6.,9.);
-      M1Bkg->SetParLimits(3,0,0.8);
+      M1Bkg->SetParLimits(1,0.,10000);
+      M1Bkg->SetParLimits(2,1.,10000);
+      M1Bkg->SetParLimits(3,0.,10000);
+
+      //M1Bkg->FixParameter(3,0.);
     }
 
 
@@ -201,6 +211,7 @@ void SimpleDiJetFitV1()
 	  if( data == 0 )
 	    {
 	      err_data = 1.8 / hist_mass->GetBinWidth(bin) ; //giulia : perche`??
+	      hist_mass->SetBinError(bin, err_data);
 	    }
 	  //double fit = M1Bkg->Eval(hist_mass->GetBinCenter(bin));
  	  double fit = M1Bkg->Integral(hist_mass->GetXaxis()->GetBinLowEdge(bin) 
@@ -241,7 +252,7 @@ void SimpleDiJetFitV1()
   Canvas1->cd();
   Canvas1->SetLogy();
   hist_mass->GetYaxis()->SetTitle("Events / bin width");
-  hist_mass->Draw();  
+  hist_mass->Draw("PE0");  
   M1Bkg->SetLineColor(2);
   M1Bkg->Draw("same");     
 
@@ -285,7 +296,7 @@ void SimpleDiJetFitV1()
   TPaveText *pave_fit = new TPaveText(0.18,0.15,0.40,0.27,"NDC");
   pave_fit->AddText(" #sqrt{s} = 13 TeV");
   pave_fit->AddText("|#eta| < 2.5, |#Delta#eta| < 1.3");
-  pave_fit->AddText("M_{jj} > 119 GeV");
+  pave_fit->AddText("M_{jj} > 1118 GeV");
   pave_fit->AddText("Wide Jets");
   pave_fit->SetFillColor(0);
   pave_fit->SetLineColor(0);
@@ -321,8 +332,8 @@ void SimpleDiJetFitV1()
   pt3->SetLineColor(0);
   pt3->SetTextAlign(12);
   pt3->SetTextSize(0.035);
+  TText *text3 = pt3->AddText("L= 5.608 pb^{-1}");
   //TText *text3 = pt3->AddText("L= 1 fb^{-1}");
-  //TText *text3 = pt3->AddText("L= 10 fb^{-1}");
 
   TH1F *vFrame = p11_1->DrawFrame(minX_mass,0.000000001,maxX_mass,10.0);
 
@@ -359,14 +370,15 @@ void SimpleDiJetFitV1()
 
   TLegend *leg = new TLegend(0.5564991,0.4,0.8903575,0.575812);
   leg->SetTextSize(0.03146853);
-  leg->SetLineColor(1);
+  leg->SetLineColor(0);
   leg->SetLineStyle(1);
   leg->SetLineWidth(1);
   leg->SetFillColor(0);
+  leg->SetFillStyle(0);
   leg->SetMargin(0.35);
   leg->AddEntry(hist_mass,"data" ,"PL");
   leg->AddEntry(M1Bkg,"fit to data","L");
-  leg->AddEntry(h_w,"q* resonance M = 1000 GeV","L");
+  leg->AddEntry(h_w,"q* resonance M = 2000 GeV","L");
   leg->Draw("same");
 
   pt1->Draw("same"); 
