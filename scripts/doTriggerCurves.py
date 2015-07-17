@@ -265,7 +265,7 @@ g_ineff[1].Draw("PL SAME")
 g_ineff[2].Draw("PL SAME")
 l.Draw()
 #draw the lumi text on the canvas
-CMS_lumi.CMS_lumi(can_allCuts, iPeriod, iPos)
+CMS_lumi.CMS_lumi(c_ineff, iPeriod, iPos)
 
 c_ineff.SaveAs("trigger_ineff_MC.png")
 
@@ -286,7 +286,7 @@ g_eff[1].Draw("P SAME")
 g_eff[2].Draw("P SAME")
 l.Draw()
 #draw the lumi text on the canvas
-CMS_lumi.CMS_lumi(can_allCuts, iPeriod, iPos)
+CMS_lumi.CMS_lumi(c, iPeriod, iPos)
 
 c.SaveAs("triggerCurves_MC.png")
 
@@ -297,7 +297,7 @@ g_eff[1].Draw("P SAME")
 g_eff[2].Draw("P SAME")
 l.Draw()
 #draw the lumi text on the canvas
-CMS_lumi.CMS_lumi(can_allCuts, iPeriod, iPos)
+CMS_lumi.CMS_lumi(c, iPeriod, iPos)
 c.SaveAs("triggerCurves_MC_zoom.png")
 
 
@@ -324,7 +324,7 @@ l2.AddEntry(h_mjj_HLTpass_PFHT650MJJ900_all,"PFHT650MJJ900","l")
 l2.AddEntry(h_mjj_HLTpass_PFHT900_OR_PFHT650MJJ900_all,"PFHT900_OR_PFHT650MJJ900","l")
 l2.Draw()
 #draw the lumi text on the canvas
-CMS_lumi.CMS_lumi(can_allCuts, iPeriod, iPos)
+CMS_lumi.CMS_lumi(c2, iPeriod, iPos)
 
 c2.SaveAs("triggerPass_MC.png")
 
