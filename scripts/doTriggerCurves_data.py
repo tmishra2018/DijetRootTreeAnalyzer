@@ -63,8 +63,11 @@ MODE = args.MODE
 outputDir = args.outputDir
 #####################
 
+minX_mass = 526
+maxX_mass = 2438 
+
 CMS_lumi.extraText = "Simulation Preliminary"
-CMS_lumi.lumi_sqrtS = str(LUMI)+" fb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+CMS_lumi.lumi_sqrtS = str(LUMI)+" pb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 iPos = 11
 iPeriod = 0
 
@@ -273,7 +276,9 @@ g_ineff[0].Draw("APL")
 g_ineff[1].Draw("PL SAME")
 g_ineff[2].Draw("PL SAME")
 l.Draw()
-c_ineff.SaveAs(outputDir+"/trigger_ineff_MC.png")
+#draw the lumi text on the canvas
+CMS_lumi.CMS_lumi(c_ineff, iPeriod, iPos)
+c_ineff.SaveAs(outputDir+"/trigger_ineff_data.png")
 
 g_eff[0].SetMarkerStyle(20)
 g_eff[1].SetMarkerStyle(21)
@@ -283,7 +288,8 @@ g_eff[1].SetMarkerColor(2)
 g_eff[2].SetMarkerColor(3)
 g_eff[0].GetXaxis().SetTitle("mjj [GeV]")
 g_eff[0].GetYaxis().SetTitle("efficiency")
-g_eff[0].GetXaxis().SetRangeUser(526,6099)
+g_eff[0].GetXaxis().SetRangeUser(minX_mass,maxX_mass)
+g_eff[0].GetYaxis().SetRangeUser(0,1.3)
 
 c = TCanvas("c","",600,600)
 c.cd()
@@ -291,16 +297,20 @@ g_eff[0].Draw("AP")
 g_eff[1].Draw("P SAME")
 g_eff[2].Draw("P SAME")
 l.Draw()
+#draw the lumi text on the canvas
+CMS_lumi.CMS_lumi(c, iPeriod, iPos)
 
-c.SaveAs(outputDir+"/triggerCurves_MC.png")
+c.SaveAs(outputDir+"/triggerCurves_data.png")
 
-g_eff[0].GetXaxis().SetRangeUser(526,2037)
-g_eff[0].GetYaxis().SetRangeUser(0.8,1.02)
+g_eff[0].GetXaxis().SetRangeUser(minX_mass,maxX_mass)
+g_eff[0].GetYaxis().SetRangeUser(0.8,1.05)
 g_eff[0].Draw("AP")
 g_eff[1].Draw("P SAME")
 g_eff[2].Draw("P SAME")
 l.Draw()
-c.SaveAs(outputDir+"/triggerCurves_MC_zoom.png")
+#draw the lumi text on the canvas
+CMS_lumi.CMS_lumi(c, iPeriod, iPos)
+c.SaveAs(outputDir+"/triggerCurves_data_zoom.png")
 
 
 h_mjj_HLTpass_PFHT475_all.SetLineColor(1)  
@@ -309,7 +319,7 @@ h_mjj_HLTpass_PFHT650MJJ900_all.SetLineColor(3)
 h_mjj_HLTpass_PFHT800_OR_PFHT650MJJ900_all.SetLineColor(4)    
 h_mjj_HLTpass_PFHT475_all.GetXaxis().SetTitle("mjj [GeV]")  
 h_mjj_HLTpass_PFHT475_all.GetYaxis().SetTitle("events")  
-h_mjj_HLTpass_PFHT475_all.GetXaxis().SetRangeUser(526,7060)  
+h_mjj_HLTpass_PFHT475_all.GetXaxis().SetRangeUser(minX_mass,maxX_mass)  
 
 c2 = TCanvas("c2","",600,600)
 c2.cd()
@@ -325,11 +335,13 @@ l2.AddEntry(h_mjj_HLTpass_PFHT800_all,"PFHT800","l")
 l2.AddEntry(h_mjj_HLTpass_PFHT650MJJ900_all,"PFHT650MJJ900","l")
 l2.AddEntry(h_mjj_HLTpass_PFHT800_OR_PFHT650MJJ900_all,"PFHT800_OR_PFHT650MJJ900","l")
 l2.Draw()
+#draw the lumi text on the canvas
+CMS_lumi.CMS_lumi(c2, iPeriod, iPos)
 
-c2.SaveAs(outputDir+"/triggerPass_MC.png")
+c2.SaveAs(outputDir+"/triggerPass_data.png")
 
 
-file_out = TFile(outputDir+"/triggerCurves_MC.root","recreate")
+file_out = TFile(outputDir+"/triggerCurves_data.root","recreate")
 g_eff[0].Write()
 g_eff[1].Write()
 g_eff[2].Write()
