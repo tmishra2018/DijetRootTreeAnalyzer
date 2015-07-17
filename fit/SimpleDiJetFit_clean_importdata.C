@@ -9,12 +9,13 @@ void SimpleDiJetFitV1()
   gROOT->ProcessLine(".L tdrStyle.C");
   gROOT->ProcessLine("setTDRStyle()");
  
-  gStyle->SetOptFit(1111); 
+  gStyle->SetOptFit(1100); 
   gROOT->ForceStyle();
 
   gRandom = new TRandom3(0);
   gRandom->SetSeed(0);
 
+  double lumi = 21.239;
 
   //########################
   //##### User Options #####
@@ -28,7 +29,7 @@ void SimpleDiJetFitV1()
   TH1F* h_sig = (TH1F*)signal_sample->Get("h_qg_2000");
   const Int_t nbins_sig = h_sig->GetNbinsX();
   double integral = h_sig->Integral();
-  h_sig->Scale(5.608*0.1121E+02/integral);
+  h_sig->Scale(lumi*5./integral);
   //cout << "n bins x sig : " << nbins_sig << endl;
   double massBinsSig[nbins_sig+1];
 //-------------
@@ -38,7 +39,7 @@ void SimpleDiJetFitV1()
 
   TH1D* h_w = new TH1D("h_w","", h_sig->GetNbinsX(), massBinsSig);
   for (int i=1; i<nbins_sig+1; i++ ){
-    double bincontent = h_sig->GetBinContent(i)/h_sig->GetBinWidth(i);
+    double bincontent = h_sig->GetBinContent(i)/(h_sig->GetBinWidth(i) * lumi);
     //cout << "content bin " << i << " = " << bincontent << endl;
     h_w->SetBinContent(i, bincontent );
   } 
@@ -55,7 +56,7 @@ void SimpleDiJetFitV1()
   //char input_root_file[500] = "/cmshome/fpreiato/CMSSW_7_4_3/src/CMSDIJET/DijetRootTreeAnalyzer/output/Data2015/UnstableBeam/Plot/histo_data_mjj_fromTree.root";
   //char input_root_file[500] = "../scripts/histo_data_mjj_fromTree_run246908_247398.root";
   //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_Complete0T/histo_data_mjj_fromTree.root";
-char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_withSF_13_07_15/histo_data_mjj_fromTree.root";
+char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_withSF_16_07_15/all/histo_data_mjj_fromTree.root";
 
   char fileNameSuffix[500] = "data"; //i.e. run period
   //char fileNameSuffix[500] = "MC_10fb-1"; //i.e. run period
@@ -69,8 +70,7 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   //10 fb-1
   //double maxX_mass = 7000.;
   ////////
-  double maxX_mass = 3416.;
-
+  double maxX_mass = 5253.;
 
   //Fit functions
   // 0: DEFAULT (4 par.) - "( [0]*TMath::Power(1-x/8000,[1]) ) / ( TMath::Power(x/8000,[2]+[3]*log(x/8000)) )" 
@@ -106,8 +106,8 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
     bincontent = hist_binned->GetBinContent(i);
     binwidth = hist_binned->GetBinWidth(i);
     binerror = hist_binned->GetBinError(i);
-    hist_mass->SetBinContent(i,bincontent/binwidth);   
-    hist_mass->SetBinError(i,binerror/binwidth);   
+    hist_mass->SetBinContent(i,bincontent/(binwidth*lumi));   
+    hist_mass->SetBinError(i,binerror/(binwidth*lumi));   
     cout << "content bin " << i << " = " <<  hist_mass->GetBinContent(i) << endl;
   }
 
@@ -210,7 +210,7 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
 	  double err_data = hist_mass->GetBinError(bin);
 	  if( data == 0 )
 	    {
-	      err_data = 1.8 / hist_mass->GetBinWidth(bin) ; //giulia : perche`??
+	      err_data = 1.8 / (hist_mass->GetBinWidth(bin) * lumi) ; //giulia : perche`??
 	      hist_mass->SetBinError(bin, err_data);
 	    }
 	  //double fit = M1Bkg->Eval(hist_mass->GetBinCenter(bin));
@@ -251,7 +251,8 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   TCanvas *Canvas1 = new TCanvas("Canvas1","Canvas1",11,51,700,500);
   Canvas1->cd();
   Canvas1->SetLogy();
-  hist_mass->GetYaxis()->SetTitle("Events / bin width");
+  //hist_mass->GetYaxis()->SetTitle("Events / bin width");
+  hist_mass->GetYaxis()->SetTitle("d#sigma / dm (pb/GeV)");
   hist_mass->Draw("PE0");  
   M1Bkg->SetLineColor(2);
   M1Bkg->Draw("same");     
@@ -293,8 +294,8 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   p11_1->SetTopMargin(0.05);
 
   // Pave text
-  TPaveText *pave_fit = new TPaveText(0.18,0.15,0.40,0.27,"NDC");
-  pave_fit->AddText(" #sqrt{s} = 13 TeV");
+  TPaveText *pave_fit = new TPaveText(0.1558691,0.03735043,0.3750171,0.1570085,"NDC");
+  //pave_fit->AddText(" #sqrt{s} = 13 TeV");
   pave_fit->AddText("|#eta| < 2.5, |#Delta#eta| < 1.3");
   pave_fit->AddText("M_{jj} > 1118 GeV");
   pave_fit->AddText("Wide Jets");
@@ -303,7 +304,7 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   pave_fit->SetFillStyle(0);
   pave_fit->SetBorderSize(0);
   pave_fit->SetTextFont(42);
-  pave_fit->SetTextSize(0.03);
+  pave_fit->SetTextSize(0.035);
   pave_fit->SetTextAlign(12); 
 
 
@@ -314,7 +315,7 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   pt1->SetLineColor(0);
   pt1->SetTextAlign(12);
   pt1->SetTextSize(0.035);
-  TText *text = pt1->AddText("CMS");
+  TText *text = pt1->AddText("CMS Preliminary");
 
   TPaveText *pt2 = new TPaveText(0.45,0.96,0.65,0.99,"brNDC");
   pt2->SetBorderSize(0);
@@ -332,7 +333,7 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   pt3->SetLineColor(0);
   pt3->SetTextAlign(12);
   pt3->SetTextSize(0.035);
-  TText *text3 = pt3->AddText("L= 5.608 pb^{-1}");
+  TText *text3 = pt3->AddText("L= 21.239 pb^{-1}");
   //TText *text3 = pt3->AddText("L= 1 fb^{-1}");
 
   TH1F *vFrame = p11_1->DrawFrame(minX_mass,0.000000001,maxX_mass,10.0);
@@ -368,7 +369,8 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   h_w->SetLineStyle(2);
   h_w->Draw("same");
 
-  TLegend *leg = new TLegend(0.5564991,0.4,0.8903575,0.575812);
+//TLegend *leg = new TLegend(0.5564991,0.4,0.8903575,0.575812);
+  TLegend *leg = new TLegend(0.5564991,0.5,0.8903575,0.7);
   leg->SetTextSize(0.03146853);
   leg->SetLineColor(0);
   leg->SetLineStyle(1);
@@ -378,7 +380,7 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   leg->SetMargin(0.35);
   leg->AddEntry(hist_mass,"data" ,"PL");
   leg->AddEntry(M1Bkg,"fit to data","L");
-  leg->AddEntry(h_w,"q* resonance M = 2000 GeV","L");
+  leg->AddEntry(h_w,"q* (2 TeV, #sigma = 5 pb)","L");
   leg->Draw("same");
 
   pt1->Draw("same"); 
@@ -477,15 +479,18 @@ char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Di
   sprintf(c2_fileName,"fitresiduals_vs_mass_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
   char c3_fileName[200];
   sprintf(c3_fileName,"fitresiduals_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
-  char c4_fileName[200];
-  sprintf(c4_fileName,"fitAndResiduals_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
+  char c4_fileName_1[200];
+  char c4_fileName_2[200];
+  sprintf(c4_fileName_1,"fitAndResiduals_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
+  sprintf(c4_fileName_2,"fitAndResiduals_FuncType%d_nParFit%d_%s.C",FunctionType,nPar,fileNameSuffix);
 
 
   Canvas0->SaveAs(c0_fileName);
   Canvas1->SaveAs(c1_fileName);
   Canvas2->SaveAs(c2_fileName);
   Canvas3->SaveAs(c3_fileName);
-  c->SaveAs(c4_fileName);
+  c->SaveAs(c4_fileName_1);
+  c->SaveAs(c4_fileName_2);
 
 }
 
