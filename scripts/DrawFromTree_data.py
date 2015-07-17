@@ -67,7 +67,7 @@ iPos = 11
 iPeriod = 0
 #######################
 minX_mass = 1118.
-maxX_mass = 3704. 
+maxX_mass = 5877. 
 
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
     
@@ -123,7 +123,18 @@ for f in fileNames:
   h_allCuts = TH1F("h_allCuts", "", bins, xmin, xmax)
   h_allCuts.Sumw2()
   tree = inf.Get('rootTupleTree/tree')
+  #standard
   tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118')
+  # "peak mjj 2 TeV"
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1856. && mjj < 2332.')
+  #MET 200-300 GeV
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 && MET > 200 && MET < 300')
+  #EE
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 &&  TMath::Abs(etaWJ_j1)>1.4 &&  TMath::Abs(etaWJ_j2)>1.4')
+  #BB
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 &&  TMath::Abs(etaWJ_j1)<1.4 &&  TMath::Abs(etaWJ_j2)<1.4')
+  #EB or BE
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 && ( (TMath::Abs(etaWJ_j1)>1.4 &&  TMath::Abs(etaWJ_j2)<1.4) || (TMath::Abs(etaWJ_j1)<1.4 &&  TMath::Abs(etaWJ_j2)>1.4) )')
   Npassed = h_allCuts.GetEntries()
   eff = float(Npassed)/Nev
   print('eff : %f' % eff)
@@ -170,7 +181,8 @@ for i in range(0,9) :
   hsQCD_allCuts.Add(hist_allCuts[i])
 
 NDAT = h_dat.GetEntries()
-NQCD = hist_allCutsQCD.Integral()
+NQCD = hist_allCutsQCD.Integral(0,hist_allCutsQCD.GetNbinsX()+1)
+## k factor calculated including overflow and underflow
 kFactor = NDAT/NQCD
 #kFactor = 1.
 print ("kFactor = %f" % kFactor)
@@ -199,10 +211,10 @@ integral_qcd = hist_allCutsQCD.Integral()
 hist_allCutsQCD.Write()
 h_dat.Write()
 
-#Rebin only for the plots
+#Rebin only for the plots, add last bin overflow only for the plot
 #hist_allCutsQCD.Rebin(rebin)
 #h_dat.Rebin(rebin)
-if var=="mjj":
+if var=="mjj" and rebin==-1:
   hist_allCutsQCD_rebin = hist_allCutsQCD.Rebin(len(massBins_list)-1,var+"_rebin",massBins)
   h_dat_rebin = h_dat.Rebin(len(massBins_list)-1,var+"_data_rebin",massBins)
   hist_allCutsQCD_rebin.GetXaxis().SetRangeUser(minX_mass,maxX_mass)  
@@ -251,8 +263,12 @@ max = hist_allCutsQCD_rebin.GetBinContent(hist_allCutsQCD_rebin.GetMaximumBin())
 
 if logy:
   gPad.SetLogy()
-  hist_allCutsQCD_rebin.SetMaximum(10.*max)  
-  h_dat_rebin.SetMaximum(10.*max)
+  hist_allCutsQCD_rebin.SetMaximum(100.*max)  
+  h_dat_rebin.SetMaximum(100.*max)
+else:
+  hist_allCutsQCD_rebin.SetMaximum(max + 0.3*max)
+  h_dat_rebin.SetMaximum(max + 0.3*max)
+
 
 #hist_allCutsQCD.Reset()
 hist_allCutsQCD_rebin.GetXaxis().SetTitle(xtitle)
@@ -261,8 +277,8 @@ h_dat_rebin.GetXaxis().SetTitle(xtitle)
 #max = TMath.MaxElement(2, maximumBin)
 #hist_allCutsQCD_rebin.SetMaximum(1.2*max)
 hist_allCutsQCD_rebin.SetMinimum(0.0001)
-h_dat_rebin.Draw("p")
-hist_allCutsQCD_rebin.Draw("hist same")
+#h_dat_rebin.Draw("p")
+hist_allCutsQCD_rebin.Draw("hist")
 h_dat_rebin.Draw("p same")
 leg.Draw()
 
@@ -310,6 +326,11 @@ if(logy):
   can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.C')
   can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.png')
   can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.pdf')
+if(rebin == -1):
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_varBin.C')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_varBin.png')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_varBin.pdf')
+
 
 else:
   can_allCuts.SaveAs(outputDir+var+'_allCuts.C')
@@ -318,8 +339,6 @@ else:
 
 
 can_allCuts.Write()   
-can_allCuts.SaveAs(outputDir+var+'_allCuts.png')
-can_allCuts.SaveAs(outputDir+var+'_allCuts.svg')
 can_allCuts.Close()
 
 outFile.Close()
