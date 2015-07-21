@@ -131,7 +131,7 @@ for line in  ins:
     outputfile.write(command+"\n")
     print outputname 
     if opt.interactive==False:
-      os.system("bsub -q "+opt.queue+" -o batch/"+logfile+" source "+pwd+"/"+outputname)
+      os.system("bsub -q "+opt.queue+" -o "+logfile+" source "+pwd+"/"+outputname)
     else:
       print logfile
       if imc==0: os.system(command+" >&! "+logfile+"&")
