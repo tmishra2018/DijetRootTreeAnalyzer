@@ -183,8 +183,8 @@ for i in range(0,9) :
 NDAT = h_dat.GetEntries()
 NQCD = hist_allCutsQCD.Integral(0,hist_allCutsQCD.GetNbinsX()+1)
 ## k factor calculated including overflow and underflow
-kFactor = NDAT/NQCD
-#kFactor = 1.
+#kFactor = NDAT/NQCD
+kFactor = 1.
 print ("kFactor = %f" % kFactor)
 
 hist_allCutsQCD.Scale(kFactor)
@@ -223,6 +223,19 @@ if var=="mjj" and rebin==-1:
   lastbin = h_dat_rebin.FindBin(maxX_mass-1.)
   h_dat_rebin.SetBinContent(lastbin,h_dat_rebin.Integral(lastbin,len(massBins_list)))
   hist_allCutsQCD_rebin.SetBinContent(lastbin,hist_allCutsQCD_rebin.Integral(lastbin,len(massBins_list)))
+  filetxt_data = open(outputDir+"/DijetMassSpectrum_data_events_CMS_13TeV_"+str(options.lumi)+"pb-1.txt","w+")  
+  filetxt_mc = open(outputDir+"/DijetMassSpectrum_mc_events_CMS_13TeV_"+str(options.lumi)+"pb-1.txt","w+")  
+  filetxt_data.write("########################################################################################\n")
+  filetxt_data.write("#binLow(GeV)    binHigh(GeV)    events    errLow (evt)    errUp (evt)\n")
+  filetxt_data.write("########################################################################################\n")
+  filetxt_mc.write("########################################################################################\n")
+  filetxt_mc.write("#binLow(GeV)    binHigh(GeV)    events    errLow (evt)    errUp (evt)\n")
+  filetxt_mc.write("########################################################################################\n")
+  for i in range(1,len(massBins_list)):
+    filetxt_data.write(str(h_dat_rebin.GetXaxis().GetBinLowEdge(i))+"     "+str(h_dat_rebin.GetXaxis().GetBinUpEdge(i))+"      "+str(h_dat_rebin.GetBinContent(i))+"        "+str(h_dat_rebin.GetBinError(i))+"      "+str(h_dat_rebin.GetBinError(i))+"\n")
+    filetxt_mc.write(str(hist_allCutsQCD_rebin.GetXaxis().GetBinLowEdge(i))+"     "+str(hist_allCutsQCD_rebin.GetXaxis().GetBinUpEdge(i))+"      "+str(hist_allCutsQCD_rebin.GetBinContent(i))+"        "+str(hist_allCutsQCD_rebin.GetBinError(i))+"      "+str(hist_allCutsQCD_rebin.GetBinError(i))+"\n")
+  filetxt_data.close() 
+  filetxt_mc.close() 
 
 else :
   hist_allCutsQCD.Rebin(rebin)
