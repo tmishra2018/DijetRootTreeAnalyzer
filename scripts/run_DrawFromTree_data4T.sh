@@ -1,6 +1,12 @@
-outputdir="plots_data4T_withSF_16_07_15/all/"
-list="list_for_plots_data4T_16_07_15.txt"
-lumi="21.239"
+#outputdir="plots_data4T_withSF_16_07_15/all/"
+#list="list_for_plots_data4T_16_07_15.txt"
+#lumi="21.239"
+#outputdir="plots_data4T_withSF_19_07_15/all/"
+#list="list_for_plots_data4T_19_07_15.txt"
+outputdir="plots_data4T_JEC_MC_plus5percent/"
+list="list_for_plots_data4T_JEC_MC_plus5percent.txt"
+lumi="37"
+
 #python DrawFromTree_data.py --var mjj --xmin 1200 --xmax 2500 --xtitle "mjj [GeV]" --bins 1300  --rebin 20 --outputDir $outputdir --inputList $list --lumi $lumi --logy
 #python DrawFromTree_data.py --var mjj --xmin 1200 --xmax 2500 --xtitle "mjj [GeV]" --bins 1300 --rebin 20 --outputDir $outputdir --inputList $list --lumi $lumi 
 python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "mjj [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList $list --lumi $lumi --logy
@@ -38,6 +44,8 @@ python DrawFromTree_data.py --var neutrMult_j2  --xmin 0 --xmax 50 --xtitle "neu
 python DrawFromTree_data.py --var photonMult_j2 --xmin 0 --xmax 50 --xtitle "photon mult. j2" --bins 50 --outputDir $outputdir --inputList $list --lumi $lumi --logy        
 python DrawFromTree_data.py --var jetPtAK4matchCaloJet_j2  --xmin 30 --xmax 5000 --xtitle "pT(j2)calo match [GeV]" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
 python DrawFromTree_data.py --var CosThetaStarWJ --xmin -1 --xmax 1  --xtitle "cos #theta *" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
-python DrawFromTree_data.py --var nJetsAK4 --xmin 0 --xmax 6  --xtitle "N jets" --bins 6  --outputDir $outputdir --inputList $list --lumi $lumi 
+python DrawFromTree_data.py --var  Nak4 --xmin 0 --xmax 6  --xtitle "N jets" --bins 6  --outputDir $outputdir --inputList $list --lumi $lumi 
 python DrawFromTree_data.py --var  phiWJ_j1  --xmin -3.1415 --xmax 3.1415  --xtitle "#phi (j1)" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
 python DrawFromTree_data.py --var  phiWJ_j2  --xmin -3.1415 --xmax 3.1415  --xtitle "#phi (j2)" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
+python DrawFromTree_data.py --var  massWJ_j1  --xmin 0 --xmax 200  --xtitle "#m (j1) [GeV]" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
+python DrawFromTree_data.py --var  massWJ_j2  --xmin 0 --xmax 200  --xtitle "#m (j2) [GeV]" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
