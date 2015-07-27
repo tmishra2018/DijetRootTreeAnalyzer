@@ -26,9 +26,13 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   // For JECs
   if( int(getPreCutValue1("useJECs"))==1 )
   {
-    std::string L1Path = "/afs/cern.ch/user/f/ferencek/public/JEC_txt_files/PHYS14_25_V2/PHYS14_25_V2_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "/afs/cern.ch/user/f/ferencek/public/JEC_txt_files/PHYS14_25_V2/PHYS14_25_V2_L2Relative_AK4PFchs.txt"; 
-    std::string L3Path = "/afs/cern.ch/user/f/ferencek/public/JEC_txt_files/PHYS14_25_V2/PHYS14_25_V2_L3Absolute_AK4PFchs.txt";
+    std::cout << "Reapplying JECs on the fly" << std::endl;
+    //std::string L1Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L1FastJet_AK4PFchs.txt";
+    //std::string L2Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L2Relative_AK4PFchs.txt"; 
+    //std::string L3Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
+    std::string L3Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
     
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
@@ -138,8 +142,15 @@ void analysisClass::Loop()
 	 JetCorrector->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
 	 JetCorrector->setJetA(jetAreaAK4->at(j));
 	 JetCorrector->setRho(rho);
-
-	 double correction = JetCorrector->getCorrection();
+	 //nominal value of JECs
+	 double correction;
+	 if( int(getPreCutValue1("shiftJECs"))==0 ){
+   	   correction = JetCorrector->getCorrection();
+	 }
+	 //use "shifted" JECs for study of systematic uncertainties 
+	 else if( int(getPreCutValue1("shiftJECs"))==1 ){
+       	   correction = JetCorrector->getCorrection() * getPreCutValue2("shiftJECs");
+	 }
 
 	 jecFactors.push_back(correction);
 	 sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j))*correction, j));
@@ -258,6 +269,8 @@ void analysisClass::Loop()
 	 }
      }
 
+     double MJ1Wide = 0; 
+     double MJ2Wide = 0; 
      double MJJWide = 0; 
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
@@ -283,6 +296,7 @@ void analysisClass::Loop()
      fillVariableWithValue("nVtx",nvtx);     
      fillVariableWithValue("nJet",widejets.size());
      fillVariableWithValue("metSig",metSig);
+     fillVariableWithValue("Nak4",no_jets_ak4);
 
      // Trigger
      int NtriggerBits = triggerResult->size();
@@ -309,10 +323,12 @@ void analysisClass::Loop()
      }
 
      if( widejets.size() >= 1 ){
+         MJ1Wide = wj1.M();
          fillVariableWithValue( "pTWJ_j1", widejets[0].Pt() );
          fillVariableWithValue( "etaWJ_j1", widejets[0].Eta());
 
 	 //no cuts on these variables, just to store in output
+         fillVariableWithValue( "massWJ_j1", widejets[0].M());
          fillVariableWithValue( "phiWJ_j1", widejets[0].Phi());
          fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfAK4->at(0));
          fillVariableWithValue( "chargedHadEnFrac_j1", jetChfAK4->at(0));
@@ -327,12 +343,14 @@ void analysisClass::Loop()
        }
 
      if( widejets.size() >= 2 ){
+	 MJ2Wide = wj2.M();
          fillVariableWithValue( "pTWJ_j2", widejets[1].Pt() );
          fillVariableWithValue( "etaWJ_j2", widejets[1].Eta());
 	 fillVariableWithValue( "deltaETAjj", DeltaEtaJJWide ) ;
          fillVariableWithValue( "mjj", MJJWide ) ;
 
 	 //no cuts on these variables, just to store in output
+         fillVariableWithValue( "massWJ_j2", widejets[1].M());
          fillVariableWithValue( "CosThetaStarWJ", TMath::TanH( (widejets[0].Eta()-widejets[1].Eta())/2 )); 
          fillVariableWithValue( "phiWJ_j2", widejets[1].Phi());	
          fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(1));
