@@ -49,7 +49,7 @@ pwd = os.environ['PWD']
 
 if not opt.match:
   print opt.input
-  os.system("ls "+opt.input+" > config/lists_to_run.txt")
+  os.system("ls "+opt.input+" | grep txt > config/lists_to_run.txt")
   os.system("cat config/lists_to_run.txt")
 else:
   os.system("ls "+opt.input+" | grep "+opt.match+"  > config/lists_to_run.txt")
@@ -84,6 +84,7 @@ for line in  ins:
   #open list
   list = open(opt.input+"/"+line,"r") 
   ## remove splitted lists if they already exist (necessary beacuse we append to txt file)
+  os.system("mkdir "+opt.input+"/splitted")
   os.system("rm "+opt.input+"/splitted/"+sample+"_"+opt.tag+"*.txt")
   for file in list:
     #print "file:%i  filesperjob:%i  job:%i op.modulo:%i  list %s " % (jf, opt.filesperjob,jj,(jf+1 % opt.filesperjob), opt.input+"/"+line)
@@ -102,8 +103,11 @@ for line in  ins:
   njobs_list.append(jj)
   inputlists.append(lists_dataset)
 
+print ""
 print njobs_list
+print ""
 print inputlists
+print "inputlists size = "+str(len(inputlists))
 
 i_f = 0
 ins = open("config/lists_to_run.txt", "r") 
@@ -117,6 +121,7 @@ for line in  ins:
   for jj in range(0,njobs_list[i_f]+1):
     print sample+"  job "+str(jj)
     command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+"/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" "+opt.output+"/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
+    #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
     print "submit "+command
     print ""
     
@@ -129,6 +134,13 @@ for line in  ins:
     outputfile.write('cd '+pwd+' \n')
     outputfile.write('eval `scramv1 runtime -sh`\n')
     outputfile.write(command+"\n")
+    #outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root dcap://cmsrm-se01.roma1.infn.it/"+opt.output+"\n")
+    #outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root dcap://cmsrm-se01.roma1.infn.it/"+opt.output+"\n")
+    #outputfile.write("dccp /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat dcap://cmsrm-se01.roma1.infn.it/"+opt.output+"\n")
+    #outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root\n")
+    #outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root\n")
+    #outputfile.write("rm /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat\n")
+    
     print outputname 
     if opt.interactive==False:
       os.system("bsub -q "+opt.queue+" -o "+logfile+" source "+pwd+"/"+outputname)
@@ -136,5 +148,5 @@ for line in  ins:
       print logfile
       if imc==0: os.system(command+" >&! "+logfile+"&")
       else: os.system(command+" >&! "+logfile)
-    i_f += 1
+  i_f += 1
       
