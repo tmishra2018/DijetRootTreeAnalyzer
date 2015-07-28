@@ -29,7 +29,7 @@ parser.add_option("--tag", dest="tag",
     default="")
 
 parser.add_option("--split", dest="filesperjob", type=int,
-    help="files to analyze per job (-1 if you don't want to split)",
+    help="files to analyze per job ",
     default=-1)
 
 parser.add_option('-I', '--interactive',      
@@ -43,7 +43,7 @@ parser.add_option('-I', '--interactive',
 ################################################
 
 os.system("mkdir -p "+opt.output)
-os.system("rm -rf batch")
+#os.system("rm -rf batch")
 os.system("mkdir -p batch")
 pwd = os.environ['PWD']
 
@@ -120,8 +120,8 @@ for line in  ins:
   print splittedlist
   for jj in range(0,njobs_list[i_f]+1):
     print sample+"  job "+str(jj)
-    command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+"/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" "+opt.output+"/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
-    #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
+    #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+"/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" "+opt.output+"/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
+    command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
     print "submit "+command
     print ""
     
@@ -134,12 +134,12 @@ for line in  ins:
     outputfile.write('cd '+pwd+' \n')
     outputfile.write('eval `scramv1 runtime -sh`\n')
     outputfile.write(command+"\n")
-    #outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root dcap://cmsrm-se01.roma1.infn.it/"+opt.output+"\n")
-    #outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root dcap://cmsrm-se01.roma1.infn.it/"+opt.output+"\n")
-    #outputfile.write("dccp /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat dcap://cmsrm-se01.roma1.infn.it/"+opt.output+"\n")
-    #outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root\n")
-    #outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root\n")
-    #outputfile.write("rm /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat\n")
+    outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root "+opt.output+"\n")
+    outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root "+opt.output+"\n")
+    outputfile.write("dccp /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat "+opt.output+"\n")
+    outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root\n")
+    outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root\n")
+    outputfile.write("rm /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat\n")
     
     print outputname 
     if opt.interactive==False:
