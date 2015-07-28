@@ -98,7 +98,7 @@ h_mjj_HLTpass_PFHT800_OR_PFHT650MJJ900_list = []
 print fileNames
 filelist =[]
 for f in fileNames:
-  inf = TFile(f)
+  inf = TFile.Open(f)
   filelist.append(inf)
   
 i_f = 0
@@ -266,6 +266,7 @@ g_ineff[1].SetMarkerStyle(21)
 g_ineff[2].SetMarkerStyle(22)
 
 l = TLegend(0.5,0.4,0.85,0.6)
+l.SetFillStyle(0)
 l.AddEntry(g_ineff[0],"PFHT800","p")
 l.AddEntry(g_ineff[1],"PFHT650MJJ900","p")
 l.AddEntry(g_ineff[2],"PFHT800_OR_MJJ900","p")

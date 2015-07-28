@@ -48,6 +48,9 @@ parser = argparse.ArgumentParser(description='Process options.')
 parser.add_argument("-i", "--inputList", type=str, dest="inputList", default="",
     help="input list of files to be merged",
     )
+parser.add_argument("-o", "--outputDir", type=str, dest="outputDir", default="",
+    help="output dir",
+    )
 parser.add_argument("--lumi", type=float, dest="LUMI", default="1000",
     help="luminosity in pb",
     )
@@ -58,6 +61,7 @@ parser.add_argument("--mode", type=int, dest="MODE", default="1",
 args = parser.parse_args()
 print args 
 
+outputDir = args.outputDir
 inputList = args.inputList
 LUMI = args.LUMI
 MODE = args.MODE
@@ -254,6 +258,7 @@ g_ineff[1].SetMarkerStyle(21)
 g_ineff[2].SetMarkerStyle(22)
 
 l = TLegend(0.5,0.4,0.85,0.6)
+l.SetFillStyle(0)
 l.AddEntry(g_ineff[0],"PFHT900","p")
 l.AddEntry(g_ineff[1],"PFHT650MJJ900","p")
 l.AddEntry(g_ineff[2],"PFHT900_OR_MJJ900","p")
@@ -267,7 +272,7 @@ l.Draw()
 #draw the lumi text on the canvas
 CMS_lumi.CMS_lumi(c_ineff, iPeriod, iPos)
 
-c_ineff.SaveAs("trigger_ineff_MC.png")
+c_ineff.SaveAs(outputDir+"/trigger_ineff_MC.png")
 
 g_eff[0].SetMarkerStyle(20)
 g_eff[1].SetMarkerStyle(21)
@@ -288,7 +293,7 @@ l.Draw()
 #draw the lumi text on the canvas
 CMS_lumi.CMS_lumi(c, iPeriod, iPos)
 
-c.SaveAs("triggerCurves_MC.png")
+c.SaveAs(outputDir+"/triggerCurves_MC.png")
 
 g_eff[0].GetXaxis().SetRangeUser(526,2037)
 g_eff[0].GetYaxis().SetRangeUser(0.8,1.02)
@@ -298,7 +303,7 @@ g_eff[2].Draw("P SAME")
 l.Draw()
 #draw the lumi text on the canvas
 CMS_lumi.CMS_lumi(c, iPeriod, iPos)
-c.SaveAs("triggerCurves_MC_zoom.png")
+c.SaveAs(outputDir+"/triggerCurves_MC_zoom.png")
 
 
 h_mjj_HLTpass_PFHT350_all.SetLineColor(1)  
@@ -326,7 +331,7 @@ l2.Draw()
 #draw the lumi text on the canvas
 CMS_lumi.CMS_lumi(c2, iPeriod, iPos)
 
-c2.SaveAs("triggerPass_MC.png")
+c2.SaveAs(outputDir+"/triggerPass_MC.png")
 
 
 file_out = TFile("triggerCurves_MC.root","recreate")
