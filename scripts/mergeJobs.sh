@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR='/pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015/'
+DIR='/pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/mc/santanas__40pb-1_30_07_2015/'
 #DIR='/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/25July2015-CertJson-251586-251883_JEC-Summer15_50nsV2_501dfb2/'
 mkdir $DIR/merged/
 ENDPOINT="dcap://cmsrm-se01.roma1.infn.it/"
