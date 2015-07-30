@@ -48,7 +48,7 @@ jetAlgo				AntiKt 		-		-		-		-1
 #
 #VariableName	      minValue1(<) maxValue1(>=)	minValue2(<)	maxValue2(>=)	level	histoNbinsMinMax  OptionalFlag
 #------------	      ------------ -------------	------------	-------------	-----	----------------  ------------
-nVtx                  1             +inf                -               -               1       50  0 50	  SAVE
+nVtx                  0             +inf                -               -               1       50  0 50	  SAVE
 IdTight_j1            0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
 IdTight_j2            0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
 nJet	      	      1     	    +inf		-		-		1	31 -0.5 30.5      SAVE
@@ -71,7 +71,7 @@ METoverHTAK4	     -inf	    +inf		-		-		1	1000 0 10000      SAVE
 HTAK4                -inf           +inf                -               -               1       500 0 10000       SAVE
 ptHat                -inf           +inf                -               -               1       500 0 10000       SAVE
 deltaPHIjj           -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
-Nak4                 -inf           +inf                -               -               1       10      0   10    SAVE  
+Nak4                 -inf           +inf                -               -               1       100 0 100         SAVE  
 pTAK4_j1	     -inf	    +inf		-	        -	        1	500 0 5000        SAVE
 etaAK4_j1            -inf           +inf                -               -               1       50  -2.5 2.5      SAVE
 phiAK4_j1  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
