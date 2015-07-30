@@ -30,7 +30,7 @@ parser.add_option("--tag", dest="tag",
 
 parser.add_option("--split", dest="filesperjob", type=int,
     help="files to analyze per job ",
-    default=-1)
+    default=10)
 
 parser.add_option('-I', '--interactive',      
     action='store_true',
