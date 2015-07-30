@@ -112,6 +112,7 @@ void analysisClass::Loop()
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   //for (Long64_t jentry=0; jentry<100;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -176,6 +177,17 @@ void analysisClass::Loop()
      //    std::cout << " JET 1 FAIL " << jetEtaAK4->at(1) << " JET 1  ID " << idTAK4->at(1) << std::endl;
      //  }  
      // }
+
+     //count ak4 jets passing pt threshold and id criteria
+     int Nak4 = 0;
+     for(size_t ijet=0; ijet<no_jets_ak4; ++ijet)
+       {
+	 if(fabs(jetEtaAK4->at(ijet)) < getPreCutValue1("jetFidRegion")
+	    && idTAK4->at(ijet) == getPreCutValue1("tightJetID")
+	    && (jecFactors[ijet]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) > getPreCutValue1("ptCut"))
+	   Nak4 += 1;
+       }
+
 
      if( int(getPreCutValue1("useFastJet"))==1 )
      {
@@ -296,7 +308,7 @@ void analysisClass::Loop()
      fillVariableWithValue("nVtx",nvtx);     
      fillVariableWithValue("nJet",widejets.size());
      fillVariableWithValue("metSig",metSig);
-     fillVariableWithValue("Nak4",no_jets_ak4);
+     fillVariableWithValue("Nak4",Nak4);
 
      // Trigger
      int NtriggerBits = triggerResult->size();
