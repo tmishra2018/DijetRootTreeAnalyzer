@@ -3,6 +3,7 @@
 import os
 import sys
 import optparse
+import datetime
 
 usage = "usage: To be run from DijetRootTreeAnalyzer/ :  python scripts/submit_batch_T2.py -i directory_containing_lists_to_run -o output_directory"
 
@@ -38,14 +39,28 @@ parser.add_option('-I', '--interactive',
     help='run the jobs interactively, 2 jobs at a time',
     default=False)
 
+parser.add_option("-c", "--cut", dest="cutfile",
+    help="cutfile",                  
+    )
 
 (opt, args) = parser.parse_args()
 ################################################
 
-os.system("mkdir -p "+opt.output)
+###
+current_time = datetime.datetime.now()
+simpletimeMarker = "_%04d%02d%02d_%02d%02d%02d" % (current_time.year,current_time.month,current_time.day,current_time.hour,current_time.minute,current_time.second) 
+timeMarker = "mycutFile_%04d%02d%02d_%02d%02d%02d__" % (current_time.year,current_time.month,current_time.day,current_time.hour,current_time.minute,current_time.second) 
+cutfileName = timeMarker+os.path.split(opt.cutfile)[1]
+print cutfileName
+###
+os.system("mkdir -p "+opt.output+simpletimeMarker)
 #os.system("rm -rf batch")
 os.system("mkdir -p batch")
 pwd = os.environ['PWD']
+###
+os.system("cp "+opt.cutfile+" batch/"+cutfileName)
+###
+newTag = opt.tag+simpletimeMarker
 
 if not opt.match:
   print opt.input
@@ -65,7 +80,7 @@ njobs_list = []
 #filenames_skim = []
 
 ##create a directory to store logfiles containing the "tag" in the name
-os.system("mkdir batch/"+opt.tag)
+os.system("mkdir batch/"+newTag)
 os.system("mkdir "+opt.input+"/splitted")
 
 ##loop over lists (one for datasets) to create splitted lists
@@ -76,7 +91,7 @@ for line in  ins:
   line = line.rstrip('\n')
   sample = sample.rstrip('\n')
   # name of final rootfile merged
-  #filenames_skim.append(opt.output+"/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root")
+  #filenames_skim.append(opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root")
   # list of commands for current dataset
   #commands_dataset = []
   
@@ -85,21 +100,21 @@ for line in  ins:
   #open list
   list = open(opt.input+"/"+line,"r") 
   ## remove splitted lists if they already exist (necessary beacuse we append to txt file)
-  os.system("rm "+opt.input+"/splitted/"+sample+"_"+opt.tag+"*.txt")
+  os.system("rm "+opt.input+"/splitted/"+sample+"_"+newTag+"*.txt")
   for file in list:
     #print "file:%i  filesperjob:%i  job:%i op.modulo:%i  list %s " % (jf, opt.filesperjob,jj,(jf+1 % opt.filesperjob), opt.input+"/"+line)
     #print file
     modulo = int(jf+1) % int(opt.filesperjob)
     #print "modulo = %i" % modulo
-    splittedlist = open(opt.input+"/splitted/"+sample+"_"+opt.tag+"_"+str(jj)+".txt","a+")
+    splittedlist = open(opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt","a+")
     splittedlist.write(file)
     if ( modulo == 0 ):
-      lists_dataset.append(opt.input+"/splitted/"+sample+"_"+opt.tag+"_"+str(jj)+".txt")
-      print "job "+str(jj)+"   appending "+opt.input+"/splitted/"+sample+"_"+opt.tag+"_"+str(jj)+".txt"
+      lists_dataset.append(opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt")
+      print "job "+str(jj)+"   appending "+opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt"
       jj += 1 #increment counter of jobs  
     jf += 1   #increment counter of files         
-  print "job "+str(jj)+"   appending "+opt.input+"/splitted/"+sample+"_"+opt.tag+"_"+str(jj)+".txt"
-  lists_dataset.append(opt.input+"/splitted/"+sample+"_"+opt.tag+"_"+str(jj)+".txt")  
+  print "job "+str(jj)+"   appending "+opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt"
+  lists_dataset.append(opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt")  
   njobs_list.append(jj)
   inputlists.append(lists_dataset)
 
@@ -120,13 +135,14 @@ for line in  ins:
   print splittedlist
   for jj in range(0,njobs_list[i_f]+1):
     print sample+"  job "+str(jj)
-    #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+"/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" "+opt.output+"/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
-    command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)
+    #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" "+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
+    #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
+    command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
     print "submit "+command
     print ""
     
-    logfile = "batch/"+opt.tag+"/logfile_"+sample+"_"+opt.tag+"_"+str(jj)+".log"
-    outputname = "batch/"+opt.tag+"/submit_"+sample+"_"+opt.tag+"_"+str(jj)+".src"
+    logfile = "batch/"+newTag+"/logfile_"+sample+"_"+newTag+"_"+str(jj)+".log"
+    outputname = "batch/"+newTag+"/submit_"+sample+"_"+newTag+"_"+str(jj)+".src"
     outputfile = open(outputname,'w')
     outputfile.write('#!/bin/bash\n')
     #outputfile.write('export SCRAM_ARCH=slc6_amd64_gcc481\n')
@@ -134,12 +150,12 @@ for line in  ins:
     outputfile.write('cd '+pwd+' \n')
     outputfile.write('eval `scramv1 runtime -sh`\n')
     outputfile.write(command+"\n")
-    outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root "+opt.output+"\n")
-    outputfile.write("dccp /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root "+opt.output+"\n")
-    outputfile.write("dccp /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat "+opt.output+"\n")
-    outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+"_reduced_skim.root\n")
-    outputfile.write("rm /tmp/rootfile_"+sample+"_"+opt.tag+"_"+str(jj)+".root\n")
-    outputfile.write("rm /tmp/cutEfficiencyFile_"+sample+"_"+opt.tag+"_"+str(jj)+".dat\n")
+    outputfile.write("dccp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root "+opt.output+simpletimeMarker+"\n")
+    outputfile.write("dccp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root "+opt.output+simpletimeMarker+"\n")
+    outputfile.write("dccp /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat "+opt.output+simpletimeMarker+"\n")
+    outputfile.write("rm /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
+    outputfile.write("rm /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
+    outputfile.write("rm /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
     
     print outputname 
     if opt.interactive==False:
