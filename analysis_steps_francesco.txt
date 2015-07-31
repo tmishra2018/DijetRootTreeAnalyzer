@@ -63,8 +63,8 @@ command = "./main "+opt.input+"/"+line+" config/cutFile_mainDijetSelection.txt d
 if needed 
 
 ### submit 
-python scripts/submit_batch_T2_split.py -i $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/config/lists_40pb-1_30_07_2015/ -o /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015 -q cmsan -m JetHT --split 5 --tag santanas__40pb-1_30_07_2015 
-python scripts/submit_batch_T2_split.py -i $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/config/lists_40pb-1_30_07_2015/ -o /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/mc/santanas__40pb-1_30_07_2015 -q cmsan -m RunIISpring15DR74 --split 5 --tag santanas__40pb-1_30_07_2015 
+python scripts/submit_batch_T2_split.py -i $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/config/lists_40pb-1_30_07_2015/ -o /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015 -q cmsan -m JetHT --split 5 --tag santanas__40pb-1_30_07_2015 -c config/cutFile_mainDijetSelection.txt
+python scripts/submit_batch_T2_split.py -i $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/config/lists_40pb-1_30_07_2015/ -o /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/mc/santanas__40pb-1_30_07_2015 -q cmsan -m RunIISpring15DR74 --split 5 --tag santanas__40pb-1_30_07_2015 -c config/cutFile_mainDijetSelection.txt
 
 note: you must specify the folder that contains all the lists you want to submit (the submit_batch_T2_split only works at the moment 
 for output directories in /pnfs/...)
@@ -133,6 +133,8 @@ emacs run_DrawFromTree_data4T.sh &
 outputdir="$MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/plots/santanas__40pb-1_30_07_2015/"
 list="$MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/plots/santanas__40pb-1_30_07_2015/listForPlots_santanas__40pb-1_30_07_2015.txt"
 lumi="40.2"
+
+check the scale factor
 
 ./run_DrawFromTree_data4T.sh
 
