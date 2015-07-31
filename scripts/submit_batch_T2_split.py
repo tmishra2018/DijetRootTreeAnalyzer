@@ -66,6 +66,7 @@ njobs_list = []
 
 ##create a directory to store logfiles containing the "tag" in the name
 os.system("mkdir batch/"+opt.tag)
+os.system("mkdir "+opt.input+"/splitted")
 
 ##loop over lists (one for datasets) to create splitted lists
 for line in  ins:
@@ -84,7 +85,6 @@ for line in  ins:
   #open list
   list = open(opt.input+"/"+line,"r") 
   ## remove splitted lists if they already exist (necessary beacuse we append to txt file)
-  os.system("mkdir "+opt.input+"/splitted")
   os.system("rm "+opt.input+"/splitted/"+sample+"_"+opt.tag+"*.txt")
   for file in list:
     #print "file:%i  filesperjob:%i  job:%i op.modulo:%i  list %s " % (jf, opt.filesperjob,jj,(jf+1 % opt.filesperjob), opt.input+"/"+line)
