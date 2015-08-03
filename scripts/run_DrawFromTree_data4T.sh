@@ -1,11 +1,18 @@
+#!/bin/bash
+
 #outputdir="plots_data4T_withSF_16_07_15/all/"
 #list="list_for_plots_data4T_16_07_15.txt"
 #lumi="21.239"
 #outputdir="plots_data4T_withSF_19_07_15/all/"
 #list="list_for_plots_data4T_19_07_15.txt"
-outputdir="plots_data4T_JEC_MC_plus5percent/"
-list="list_for_plots_data4T_JEC_MC_plus5percent.txt"
-lumi="37"
+#outputdir="plots_data4T_JEC_MC_plus5percent/"
+#list="list_for_plots_data4T_JEC_MC_plus5percent.txt"
+
+outputdir="$MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/plots/santanas__40pb-1_30_07_2015_v2/"
+list="$MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/plots/santanas__40pb-1_30_07_2015/listForPlots_santanas__40pb-1_30_07_2015.txt"
+lumi="40.2"
+
+mkdir -p $outputdir
 
 #python DrawFromTree_data.py --var mjj --xmin 1200 --xmax 2500 --xtitle "mjj [GeV]" --bins 1300  --rebin 20 --outputDir $outputdir --inputList $list --lumi $lumi --logy
 #python DrawFromTree_data.py --var mjj --xmin 1200 --xmax 2500 --xtitle "mjj [GeV]" --bins 1300 --rebin 20 --outputDir $outputdir --inputList $list --lumi $lumi 
