@@ -27,7 +27,7 @@ if( iPos==0 ): CMS_lumi.relPosX = 0.12
 iPeriod = 4
  
   
-fileNameSuffix = "test"
+fileNameSuffix = "test_range_1118_3704"
 
 
 #Fit functions
@@ -56,9 +56,12 @@ massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176,
 
 v_massBins = array("d",massBins)
 lumi = 40.2
+sf = 0.8
+#sf=1.
+#minX_mass = 1000.
 minX_mass = 1118.
-#maxX_mass = 3704.
-maxX_mass = 5253.
+maxX_mass = 3704.
+#maxX_mass = 5253.
 #================================================================================================================
   
 def main():
@@ -77,6 +80,7 @@ def main():
   hist_mass = TH1F("hist_mass","",number_of_variableWidth_bins,v_massBins)
   
   hist_mass_original_mc = fileMC.Get(input_1Dhistogram_mc)
+  hist_mass_original_mc.Scale(sf)
   hist_binned_mc = hist_mass_original_mc.Rebin(number_of_variableWidth_bins,"hist_binned_MC",v_massBins)
   hist_mass_mc = TH1F("hist_mass_mc","",number_of_variableWidth_bins,v_massBins)
   
@@ -87,10 +91,9 @@ def main():
     binerror = hist_binned.GetBinError(i)
     hist_mass.SetBinContent(i,bincontent/(binwidth*lumi))   
     #mc
-    bincontent = hist_binned_mc.GetBinContent(i)
-    binwidth = hist_binned_mc.GetBinWidth(i)
-    binerror = hist_binned_mc.GetBinError(i)
-    hist_mass_mc.SetBinContent(i,bincontent/(binwidth*lumi))   
+    bincontent_mc = hist_binned_mc.GetBinContent(i)
+    binwidth_mc = hist_binned_mc.GetBinWidth(i)
+    hist_mass_mc.SetBinContent(i,bincontent_mc/(binwidth_mc*lumi))   
 
   #hist_mass.Draw()
   #filetest = TFile("filetest.root","recreate")
@@ -108,6 +111,7 @@ def main():
   exh=[]
   eyl=[]
   eyh=[]
+  x_mc=[]
   y_mc=[]
   
   for i in range(0,number_of_variableWidth_bins):
@@ -126,23 +130,27 @@ def main():
     eyh.append( (h-n)/(lumi*dm) )
     #print "%f   %f    %f    %f    %f     %f" % (x[i],y[i],exl[i],exh[i],eyl[i],eyh[i])
     n_mc = hist_binned_mc.GetBinContent(i+1)
-    y_mc.append( n_mc / (dm*lumi))
-  
+    if (i>=40 and i<103):
+      x_mc.append((xl+xh)/2.)
+      y_mc.append( n_mc / (dm*lumi)) 
+
   vx = array("f",x)
   vy = array("f",y)
   vexl = array("f",exl)
   vexh = array("f",exh)
   veyl = array("f",eyl)
   veyh = array("f",eyh)
+  vx_mc = array("f",x_mc)
   vy_mc = array("f",y_mc)
 
   #data in TGraph format
   g = TGraphAsymmErrors(number_of_variableWidth_bins,vx,vy,vexl,vexh,veyl,veyh)
   g.SetName("g_data")
-  #g.Print()
+  g.Print()
   #mc
-  g_mc = TGraph(number_of_variableWidth_bins,vx,vy_mc)
+  g_mc = TGraph(number_of_variableWidth_bins-40,vx_mc,vy_mc)
   g_mc.SetName("g_mc")
+  g_mc.Print()
   
   
   nBins_fit = hist_mass.FindBin(maxX_mass)- hist_mass.FindBin(minX_mass) 
@@ -169,9 +177,9 @@ def main():
     list_dof.append(fitresult[1])
     M1Bkg = fitresult[3]
     hist_fit_residual_vsMass = fitresult[4]
-    nPar = nBins_fit - fitresult[1] - 1
+    nPar = nBins_fit - fitresult[1]# - 1
     result_WaldTest = WaldWolfowitzTest(hist_fit_residual_vsMass)
-    #DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix)
+    DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix)
     print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
     list_pvalue_WaldTest.append(result_WaldTest)
     if (i_f > 0):
@@ -185,8 +193,9 @@ def main():
   result_mc = doChi2MC(g,hist_mass,hist_mass_mc)  
   chi2_mc = result_mc[0] 
   Ndof_mc = result_mc[1] 
-  hist_mc_residual_vsMass_mc = result_mc[2] 
+  hist_mc_residual_vsMass = result_mc[2] 
   pvalue_WaldTest_mc = WaldWolfowitzTest(hist_mc_residual_vsMass)
+  DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix)
 
   print "nBins_Fit = "+str(nBins_fit)
   print "list_RSS = "+str(list_RSS)
@@ -202,15 +211,16 @@ def doChi2MC(g,hist_mass,hist_mass_mc):
   hist_mc_residual_vsMass =  TH1D("hist_mc_residual_vsMass","hist_mc_residual_vsMass",number_of_variableWidth_bins,v_massBins)
   NumberOfObservations_VarBin = 0
   chi2_VarBin = 0.
-  sf = 0.8
   for bin in range (1,number_of_variableWidth_bins):
+    mc_residual = 0
+    hist_mc_residual_vsMass.SetBinContent(bin,mc_residual)
   
     if( hist_mass_mc.GetXaxis().GetBinLowEdge(bin)>=minX_mass and hist_mass_mc.GetXaxis().GetBinUpEdge(bin)<=maxX_mass ):
       #print "bin content = " + str(hist_mass.GetBinContent(bin)) + "   graph y = " + str(vy[bin-1]) + "  error y low = " + str(g.GetErrorYlow(bin-1))
       data = hist_mass.GetBinContent(bin)
       err_data_low = g.GetErrorYlow(bin-1) 
       err_data_high= g.GetErrorYhigh(bin-1)
-      mc = hist_mass_mc.GetBinContent(bin)*sf
+      mc = hist_mass_mc.GetBinContent(bin)
       #print "mc = %f" % mc 
       if(mc > data or mc == 0): err_tot = err_data_high
       else: err_tot = err_data_low
@@ -224,12 +234,10 @@ def doChi2MC(g,hist_mass,hist_mass_mc):
       if (hist_mass.GetBinContent(bin)>0): 
 	NumberOfObservations_VarBin+=1
         chi2_VarBin += pow( (data - mc) , 2 ) / pow( err_tot , 2 )	 
-  
-  
       hist_mc_residual_vsMass.SetBinContent(bin,mc_residual)
-      hist_mc_residual_vsMass.SetBinError(bin,err_mc_residual)
+    print "bin : %d   mc_residual : %f" % (bin,mc_residual) 
     
-  ndf_VarBin = NumberOfObservations_VarBin -1 
+  ndf_VarBin = NumberOfObservations_VarBin #-1 
   print "============ MC ==============" 
   print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
   print "ndf_VarBin: %d" % ndf_VarBin 
@@ -257,11 +265,11 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     M1Bkg.SetParameter(2,2.8)
   
     #1 fb-1
-    #M1Bkg.SetParLimits(0,0.,10);
+    M1Bkg.SetParLimits(0,0.,10);
     #10 fb-1
     #M1Bkg->SetParLimits(0,0,1.);
-    #M1Bkg.SetParLimits(1,0.,10000)
-    #M1Bkg.SetParLimits(2,1.,10000)
+    M1Bkg.SetParLimits(1,0.,10000)
+    M1Bkg.SetParLimits(2,1.,10000)
   
   # 0: DEFAULT (4 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )" 
   if( FunctionType==0 ):    
@@ -270,15 +278,15 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     M1Bkg.SetParameter(0,0.08)
     M1Bkg.SetParameter(1,28)
     M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.25)
+    M1Bkg.SetParameter(3,0.2595)
   
     #1 fb-1
-    #M1Bkg.SetParLimits(0,0.,10);
+    M1Bkg.SetParLimits(0,0.,10);
     #10 fb-1
     #M1Bkg->SetParLimits(0,0,1.);
-    #M1Bkg.SetParLimits(1,0.,10000)
-    #M1Bkg.SetParLimits(2,1.,10000)
-    #M1Bkg.SetParLimits(3,0.,10000)
+    M1Bkg.SetParLimits(1,0.,10000)
+    M1Bkg.SetParLimits(2,1.,10000)
+    M1Bkg.SetParLimits(3,0.,10000)
    # M1Bkg.FixParameter(3,0.)
      
   
@@ -330,11 +338,14 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     M1Bkg.SetParameter(0,0.08)
     M1Bkg.SetParameter(1,28)
     M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.25)
+    M1Bkg.SetParameter(3,0.2595)
     M1Bkg.SetParameter(4,0.)
     #M1Bkg.SetParLimits(3,0,0.4)
     #M1Bkg.FixParameter(3,0.)
     #M1Bkg.FixParameter(4,0.)
+    M1Bkg.SetParLimits(1,0.,10000)
+    M1Bkg.SetParLimits(2,1.,10000)
+    M1Bkg.SetParLimits(3,0.,10000)
    
   
   # 5: VARIATION 5 (6 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)+[5]*TMath::Power(log(x/13000),3)) )" 
@@ -345,13 +356,16 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     M1Bkg.SetParameter(0,0.08)
     M1Bkg.SetParameter(1,28)
     M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.25)
+    M1Bkg.SetParameter(3,0.2595)
     M1Bkg.SetParameter(4,0.)
     M1Bkg.SetParameter(5,0.)
     #M1Bkg.SetParLimits(3,0,0.4)
     #M1Bkg.FixParameter(3,0.)
     #M1Bkg.FixParameter(4,0.)
     #M1Bkg.FixParameter(5,0.)
+    M1Bkg.SetParLimits(1,0.,10000)
+    M1Bkg.SetParLimits(2,1.,10000)
+    M1Bkg.SetParLimits(3,0.,10000)
    
   
   # 6: VARIATION 6 (7 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)+[5]*TMath::Power(log(x/13000),3)+[6]*TMath::Power(log(x/13000),4)) )" 
@@ -362,7 +376,7 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     M1Bkg.SetParameter(0,0.08)
     M1Bkg.SetParameter(1,28)
     M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.25)
+    M1Bkg.SetParameter(3,0.2595)
     M1Bkg.SetParameter(4,0.)
     M1Bkg.SetParameter(5,0.)
     M1Bkg.SetParameter(6,0.)
@@ -371,6 +385,9 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     #M1Bkg.FixParameter(4,0.)
     #M1Bkg.FixParameter(5,0.)
     #M1Bkg.FixParameter(6,0.)
+    M1Bkg.SetParLimits(1,0.,10000)
+    M1Bkg.SetParLimits(2,1.,10000)
+    M1Bkg.SetParLimits(3,0.,10000)
   
   
   
@@ -426,7 +443,7 @@ def doFitAndChi2(FunctionType,hist_mass,g):
       hist_fit_residual_vsMass.SetBinError(bin,err_fit_residual)
       hist_fit_residual.Fill(fit_residual)
     
-  ndf_VarBin = NumberOfObservations_VarBin - nPar -1
+  ndf_VarBin = NumberOfObservations_VarBin - nPar# -1
   print "============================" 
   print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
   print "ndf_VarBin: %d" % ndf_VarBin 
@@ -457,7 +474,7 @@ def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
 
 
 def WaldWolfowitzTest(hist_fit_residual_vsMass):
-  Nruns = 0
+  Nruns = 1
   Nplus = 0
   Nminus = 0
   N = hist_fit_residual_vsMass.FindBin(maxX_mass) - hist_fit_residual_vsMass.FindBin(minX_mass)
@@ -467,7 +484,10 @@ def WaldWolfowitzTest(hist_fit_residual_vsMass):
     if (previousbincontent > 0): Nplus+= 1 
     if (previousbincontent < 0 ):  Nminus+= 1
     if( bincontent*previousbincontent < 0): Nruns += 1
-  #print "N %d Nruns %d   Nplus %d   Nminus %d " %(N,Nruns,Nplus,Nminus)
+  if (bincontent > 0): Nplus+= 1
+  if (bincontent < 0 ):  Nminus+= 1
+
+  print "N %d Nruns %d   Nplus %d   Nminus %d " %(N,Nruns,Nplus,Nminus)
   Pdf  = TF1("WaldWolfowitzProb","[0]*exp(-0.5*(x-[1])**2/[2]**2)",-10000,10000) 
   mu = float(2*Nplus*Nminus)/float(N) + 1
   sigma = float((mu-1)*(mu-2))/float(N-1)
@@ -480,6 +500,148 @@ def WaldWolfowitzTest(hist_fit_residual_vsMass):
   print "pvalue %f" %(pvalue)
 
   return pvalue
+
+def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
+#  //### Draw plots
+  W = 600
+  H = 650
+  H_ref = 650 
+  W_ref = 600 
+  T = 0.08*H_ref
+  B = 0.12*H_ref
+  L = 0.12*W_ref
+  R = 0.04*W_ref
+  
+  c = TCanvas("c","DijetMass cross section with QCD MC",W,H)
+  c.GetWindowHeight()
+  c.GetWindowWidth()
+  c.SetLogy()
+  c.Divide(1,2,0,0,0)
+  
+  
+  #------------ pad 1  ----------------
+  c.cd(1)
+  p11_1 = c.GetPad(1)
+  p11_1.SetPad(0.01,0.23,0.99,0.98)
+  p11_1.SetLogy()
+  p11_1.SetRightMargin(0.05)
+  p11_1.SetTopMargin(0.05)
+  p11_1.SetFillColor(0)
+  p11_1.SetBorderMode(0)
+  p11_1.SetFrameFillStyle(0)
+  p11_1.SetFrameBorderMode(0)
+  
+  #Pave text
+  pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
+  pave_fit = TPaveText(0.2058691,0.20735043,0.4750171,0.3670085,"NDC")
+    
+  pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
+  pave_fit.AddText("M_{jj} > 1.1 TeV")
+  pave_fit.AddText("Wide Jets")
+  pave_fit.SetFillColor(0)
+  pave_fit.SetLineColor(0)
+  pave_fit.SetFillStyle(0)
+  pave_fit.SetBorderSize(0)
+  pave_fit.SetTextFont(42)
+  pave_fit.SetTextSize(0.040)
+  pave_fit.SetTextAlign(12) 
+  
+  
+  vFrame = p11_1.DrawFrame(minX_mass,0.000005,maxX_mass,5.0)
+  
+  vFrame.SetTitle("")
+  vFrame.SetXTitle("Dijet Mass (GeV)")
+  vFrame.SetYTitle("d#sigma / dm_{jj}   (pb / GeV)")
+  vFrame.GetXaxis().SetTitleSize(0.06)
+  vFrame.GetXaxis().SetTitleOffset(0.95)
+  vFrame.GetXaxis().SetLabelSize(0.05)
+  vFrame.GetYaxis().SetTitleSize(0.06)
+  vFrame.GetYaxis().SetTitleOffset(0.95)
+  vFrame.GetYaxis().SetLabelSize(0.05)
+  
+  g_mc.SetLineWidth(2)
+  g_mc.SetLineColor(kBlue)
+  g_mc.Draw("c")
+  g.SetMarkerSize(0.9)
+  g.SetMarkerStyle(20)
+  g.Draw("pe0 same")
+    
+  leg = TLegend(0.5564991,0.55,0.8903575,0.705812)
+  #leg =  TLegend(0.5564991,0.55,0.8903575,0.80)
+  leg.SetTextSize(0.03546853)
+  leg.SetLineColor(0)
+  leg.SetLineStyle(1)
+  leg.SetLineWidth(1)
+  leg.SetFillColor(0)
+  leg.SetFillStyle(0)
+  leg.SetMargin(0.35)
+  leg.AddEntry(g,"data" ,"PL")
+  leg.AddEntry(g_mc,"mc","L")
+  leg.Draw("same")
+  pave_fit.Draw("same")
+  
+  # writing the lumi information and the CMS "logo"
+  #  CMS_lumi( p11_1, iPeriod, iPos );
+  #redraw axis
+  p11_1.RedrawAxis()
+  p11_1.Update()
+  p11_1.GetFrame().Draw()
+  #draw the lumi text on the canvas
+  CMS_lumi.CMS_lumi(p11_1, iPeriod, iPos)
+  
+  #--- Next PAD
+  
+  c.cd(2)
+  p11_2 = c.GetPad(2)
+  p11_2.SetPad(0.01,0.02,0.99,0.24)
+  p11_2.SetBottomMargin(0.35)
+  p11_2.SetRightMargin(0.05)
+  p11_2.SetGridx()
+  p11_2.SetGridy()
+  
+  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3., p11_1.GetUxmax(), 3.)
+  
+  vFrame2.SetTitle("")
+  vFrame2.SetXTitle("Dijet Mass (GeV)")
+  vFrame2.GetXaxis().SetTitleSize(0.06)
+  vFrame2.SetYTitle("(Data-MC)/#sigma")
+  vFrame2.GetYaxis().SetTitleSize(0.15)
+  vFrame2.GetYaxis().SetTitleOffset(0.40)
+  vFrame2.GetYaxis().SetLabelSize(0.09)
+  vFrame2.GetXaxis().SetTitleSize(0.18)
+  vFrame2.GetXaxis().SetTitleOffset(0.90)
+  vFrame2.GetXaxis().SetLabelSize(0.15)
+  
+  hist_mc_residual_vsMass.GetXaxis().SetRangeUser(minX_mass,maxX_mass)
+  hist_mc_residual_vsMass.GetYaxis().SetRangeUser(-3.,3.)
+  hist_mc_residual_vsMass.SetLineWidth(0)
+  hist_mc_residual_vsMass.SetFillColor(kBlue)
+  hist_mc_residual_vsMass.SetLineColor(1)
+  hist_mc_residual_vsMass.Draw("SAMEHIST")
+  
+  line = TLine(minX_mass,0,maxX_mass,0)
+  line.Draw("")
+  p11_2.RedrawAxis()
+  line2=TLine()
+  line2.DrawLine(p11_2.GetUxmin(), p11_2.GetUymax(), p11_2.GetUxmax(), p11_2.GetUymax())
+  line2.DrawLine(p11_2.GetUxmax(), p11_2.GetUymin(), p11_2.GetUxmax(), p11_2.GetUymax())
+  	
+  ### Output files
+  
+  output_root_file = "dijetFitResults_MC_%s.root" % (fileNameSuffix) 
+  
+  f_output = TFile(output_root_file,"RECREATE")
+  f_output.cd()
+  g.Write()
+  #hist_mass_original.Write()
+  #hist_binned.Write()
+  hist_mass.Write()
+  c.Write()
+  #r_bin->Write()
+  f_output.Close()
+  c_fileName = "MCandResiduals_%s.png" %(fileNameSuffix)
+  c.SaveAs(c_fileName)
+
 
 def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
 #  //### Draw plots
@@ -527,7 +689,7 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
   pave_fit.SetTextAlign(12) 
   
   
-  vFrame = p11_1.DrawFrame(minX_mass,0.0000005,maxX_mass,5.0)
+  vFrame = p11_1.DrawFrame(minX_mass,0.000005,maxX_mass,5.0)
   
   vFrame.SetTitle("")
   vFrame.SetXTitle("Dijet Mass (GeV)")
