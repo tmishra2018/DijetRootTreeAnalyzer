@@ -33,17 +33,27 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
     std::string L2Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
     std::string L3Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Summer15_50nsV2/Summer15_50nsV2_DATA_L2L3Residual_AK4PFchs.txt" ;
     
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
     L3Par = new JetCorrectorParameters(L3Path);
+    L2L3Residual = new JetCorrectorParameters(L2L3ResidualPath);
 
     std::vector<JetCorrectorParameters> vPar;
+    std::vector<JetCorrectorParameters> vPar_data;
     vPar.push_back(*L1Par);
     vPar.push_back(*L2Par);
     vPar.push_back(*L3Par);
+   
+    //residuals are applied only to data
+    vPar_data.push_back(*L1Par);
+    vPar_data.push_back(*L2Par);
+    vPar_data.push_back(*L3Par);
+    vPar_data.push_back(*L2L3Residual);
 
     JetCorrector = new FactorizedJetCorrector(vPar);
+    JetCorrector_data = new FactorizedJetCorrector(vPar_data);
   }
   
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;
@@ -129,10 +139,25 @@ void analysisClass::Loop()
 
      resetCuts();
 
+     //find intime BX
+     int idx_InTimeBX=-1;
+     for(size_t j=0; j<PileupOriginBX->size(); ++j)
+       {
+	 //cout << PileupOriginBX->at(j) << endl;	 
+	 if(PileupOriginBX->at(j)==0)
+	   {
+	     idx_InTimeBX = j;
+	     //cout << "idx_InTimeBX: " << idx_InTimeBX << endl; 
+	   }
+       }
+
      std::vector<double> jecFactors;
      // new JECs could change the jet pT ordering. the vector below
      // holds sorted jet indices after the new JECs had been applied
      std::vector<unsigned> sortedJetIdx;
+     bool isData = 0;
+     if(idx_InTimeBX > -1 ) isData = 0;
+     else isData = 1;
      if( int(getPreCutValue1("useJECs"))==1 )
      {
        // sort jets by increasing pT
@@ -143,14 +168,22 @@ void analysisClass::Loop()
 	 JetCorrector->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
 	 JetCorrector->setJetA(jetAreaAK4->at(j));
 	 JetCorrector->setRho(rho);
+	 
+	 JetCorrector_data->setJetEta(jetEtaAK4->at(j));
+	 JetCorrector_data->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
+	 JetCorrector_data->setJetA(jetAreaAK4->at(j));
+	 JetCorrector_data->setRho(rho);
+	 
 	 //nominal value of JECs
 	 double correction;
 	 if( int(getPreCutValue1("shiftJECs"))==0 ){
-   	   correction = JetCorrector->getCorrection();
+	   if (isData == 1) correction = JetCorrector_data->getCorrection();
+	   else correction = JetCorrector->getCorrection();
 	 }
 	 //use "shifted" JECs for study of systematic uncertainties 
 	 else if( int(getPreCutValue1("shiftJECs"))==1 ){
-       	   correction = JetCorrector->getCorrection() * getPreCutValue2("shiftJECs");
+       	   if (isData == 1) correction = JetCorrector_data->getCorrection() * getPreCutValue2("shiftJECs");
+	   else correction = JetCorrector->getCorrection() * getPreCutValue2("shiftJECs");
 	 }
 
 	 jecFactors.push_back(correction);
@@ -386,20 +419,7 @@ void analysisClass::Loop()
 	 //    //std::cout << " INV MASS FROM NTUPLE CA8 " << mjjCA8 << std::endl;
        }
 
-     //find intime BX
-     int idx_InTimeBX=-1;
-     for(size_t j=0; j<PileupOriginBX->size(); ++j)
-       {
-	 //cout << PileupOriginBX->at(j) << endl;	 
-	 if(PileupOriginBX->at(j)==0)
-	   {
-	     idx_InTimeBX = j;
-	     //cout << "idx_InTimeBX: " << idx_InTimeBX << endl; 
-	   }
-       }    
-
      //no cuts on these variables, just to store in output
-     bool isData = 0;
      if(idx_InTimeBX > -1 )
        {
 	 fillVariableWithValue("trueVtx",PileupInteractions->at(idx_InTimeBX));
