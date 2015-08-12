@@ -135,6 +135,8 @@ for f in fileNames:
   #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 &&  TMath::Abs(etaWJ_j1)<1.4 &&  TMath::Abs(etaWJ_j2)<1.4')
   #EB or BE
   #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 && ( (TMath::Abs(etaWJ_j1)>1.4 &&  TMath::Abs(etaWJ_j2)<1.4) || (TMath::Abs(etaWJ_j1)<1.4 &&  TMath::Abs(etaWJ_j2)>1.4) )')
+  ##eta <2
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 &&  TMath::Abs(etaWJ_j1)<2. &&  TMath::Abs(etaWJ_j2)<2.')
   Npassed = h_allCuts.GetEntries()
   eff = float(Npassed)/Nev
   print('eff : %f' % eff)
@@ -185,7 +187,8 @@ NQCD = hist_allCutsQCD.Integral(0,hist_allCutsQCD.GetNbinsX()+1)
 ## k factor calculated including overflow and underflow
 #kFactor = NDAT/NQCD
 kFactor = 1.
-print ("kFactor = %f" % kFactor)
+print ("kFactor set to %f" % kFactor)
+print ("NDAT / NQCD = = %f" % (NDAT/NQCD))
 
 hist_allCutsQCD.Scale(kFactor)
 
