@@ -12,7 +12,8 @@ void SimpleDiJetFitV1()
 
   writeExtraText = true;       // if extra text
   extraText  = "Preliminary";  // default extra text is "Preliminary"
-  lumi_13TeV = "37 pb^{-1}" ;
+  lumi_13TeV = "41.8 pb^{-1}" ;
+  //lumi_13TeV = "1 fb^{-1}" ;
   lumi_8TeV  = "19.1 fb^{-1}"; // default is "19.7 fb^{-1}"
   lumi_7TeV  = "4.9 fb^{-1}";  // default is "5.1 fb^{-1}"
 
@@ -25,7 +26,8 @@ void SimpleDiJetFitV1()
   //gRandom = new TRandom3(0);
   //gRandom->SetSeed(0);
 
-  double lumi = 37;
+  double lumi = 41.8;
+  //double lumi = 1000;
   double sigmaQstar = 0.2827E-01;
 
   //########################
@@ -68,28 +70,38 @@ void SimpleDiJetFitV1()
   //char input_root_file[500] = "/cmshome/fpreiato/CMSSW_7_4_3/src/CMSDIJET/DijetRootTreeAnalyzer/output/Data2015/UnstableBeam/Plot/histo_data_mjj_fromTree.root";
   //char input_root_file[500] = "../scripts/histo_data_mjj_fromTree_run246908_247398.root";
   //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_Complete0T/histo_data_mjj_fromTree.root";
-  char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_JEC_MC_nominal//histo_data_mjj_fromTree.root";
-  char input_root_file_mc_JECplus5percent[500]  = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_JEC_MC_plus5percent//histo_data_mjj_fromTree.root";
-  char input_root_file_mc_JECminus5percent[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_JEC_MC_minus5percent//histo_data_mjj_fromTree.root";
+  //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root";
+  //char input_root_file_mc_JECplus5percent[500]  = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2_plus5percent/histo_data_mjj_fromTree.root";
+  //char input_root_file_mc_JECminus5percent[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2_minus5percent/histo_data_mjj_fromTree.root";
+  //data
+  //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root";
+  char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_withSF/histo_data_mjj_fromTree.root"; 
+  //mc
+  char input_root_file_mc[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_withSF//histo_data_mjj_fromTree.root";
+  char input_root_file_mc_JECplus5percent[500]  = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_plusJECuncertainty_withSF//histo_data_mjj_fromTree.root";
+  char input_root_file_mc_JECminus5percent[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_minusJECuncertainty_withSF//histo_data_mjj_fromTree.root";
 
-  char fileNameSuffix[500] = "data_finalJSON_25_07_15"; //i.e. run period
-  //char fileNameSuffix[500] = "MC_10fb-1"; //i.e. run period
+  //char fileNameSuffix[500] = "data_finalJSON_25_07_15_scaled"; //i.e. run period
+  char fileNameSuffix[500] = "data_finalJSON_25_07_15_JECunc_shape"; //i.e. run period
+  //char fileNameSuffix[500] = "goldenpseudodata_1fb-1"; //i.e. run period
 
   //char input_1Dhistogram[500] = "hist_mass_1GeV";
   char input_1Dhistogram[500] = "h_dat";
   char input_1Dhistogram_mc[500] = "hist_allCutsQCD";
   double minX_mass = 1118.;
+  //double minX_mass = 2037.;
   //1 fb -1
   //double maxX_mass = 6099.;
   //10 fb-1
   //double maxX_mass = 7000.;
   ////////
-  double maxX_mass = 5253.;
+  //double maxX_mass = 5253.;
+  double maxX_mass = 5663.;
 
   //Fit functions
   // 0: DEFAULT (4 par.) - "( [0]*TMath::Power(1-x/8000,[1]) ) / ( TMath::Power(x/8000,[2]+[3]*log(x/8000)) )" 
 
-  const int FunctionType = 0;
+  const int FunctionType = -1; //3 param function
 
   const int number_of_variableWidth_bins = 103;
 
@@ -105,10 +117,11 @@ void SimpleDiJetFitV1()
 
   //### input file and 1D histo
   TFile *file0=TFile::Open( input_root_file );
+  TFile *file_nominal=TFile::Open( input_root_file_mc );
   TFile *file_JECup=TFile::Open( input_root_file_mc_JECplus5percent );
   TFile *file_JECdown=TFile::Open( input_root_file_mc_JECminus5percent );
   TH1D* hist_mass_original = (TH1D*) file0->Get( input_1Dhistogram );  
-  TH1D* hist_mass_original_mc_JECnominal = (TH1D*) file0->Get( input_1Dhistogram_mc );  
+  TH1D* hist_mass_original_mc_JECnominal = (TH1D*) file_nominal->Get( input_1Dhistogram_mc );  
   TH1D* hist_mass_original_mc_JECup = (TH1D*) file_JECup->Get( input_1Dhistogram_mc );  
   TH1D* hist_mass_original_mc_JECdown = (TH1D*) file_JECdown->Get( input_1Dhistogram_mc );  
 
@@ -155,20 +168,41 @@ void SimpleDiJetFitV1()
   TCanvas* c_JES = new TCanvas("c_JES","",600,600);
   c_JES->cd();
   c_JES->SetLogy(1);
+  hist_mass_mc_JECnominal->SetLineColor(1);
+  hist_mass_mc_JECnominal->SetLineWidth(1);
+  hist_mass_mc_JECnominal->SetFillStyle(0);
   hist_mass_mc_JECnominal->GetXaxis()->SetRangeUser(minX_mass,maxX_mass);
+  hist_mass_mc_JECnominal->GetYaxis()->SetRangeUser(-4,4);
   hist_mass_mc_JECnominal->Draw("hist");
-  hist_mass_mc_JECplus5percent->SetLineWidth(2);
+  hist_mass_mc_JECplus5percent->SetFillStyle(0);
+  hist_mass_mc_JECplus5percent->SetLineWidth(1);
   hist_mass_mc_JECplus5percent->SetLineColor(2);
   hist_mass_mc_JECplus5percent->Draw("hist same");
-  hist_mass_mc_JECminus5percent->SetLineWidth(2);
-  hist_mass_mc_JECminus5percent->SetLineColor(3);
+  hist_mass_mc_JECminus5percent->SetFillStyle(0);
+  hist_mass_mc_JECminus5percent->SetLineWidth(1);
+  hist_mass_mc_JECminus5percent->SetLineColor(4);
   hist_mass_mc_JECminus5percent->Draw("hist same");
   gPad->RedrawAxis();
+  TLegend* l_check = new TLegend(0.5,0.7,0.85,0.85);
+  l_check->AddEntry(hist_mass_mc_JECnominal,"JEC nominal","l");
+  l_check->AddEntry(hist_mass_mc_JECplus5percent,"JEC+5%","l");
+  l_check->AddEntry(hist_mass_mc_JECminus5percent,"JEC-5%","l");
+  l_check->Draw();
   c_JES->SaveAs("dijetmass_JES.png");
 
   //### fit mass histogram with background function
   TF1 *M1Bkg;
 
+  // -1: (3 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2] )" 
+  if( FunctionType==-1 )    
+    {
+      nPar=3;
+      M1Bkg = new TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2] ))",minX_mass, maxX_mass);
+      M1Bkg->SetParameter(0,0.08);
+      M1Bkg->SetParameter(1,11);
+      M1Bkg->SetParameter(2,2);
+
+    }
   // 0: DEFAULT (4 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )" 
   if( FunctionType==0 )    
     {
@@ -189,12 +223,12 @@ void SimpleDiJetFitV1()
       M1Bkg->SetParameter(3,0.2595);
 
       //1 fb-1
-      M1Bkg->SetParLimits(0,0.,10);
+      //M1Bkg->SetParLimits(0,0.,10);
       //10 fb-1
       //M1Bkg->SetParLimits(0,0,1.);
-      M1Bkg->SetParLimits(1,0.,10000);
-      M1Bkg->SetParLimits(2,1.,10000);
-      M1Bkg->SetParLimits(3,0.,10000);
+      //M1Bkg->SetParLimits(1,0.,10000);
+      //M1Bkg->SetParLimits(2,1.,10000);
+      //M1Bkg->SetParLimits(3,0.,10000);
 
       //M1Bkg->FixParameter(3,0.);
     }
@@ -218,11 +252,12 @@ void SimpleDiJetFitV1()
   r_bin->SetName("fit_result_M1Bkg_binned");
   //TFile* fitresult_binned = new TFile("fitresult_binned_1fb-1.root","recreate");
   //fitresult_binned->cd();
+  hist_mass_original->Scale(1./lumi); 
   int stopProgram=1;
   for( int loop=0; loop<10; loop++)
     {
       //r = hist_mass->Fit("M1Bkg","LS","",minX_mass,maxX_mass);      
-      r_bin = hist_mass->Fit("M1Bkg","ILSR","",minX_mass,maxX_mass);      
+      r_bin = hist_mass_original->Fit("M1Bkg","ELLSR","",minX_mass,maxX_mass);      
       Int_t fitStatus = r_bin;
       if(fitStatus==0)
 	{
@@ -301,13 +336,18 @@ void SimpleDiJetFitV1()
   double vexh[number_of_variableWidth_bins];
   double veyl[number_of_variableWidth_bins];
   double veyh[number_of_variableWidth_bins];
-  double vx_mc[number_of_variableWidth_bins-41];
-  double vx_mc_el[number_of_variableWidth_bins-41];
-  double vx_mc_eh[number_of_variableWidth_bins-41];
-  double vy_mc[number_of_variableWidth_bins-41];
-  double vy_mc_el[number_of_variableWidth_bins-41];
-  double vy_mc_eh[number_of_variableWidth_bins-41];
-  double sf = 0.8;
+  double vx_mc[number_of_variableWidth_bins-40];
+  double vx_mc_el[number_of_variableWidth_bins-40];
+  double vx_mc_eh[number_of_variableWidth_bins-40];
+  double vy_mc[number_of_variableWidth_bins-40];
+  double vy_mc_el[number_of_variableWidth_bins-40];
+  double vy_mc_eh[number_of_variableWidth_bins-40];
+  double vy_mc_JECplus5percent[number_of_variableWidth_bins-40];
+  double vy_mc_JECminus5percent[number_of_variableWidth_bins-40];
+  //double sf = 0.8;
+  //double sf = 1.18;
+  double sf = 1.;
+  //double sf =1.472764e+00;
   for(int i=0; i<number_of_variableWidth_bins; ++i)
     {
       double n    = hist_binned->GetBinContent(i+1);
@@ -326,8 +366,10 @@ void SimpleDiJetFitV1()
 	vx_mc[i-40]   = vx[i]; 
 	vx_mc_el[i-40]   = vexl[i]; 
 	vx_mc_eh[i-40]   = vexh[i]; 
-	
+	vy_mc_JECplus5percent[i-40]=n_mc_JECplus5percent*sf / (dm*lumi);
+	vy_mc_JECminus5percent[i-40]=n_mc_JECminus5percent*sf / (dm*lumi);
 	vy_mc[i-40]   = n_mc_JEC_nominal*sf  / (dm*lumi);
+	cout << "vy_mc["<<i<<"-40] =" << vy_mc[i-40] << endl;
 	if (n_mc_JECplus5percent > n_mc_JEC_nominal){
 	  vy_mc_el[i-40]  = TMath::Abs( n_mc_JECplus5percent -  n_mc_JEC_nominal )*sf / (dm*lumi);  
 	  vy_mc_eh[i-40]  = TMath::Abs( n_mc_JEC_nominal - n_mc_JECminus5percent )*sf / (dm*lumi);  
@@ -340,7 +382,7 @@ void SimpleDiJetFitV1()
 	  std::cout << "both bands on the same side!!!" << std::endl;
 	  if(n_mc_JEC_nominal !=0)
 	    {
-	      //std::cout << "x_mc=" << vx[i] << "  y_mc=" << vy_mc[i] << "  y_mc_el=" << vy_mc_el[i] << "  y_mc_eh=" << vy_mc_eh[i]  << "   e_low/y (%)" << 100 *vy_mc_el[i]/vy_mc[i] << std::endl;
+	      std::cout << "x_mc=" << vx[i] << "  y_mc=" << vy_mc[i-40] << "  y_mc_el=" << vy_mc_el[i-40] << "  y_mc_eh=" << vy_mc_eh[i-40]  << "   e_low/y (%)" << 100 *vy_mc_el[i-40]/vy_mc[i-40] << std::endl;
 	      std::cout  << "x_mc=" << vx[i] << "    JEC+5% : " << n_mc_JECplus5percent << "JEC nom: " << n_mc_JEC_nominal << "    JEC-5%: " << n_mc_JECminus5percent <<"    " << 100*TMath::Abs(n_mc_JECplus5percent-n_mc_JEC_nominal)/n_mc_JEC_nominal << " %" <<std::endl;
 	    }
 	}
@@ -366,14 +408,26 @@ void SimpleDiJetFitV1()
   g->SetName("g_data");
   // mc in TGaph format
   TGraphAsymmErrors *g_mc = new TGraphAsymmErrors(number_of_variableWidth_bins-41,vx_mc,vy_mc,vx_mc_el,vx_mc_eh,vy_mc_el,vy_mc_eh);
-  g_mc->SetName("g_mc");
+  TGraph *g_mc_simple = new TGraph(number_of_variableWidth_bins-41,vx_mc,vy_mc);
+  TGraph *g_mc_JEC_plus5percent = new TGraph(number_of_variableWidth_bins-41,vx_mc,vy_mc_JECplus5percent);
+  TGraph *g_mc_JEC_minus5percent = new TGraph(number_of_variableWidth_bins-41,vx_mc,vy_mc_JECminus5percent);
+  TGraph *grshade = new TGraph(2*(number_of_variableWidth_bins-41));
+  for (i=0;i<(number_of_variableWidth_bins-41);i++) {
+    grshade->SetPoint(i,vx_mc[i],vy_mc_JECminus5percent[i]);
+    grshade->SetPoint(n+i,vx_mc[(number_of_variableWidth_bins-41)-i-1],vy_mc_JECplus5percent[(number_of_variableWidth_bins-41)-i-1]);
+  }
+  g_mc->SetName("g_mc") ;
 
 //#######################################################
   // fit residuals and chi2 from TGraphAsymmErrors
   TH1D* hist_fit_residual_vsMass = new TH1D("hist_fit_residual_vsMass","hist_fit_residual_vsMass",number_of_variableWidth_bins,massBins);
   TH1D* hist_fit_residual = new TH1D("hist_fit_residual","hist_fit_residual",10,-5,5);
+  TH1D* hist_mc_residual_vsMass = new TH1D("hist_mc_residual_vsMass","",number_of_variableWidth_bins,massBins);
   int NumberOfObservations_VarBin = 0;
+  int NumberOfObservations_VarBin_nonZeroBins = 0;
   double chi2_VarBin = 0.;
+  double chi2_VarBin_nonZeroBins = 0.;
+  double chi2_VarBin_MC = 0.;
   double integral_4p2TeV = M1Bkg->Integral(4200, 13000 );
   double integral_3TeV = M1Bkg->Integral(3000, 13000 );
   double integral_3p5TeV = M1Bkg->Integral(3500, 13000 );
@@ -402,30 +456,49 @@ void SimpleDiJetFitV1()
       }
       if( hist_mass->GetXaxis()->GetBinLowEdge(bin)>=minX_mass 
  	  && hist_mass->GetXaxis()->GetBinUpEdge(bin)<=maxX_mass )
- 	{	  
+	{	  
 	  NumberOfObservations_VarBin++;
 	  cout << "bin content = " << hist_mass->GetBinContent(bin) << "   graph y = " << vy[bin-1] << "  error y low = " << g->GetErrorYlow(bin-1) << endl ;
 	  double data = hist_mass->GetBinContent(bin);
 	  double err_data_low = g->GetErrorYlow(bin-1);
 	  double err_data_high= g->GetErrorYhigh(bin-1);
+	  //double mc = hist_mass_mc_JECnominal->GetBinContent(bin);
+	  //double err_mc_low = g_mc->GetErrorYlow(bin-1);
+	  //double err_mc_high= g_mc->GetErrorYhigh(bin-1);
+	  double mc = hist_mass_mc_JECminus5percent->GetBinContent(bin);
+	  double err_mc_low = g_mc_JEC_minus5percent->GetErrorYlow(bin-1);
+	  double err_mc_high= g_mc_JEC_minus5percent->GetErrorYhigh(bin-1);
 
-  	  double fit = M1Bkg->Integral(hist_mass->GetXaxis()->GetBinLowEdge(bin) 
+	  double fit = M1Bkg->Integral(hist_mass->GetXaxis()->GetBinLowEdge(bin) 
 				       , hist_mass->GetXaxis()->GetBinUpEdge(bin) ); 
 	  fit = fit / ( hist_mass->GetBinWidth(bin) );
-	  double err_tot;
+	  double err_tot, err_tot_mc;
 	  if(fit > data) err_tot = err_data_high;
 	  else err_tot = err_data_low; 
+	  if(mc>data) err_tot_mc = err_data_high;
+	  else err_tot_mc = err_data_low;
 
 	  double fit_residual = (data - fit) / err_tot;
 	  double err_fit_residual = 1;
-	    	  
-	  chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 );	 
 
+	  double mc_residual = (data - mc) / err_tot_mc;
+	  double err_mc_residual = 1;
+
+	  chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 );	 
+	  chi2_VarBin_MC += pow( (data - mc),2 ) / pow( err_tot_mc , 2);
+	  if(hist_mass->GetBinContent(bin) >0) {
+	    chi2_VarBin_nonZeroBins += pow( (data - fit) , 2 ) / pow( err_tot , 2 );
+	    NumberOfObservations_VarBin_nonZeroBins++;
+	  
+	  }
 	  // 	  cout << "data, err_tot, fit: " << data << ", " << err_tot << ", " << fit << endl;
 	  // 	  cout << "bin, fit residual : " << bin << ", " <<fit_residual << endl;	  
 	  hist_fit_residual_vsMass->SetBinContent(bin,fit_residual);
 	  hist_fit_residual_vsMass->SetBinError(bin,err_fit_residual);
 	  hist_fit_residual->Fill(fit_residual);
+	  hist_mc_residual_vsMass->SetBinContent(bin,mc_residual);
+	  hist_mc_residual_vsMass->SetBinError(bin,err_mc_residual);
+	  hist_mc_residual_vsMass->Fill(mc_residual);
 
 	  //write on txt file
 	  myfile << hist_mass->GetXaxis()->GetBinLowEdge(bin) << "      " << hist_mass->GetXaxis()->GetBinUpEdge(bin) << "      " << data << "      " << err_data_low << "       " << err_data_high  << endl;
@@ -435,10 +508,16 @@ void SimpleDiJetFitV1()
   myfile.close();
   
   int ndf_VarBin = NumberOfObservations_VarBin - nPar  ;
+  int ndf_VarBin_nonZeroBins = NumberOfObservations_VarBin_nonZeroBins - nPar  ;
   cout << "============================" << endl;
-  cout << "NumberOfObservations_VarBin: " << NumberOfObservations_VarBin << endl;
+  cout << "NumberOfObservations_VarBin: " << NumberOfObservations_VarBin_nonZeroBins << endl;
   cout << "ndf_VarBin: " << ndf_VarBin << endl;
   cout << "chi2_VarBin: " << chi2_VarBin << endl;
+  cout << "chi2_VarBin_MC: " << chi2_VarBin_MC << endl;
+  cout << "ndf_VarBin_nonZeroBins: " << ndf_VarBin_nonZeroBins << endl;
+  cout << "chi2_VarBin_nonZeroBins: " << chi2_VarBin_nonZeroBins << endl;
+
+  cout << "==============================" << endl;
   cout << "integral fit func > 4.2 TeV " << integral_4p2TeV*lumi << endl;
   cout << "integral fit func > 3.0 TeV " << integral_3TeV*lumi << endl;
   cout << "integral fit func > 3.5 TeV " << integral_3p5TeV*lumi << endl;
@@ -446,9 +525,9 @@ void SimpleDiJetFitV1()
   cout << "integral sig  > 3.0 TeV " << integral_3TeV_sig*lumi << endl;
   cout << "integral sig  > 3.5 TeV " << integral_3p5TeV_sig*lumi << endl;
   cout << "integral sig > 4.0 TeV " << integral_4TeV_sig*lumi << endl;
-  cout << "integral data > 3.0 TeV " << integral_3TeV_data*lumi << endl;
-  cout << "integral data  > 3.5 TeV " << integral_3p5TeV_data*lumi << endl;
-  cout << "integral data > 4.0 TeV " << integral_4TeV_data*lumi << endl;
+ // cout << "integral data > 3.0 TeV " << integral_3TeV_data*lumi << endl;
+ // cout << "integral data  > 3.5 TeV " << integral_3p5TeV_data*lumi << endl;
+ // cout << "integral data > 4.0 TeV " << integral_4TeV_data*lumi << endl;
   cout << "============================" << endl;  
 
 
@@ -577,7 +656,7 @@ void SimpleDiJetFitV1()
 //  TText *text3 = pt3->AddText("L= 21.239 pb^{-1}");
 //  //TText *text3 = pt3->AddText("L= 1 fb^{-1}");
 //
-  TH1F *vFrame = p11_1->DrawFrame(minX_mass,0.000005,maxX_mass,5.0);
+  TH1F *vFrame = p11_1->DrawFrame(minX_mass,0.000002,maxX_mass,5.0);
 
   vFrame->SetTitle("");
   vFrame->SetXTitle("Dijet Mass (GeV)");
@@ -602,25 +681,35 @@ void SimpleDiJetFitV1()
 //  gStyle->SetEndErrorSize(0);
   g->SetMarkerSize(0.9);
   //g_mc->SetMarkerSize(0);
-  g_mc->SetLineColor(kBlue);
+  g_mc->SetLineStyle(2);
+  g_mc->SetLineColor(0);
+  g_mc->SetLineWidth(0);
   g_mc->SetFillColor(kBlue);
   g_mc->SetFillStyle(3002);
   g_mc->SetLineWidth(2);
-  g_mc->GetXaxis()->SetRangeUser(1181,maxX_mass);
+  g_mc->GetXaxis()->SetRangeUser(minX_mass,maxX_mass);
+  g_mc_simple->SetLineColor(kBlue);
+  g_mc_simple->SetLineWidth(2);
+  g_mc_simple->SetLineStyle(2);
+  grshade->SetFillStyle(3002);
+  grshade->SetFillColor(kBlue);
+  grshade->GetXaxis()->SetRangeUser(minX_mass,maxX_mass);
 
   g_mc->Draw("c3");
+  //grshade->Draw("cf");
+  g_mc_simple->Draw("c");
   g->Draw("pe0 same");
   M1Bkg->SetLineWidth(2);
-  M1Bkg->SetLineStyle(2);
+  M1Bkg->SetLineStyle(0);
   M1Bkg->SetLineColor(2);
   M1Bkg->Draw("same");
   
-  h_w->SetLineColor(kBlue);
+  h_w->SetLineColor(kBlack);
   h_w->SetLineWidth(2);
   h_w->SetLineStyle(2);
   h_w->Draw("same");
 
-  //TLegend *leg = new TLegend(0.5564991,0.4,0.8903575,0.575812);
+  //TLegend *leg = new TLegend(0.5564991,0.55,0.8903575,0.705812);
   TLegend *leg = new TLegend(0.5564991,0.55,0.8903575,0.80);
   leg->SetTextSize(0.03546853);
   leg->SetLineColor(0);
@@ -629,9 +718,11 @@ void SimpleDiJetFitV1()
   leg->SetFillColor(0);
   leg->SetFillStyle(0);
   leg->SetMargin(0.35);
+  //leg->AddEntry(hist_mass,"pseudo-data" ,"PL");
+  //leg->AddEntry(M1Bkg,"fit to pseudo-data","L");
   leg->AddEntry(hist_mass,"data" ,"PL");
-  leg->AddEntry(M1Bkg,"fit to data","L");
-  leg->AddEntry(g_mc,"QCD MC","L");
+  leg->AddEntry(M1Bkg,"bkg fit to data","L");
+  leg->AddEntry(g_mc_simple,"QCD MC","L");
   leg->AddEntry(g_mc,"JEC uncertainty","F");
   leg->AddEntry(h_w,"q* (4.5 TeV)","L");
   leg->Draw("same");
@@ -698,10 +789,10 @@ void SimpleDiJetFitV1()
     hist_sig_significance->SetBinContent(i,significance);
 
   }
-  hist_sig_significance->SetLineColor(kBlue) ;
+  hist_sig_significance->SetLineColor(kBlack) ;
   hist_sig_significance->SetLineWidth(2) ;
   hist_sig_significance->SetLineStyle(2) ;
-  hist_sig_significance->Draw("same");
+//  hist_sig_significance->Draw("same");
   
   
   
@@ -755,6 +846,61 @@ void SimpleDiJetFitV1()
   ////Canvas3->SaveAs(c3_fileName);
   c->SaveAs(c4_fileName_1);
   c->SaveAs(c4_fileName_2);
+
+  //a version of the mjj plot with only mc  and mc residuals
+  c->cd();
+  p11_1->cd();
+  p11_1->Clear();
+  vFrame = p11_1->DrawFrame(minX_mass,0.0000005,maxX_mass,5.0);
+  g_mc_JEC_minus5percent->SetLineColor(kBlue);
+  g_mc_JEC_minus5percent->SetLineWidth(2);
+  //g_mc->Draw("c3");
+  //g_mc_simple->Draw("c");
+  g_mc_JEC_minus5percent->Draw("c");
+  g->Draw("pe0 same");
+  // writing the lumi information and the CMS "logo"
+  CMS_lumi( p11_1, iPeriod, iPos );
+  //redraw axis
+  p11_1->RedrawAxis();
+  p11_1->Update();
+  vFrame->SetYTitle("d#sigma / dm_{jj}   (pb / GeV)");
+  p11_1->GetFrame()->Draw();
+  vFrame->SetXTitle("Dijet Mass (GeV)");
+  vFrame->GetXaxis()->SetTitleSize(0.06);
+  vFrame->GetXaxis()->SetTitleOffset(0.95);
+  vFrame->GetXaxis()->SetLabelSize(0.05);
+  vFrame->GetYaxis()->SetTitleSize(0.06);
+  vFrame->GetYaxis()->SetTitleOffset(0.95);
+  vFrame->GetYaxis()->SetLabelSize(0.05);
+
+
+  p11_2->cd();
+  p11_2->Clear();
+  p11_2->Update();
+  vFrame2 = p11_2->DrawFrame(minX_mass,-3,maxX_mass,3);
+  vFrame2->SetXTitle("Dijet Mass (GeV)");
+  vFrame2->SetYTitle("(Data-Fit)/#sigma");
+  vFrame2->GetXaxis()->SetTitleSize(0.06);
+  vFrame2->GetYaxis()->SetTitleSize(0.15);
+  vFrame2->GetYaxis()->SetTitleOffset(0.40);
+  vFrame2->GetYaxis()->SetLabelSize(0.09);
+  vFrame2->GetXaxis()->SetTitleSize(0.18);
+  vFrame2->GetXaxis()->SetTitleOffset(0.90);
+  vFrame2->GetXaxis()->SetLabelSize(0.15);
+  vFrame2->GetYaxis()->SetRangeUser(-3,3);
+  p11_2->GetFrame()->Draw();
+  p11_2->Update();
+  hist_mc_residual_vsMass->GetXaxis()->SetRangeUser(minX_mass,maxX_mass);
+  hist_mc_residual_vsMass->GetYaxis()->SetRangeUser(-4,4);
+  hist_mc_residual_vsMass->SetLineWidth(0);
+  hist_mc_residual_vsMass->SetFillColor(kBlue);
+  hist_mc_residual_vsMass->SetLineColor(1);
+  hist_mc_residual_vsMass->Draw("hist");  
+  p11_2->RedrawAxis();  
+
+  char  canvasname[500];
+  sprintf(canvasname, "mcAndResiduals_JECminus5percent_%s.png",fileNameSuffix);
+  c->SaveAs(canvasname);
 
 }
 

@@ -17,7 +17,7 @@ tdrstyle.setTDRStyle()
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
 CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
-CMS_lumi.lumi_13TeV = "40.2 pb^{-1}"
+CMS_lumi.lumi_13TeV = "41.8 pb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -27,7 +27,9 @@ if( iPos==0 ): CMS_lumi.relPosX = 0.12
 iPeriod = 4
  
   
-fileNameSuffix = "test_range_1118_3704"
+#fileNameSuffix = "test_range_1118_3704"
+#fileNameSuffix = "test"
+fileNameSuffix = "JEC_L2L3Residuals"
 
 
 #Fit functions
@@ -55,19 +57,21 @@ number_of_variableWidth_bins = 103
 massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430,10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000];
 
 v_massBins = array("d",massBins)
-lumi = 40.2
-sf = 0.8
+lumi = 41.8
+sf = 1.18
 #sf=1.
 #minX_mass = 1000.
 minX_mass = 1118.
-maxX_mass = 3704.
+#maxX_mass = 3019.
 #maxX_mass = 5253.
+maxX_mass = 5663.
 #================================================================================================================
   
 def main():
   
   # data 
-  input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
+  input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals/histo_data_mjj_fromTree.root"
+  #input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
   input_root_file_mc = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
  ### input file and 1D histo
   file0 = TFile.Open( input_root_file )
@@ -78,7 +82,8 @@ def main():
   hist_mass_original = file0.Get(input_1Dhistogram)
   hist_binned = hist_mass_original.Rebin(number_of_variableWidth_bins,"hist_binned",v_massBins)
   hist_mass = TH1F("hist_mass","",number_of_variableWidth_bins,v_massBins)
-  
+  hist_mass_original.Scale(1/lumi)
+
   hist_mass_original_mc = fileMC.Get(input_1Dhistogram_mc)
   hist_mass_original_mc.Scale(sf)
   hist_binned_mc = hist_mass_original_mc.Rebin(number_of_variableWidth_bins,"hist_binned_MC",v_massBins)
@@ -169,9 +174,10 @@ def main():
   list_F = []
   list_CL = []
   list_pvalue_WaldTest = []
+  list_CL_WaldTest = []
   i_f = 0
   for FunctionType in FunctionTypes:
-    fitresult = doFitAndChi2(FunctionType,hist_mass,g)
+    fitresult = doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original)
     list_RSS.append(fitresult[0])
     list_chi2.append(fitresult[2])
     list_dof.append(fitresult[1])
@@ -182,6 +188,7 @@ def main():
     DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix)
     print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
     list_pvalue_WaldTest.append(result_WaldTest)
+    list_CL_WaldTest.append(1-result_WaldTest)
     if (i_f > 0):
       result = FisherTest(list_RSS[i_f-1],list_RSS[i_f],list_dof[i_f-1],list_dof[i_f],nBins_fit)
       F = result[0]
@@ -195,27 +202,33 @@ def main():
   Ndof_mc = result_mc[1] 
   hist_mc_residual_vsMass = result_mc[2] 
   pvalue_WaldTest_mc = WaldWolfowitzTest(hist_mc_residual_vsMass)
+  CL_WaldTest_mc =1- pvalue_WaldTest_mc
   DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix)
 
   print "nBins_Fit = "+str(nBins_fit)
   print "list_RSS = "+str(list_RSS)
   print "chi2 MC = "+str(chi2_mc)
   print "pvalue_WaldTest MC = "+str(pvalue_WaldTest_mc)
+  print "CL_WaldTest MC = "+str(CL_WaldTest_mc)
   print "list_chi2 = "+str(list_chi2)
   print "list_dof ="+str(list_dof)
   print "list_F = "+str(list_F)
   print "list_CL = "+str(list_CL)
   print "list_pvalue_WaldTest = "+str(list_pvalue_WaldTest)
+  print "list_CL_WaldTest = "+str(list_CL_WaldTest)
 
 def doChi2MC(g,hist_mass,hist_mass_mc):
   hist_mc_residual_vsMass =  TH1D("hist_mc_residual_vsMass","hist_mc_residual_vsMass",number_of_variableWidth_bins,v_massBins)
   NumberOfObservations_VarBin = 0
-  chi2_VarBin = 0.
+  NumberOfVarBins = 0
+  chi2_VarBin_zeroes = 0
+  chi2_VarBin = 0
   for bin in range (1,number_of_variableWidth_bins):
     mc_residual = 0
     hist_mc_residual_vsMass.SetBinContent(bin,mc_residual)
   
     if( hist_mass_mc.GetXaxis().GetBinLowEdge(bin)>=minX_mass and hist_mass_mc.GetXaxis().GetBinUpEdge(bin)<=maxX_mass ):
+      NumberOfVarBins += 1
       #print "bin content = " + str(hist_mass.GetBinContent(bin)) + "   graph y = " + str(vy[bin-1]) + "  error y low = " + str(g.GetErrorYlow(bin-1))
       data = hist_mass.GetBinContent(bin)
       err_data_low = g.GetErrorYlow(bin-1) 
@@ -230,6 +243,8 @@ def doChi2MC(g,hist_mass,hist_mass_mc):
       mc_residual = (data - mc) / err_tot
       err_mc_residual = 1
       print "data %f   mc %f   error %f  residual %f" % (data,mc,err_tot,mc_residual)
+      chi2_VarBin_zeroes += pow( (data - mc) , 2 ) / pow( err_tot , 2 )
+
       ##skip bin with zero entries
       if (hist_mass.GetBinContent(bin)>0): 
 	NumberOfObservations_VarBin+=1
@@ -238,22 +253,27 @@ def doChi2MC(g,hist_mass,hist_mass_mc):
     print "bin : %d   mc_residual : %f" % (bin,mc_residual) 
     
   ndf_VarBin = NumberOfObservations_VarBin #-1 
+  ndf_VarBin_withzeroes = NumberOfVarBins #-1 
   print "============ MC ==============" 
   print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
   print "ndf_VarBin: %d" % ndf_VarBin 
   print "chi2_VarBin: %f" % chi2_VarBin
+  print "ndf_VarBin with zeroes: %d" % ndf_VarBin_withzeroes 
+  print "chi2_VarBin with zeroes: %f" % chi2_VarBin_zeroes
   print "============================"   
   return [chi2_VarBin,ndf_VarBin,hist_mc_residual_vsMass]
   
 
-def doFitAndChi2(FunctionType,hist_mass,g):
+def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   ### fit mass histogram with background function
   # -2: VARIATION-1 (3 par.) - " [0] / ( TMath::Power(x/13000,[2]) )" 
   if( FunctionType==-2 ):    
     nPar=2
     M1Bkg = TF1("M1Bkg"," [0] / ( TMath::Power(x/13000,[1]) )",minX_mass,maxX_mass)
     M1Bkg.SetParameter(0,0.08)
-    M1Bkg.SetParameter(1,2.8)
+    M1Bkg.SetParameter(1,2)
+    M1Bkg.SetParLimits(0,0.,10);
+    M1Bkg.SetParLimits(1,0.,20);
   
   
   # -1: VARIATION-1 (3 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )" 
@@ -261,32 +281,34 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     nPar=3
     M1Bkg = TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]) )",minX_mass,maxX_mass)
     M1Bkg.SetParameter(0,0.08)
-    M1Bkg.SetParameter(1,28)
-    M1Bkg.SetParameter(2,2.8)
+    M1Bkg.SetParameter(1,11)
+    M1Bkg.SetParameter(2,2)
   
     #1 fb-1
-    M1Bkg.SetParLimits(0,0.,10);
+    #M1Bkg.SetParLimits(0,0.,10);
     #10 fb-1
     #M1Bkg->SetParLimits(0,0,1.);
-    M1Bkg.SetParLimits(1,0.,10000)
-    M1Bkg.SetParLimits(2,1.,10000)
+    #M1Bkg.SetParLimits(1,0.,100)
+    #M1Bkg.SetParLimits(2,0.,20)
   
   # 0: DEFAULT (4 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )" 
   if( FunctionType==0 ):    
     nPar=4
     M1Bkg = TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",minX_mass,maxX_mass)
     M1Bkg.SetParameter(0,0.08)
-    M1Bkg.SetParameter(1,28)
-    M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.2595)
+    M1Bkg.SetParameter(1,12)
+    M1Bkg.SetParameter(2,2)
+    M1Bkg.SetParameter(3,-0.5)
   
     #1 fb-1
-    M1Bkg.SetParLimits(0,0.,10);
+    #M1Bkg.SetParLimits(0,0.,10);
     #10 fb-1
     #M1Bkg->SetParLimits(0,0,1.);
-    M1Bkg.SetParLimits(1,0.,10000)
-    M1Bkg.SetParLimits(2,1.,10000)
-    M1Bkg.SetParLimits(3,0.,10000)
+   # M1Bkg.SetParLimits(1,0.,10000)
+   # M1Bkg.SetParLimits(2,1.,10000)
+   # M1Bkg.SetParLimits(1,0,100)
+   # M1Bkg.SetParLimits(2,0.,20)
+   # M1Bkg.SetParLimits(3,-10.,10)
    # M1Bkg.FixParameter(3,0.)
      
   
@@ -336,16 +358,20 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     nPar=5
     M1Bkg = TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)) )",minX_mass,maxX_mass);
     M1Bkg.SetParameter(0,0.08)
-    M1Bkg.SetParameter(1,28)
-    M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.2595)
+    M1Bkg.SetParameter(1,12)
+    M1Bkg.SetParameter(2,2)
+    M1Bkg.SetParameter(3,-0.5)
     M1Bkg.SetParameter(4,0.)
     #M1Bkg.SetParLimits(3,0,0.4)
     #M1Bkg.FixParameter(3,0.)
     #M1Bkg.FixParameter(4,0.)
-    M1Bkg.SetParLimits(1,0.,10000)
-    M1Bkg.SetParLimits(2,1.,10000)
-    M1Bkg.SetParLimits(3,0.,10000)
+    #M1Bkg.SetParLimits(1,0.,10000)
+    #M1Bkg.SetParLimits(2,1.,10000)
+    #M1Bkg.SetParLimits(0,0.,10);
+    #M1Bkg.SetParLimits(1,0.,100)
+    #M1Bkg.SetParLimits(2,0.,20)
+    #M1Bkg.SetParLimits(3,-10,10)
+    #M1Bkg.SetParLimits(4,-10,10)
    
   
   # 5: VARIATION 5 (6 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)+[5]*TMath::Power(log(x/13000),3)) )" 
@@ -354,18 +380,24 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     nPar=6
     M1Bkg = TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)+[5]*TMath::Power(log(x/13000),3)) )",minX_mass,maxX_mass)
     M1Bkg.SetParameter(0,0.08)
-    M1Bkg.SetParameter(1,28)
-    M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.2595)
+    M1Bkg.SetParameter(1,12)
+    M1Bkg.SetParameter(2,2)
+    M1Bkg.SetParameter(3,-0.5)
     M1Bkg.SetParameter(4,0.)
     M1Bkg.SetParameter(5,0.)
     #M1Bkg.SetParLimits(3,0,0.4)
     #M1Bkg.FixParameter(3,0.)
     #M1Bkg.FixParameter(4,0.)
     #M1Bkg.FixParameter(5,0.)
-    M1Bkg.SetParLimits(1,0.,10000)
-    M1Bkg.SetParLimits(2,1.,10000)
-    M1Bkg.SetParLimits(3,0.,10000)
+    #M1Bkg.SetParLimits(1,0.,10000)
+    #M1Bkg.SetParLimits(2,1.,10000)
+    #M1Bkg.SetParLimits(3,0.,10000)
+    #M1Bkg.SetParLimits(0,0.,10);
+    #M1Bkg.SetParLimits(1,1.,100)
+    #M1Bkg.SetParLimits(2,1.,20)
+    #M1Bkg.SetParLimits(3,-10,10)
+    #M1Bkg.SetParLimits(4,-10,10)
+    #M1Bkg.SetParLimits(5,-10,10)
    
   
   # 6: VARIATION 6 (7 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)+[5]*TMath::Power(log(x/13000),3)+[6]*TMath::Power(log(x/13000),4)) )" 
@@ -374,9 +406,9 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     nPar=7
     M1Bkg = TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)+[4]*TMath::Power(log(x/13000),2)+[5]*TMath::Power(log(x/13000),3)+[6]*TMath::Power(log(x/13000),4)) )",minX_mass,maxX_mass)
     M1Bkg.SetParameter(0,0.08)
-    M1Bkg.SetParameter(1,28)
-    M1Bkg.SetParameter(2,2.8)
-    M1Bkg.SetParameter(3,0.2595)
+    M1Bkg.SetParameter(1,12)
+    M1Bkg.SetParameter(2,2)
+    M1Bkg.SetParameter(3,-0.5)
     M1Bkg.SetParameter(4,0.)
     M1Bkg.SetParameter(5,0.)
     M1Bkg.SetParameter(6,0.)
@@ -385,17 +417,24 @@ def doFitAndChi2(FunctionType,hist_mass,g):
     #M1Bkg.FixParameter(4,0.)
     #M1Bkg.FixParameter(5,0.)
     #M1Bkg.FixParameter(6,0.)
-    M1Bkg.SetParLimits(1,0.,10000)
-    M1Bkg.SetParLimits(2,1.,10000)
-    M1Bkg.SetParLimits(3,0.,10000)
+    #M1Bkg.SetParLimits(1,0.,10000)
+    #M1Bkg.SetParLimits(2,1.,10000)
+    #M1Bkg.SetParLimits(3,0.,10000)
+    #M1Bkg.SetParLimits(0,0.,10);
+    #M1Bkg.SetParLimits(1,0.,100)
+    #M1Bkg.SetParLimits(2,0.,20)
+    #M1Bkg.SetParLimits(3,-10,10)
+    #M1Bkg.SetParLimits(4,-10,10)
+    #M1Bkg.SetParLimits(5,-10,10)
+    #M1Bkg.SetParLimits(6,-10,10)
   
   
   
   #TFitResultPtr r;
   stopProgram=1;
   for loop in range (0,10):
-    r = hist_mass.Fit("M1Bkg","ILSR","",minX_mass,maxX_mass)      
-    #r = hist_mass.Fit("M1Bkg","SR","",minX_mass,maxX_mass)      
+    r = hist_mass_original.Fit("M1Bkg","ELLSR","",minX_mass,maxX_mass)      
+    #r = hist_mass_original.Fit("M1Bkg","MSR","",minX_mass,maxX_mass)      
     fitStatus = int(r)
     print "fit status : %d" % fitStatus
     if(fitStatus==0):
@@ -415,13 +454,16 @@ def doFitAndChi2(FunctionType,hist_mass,g):
   # fit residuals and chi2
   hist_fit_residual_vsMass =  TH1D("hist_fit_residual_vsMass","hist_fit_residual_vsMass",number_of_variableWidth_bins,v_massBins)
   hist_fit_residual = TH1D("hist_fit_residual","hist_fit_residual",10,-5,5)
+  NumberOfVarBins = 0
   NumberOfObservations_VarBin = 0
   chi2_VarBin = 0.
   chi2_VarBin_notNorm = 0.
-  
+  chi2_VarBin_zeroes = 0.
+
   for bin in range (1,number_of_variableWidth_bins):
   
     if( hist_mass.GetXaxis().GetBinLowEdge(bin)>=minX_mass and hist_mass.GetXaxis().GetBinUpEdge(bin)<=maxX_mass ):
+      NumberOfVarBins += 1
       #print "bin content = " + str(hist_mass.GetBinContent(bin)) + "   graph y = " + str(vy[bin-1]) + "  error y low = " + str(g.GetErrorYlow(bin-1))
       data = hist_mass.GetBinContent(bin)
       err_data_low = g.GetErrorYlow(bin-1) 
@@ -433,6 +475,7 @@ def doFitAndChi2(FunctionType,hist_mass,g):
       fit_residual = (data - fit) / err_tot
       err_fit_residual = 1
       ##skip bin with zero entries
+      chi2_VarBin_zeroes += pow( (data - fit) , 2 ) / pow( err_tot , 2 )
       if (hist_mass.GetBinContent(bin)>0): 
 	NumberOfObservations_VarBin+=1
         chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 )	 
@@ -444,9 +487,12 @@ def doFitAndChi2(FunctionType,hist_mass,g):
       hist_fit_residual.Fill(fit_residual)
     
   ndf_VarBin = NumberOfObservations_VarBin - nPar# -1
+  ndf_VarBin_withzeroes = NumberOfVarBins - nPar# -1
   print "============================" 
   print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
   print "ndf_VarBin: %d" % ndf_VarBin 
+  print "ndf_VarBin with zeroes: %d" % ndf_VarBin_withzeroes 
+  print "chi2_VarBin with zeroes: %f" % chi2_VarBin_zeroes
   print "chi2_VarBin: %f" % chi2_VarBin
   print "chi2_VarBin_notNorm: %f" % chi2_VarBin_notNorm
   print "============================"   
@@ -490,7 +536,8 @@ def WaldWolfowitzTest(hist_fit_residual_vsMass):
   print "N %d Nruns %d   Nplus %d   Nminus %d " %(N,Nruns,Nplus,Nminus)
   Pdf  = TF1("WaldWolfowitzProb","[0]*exp(-0.5*(x-[1])**2/[2]**2)",-10000,10000) 
   mu = float(2*Nplus*Nminus)/float(N) + 1
-  sigma = float((mu-1)*(mu-2))/float(N-1)
+  sigma2 = float((mu-1)*(mu-2))/float(N-1)
+  sigma = TMath.Sqrt(sigma2)
   norm = 1/(TMath.Sqrt(2*TMath.Pi())*sigma)
   print "mu %f   sigma %f" %(mu,sigma)
   Pdf.SetParameter(0, norm)

@@ -54,6 +54,10 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
 
     JetCorrector = new FactorizedJetCorrector(vPar);
     JetCorrector_data = new FactorizedJetCorrector(vPar_data);
+
+    //uncertainty
+    unc = new JetCorrectionUncertainty("data/Summer15_50nsV2/Summer15_50nsV2_DATA_Uncertainty_AK4PFchs.txt");
+
   }
   
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;
@@ -152,6 +156,7 @@ void analysisClass::Loop()
        }
 
      std::vector<double> jecFactors;
+     std::vector<double> jecUncertainty;
      // new JECs could change the jet pT ordering. the vector below
      // holds sorted jet indices after the new JECs had been applied
      std::vector<unsigned> sortedJetIdx;
@@ -174,24 +179,41 @@ void analysisClass::Loop()
 	 JetCorrector_data->setJetA(jetAreaAK4->at(j));
 	 JetCorrector_data->setRho(rho);
 	 
+	 
 	 //nominal value of JECs
 	 double correction;
-	 if( int(getPreCutValue1("shiftJECs"))==0 ){
-	   if (isData == 1) correction = JetCorrector_data->getCorrection();
-	   else correction = JetCorrector->getCorrection();
-	 }
+	 //if( int(getPreCutValue1("shiftJECs"))==0 ){
+	 if (isData == 1) correction = JetCorrector_data->getCorrection();
+       	 else correction = JetCorrector->getCorrection();
+	 //}
+	 //JEC uncertainties
+	 unc->setJetEta(jetEtaAK4->at(j));
+	 unc->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
+	 double uncertainty = unc->getUncertainty(true);
+	 jecUncertainty.push_back(uncertainty); 
+	// if( jetPtAK4->at(j)/jetJecAK4->at(j)*correction > 500){
+	//   std::cout << "jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction << "   uncertainty:" <<  uncertainty  << std::endl;
+	// }
 	 //use "shifted" JECs for study of systematic uncertainties 
-	 else if( int(getPreCutValue1("shiftJECs"))==1 ){
-       	   if (isData == 1) correction = JetCorrector_data->getCorrection() * getPreCutValue2("shiftJECs");
-	   else correction = JetCorrector->getCorrection() * getPreCutValue2("shiftJECs");
+	 if( int(getPreCutValue1("shiftJECs"))==1 ){
+	   //flat shift
+       	   //if (isData == 1) correction = JetCorrector_data->getCorrection() * getPreCutValue2("shiftJECs");
+	   //else correction = JetCorrector->getCorrection() * getPreCutValue2("shiftJECs");
+       	   //shift of the corresponding unc
+	   correction = correction + getPreCutValue2("shiftJECs")*uncertainty;
+	   //if( jetPtAK4->at(j)/jetJecAK4->at(j)*correction > 500){
+	   //  std::cout << "jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction << "   uncertainty:" <<  uncertainty  << std::endl << std::endl;
+	   //}
 	 }
 
 	 jecFactors.push_back(correction);
 	 sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j))*correction, j));
+    
        }
        // get jet indices in decreasing pT order
        for(std::multimap<double, unsigned>::const_reverse_iterator it = sortedJets.rbegin(); it != sortedJets.rend(); ++it)
 	 sortedJetIdx.push_back(it->second);
+     
      }
      else
      {
@@ -355,6 +377,11 @@ void analysisClass::Loop()
        fillVariableWithValue( "phiAK4_j1", jetPhiAK4->at(0));
        fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(0));
        fillVariableWithValue( "jetJecAK4_j1", jetJecAK4->at(0));
+       //for (int ii=0; ii<no_jets_ak4; ii++ ){
+       // if ii==sortedJetIdx[0]{
+       //   fillVariableWithValue( "jetUncAK4_j1", jecUncertainty[ii]);
+       // }
+       //}
      }
      if( no_jets_ak4 >=2 ){
      fillVariableWithValue( "IdTight_j2",idTAK4->at(1));
