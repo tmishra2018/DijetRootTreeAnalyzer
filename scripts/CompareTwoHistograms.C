@@ -1,4 +1,4 @@
-// %%%%%%%%%%%%%%%%%  EXAMPLE OF USAGE %%%%%%%%%%%%%%%%%%%
+// %%%%%%%%%%%%%%%%%%  EXAMPLE OF USAGE %%%%%%%%%%%%%%%%%%%
 // ##RSqq
 // # root -b -l << EOF
 // # .L CompareTwoHistograms.C
