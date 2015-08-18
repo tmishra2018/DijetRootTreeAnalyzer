@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Jun 10 16:38:08 2015 by ROOT version 6.02/05
+// Mon Jul 13 13:33:03 2015 by ROOT version 6.02/05
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -44,6 +44,18 @@ public :
    const Int_t kMaxmjjAK8 = 1;
    const Int_t kMaxdEtajjAK8 = 1;
    const Int_t kMaxdPhijjAK8 = 1;
+   const Int_t kMaxpassFilterHBHE = 1;
+   const Int_t kMaxpassFilterCSCHalo = 1;
+   const Int_t kMaxpassFilterHCALlaser = 1;
+   const Int_t kMaxpassFilterECALDeadCell = 1;
+   const Int_t kMaxpassFilterGoodVtx = 1;
+   const Int_t kMaxpassFilterTrkFailure = 1;
+   const Int_t kMaxpassFilterEEBadSc = 1;
+   const Int_t kMaxpassFilterECALlaser = 1;
+   const Int_t kMaxpassFilterTrkPOG = 1;
+   const Int_t kMaxpassFilterTrkPOG_manystrip = 1;
+   const Int_t kMaxpassFilterTrkPOG_toomanystrip = 1;
+   const Int_t kMaxpassFilterTrkPOG_logError = 1;
    const Int_t kMaxptHat = 1;
    const Int_t kMaxprocessID = 1;
    const Int_t kMaxweight = 1;
@@ -96,6 +108,8 @@ public :
    vector<float>   *jetPhfAK4;
    vector<float>   *jetMufAK4;
    vector<float>   *jetElfAK4;
+   vector<float>   *jetNemfAK4;
+   vector<float>   *jetCemfAK4;
    vector<float>   *jetHf_hfAK4;
    vector<float>   *jetHf_emfAK4;
    vector<float>   *jetHofAK4;
@@ -108,6 +122,29 @@ public :
    vector<int>     *phoMultAK4;
    vector<float>   *jetPtAK4matchCaloJet;
    vector<float>   *jetEmfAK4matchCaloJet;
+   vector<float>   *jetPtAK4Calo;
+   vector<float>   *jetJecAK4Calo;
+   vector<float>   *jetEtaAK4Calo;
+   vector<float>   *jetPhiAK4Calo;
+   vector<float>   *jetMassAK4Calo;
+   vector<float>   *jetEnergyAK4Calo;
+   vector<float>   *jetAreaAK4Calo;
+   vector<float>   *jetEmfAK4Calo;
+   vector<float>   *jetPtAK4PFCluster;
+   vector<float>   *jetJecAK4PFCluster;
+   vector<float>   *jetEtaAK4PFCluster;
+   vector<float>   *jetPhiAK4PFCluster;
+   vector<float>   *jetMassAK4PFCluster;
+   vector<float>   *jetEnergyAK4PFCluster;
+   vector<float>   *jetAreaAK4PFCluster;
+   vector<float>   *jetPtAK4PFCalo;
+   vector<float>   *jetJecAK4PFCalo;
+   vector<float>   *jetEtaAK4PFCalo;
+   vector<float>   *jetPhiAK4PFCalo;
+   vector<float>   *jetMassAK4PFCalo;
+   vector<float>   *jetEnergyAK4PFCalo;
+   vector<float>   *jetAreaAK4PFCalo;
+   vector<float>   *jetEmfAK4PFCalo;
    vector<float>   *jetPtAK8;
    vector<float>   *jetJecAK8;
    vector<float>   *jetEtaAK8;
@@ -120,6 +157,8 @@ public :
    vector<float>   *jetPhfAK8;
    vector<float>   *jetMufAK8;
    vector<float>   *jetElfAK8;
+   vector<float>   *jetNemfAK8;
+   vector<float>   *jetCemfAK8;
    vector<float>   *jetHf_hfAK8;
    vector<float>   *jetHf_emfAK8;
    vector<float>   *jetHofAK8;
@@ -136,6 +175,18 @@ public :
    vector<int>     *neMultAK8;
    vector<int>     *phoMultAK8;
    vector<bool>    *triggerResult;
+   Bool_t          passFilterHBHE;
+   Bool_t          passFilterCSCHalo;
+   Bool_t          passFilterHCALlaser;
+   Bool_t          passFilterECALDeadCell;
+   Bool_t          passFilterGoodVtx;
+   Bool_t          passFilterTrkFailure;
+   Bool_t          passFilterEEBadSc;
+   Bool_t          passFilterECALlaser;
+   Bool_t          passFilterTrkPOG;
+   Bool_t          passFilterTrkPOG_manystrip;
+   Bool_t          passFilterTrkPOG_toomanystrip;
+   Bool_t          passFilterTrkPOG_logError;
    vector<float>   *npu;
    vector<int>     *PileupInteractions;
    vector<int>     *PileupOriginBX;
@@ -201,6 +252,8 @@ public :
    TBranch        *b_jetPhfAK4;   //!
    TBranch        *b_jetMufAK4;   //!
    TBranch        *b_jetElfAK4;   //!
+   TBranch        *b_jetNemfAK4;   //!
+   TBranch        *b_jetCemfAK4;   //!
    TBranch        *b_jetHf_hfAK4;   //!
    TBranch        *b_jetHf_emfAK4;   //!
    TBranch        *b_jetHofAK4;   //!
@@ -213,6 +266,29 @@ public :
    TBranch        *b_phoMultAK4;   //!
    TBranch        *b_jetPtAK4matchCaloJet;   //!
    TBranch        *b_jetEmfAK4matchCaloJet;   //!
+   TBranch        *b_jetPtAK4Calo;   //!
+   TBranch        *b_jetJecAK4Calo;   //!
+   TBranch        *b_jetEtaAK4Calo;   //!
+   TBranch        *b_jetPhiAK4Calo;   //!
+   TBranch        *b_jetMassAK4Calo;   //!
+   TBranch        *b_jetEnergyAK4Calo;   //!
+   TBranch        *b_jetAreaAK4Calo;   //!
+   TBranch        *b_jetEmfAK4Calo;   //!
+   TBranch        *b_jetPtAK4PFCluster;   //!
+   TBranch        *b_jetJecAK4PFCluster;   //!
+   TBranch        *b_jetEtaAK4PFCluster;   //!
+   TBranch        *b_jetPhiAK4PFCluster;   //!
+   TBranch        *b_jetMassAK4PFCluster;   //!
+   TBranch        *b_jetEnergyAK4PFCluster;   //!
+   TBranch        *b_jetAreaAK4PFCluster;   //!
+   TBranch        *b_jetPtAK4PFCalo;   //!
+   TBranch        *b_jetJecAK4PFCalo;   //!
+   TBranch        *b_jetEtaAK4PFCalo;   //!
+   TBranch        *b_jetPhiAK4PFCalo;   //!
+   TBranch        *b_jetMassAK4PFCalo;   //!
+   TBranch        *b_jetEnergyAK4PFCalo;   //!
+   TBranch        *b_jetAreaAK4PFCalo;   //!
+   TBranch        *b_jetEmfAK4PFCalo;   //!
    TBranch        *b_jetPtAK8;   //!
    TBranch        *b_jetJecAK8;   //!
    TBranch        *b_jetEtaAK8;   //!
@@ -225,6 +301,8 @@ public :
    TBranch        *b_jetPhfAK8;   //!
    TBranch        *b_jetMufAK8;   //!
    TBranch        *b_jetElfAK8;   //!
+   TBranch        *b_jetNemfAK8;   //!
+   TBranch        *b_jetCemfAK8;   //!
    TBranch        *b_jetHf_hfAK8;   //!
    TBranch        *b_jetHf_emfAK8;   //!
    TBranch        *b_jetHofAK8;   //!
@@ -241,6 +319,18 @@ public :
    TBranch        *b_neMultAK8;   //!
    TBranch        *b_phoMultAK8;   //!
    TBranch        *b_triggerResult;   //!
+   TBranch        *b_passFilterHBHE_;   //!
+   TBranch        *b_passFilterCSCHalo_;   //!
+   TBranch        *b_passFilterHCALlaser_;   //!
+   TBranch        *b_passFilterECALDeadCell_;   //!
+   TBranch        *b_passFilterGoodVtx_;   //!
+   TBranch        *b_passFilterTrkFailure_;   //!
+   TBranch        *b_passFilterEEBadSc_;   //!
+   TBranch        *b_passFilterECALlaser_;   //!
+   TBranch        *b_passFilterTrkPOG_;   //!
+   TBranch        *b_passFilterTrkPOG_manystrip_;   //!
+   TBranch        *b_passFilterTrkPOG_toomanystrip_;   //!
+   TBranch        *b_passFilterTrkPOG_logError_;   //!
    TBranch        *b_npu;   //!
    TBranch        *b_PileupInteractions;   //!
    TBranch        *b_PileupOriginBX;   //!
@@ -294,7 +384,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("/uscms_data/d2/ferencek/Dijets/CMSSW_7_4_4/src/CMSDIJET/DijetRootTreeMaker/prod/dijetTree_QstarToJJ_M_4000_RunIISpring15_mod.root/dijets/events");
+      chain->Add("dcap://cmsrm-se01.roma1.infn.it//pnfs/roma1.infn.it/data/cms//store/user/gdimperi/Dijet/data/Run2015B_JetHT_12June2015DCSJson_JECV5_4422c9ba9d/JetHT/crab_JetHT__Run2015B-PromptReco-v1__MINIAOD/150712_211959/0000/JetHT__Run2015B-PromptReco-v1__MINIAOD_1.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -366,6 +456,8 @@ void rootNtupleClass::Init(TTree *tree)
    jetPhfAK4 = 0;
    jetMufAK4 = 0;
    jetElfAK4 = 0;
+   jetNemfAK4 = 0;
+   jetCemfAK4 = 0;
    jetHf_hfAK4 = 0;
    jetHf_emfAK4 = 0;
    jetHofAK4 = 0;
@@ -378,6 +470,29 @@ void rootNtupleClass::Init(TTree *tree)
    phoMultAK4 = 0;
    jetPtAK4matchCaloJet = 0;
    jetEmfAK4matchCaloJet = 0;
+   jetPtAK4Calo = 0;
+   jetJecAK4Calo = 0;
+   jetEtaAK4Calo = 0;
+   jetPhiAK4Calo = 0;
+   jetMassAK4Calo = 0;
+   jetEnergyAK4Calo = 0;
+   jetAreaAK4Calo = 0;
+   jetEmfAK4Calo = 0;
+   jetPtAK4PFCluster = 0;
+   jetJecAK4PFCluster = 0;
+   jetEtaAK4PFCluster = 0;
+   jetPhiAK4PFCluster = 0;
+   jetMassAK4PFCluster = 0;
+   jetEnergyAK4PFCluster = 0;
+   jetAreaAK4PFCluster = 0;
+   jetPtAK4PFCalo = 0;
+   jetJecAK4PFCalo = 0;
+   jetEtaAK4PFCalo = 0;
+   jetPhiAK4PFCalo = 0;
+   jetMassAK4PFCalo = 0;
+   jetEnergyAK4PFCalo = 0;
+   jetAreaAK4PFCalo = 0;
+   jetEmfAK4PFCalo = 0;
    jetPtAK8 = 0;
    jetJecAK8 = 0;
    jetEtaAK8 = 0;
@@ -390,6 +505,8 @@ void rootNtupleClass::Init(TTree *tree)
    jetPhfAK8 = 0;
    jetMufAK8 = 0;
    jetElfAK8 = 0;
+   jetNemfAK8 = 0;
+   jetCemfAK8 = 0;
    jetHf_hfAK8 = 0;
    jetHf_emfAK8 = 0;
    jetHofAK8 = 0;
@@ -470,6 +587,8 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("jetPhfAK4", &jetPhfAK4, &b_jetPhfAK4);
    fChain->SetBranchAddress("jetMufAK4", &jetMufAK4, &b_jetMufAK4);
    fChain->SetBranchAddress("jetElfAK4", &jetElfAK4, &b_jetElfAK4);
+   fChain->SetBranchAddress("jetNemfAK4", &jetNemfAK4, &b_jetNemfAK4);
+   fChain->SetBranchAddress("jetCemfAK4", &jetCemfAK4, &b_jetCemfAK4);
    fChain->SetBranchAddress("jetHf_hfAK4", &jetHf_hfAK4, &b_jetHf_hfAK4);
    fChain->SetBranchAddress("jetHf_emfAK4", &jetHf_emfAK4, &b_jetHf_emfAK4);
    fChain->SetBranchAddress("jetHofAK4", &jetHofAK4, &b_jetHofAK4);
@@ -482,6 +601,29 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("phoMultAK4", &phoMultAK4, &b_phoMultAK4);
    fChain->SetBranchAddress("jetPtAK4matchCaloJet", &jetPtAK4matchCaloJet, &b_jetPtAK4matchCaloJet);
    fChain->SetBranchAddress("jetEmfAK4matchCaloJet", &jetEmfAK4matchCaloJet, &b_jetEmfAK4matchCaloJet);
+   fChain->SetBranchAddress("jetPtAK4Calo", &jetPtAK4Calo, &b_jetPtAK4Calo);
+   fChain->SetBranchAddress("jetJecAK4Calo", &jetJecAK4Calo, &b_jetJecAK4Calo);
+   fChain->SetBranchAddress("jetEtaAK4Calo", &jetEtaAK4Calo, &b_jetEtaAK4Calo);
+   fChain->SetBranchAddress("jetPhiAK4Calo", &jetPhiAK4Calo, &b_jetPhiAK4Calo);
+   fChain->SetBranchAddress("jetMassAK4Calo", &jetMassAK4Calo, &b_jetMassAK4Calo);
+   fChain->SetBranchAddress("jetEnergyAK4Calo", &jetEnergyAK4Calo, &b_jetEnergyAK4Calo);
+   fChain->SetBranchAddress("jetAreaAK4Calo", &jetAreaAK4Calo, &b_jetAreaAK4Calo);
+   fChain->SetBranchAddress("jetEmfAK4Calo", &jetEmfAK4Calo, &b_jetEmfAK4Calo);
+   fChain->SetBranchAddress("jetPtAK4PFCluster", &jetPtAK4PFCluster, &b_jetPtAK4PFCluster);
+   fChain->SetBranchAddress("jetJecAK4PFCluster", &jetJecAK4PFCluster, &b_jetJecAK4PFCluster);
+   fChain->SetBranchAddress("jetEtaAK4PFCluster", &jetEtaAK4PFCluster, &b_jetEtaAK4PFCluster);
+   fChain->SetBranchAddress("jetPhiAK4PFCluster", &jetPhiAK4PFCluster, &b_jetPhiAK4PFCluster);
+   fChain->SetBranchAddress("jetMassAK4PFCluster", &jetMassAK4PFCluster, &b_jetMassAK4PFCluster);
+   fChain->SetBranchAddress("jetEnergyAK4PFCluster", &jetEnergyAK4PFCluster, &b_jetEnergyAK4PFCluster);
+   fChain->SetBranchAddress("jetAreaAK4PFCluster", &jetAreaAK4PFCluster, &b_jetAreaAK4PFCluster);
+   fChain->SetBranchAddress("jetPtAK4PFCalo", &jetPtAK4PFCalo, &b_jetPtAK4PFCalo);
+   fChain->SetBranchAddress("jetJecAK4PFCalo", &jetJecAK4PFCalo, &b_jetJecAK4PFCalo);
+   fChain->SetBranchAddress("jetEtaAK4PFCalo", &jetEtaAK4PFCalo, &b_jetEtaAK4PFCalo);
+   fChain->SetBranchAddress("jetPhiAK4PFCalo", &jetPhiAK4PFCalo, &b_jetPhiAK4PFCalo);
+   fChain->SetBranchAddress("jetMassAK4PFCalo", &jetMassAK4PFCalo, &b_jetMassAK4PFCalo);
+   fChain->SetBranchAddress("jetEnergyAK4PFCalo", &jetEnergyAK4PFCalo, &b_jetEnergyAK4PFCalo);
+   fChain->SetBranchAddress("jetAreaAK4PFCalo", &jetAreaAK4PFCalo, &b_jetAreaAK4PFCalo);
+   fChain->SetBranchAddress("jetEmfAK4PFCalo", &jetEmfAK4PFCalo, &b_jetEmfAK4PFCalo);
    fChain->SetBranchAddress("jetPtAK8", &jetPtAK8, &b_jetPtAK8);
    fChain->SetBranchAddress("jetJecAK8", &jetJecAK8, &b_jetJecAK8);
    fChain->SetBranchAddress("jetEtaAK8", &jetEtaAK8, &b_jetEtaAK8);
@@ -494,6 +636,8 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("jetPhfAK8", &jetPhfAK8, &b_jetPhfAK8);
    fChain->SetBranchAddress("jetMufAK8", &jetMufAK8, &b_jetMufAK8);
    fChain->SetBranchAddress("jetElfAK8", &jetElfAK8, &b_jetElfAK8);
+   fChain->SetBranchAddress("jetNemfAK8", &jetNemfAK8, &b_jetNemfAK8);
+   fChain->SetBranchAddress("jetCemfAK8", &jetCemfAK8, &b_jetCemfAK8);
    fChain->SetBranchAddress("jetHf_hfAK8", &jetHf_hfAK8, &b_jetHf_hfAK8);
    fChain->SetBranchAddress("jetHf_emfAK8", &jetHf_emfAK8, &b_jetHf_emfAK8);
    fChain->SetBranchAddress("jetHofAK8", &jetHofAK8, &b_jetHofAK8);
@@ -510,6 +654,18 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("neMultAK8", &neMultAK8, &b_neMultAK8);
    fChain->SetBranchAddress("phoMultAK8", &phoMultAK8, &b_phoMultAK8);
    fChain->SetBranchAddress("triggerResult", &triggerResult, &b_triggerResult);
+   fChain->SetBranchAddress("passFilterHBHE", &passFilterHBHE, &b_passFilterHBHE_);
+   fChain->SetBranchAddress("passFilterCSCHalo", &passFilterCSCHalo, &b_passFilterCSCHalo_);
+   fChain->SetBranchAddress("passFilterHCALlaser", &passFilterHCALlaser, &b_passFilterHCALlaser_);
+   fChain->SetBranchAddress("passFilterECALDeadCell", &passFilterECALDeadCell, &b_passFilterECALDeadCell_);
+   fChain->SetBranchAddress("passFilterGoodVtx", &passFilterGoodVtx, &b_passFilterGoodVtx_);
+   fChain->SetBranchAddress("passFilterTrkFailure", &passFilterTrkFailure, &b_passFilterTrkFailure_);
+   fChain->SetBranchAddress("passFilterEEBadSc", &passFilterEEBadSc, &b_passFilterEEBadSc_);
+   fChain->SetBranchAddress("passFilterECALlaser", &passFilterECALlaser, &b_passFilterECALlaser_);
+   fChain->SetBranchAddress("passFilterTrkPOG", &passFilterTrkPOG, &b_passFilterTrkPOG_);
+   fChain->SetBranchAddress("passFilterTrkPOG_manystrip", &passFilterTrkPOG_manystrip, &b_passFilterTrkPOG_manystrip_);
+   fChain->SetBranchAddress("passFilterTrkPOG_toomanystrip", &passFilterTrkPOG_toomanystrip, &b_passFilterTrkPOG_toomanystrip_);
+   fChain->SetBranchAddress("passFilterTrkPOG_logError", &passFilterTrkPOG_logError, &b_passFilterTrkPOG_logError_);
    fChain->SetBranchAddress("npu", &npu, &b_npu);
    fChain->SetBranchAddress("PileupInteractions", &PileupInteractions, &b_PileupInteractions);
    fChain->SetBranchAddress("PileupOriginBX", &PileupOriginBX, &b_PileupOriginBX);

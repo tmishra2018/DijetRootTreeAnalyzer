@@ -21,6 +21,7 @@ typedef boost::shared_ptr<fastjet::JetDefinition>    JetDefPtr;
 // For JECs
 #include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
 #include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
+#include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 
 using namespace std;
 
@@ -36,7 +37,10 @@ private :
   JetCorrectorParameters *L1Par;
   JetCorrectorParameters *L2Par;
   JetCorrectorParameters *L3Par;
+  JetCorrectorParameters *L2L3Residual;
   FactorizedJetCorrector *JetCorrector;
+  FactorizedJetCorrector *JetCorrector_data;
+  JetCorrectionUncertainty *unc;
 };
 
 #endif
