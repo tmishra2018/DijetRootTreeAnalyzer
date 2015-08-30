@@ -37,6 +37,9 @@ private :
   JetCorrectorParameters *L1Par;
   JetCorrectorParameters *L2Par;
   JetCorrectorParameters *L3Par;
+  JetCorrectorParameters *L1DATAPar;
+  JetCorrectorParameters *L2DATAPar;
+  JetCorrectorParameters *L3DATAPar;
   JetCorrectorParameters *L2L3Residual;
   FactorizedJetCorrector *JetCorrector;
   FactorizedJetCorrector *JetCorrector_data;
