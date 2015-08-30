@@ -30,14 +30,26 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //std::string L1Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L1FastJet_AK4PFchs.txt";
     //std::string L2Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L2Relative_AK4PFchs.txt"; 
     //std::string L3Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
-    std::string L3Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Summer15_50nsV2/Summer15_50nsV2_DATA_L2L3Residual_AK4PFchs.txt" ;
+    //std::string L1Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
+    //std::string L2Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
+    //std::string L3Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
+    //std::string L1DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
+    //std::string L2DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
+    //std::string L3DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt"; 
+    std::string L3Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt";
+    std::string L2DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt"; 
+    std::string L3DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt" ;
     
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
     L3Par = new JetCorrectorParameters(L3Path);
+    L1DATAPar = new JetCorrectorParameters(L1DATAPath);
+    L2DATAPar = new JetCorrectorParameters(L2DATAPath);
+    L3DATAPar = new JetCorrectorParameters(L3DATAPath);
     L2L3Residual = new JetCorrectorParameters(L2L3ResidualPath);
 
     std::vector<JetCorrectorParameters> vPar;
@@ -47,16 +59,16 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vPar.push_back(*L3Par);
    
     //residuals are applied only to data
-    vPar_data.push_back(*L1Par);
-    vPar_data.push_back(*L2Par);
-    vPar_data.push_back(*L3Par);
+    vPar_data.push_back(*L1DATAPar);
+    vPar_data.push_back(*L2DATAPar);
+    vPar_data.push_back(*L3DATAPar);
     vPar_data.push_back(*L2L3Residual);
 
     JetCorrector = new FactorizedJetCorrector(vPar);
     JetCorrector_data = new FactorizedJetCorrector(vPar_data);
 
     //uncertainty
-    unc = new JetCorrectionUncertainty("data/Summer15_50nsV2/Summer15_50nsV2_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Summer15_50nsV4/Summer15_50nsV4_DATA_Uncertainty_AK4PFchs.txt");
 
   }
   
@@ -107,10 +119,10 @@ void analysisClass::Loop()
      10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
 
 
-   char* HLTname[50] = {"noTrig","PFHT475","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900"};
-   TH1F* h_mjj_HLTpass[5];
+   char* HLTname[50] = {"noTrig","PFHT475","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900","PFHT800_noPFHT475"};
+   TH1F* h_mjj_HLTpass[6];
    char name_histoHLT[50];
-   for (int i=0; i<5; i++){  
+   for (int i=0; i<6; i++){  
      sprintf(name_histoHLT,"h_mjj_HLTpass_%s",HLTname[i]);
      h_mjj_HLTpass[i]= new TH1F(name_histoHLT,"",103,massBoundaries);
    }
@@ -126,7 +138,7 @@ void analysisClass::Loop()
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
-   //for (Long64_t jentry=0; jentry<100;jentry++) {
+   //for (Long64_t jentry=0; jentry<2000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -136,7 +148,7 @@ void analysisClass::Loop()
      ////////////////////// User's code starts here ///////////////////////
 
      ///Stuff to be done for every event
- 
+
      size_t no_jets_ak4=jetPtAK4->size();
      vector<TLorentzVector> widejets;
      TLorentzVector wj1, wj2, wdijet;
@@ -164,54 +176,56 @@ void analysisClass::Loop()
      if(idx_InTimeBX > -1 ) isData = 0;
      else isData = 1;
      if( int(getPreCutValue1("useJECs"))==1 )
-     {
-       // sort jets by increasing pT
-       std::multimap<double, unsigned> sortedJets;
-       for(size_t j=0; j<no_jets_ak4; ++j)
        {
-	 JetCorrector->setJetEta(jetEtaAK4->at(j));
-	 JetCorrector->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
-	 JetCorrector->setJetA(jetAreaAK4->at(j));
-	 JetCorrector->setRho(rho);
-	 
-	 JetCorrector_data->setJetEta(jetEtaAK4->at(j));
-	 JetCorrector_data->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
-	 JetCorrector_data->setJetA(jetAreaAK4->at(j));
-	 JetCorrector_data->setRho(rho);
-	 
-	 
-	 //nominal value of JECs
-	 double correction;
-	 //if( int(getPreCutValue1("shiftJECs"))==0 ){
-	 if (isData == 1) correction = JetCorrector_data->getCorrection();
-       	 else correction = JetCorrector->getCorrection();
-	 //}
-	 //JEC uncertainties
-	 unc->setJetEta(jetEtaAK4->at(j));
-	 unc->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
-	 double uncertainty = unc->getUncertainty(true);
-	 jecUncertainty.push_back(uncertainty); 
-	// if( jetPtAK4->at(j)/jetJecAK4->at(j)*correction > 500){
-	//   std::cout << "jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction << "   uncertainty:" <<  uncertainty  << std::endl;
-	// }
-	 //use "shifted" JECs for study of systematic uncertainties 
-	 if( int(getPreCutValue1("shiftJECs"))==1 ){
-	   //flat shift
-       	   //if (isData == 1) correction = JetCorrector_data->getCorrection() * getPreCutValue2("shiftJECs");
-	   //else correction = JetCorrector->getCorrection() * getPreCutValue2("shiftJECs");
-       	   //shift of the corresponding unc
-	   correction = correction + getPreCutValue2("shiftJECs")*uncertainty;
-	   //if( jetPtAK4->at(j)/jetJecAK4->at(j)*correction > 500){
-	   //  std::cout << "jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction << "   uncertainty:" <<  uncertainty  << std::endl << std::endl;
-	   //}
-	 }
+	 // sort jets by increasing pT
+	 std::multimap<double, unsigned> sortedJets;
+	 for(size_t j=0; j<no_jets_ak4; ++j)
+	   {
+	     JetCorrector->setJetEta(jetEtaAK4->at(j));
+	     JetCorrector->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
+	     JetCorrector->setJetA(jetAreaAK4->at(j));
+	     JetCorrector->setRho(rho);
+
+  	     JetCorrector_data->setJetEta(jetEtaAK4->at(j));
+	     JetCorrector_data->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j));
+	     JetCorrector_data->setJetA(jetAreaAK4->at(j));
+	     JetCorrector_data->setRho(rho);
+
+
+  	     //nominal value of JECs
+	     double correction, old_correction, nominal_correction;
+	     //if( int(getPreCutValue1("shiftJECs"))==0 ){
+	     if (isData == 1) correction = JetCorrector_data->getCorrection();
+	     else correction = JetCorrector->getCorrection();
+	     nominal_correction=correction;
+	     old_correction = jetJecAK4->at(j);
+	     //}
+	     //JEC uncertainties
+	     unc->setJetEta(jetEtaAK4->at(j));
+	     unc->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
+	     double uncertainty = unc->getUncertainty(true);
+	     jecUncertainty.push_back(uncertainty); 
+
+
+	     // 
+	     //std::cout << "run:" << runNo << "    lumi:" << lumi << "   event:" << evtNo << "   jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction <<   "   uncertainty:" <<  uncertainty  << "  nominal correction:" << nominal_correction  << " old correction: " << old_correction << std::endl;
+	     //use "shifted" JECs for study of systematic uncertainties 
+	     if( int(getPreCutValue1("shiftJECs"))==1 ){
+	       //flat shift
+	       //if (isData == 1) correction = JetCorrector_data->getCorrection() * getPreCutValue2("shiftJECs");
+	       //else correction = JetCorrector->getCorrection() * getPreCutValue2("shiftJECs");
+	       //shift of the corresponding unc
+	       correction = correction + getPreCutValue2("shiftJECs")*uncertainty;
+	       //  std::cout << "run:" << runNo << "    lumi:" << lumi << "   event:" << evtNo << "   jet pt:" << jetPtAK3->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction << "   uncertainty:" <<  uncertainty  << std::endl << std::endl;
+	       
+	   }
 
 	 jecFactors.push_back(correction);
 	 sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j))*correction, j));
-    
+
        }
-       // get jet indices in decreasing pT order
-       for(std::multimap<double, unsigned>::const_reverse_iterator it = sortedJets.rbegin(); it != sortedJets.rend(); ++it)
+     // get jet indices in decreasing pT order
+     for(std::multimap<double, unsigned>::const_reverse_iterator it = sortedJets.rbegin(); it != sortedJets.rend(); ++it)
 	 sortedJetIdx.push_back(it->second);
      
      }
@@ -487,6 +501,7 @@ void analysisClass::Loop()
 	   if(triggerResult->at(3) && triggerResult->at(0)) h_mjj_HLTpass[2] -> Fill(MJJWide); //PFHT800
 	   if(triggerResult->at(3) && triggerResult->at(10)) h_mjj_HLTpass[3] -> Fill(MJJWide); //PFHT650MJJ900
 	   if(triggerResult->at(3) && (triggerResult->at(0) || triggerResult->at(10))) h_mjj_HLTpass[4] -> Fill(MJJWide); //PFHT800 && PFHT650MJJ900
+	   if(triggerResult->at(0)) h_mjj_HLTpass[5] -> Fill(MJJWide); //PFHT800 without PFHT475
 	 }
        //std::cout << "triggerResult->at(3) = " << triggerResult->at(3) << "  triggerResult->at(0) = " << triggerResult->at(0) << "  triggerResult->at(5) = " << triggerResult->at(5) << std::endl;
      }
@@ -543,7 +558,7 @@ void analysisClass::Loop()
    } // End loop over events
 
    //////////write histos 
-   for (int i=0; i<5; i++){
+   for (int i=0; i<6; i++){
      h_mjj_HLTpass[i]->Write();
    }
 
