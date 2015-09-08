@@ -66,7 +66,8 @@ CMS_lumi.lumi_sqrtS = str(options.lumi)+" pb^{-1} (13 TeV)" # used with iPeriod 
 iPos = 11
 iPeriod = 0
 #######################
-minX_mass = 1118.
+#minX_mass = 526.
+minX_mass = 1181.
 maxX_mass = 5877. 
 
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
@@ -124,7 +125,9 @@ for f in fileNames:
   h_allCuts.Sumw2()
   tree = inf.Get('rootTupleTree/tree')
   #standard
-  tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118')
+  tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
+  # blinded 4 TeV
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && mjj<4000')
   # "peak mjj 2 TeV"
   #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1856. && mjj < 2332.')
   #MET 200-300 GeV
@@ -185,8 +188,8 @@ for i in range(0,9) :
 NDAT = h_dat.GetEntries()
 NQCD = hist_allCutsQCD.Integral(0,hist_allCutsQCD.GetNbinsX()+1)
 ## k factor calculated including overflow and underflow
-#kFactor = NDAT/NQCD
-kFactor = 1.
+kFactor = NDAT/NQCD
+#kFactor = 1.
 print ("kFactor set to %f" % kFactor)
 print ("NDAT / NQCD = = %f" % (NDAT/NQCD))
 

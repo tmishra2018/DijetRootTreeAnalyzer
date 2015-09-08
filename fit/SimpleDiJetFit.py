@@ -27,13 +27,9 @@ if( iPos==0 ): CMS_lumi.relPosX = 0.12
 iPeriod = 4
  
   
-#fileNameSuffix = "test_range_1118_3704"
-#fileNameSuffix = "test"
-#fileNameSuffix = "JEC_L2L3Residuals"
-fileNameSuffix = "JEC_V4_firstbin1181"
 
 
-#Fit functions
+#Fit function
 # 0: DEFAULT (4 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )" 
 #
 #1: VARIATION 1 (5 par.) - "( [0]*TMath::Power(1-x/13000,[1])*(1+[4]*x/13000) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )"
@@ -61,39 +57,59 @@ v_massBins = array("d",massBins)
 lumi = 65.0
 #sf = 1.07
 sf=1.
+sigmaQstar4500 = 0.2827E-01
 #minX_mass = 1000.
 minX_mass = 1181.
 #maxX_mass = 3019.
 #maxX_mass = 5253.
 maxX_mass = 5663.
+FunctionType = -1
+
+#fileNameSuffix = "test_range_1118_3704"
+#fileNameSuffix = "test"
+#fileNameSuffix = "JEC_L2L3Residuals"
+fileNameSuffix = "JEC_V4_firstbin1181"
+
+####### INPUT #############
+# data 
+input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+###mc
+input_root_file_mc = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+### input file and 1D histo
+input_root_file_signal = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_2_1_DiJet/src/CMSDIJET/DijetRootTreeAnalyzer/test_fit/Resonance_Shapes_qg_PU20_13TeV_newJEC.root"
+
+file0 = TFile.Open( input_root_file )
+fileMC = TFile.Open( input_root_file_mc )
+file_sig = TFile.Open(input_root_file_signal)
+input_1Dhistogram = "h_dat"
+input_1Dhistogram_mc = "hist_allCutsQCD"
+input_sig = "h_qg_4500" 
+
+hist_mass_original = file0.Get(input_1Dhistogram)
+hist_binned = hist_mass_original.Rebin(number_of_variableWidth_bins,"hist_binned",v_massBins)
+hist_mass = TH1F("hist_mass","",number_of_variableWidth_bins,v_massBins)
+hist_mass_original.Scale(1/lumi)
+
+hist_mass_original_mc = fileMC.Get(input_1Dhistogram_mc)
+hist_mass_original_mc.Scale(sf)
+hist_binned_mc = hist_mass_original_mc.Rebin(number_of_variableWidth_bins,"hist_binned_MC",v_massBins)
+hist_mass_mc = TH1F("hist_mass_mc","",number_of_variableWidth_bins,v_massBins)
+
+h_sig = file_sig.Get(input_sig)
+integral_sig = h_sig.Integral()
+h_sig.Scale( sigmaQstar4500 / integral_sig)
+
+
+
+##########OUTPUT########
+outputDir="fit_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015/"
+os.system("mkdir -p "+outputDir)
+
 #================================================================================================================
   
 def main():
   
-  # data 
-  #input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals/histo_data_mjj_fromTree.root"
-  #input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
-  input_root_file = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
-  ###mc
-  #input_root_file_mc = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
-  input_root_file_mc = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
-  ### input file and 1D histo
-  
-  file0 = TFile.Open( input_root_file )
-  fileMC = TFile.Open( input_root_file_mc )
-  input_1Dhistogram = "h_dat"
-  input_1Dhistogram_mc = "hist_allCutsQCD"
-  
-  hist_mass_original = file0.Get(input_1Dhistogram)
-  hist_binned = hist_mass_original.Rebin(number_of_variableWidth_bins,"hist_binned",v_massBins)
-  hist_mass = TH1F("hist_mass","",number_of_variableWidth_bins,v_massBins)
-  hist_mass_original.Scale(1/lumi)
 
-  hist_mass_original_mc = fileMC.Get(input_1Dhistogram_mc)
-  hist_mass_original_mc.Scale(sf)
-  hist_binned_mc = hist_mass_original_mc.Rebin(number_of_variableWidth_bins,"hist_binned_MC",v_massBins)
-  hist_mass_mc = TH1F("hist_mass_mc","",number_of_variableWidth_bins,v_massBins)
-  
   for  i in range (1, number_of_variableWidth_bins):
     #data
     bincontent = hist_binned.GetBinContent(i)
@@ -171,56 +187,19 @@ def main():
       zeroBins +=1
   
   nBins_fit = nBins_fit-zeroBins   
-  FunctionTypes = [-2,-1,0,4,5,6]
-  #FunctionTypes = [-1,0]#,4,5,6]
-  list_RSS = []
-  list_chi2 = []
-  list_dof = []
-  list_F = []
-  list_CL = []
-  list_pvalue_WaldTest = []
-  list_CL_WaldTest = []
-  i_f = 0
-  for FunctionType in FunctionTypes:
-    fitresult = doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original)
-    list_RSS.append(fitresult[0])
-    list_chi2.append(fitresult[2])
-    list_dof.append(fitresult[1])
-    M1Bkg = fitresult[3]
-    hist_fit_residual_vsMass = fitresult[4]
-    nPar = nBins_fit - fitresult[1]# - 1
-    result_WaldTest = WaldWolfowitzTest(hist_fit_residual_vsMass)
-    DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix)
-    print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
-    list_pvalue_WaldTest.append(result_WaldTest)
-    list_CL_WaldTest.append(1-result_WaldTest)
-    if (i_f > 0):
-      result = FisherTest(list_RSS[i_f-1],list_RSS[i_f],list_dof[i_f-1],list_dof[i_f],nBins_fit)
-      F = result[0]
-      CL = result[1]
-      list_F.append(F)
-      list_CL.append(CL)
-    i_f += 1
+  fitresult = doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original)
+  M1Bkg = fitresult[3]
+  hist_fit_residual_vsMass = fitresult[4]
+  nPar = nBins_fit - fitresult[1]
+  DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNameSuffix)
+  print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
   
   result_mc = doChi2MC(g,hist_mass,hist_mass_mc)  
   chi2_mc = result_mc[0] 
   Ndof_mc = result_mc[1] 
   hist_mc_residual_vsMass = result_mc[2] 
-  pvalue_WaldTest_mc = WaldWolfowitzTest(hist_mc_residual_vsMass)
-  CL_WaldTest_mc =1- pvalue_WaldTest_mc
   DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix)
 
-  print "nBins_Fit = "+str(nBins_fit)
-  print "list_RSS = "+str(list_RSS)
-  print "chi2 MC = "+str(chi2_mc)
-  print "pvalue_WaldTest MC = "+str(pvalue_WaldTest_mc)
-  print "CL_WaldTest MC = "+str(CL_WaldTest_mc)
-  print "list_chi2 = "+str(list_chi2)
-  print "list_dof ="+str(list_dof)
-  print "list_F = "+str(list_F)
-  print "list_CL = "+str(list_CL)
-  print "list_pvalue_WaldTest = "+str(list_pvalue_WaldTest)
-  print "list_CL_WaldTest = "+str(list_CL_WaldTest)
 
 def doChi2MC(g,hist_mass,hist_mass_mc):
   hist_mc_residual_vsMass =  TH1D("hist_mc_residual_vsMass","hist_mc_residual_vsMass",number_of_variableWidth_bins,v_massBins)
@@ -504,55 +483,6 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,M1Bkg,hist_fit_residual_vsMass]
 
 
-def FisherTest(RSS_1,RSS_2,dof_1,dof_2,N):
-  RSS1 = RSS_1
-  RSS2 = RSS_2
-  n1 = N - dof_1 - 1
-  n2 = N - dof_2 - 1
-  print "n1 = %d    n2 = %d" % (n1,n2)
-  F = ((RSS1-RSS2)/(n2-n1)) / (RSS2/(N-n2))
-  #print "F = %f" % F
-  F_dist = TF1("F_distr","TMath::Sqrt( (TMath::Power([0]*x,[0]) * TMath::Power([1],[1])) / (TMath::Power([0]*x + [1],[0]+[1])) ) / (x*TMath::Beta([0]/2,[1]/2))",0,1000)
-  print "d1 = %d    d2 = %d" %(n2-n1,N-n2)
-  F_dist.SetParameter(0, n2-n1)
-  F_dist.SetParameter(1, N-n2)
-  CL = 1 - F_distr.Integral(0.00000001,F)
-  #c2 = TCanvas("c2","c2",600,600)
-  #c2.cd()
-  #c2.DrawFrame(0, 0, 5, 10, "Global Title;X Axis Title;Y Axis Title")
-  #F_dist.Draw("same")
-  return [F,CL]
-
-
-def WaldWolfowitzTest(hist_fit_residual_vsMass):
-  Nruns = 1
-  Nplus = 0
-  Nminus = 0
-  N = hist_fit_residual_vsMass.FindBin(maxX_mass) - hist_fit_residual_vsMass.FindBin(minX_mass)
-  for bin in range(hist_fit_residual_vsMass.FindBin(minX_mass)+1,hist_fit_residual_vsMass.FindBin(maxX_mass)):
-    bincontent = hist_fit_residual_vsMass.GetBinContent(bin)
-    previousbincontent = hist_fit_residual_vsMass.GetBinContent(bin-1)
-    if (previousbincontent > 0): Nplus+= 1 
-    if (previousbincontent < 0 ):  Nminus+= 1
-    if( bincontent*previousbincontent < 0): Nruns += 1
-  if (bincontent > 0): Nplus+= 1
-  if (bincontent < 0 ):  Nminus+= 1
-
-  print "N %d Nruns %d   Nplus %d   Nminus %d " %(N,Nruns,Nplus,Nminus)
-  Pdf  = TF1("WaldWolfowitzProb","[0]*exp(-0.5*(x-[1])**2/[2]**2)",-10000,10000) 
-  mu = float(2*Nplus*Nminus)/float(N) + 1
-  sigma2 = float((mu-1)*(mu-2))/float(N-1)
-  sigma = TMath.Sqrt(sigma2)
-  norm = 1/(TMath.Sqrt(2*TMath.Pi())*sigma)
-  print "mu %f   sigma %f" %(mu,sigma)
-  Pdf.SetParameter(0, norm)
-  Pdf.SetParameter(1,mu)
-  Pdf.SetParameter(2,sigma)
-  pvalue = Pdf.Integral(-10000.,Nruns)
-  print "pvalue %f" %(pvalue)
-
-  return pvalue
-
 def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
 #  //### Draw plots
   W = 600
@@ -651,7 +581,7 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   p11_2.SetGridx()
   p11_2.SetGridy()
   
-  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3., p11_1.GetUxmax(), 3.)
+  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3.5, p11_1.GetUxmax(), 3.5)
   
   vFrame2.SetTitle("")
   vFrame2.SetXTitle("Dijet Mass (GeV)")
@@ -665,7 +595,7 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   vFrame2.GetXaxis().SetLabelSize(0.15)
   
   hist_mc_residual_vsMass.GetXaxis().SetRangeUser(minX_mass,maxX_mass)
-  hist_mc_residual_vsMass.GetYaxis().SetRangeUser(-3.,3.)
+  hist_mc_residual_vsMass.GetYaxis().SetRangeUser(-3.5,3.5)
   hist_mc_residual_vsMass.SetLineWidth(0)
   hist_mc_residual_vsMass.SetFillColor(kBlue)
   hist_mc_residual_vsMass.SetLineColor(1)
@@ -692,13 +622,27 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   #r_bin->Write()
   f_output.Close()
   c_fileName = "MCandResiduals_%s.png" %(fileNameSuffix)
-  c.SaveAs(c_fileName)
+  c.SaveAs(outputDir+"/"+c_fileName)
   c_fileName = "MCandResiduals_%s.pdf" %(fileNameSuffix)
-  c.SaveAs(c_fileName)
+  c.SaveAs(outputDir+"/"+c_fileName)
 
 
-def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
-#  //### Draw plots
+def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNameSuffix):
+
+  nbins_sig = h_sig.GetNbinsX()
+  massBinsSig_list=[]
+  for i in range(0,nbins_sig+1):
+    massBinsSig_list.append(h_sig.GetXaxis().GetBinLowEdge(i+1))  
+
+  massBinsSig = array("d",massBinsSig_list)
+  h_w = TH1D("h_w","", h_sig.GetNbinsX(), massBinsSig)
+  for i in range(1,nbins_sig+1):
+    bincontent = h_sig.GetBinContent(i) / h_sig.GetBinWidth(i)
+    h_w.SetBinContent(i, bincontent )
+  
+  h_w.Print();
+   
+  #  //### Draw plots
   W = 600
   H = 650
   H_ref = 650 
@@ -743,11 +687,11 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
   pave_fit.SetTextAlign(12) 
   
   
-  vFrame = p11_1.DrawFrame(minX_mass,0.000005,maxX_mass,5.0)
+  vFrame = p11_1.DrawFrame(minX_mass,0.000002,maxX_mass,5.0)
   
   vFrame.SetTitle("")
-  vFrame.SetXTitle("Dijet Mass (GeV)")
-  vFrame.SetYTitle("d#sigma / dm_{jj}   (pb / GeV)")
+  vFrame.SetXTitle("Dijet Mass [GeV]")
+  vFrame.SetYTitle("d#sigma / dm_{jj}   [pb / GeV]")
   vFrame.GetXaxis().SetTitleSize(0.06)
   vFrame.GetXaxis().SetTitleOffset(0.95)
   vFrame.GetXaxis().SetLabelSize(0.05)
@@ -758,13 +702,25 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
   g.SetMarkerSize(0.9)
   g.SetMarkerStyle(20)
   g.Draw("pe0")
+  h_w.SetLineColor(kBlack)
+  h_w.SetLineWidth(2)
+  h_w.SetLineStyle(2)
+  h_w.Draw("same")
+  g_mc.SetLineWidth(2)
+  g_mc.SetLineStyle(2)
+  g_mc.SetLineColor(kBlue)
+  g_mc.Draw("c")
+  g.SetMarkerSize(0.9)
+  g.SetMarkerStyle(20)
+  g.Draw("pe0 same")
   M1Bkg.SetLineWidth(2)
-  M1Bkg.SetLineStyle(2)
+  M1Bkg.SetLineStyle(1)
   M1Bkg.SetLineColor(2)
   M1Bkg.Draw("same")
+  g.Draw("pe0 same")
     
-  leg = TLegend(0.5564991,0.55,0.8903575,0.705812)
-  #leg =  TLegend(0.5564991,0.55,0.8903575,0.80)
+  #leg = TLegend(0.5564991,0.55,0.8903575,0.705812)
+  leg =  TLegend(0.4564991,0.55,0.8903575,0.80)
   leg.SetTextSize(0.03546853)
   leg.SetLineColor(0)
   leg.SetLineStyle(1)
@@ -772,8 +728,10 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
   leg.SetFillColor(0)
   leg.SetFillStyle(0)
   leg.SetMargin(0.35)
-  leg.AddEntry(hist_mass,"data" ,"PL")
-  leg.AddEntry(M1Bkg,"fit to data","L")
+  leg.AddEntry(hist_mass,"data" ,"PLE");
+  leg.AddEntry(M1Bkg,"background fit to data","L");
+  leg.AddEntry(g_mc,"QCD MC","L");
+  leg.AddEntry(h_w,"q* (4.5 TeV)","L");
   leg.Draw("same")
   pave_fit.Draw("same")
   
@@ -796,12 +754,12 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
   p11_2.SetGridx()
   p11_2.SetGridy()
   
-  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3., p11_1.GetUxmax(), 3.)
+  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3.5, p11_1.GetUxmax(), 3.5)
   
   vFrame2.SetTitle("")
-  vFrame2.SetXTitle("Dijet Mass (GeV)")
+  vFrame2.SetXTitle("Dijet Mass [GeV]")
   vFrame2.GetXaxis().SetTitleSize(0.06)
-  vFrame2.SetYTitle("(Data-Fit)/#sigma")
+  vFrame2.SetYTitle("#frac{(Data-Fit)}{#sigma_{Data}}")
   vFrame2.GetYaxis().SetTitleSize(0.15)
   vFrame2.GetYaxis().SetTitleOffset(0.40)
   vFrame2.GetYaxis().SetLabelSize(0.09)
@@ -810,14 +768,36 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
   vFrame2.GetXaxis().SetLabelSize(0.15)
   
   hist_fit_residual_vsMass.GetXaxis().SetRangeUser(minX_mass,maxX_mass)
-  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-3.,3.)
+  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-3.5,3.5)
   hist_fit_residual_vsMass.SetLineWidth(0)
   hist_fit_residual_vsMass.SetFillColor(2)
   hist_fit_residual_vsMass.SetLineColor(1)
   hist_fit_residual_vsMass.Draw("SAMEHIST")
+ 
+
+  ##histogram signal significance 
+  hist_sig_significance = TH1D("hist_sig_significance","hist_sig_significance",nbins_sig,massBinsSig)
   
+  for  i in range(1,number_of_variableWidth_bins+1):
+    fit = M1Bkg.Integral(hist_mass.GetXaxis().GetBinLowEdge(i), hist_mass.GetXaxis().GetBinUpEdge(i) )
+    significance = 0
+
+    if((h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))+fit) != 0 and h_sig.GetBinLowEdge(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))<12000):
+      significance  = h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i))) / TMath.Sqrt(h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i))) + fit )
+    
+    print  "low edge bin: " +str( h_sig.GetBinLowEdge(i)) +"  bin low edge bkg = "+str(hist_mass.GetBinLowEdge(i))+ "  "+str( fit) + " + " +str( h_sig.GetBinContent(i))+ "  sqrt(fit + sig) = " +str( TMath.Sqrt(h_sig.GetBinContent(i) + fit))
+    print "significance = "+ str(significance)
+    hist_sig_significance.SetBinContent(i,significance);
+
+  
+  hist_sig_significance.SetLineColor(kBlack)
+  hist_sig_significance.SetLineWidth(2)
+  hist_sig_significance.SetLineStyle(2)
+  hist_sig_significance.Draw("same")
+
   line = TLine(minX_mass,0,maxX_mass,0)
   line.Draw("")
+  p11_1.RedrawAxis()
   p11_2.RedrawAxis()
   line2=TLine()
   line2.DrawLine(p11_2.GetUxmin(), p11_2.GetUymax(), p11_2.GetUxmax(), p11_2.GetUymax())
@@ -837,9 +817,9 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
   #r_bin->Write()
   f_output.Close()
   c_fileName = "fitAndResiduals_FuncType%d_nParFit%d_%s.png" %(FunctionType,nPar,fileNameSuffix)
-  c.SaveAs(c_fileName)
+  c.SaveAs(outputDir+"/"+c_fileName)
   c_fileName = "fitAndResiduals_FuncType%d_nParFit%d_%s.pdf" %(FunctionType,nPar,fileNameSuffix)
-  c.SaveAs(c_fileName)
+  c.SaveAs(outputDir+"/"+c_fileName)
 
 #if __name__ == "__main__":
 
@@ -853,67 +833,3 @@ if __name__ == '__main__':
       rep = rep[0]
 
 
-
-#  TCanvas *Canvas0 = new TCanvas("Canvas0","Canvas0",11,51,700,500);
-#  Canvas0->cd();
-#  Canvas0->SetLogy();
-#  hist_mass->GetYaxis()->SetTitle("Events");
-#  hist_mass->Draw();  
-#  M1Bkg->SetLineColor(1);
-#  M1Bkg->Draw("same");     
-#
-#  TCanvas *Canvas1 = new TCanvas("Canvas1","Canvas1",11,51,700,500);
-#  Canvas1->cd();
-#  Canvas1->SetLogy();
-#  hist_mass_varbin->GetYaxis()->SetTitle("Events / bin width");
-#  hist_mass_varbin->Draw();  
-#  M1Bkg->SetLineColor(1);
-#  M1Bkg->Draw("same");     
-# 
-#  TCanvas *Canvas2 = new TCanvas("Canvas2","Canvas2",11,51,700,500);
-#  Canvas2->cd();
-#  Canvas2->SetGridx();
-#  Canvas2->SetGridy();
-#  Canvas2->SetLogx();
-#  hist_fit_residual_vsMass->GetYaxis()->SetLimits(-5,5);
-#  hist_fit_residual_vsMass->GetYaxis()->SetRangeUser(-5,5);
-#  hist_fit_residual_vsMass->GetYaxis()->SetTitle("(data - fit) / #sqrt{data}");
-#  hist_fit_residual_vsMass->GetXaxis()->SetRangeUser(minX_mass,maxX_mass);
-#  hist_fit_residual_vsMass->GetXaxis()->SetTitle("M_{jj} WideJets [GeV]");
-#  hist_fit_residual_vsMass->Draw();
-#
-#  TCanvas *Canvas3 = new TCanvas("Canvas3","Canvas3",11,51,700,500);
-#  Canvas3->cd();
-#  hist_fit_residual->GetXaxis()->SetTitle("(data - fit) / #sqrt{data}");
-#  hist_fit_residual->GetYaxis()->SetTitle("Number of bins");
-#  hist_fit_residual->GetYaxis()->SetRangeUser(0,number_of_variableWidth_bins/3);
-#  hist_fit_residual->Draw();
-#  hist_fit_residual->Fit("gaus","L","",-3,3);
-#
-#  //### Output files
-#  char output_root_file[500];
-#  sprintf(output_root_file,"dijetFitResults_FuncType%d_nParFit%d_%s.root",FunctionType,nPar,fileNameSuffix); 
-#
-#  TFile f_output(output_root_file,"RECREATE");
-#  f_output.cd();
-#  Canvas0->Write();
-#  Canvas1->Write();
-#  Canvas2->Write();
-#  Canvas3->Write();
-#  f_output.Close();
-#
-#  //### Save figures from canvas
-#  char c0_fileName[200];
-#  sprintf(c0_fileName,"dijetmass_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
-#  char c1_fileName[200];
-#  sprintf(c1_fileName,"dijetmass_varbin_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
-#  char c2_fileName[200];
-#  sprintf(c2_fileName,"fitresiduals_vs_mass_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
-#  char c3_fileName[200];
-#  sprintf(c3_fileName,"fitresiduals_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
-#
-#  Canvas0->SaveAs(c0_fileName);
-#  Canvas1->SaveAs(c1_fileName);
-#  Canvas2->SaveAs(c2_fileName);
-#  Canvas3->SaveAs(c3_fileName);
-#}

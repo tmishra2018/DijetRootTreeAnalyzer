@@ -11,8 +11,9 @@ void SimpleDiJetFitV1()
   gROOT->LoadMacro("CMS_lumi.C");
 
   writeExtraText = true;       // if extra text
-  extraText  = "Preliminary";  // default extra text is "Preliminary"
-  lumi_13TeV = "41.8 pb^{-1}" ;
+  extraText="";
+  //extraText  = "Preliminary";  // default extra text is "Preliminary"
+  lumi_13TeV = "65 pb^{-1}" ;
   //lumi_13TeV = "1 fb^{-1}" ;
   lumi_8TeV  = "19.1 fb^{-1}"; // default is "19.7 fb^{-1}"
   lumi_7TeV  = "4.9 fb^{-1}";  // default is "5.1 fb^{-1}"
@@ -26,7 +27,7 @@ void SimpleDiJetFitV1()
   //gRandom = new TRandom3(0);
   //gRandom->SetSeed(0);
 
-  double lumi = 41.8;
+  double lumi = 65;
   //double lumi = 1000;
   double sigmaQstar = 0.2827E-01;
 
@@ -73,22 +74,29 @@ void SimpleDiJetFitV1()
   //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root";
   //char input_root_file_mc_JECplus5percent[500]  = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2_plus5percent/histo_data_mjj_fromTree.root";
   //char input_root_file_mc_JECminus5percent[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2_minus5percent/histo_data_mjj_fromTree.root";
-  //data
+  //#################### data #########
   //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root";
-  char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_withSF/histo_data_mjj_fromTree.root"; 
-  //mc
-  char input_root_file_mc[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_withSF//histo_data_mjj_fromTree.root";
+  //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_withSF/histo_data_mjj_fromTree.root"; 
+  //char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data_Run2015B_plus_Run2015C_50ns_jsonDCSonly_26Aug2015_withSF//histo_data_mjj_fromTree.root"; 
+  char input_root_file[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF//histo_data_mjj_fromTree.root"; 
+  //######### mc #################
+  //char input_root_file_mc[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_nominal_withSF//histo_data_mjj_fromTree.root";
+  char input_root_file_mc[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF///histo_data_mjj_fromTree.root";
   char input_root_file_mc_JECplus5percent[500]  = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_plusJECuncertainty_withSF//histo_data_mjj_fromTree.root";
   char input_root_file_mc_JECminus5percent[500] = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals_minusJECuncertainty_withSF//histo_data_mjj_fromTree.root";
 
-  //char fileNameSuffix[500] = "data_finalJSON_25_07_15_scaled"; //i.e. run period
-  char fileNameSuffix[500] = "data_finalJSON_25_07_15_JECunc_shape"; //i.e. run period
+  char fileNameSuffix[500] = "data_Run2015B_plus_Run2015C_50ns_certJson_28Aug2015"; //i.e. run period
+  //char fileNameSuffix[500] = "data_finalJSON_25_07_15_JECunc_scaled"; //i.e. run period
+  //char fileNameSuffix[500] = "data_finalJSON_25_07_15_noJECunc_1181to5663"; //i.e. run period
+  //char fileNameSuffix[500] = "data_finalJSON_25_07_15_noJECunc_944to5663"; //i.e. run period
   //char fileNameSuffix[500] = "goldenpseudodata_1fb-1"; //i.e. run period
 
   //char input_1Dhistogram[500] = "hist_mass_1GeV";
   char input_1Dhistogram[500] = "h_dat";
   char input_1Dhistogram_mc[500] = "hist_allCutsQCD";
-  double minX_mass = 1118.;
+  //double minX_mass = 944.;
+  //double minX_mass = 1181.;
+  double minX_mass = 1181.;
   //double minX_mass = 2037.;
   //1 fb -1
   //double maxX_mass = 6099.;
@@ -198,9 +206,11 @@ void SimpleDiJetFitV1()
     {
       nPar=3;
       M1Bkg = new TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2] ))",minX_mass, maxX_mass);
-      M1Bkg->SetParameter(0,0.08);
-      M1Bkg->SetParameter(1,11);
-      M1Bkg->SetParameter(2,2);
+      M1Bkg->SetParameter(0,0.00001);
+      M1Bkg->SetParameter(1,10);
+      M1Bkg->SetParameter(2,5);
+      M1Bkg->SetParLimits(0,0.,1000.);
+
 
     }
   // 0: DEFAULT (4 par.) - "( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )" 
@@ -345,7 +355,7 @@ void SimpleDiJetFitV1()
   double vy_mc_JECplus5percent[number_of_variableWidth_bins-40];
   double vy_mc_JECminus5percent[number_of_variableWidth_bins-40];
   //double sf = 0.8;
-  //double sf = 1.18;
+  //double sf = 1.14;
   double sf = 1.;
   //double sf =1.472764e+00;
   for(int i=0; i<number_of_variableWidth_bins; ++i)
@@ -617,7 +627,7 @@ void SimpleDiJetFitV1()
   
   //pave_fit->AddText(" #sqrt{s} = 13 TeV");
   pave_fit->AddText("|#eta| < 2.5, |#Delta#eta| < 1.3");
-  pave_fit->AddText("M_{jj} > 1.1 TeV");
+  pave_fit->AddText("M_{jj} > 1.2 TeV");
   pave_fit->AddText("Wide Jets");
   pave_fit->SetFillColor(0);
   pave_fit->SetLineColor(0);
@@ -659,8 +669,9 @@ void SimpleDiJetFitV1()
   TH1F *vFrame = p11_1->DrawFrame(minX_mass,0.000002,maxX_mass,5.0);
 
   vFrame->SetTitle("");
-  vFrame->SetXTitle("Dijet Mass (GeV)");
-  vFrame->SetYTitle("d#sigma / dm_{jj}   (pb / GeV)");
+  vFrame->SetXTitle("Dijet Mass [GeV]");
+  vFrame->SetYTitle("d#sigma / dm_{jj}  [pb / GeV]");
+
   vFrame->GetXaxis()->SetTitleSize(0.06);
   vFrame->GetXaxis()->SetTitleOffset(0.95);
   vFrame->GetXaxis()->SetLabelSize(0.05);
@@ -695,7 +706,7 @@ void SimpleDiJetFitV1()
   grshade->SetFillColor(kBlue);
   grshade->GetXaxis()->SetRangeUser(minX_mass,maxX_mass);
 
-  g_mc->Draw("c3");
+  //g_mc->Draw("c3");
   //grshade->Draw("cf");
   g_mc_simple->Draw("c");
   g->Draw("pe0 same");
@@ -710,7 +721,7 @@ void SimpleDiJetFitV1()
   h_w->Draw("same");
 
   //TLegend *leg = new TLegend(0.5564991,0.55,0.8903575,0.705812);
-  TLegend *leg = new TLegend(0.5564991,0.55,0.8903575,0.80);
+  TLegend *leg = new TLegend(0.4564991,0.55,0.8903575,0.80);
   leg->SetTextSize(0.03546853);
   leg->SetLineColor(0);
   leg->SetLineStyle(1);
@@ -720,10 +731,10 @@ void SimpleDiJetFitV1()
   leg->SetMargin(0.35);
   //leg->AddEntry(hist_mass,"pseudo-data" ,"PL");
   //leg->AddEntry(M1Bkg,"fit to pseudo-data","L");
-  leg->AddEntry(hist_mass,"data" ,"PL");
-  leg->AddEntry(M1Bkg,"bkg fit to data","L");
+  leg->AddEntry(hist_mass,"data" ,"PLE");
+  leg->AddEntry(M1Bkg,"background fit to data","L");
   leg->AddEntry(g_mc_simple,"QCD MC","L");
-  leg->AddEntry(g_mc,"JEC uncertainty","F");
+  //leg->AddEntry(g_mc,"JEC uncertainty","F");
   leg->AddEntry(h_w,"q* (4.5 TeV)","L");
   leg->Draw("same");
 
@@ -755,9 +766,9 @@ void SimpleDiJetFitV1()
   TH1F *vFrame2 = p11_2->DrawFrame(p11_1->GetUxmin(), -3., p11_1->GetUxmax(), 3.);
 
   vFrame2->SetTitle("");
-  vFrame2->SetXTitle("Dijet Mass (GeV)");
+  vFrame2->SetXTitle("Dijet Mass [GeV]");
   vFrame2->GetXaxis()->SetTitleSize(0.06);
-  vFrame2->SetYTitle("(Data-Fit)/#sigma");
+  vFrame2->SetYTitle("#frac{(Data-Fit)}{#sigma_{Data}}");
   vFrame2->GetYaxis()->SetTitleSize(0.15);
   vFrame2->GetYaxis()->SetTitleOffset(0.40);
   vFrame2->GetYaxis()->SetLabelSize(0.09);
@@ -792,16 +803,16 @@ void SimpleDiJetFitV1()
   hist_sig_significance->SetLineColor(kBlack) ;
   hist_sig_significance->SetLineWidth(2) ;
   hist_sig_significance->SetLineStyle(2) ;
-//  hist_sig_significance->Draw("same");
+  hist_sig_significance->Draw("same");
   
   
   
   TLine *line = new TLine(minX_mass,0,maxX_mass,0);
   line->Draw("");
-  p11_2->RedrawAxis();
   TLine line2;
   line2.DrawLine(p11_2->GetUxmin(), p11_2->GetUymax(), p11_2->GetUxmax(), p11_2->GetUymax());
   line2.DrawLine(p11_2->GetUxmax(), p11_2->GetUymin(), p11_2->GetUxmax(), p11_2->GetUymax());
+  p11_2->RedrawAxis();
 	
   //c->Close();
 
@@ -836,8 +847,11 @@ void SimpleDiJetFitV1()
   sprintf(c3_fileName,"fitresiduals_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
   char c4_fileName_1[200];
   char c4_fileName_2[200];
+  char c4_fileName_log[200];
+  
   sprintf(c4_fileName_1,"fitAndResiduals_FuncType%d_nParFit%d_%s.png",FunctionType,nPar,fileNameSuffix);
   sprintf(c4_fileName_2,"fitAndResiduals_FuncType%d_nParFit%d_%s.pdf",FunctionType,nPar,fileNameSuffix);
+  //sprintf(c4_fileName_2,"fitAndResiduals_FuncType%d_nParFit%d_%s.svg",FunctionType,nPar,fileNameSuffix);
 
 
   ////Canvas0->SaveAs(c0_fileName);
@@ -847,8 +861,18 @@ void SimpleDiJetFitV1()
   c->SaveAs(c4_fileName_1);
   c->SaveAs(c4_fileName_2);
 
+  c->cd();
+  p11_1->SetLogx(1);
+  p11_2->SetLogx(1);
+  //p11_1->GetXaxis()->SetNdivisions(551);
+  //p11_2->GetXaxis()->SetNdivisions(551);
+  sprintf(c4_fileName_log,"fitAndResiduals_FuncType%d_nParFit%d_logx_%s.png",FunctionType,nPar,fileNameSuffix);
+  c->SaveAs(c4_fileName_log);
+
   //a version of the mjj plot with only mc  and mc residuals
   c->cd();
+  p11_1->SetLogx(0);
+  p11_2->SetLogx(0);
   p11_1->cd();
   p11_1->Clear();
   vFrame = p11_1->DrawFrame(minX_mass,0.0000005,maxX_mass,5.0);
