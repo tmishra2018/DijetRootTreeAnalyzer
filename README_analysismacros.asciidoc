@@ -4,6 +4,7 @@ To fit the dijet mass and the plot the result in the final style use the macro +
 (the other macros in the fit directory are old versions).
 
 Example of use:
+
  python fit/SimpleDiJetFit.py
 
 The input files, output directory and the text ofthe labels are hard-coded and have to be modified in the code.
@@ -16,6 +17,7 @@ It runs on the output of the main tree analyzer ( rootfile_*_reduced_skim.root, 
 The main trigger is PFHT800 and the reference is PFHT475.
 
 Example of use:
+
  python doTriggerCurves_data.py -i list_for_trigger_Run2015B_plus_Run2015C_50ns_goldenJson_29Aug2015_JEC-Summer15_50nsV4.txt -o plots_trigger_Run2015B_plus_Run2015C_50ns_goldenJson_29Aug2015/ --lumi 65
 
 Input
@@ -26,6 +28,7 @@ Input
 * +--mode <mode=0,1>+ default="1", mode for asymmetric error intervals. The default is Wilson confidence interval for binomial ( https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval )
 
 Output
+
 * trigger turn on curve plot (also zoomed)
 * trigger inefficiency/rel_stat_uncertainty
 * rootfile with the TGraph objects 
@@ -34,6 +37,7 @@ Can be generalized to choose the reference trigger. At the moment there is anoth
 
 Trigger curve with Single lepton datasets
 -----------------------------------------
+
 The code is +scripts/doTriggerCurves_data_unbiasedDataset.py+
 
 The functioning is the same of +doTriggerCurves_data.py+
@@ -51,11 +55,13 @@ This script performs an iterative Fisher test starting from a function with 2 fr
 It also performs a Wald-Wolfowitz run test for each fit and the MC (see: https://en.wikipedia.org/wiki/Wald%E2%80%93Wolfowitz_runs_test ).
 
 Example of use:
+
  python doTestBackgoundFit.py
 
 Output:
 The plots of the fits + residuals are saved in the local directory. 
 The results of the tests are printed on screen:
-• fit result and chi2 with and without zero bins
-• F-statistics and CL
-• N runs, N+, N-, mu and sigma, CL of Wald test
+
+* fit result and chi2 with and without zero bins
+* F-statistics and CL
+* N runs, N+, N-, mu and sigma, CL of Wald test
