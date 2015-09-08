@@ -12,7 +12,7 @@ The input files, output directory and the text ofthe labels are hard-coded and h
 Trigger curve
 -------------
 
-The code is in +scripts/doTriggerCurves_data.py+
+The code is in `scripts/doTriggerCurves_data.py`
 It runs on the output of the main tree analyzer ( rootfile_*_reduced_skim.root, that contains the histograms for trigger studies).
 The main trigger is PFHT800 and the reference is PFHT475.
 
@@ -22,10 +22,10 @@ Example of use:
 
 Input
 
-* +-i (--inputList) <list.txt>+ list of files with weight for the combination (of course for data weight=1)
-* +-o (--outputDir) <output>+ output directory 
-* +--lumi <lumi>+ luminosity, used just for the label
-* +--mode <mode=0,1>+ default="1", mode for asymmetric error intervals. The default is Wilson confidence interval for binomial ( https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval )
+* `-i (--inputList) <list.txt>`  list of files with weight for the combination (of course for data weight=1)
+* `-o (--outputDir) <output>`  output directory 
+* `--lumi <lumi>`  luminosity, used just for the label
+* `--mode <mode=0,1>`  default="1", mode for asymmetric error intervals. The default is Wilson confidence interval for binomial ( https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval )
 
 Output
 
@@ -38,16 +38,16 @@ Can be generalized to choose the reference trigger. At the moment there is anoth
 Trigger curve with Single lepton datasets
 -----------------------------------------
 
-The code is +scripts/doTriggerCurves_data_unbiasedDataset.py+
+The code to produce trigger curves using Single Lepton datasets is `scripts/doTriggerCurves_data_unbiasedDataset.py`
 
-The functioning is the same of +doTriggerCurves_data.py+
+The functioning is the same of `doTriggerCurves_data.py`
 The only difference is that the denominator here is the mjj spectrum without trigger request. 
 
 
 Fisher test & Wald-Wolfowitz run test
 -------------------------------------
 
-The code is +scripts/doTestBackgoundFit.py+
+The code is `scripts/doTestBackgoundFit.py`
 
 The input files are hard-coded and have to be changed in the macro https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/scripts/doTestBackgoundFit.py#L73-L80
 
