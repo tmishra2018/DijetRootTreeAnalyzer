@@ -63,11 +63,14 @@ MODE = args.MODE
 outputDir = args.outputDir
 #####################
 
-minX_mass = 1
-maxX_mass = 2438 
+minX_mass = 526
+#minX_mass = 1
+maxX_mass = 2231 
+#maxX_mass = 2438 
 
 CMS_lumi.extraText = "Preliminary"
-CMS_lumi.lumi_sqrtS = str(LUMI)+" pb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+CMS_lumi.lumi_sqrtS = "2015, 13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+#CMS_lumi.lumi_sqrtS = str(LUMI)+" pb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 iPos = 11
 iPeriod = 0
 
@@ -193,7 +196,7 @@ for ii in range(1,5):
         LB = (w+0.5/n-d)/(1+1/n)
         eU = UB/(1-UB)-p
         eL = p-LB/(1-LB)     
-    print str(N1)+" "+str(N2)+" "+str(p)+" "+str(eL)+" "+str(eU)
+    print str(h_mjj_HLTpass[0].GetBinCenter(i+1))+"   "+str(N1)+" "+str(N2)+" "+str(p)+" "+str(eL)+" "+str(eU)
 
     x.append( h_mjj_HLTpass[0].GetBinCenter(i+1))
     y.append( p*scale)
@@ -280,10 +283,10 @@ g_ineff[1].UseCurrentStyle()
 #g_ineff[1].SetMarkerStyle(21)
 #g_ineff[2].SetMarkerStyle(22)
 #
-l = TLegend(0.5,0.4,0.85,0.6)
+l = TLegend(0.5,0.5,0.85,0.55)
 l.SetFillStyle(0)
 #l.AddEntry(g_ineff[0],"PFHT475","p")
-l.AddEntry(g_ineff[1],"PFHT800","p")
+l.AddEntry(g_ineff[1],"PF H_{T} > 800 GeV","PLE")
 #l.AddEntry(g_ineff[0],"PFHT800","p")
 #l.AddEntry(g_ineff[1],"PFHT650MJJ900","p")
 #l.AddEntry(g_ineff[2],"PFHT800_OR_MJJ900","p")
@@ -305,12 +308,12 @@ c_ineff.SaveAs(outputDir+"/trigger_ineff_data.pdf")
 #g_eff[0].SetMarkerColor(1)
 #g_eff[1].SetMarkerColor(2)
 #g_eff[2].SetMarkerColor(3)
-g_eff[0].GetXaxis().SetTitle("mjj [GeV]")
-g_eff[0].GetYaxis().SetTitle("efficiency")
+g_eff[0].GetXaxis().SetTitle("Dijet Mass [GeV]")
+g_eff[0].GetYaxis().SetTitle("Efficiency")
 g_eff[0].GetXaxis().SetRangeUser(minX_mass,maxX_mass)
 g_eff[0].GetYaxis().SetRangeUser(0,1.3)
-g_eff[1].GetXaxis().SetTitle("mjj [GeV]")
-g_eff[1].GetYaxis().SetTitle("efficiency")
+g_eff[1].GetXaxis().SetTitle("Dijet Mass [GeV]")
+g_eff[1].GetYaxis().SetTitle("Efficiency")
 g_eff[1].GetXaxis().SetRangeUser(minX_mass,maxX_mass)
 g_eff[1].GetYaxis().SetRangeUser(0,1.3)
 

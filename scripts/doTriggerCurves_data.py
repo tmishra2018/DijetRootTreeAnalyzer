@@ -353,6 +353,9 @@ for ii in range(2,5):
   veyh = array("f",eyh)
   g_ineff.append(TGraphAsymmErrors(nMassBins,vx,vy,vexl,vexh,veyh,veyh) ) 
 
+g_ineff[0].SetName("g_ineff_PFHT800")
+g_ineff[1].SetName("g_ineff_PFHT650MJJ900")
+g_ineff[2].SetName("g_ineff_PFHT800_OR_MJJ900")
 
 
 ####  Draw plots
@@ -491,6 +494,9 @@ file_out = TFile(outputDir+"/triggerCurves_data.root","recreate")
 g_eff[0].Write()
 g_eff[1].Write()
 g_eff[2].Write()
+g_ineff[0].Write()
+g_ineff[1].Write()
+g_ineff[2].Write()
 h_mjj_HLTpass_PFHT475_all.Write()
 h_mjj_HLTpass_PFHT800_all.Write()
 h_mjj_HLTpass_PFHT650MJJ900_all.Write()
