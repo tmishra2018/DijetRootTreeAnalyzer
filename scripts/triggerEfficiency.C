@@ -50,20 +50,11 @@ void triggerEfficiency()
   lumi_sqrtS = "13 TeV";       // used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 
   int iPeriod = 4;    // 1=7TeV, 2=8TeV, 3=7+8TeV, 4=13TeV, 7=7+8+13TeV, 0=free form (uses lumi_sqrtS)
+  int iPos = 11;     // 0=out , 11=left, 22=center, 33=right
 
-  //=== Draw ===
 
-  //  example_plot( iPeriod, 0 );   // out of frame (in exceptional cases)
-  example_plot( iPeriod, 11 );  // default: left-aligned
-  //  example_plot( iPeriod, 22 );  // centered
-  //  example_plot( iPeriod, 33 );  // right-aligned  
-  // mode generally : 
-  //   iPos = 10*(alignement 1/2/3) + position (1/2/3 = left/center/right)
-}
-
-TCanvas* example_plot( int iPeriod, int iPos )
-{ 
-  //  if( iPos==0 ) relPosX = 0.12;
+  //====================================================================================
+  // Style
 
   int W = 600;
   int H = 600;
@@ -114,7 +105,8 @@ TCanvas* example_plot( int iPeriod, int iPos )
   canv->SetGridx(true);
   canv->SetGridy(true);
 
-  //----------------------------------------------------------------------------
+  //====================================================================================
+  // Efficiency
 
   TFile *fileInput = TFile::Open(myinputFile);
 
@@ -164,7 +156,9 @@ TCanvas* example_plot( int iPeriod, int iPos )
       legend->Draw();
     }
 
-  //-----------------------------------------------------------------------------
+  //====================================================================================
+  //Draw
+
 
   //## Trigger Efficiency plot ##
   // writing the lumi information and the CMS "logo"
@@ -190,6 +184,7 @@ TCanvas* example_plot( int iPeriod, int iPos )
   gPad->SetTicky(1);
   canv->Print(myoutputfilename_zoom+".pdf",".pdf");
   canv->Print(myoutputfilename_zoom+".png",".png");
-  
-  return canv;
+
+  //-----------------------------------------------------------------------------
+
 }
