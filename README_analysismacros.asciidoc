@@ -1,5 +1,5 @@
 Background Fit
----
+--------------
 To fit the dijet mass and the plot the result in the final style use the macro +fit/SimpleDiJetFit.py+ 
 (the other macros in the fit directory are old versions).
 
