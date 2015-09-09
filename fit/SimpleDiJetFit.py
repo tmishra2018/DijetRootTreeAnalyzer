@@ -72,11 +72,11 @@ fileNameSuffix = "JEC_V4_firstbin1181"
 
 ####### INPUT #############
 # data 
-input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+input_root_file = "/afs/cern.ch/work/g/gdimperi/Dijet/CMSSW_7_4_3_Dijet/src/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
 ###mc
-input_root_file_mc = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+input_root_file_mc = "/afs/cern.ch/work/g/gdimperi/Dijet/CMSSW_7_4_3_Dijet/src/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
 ### input file and 1D histo
-input_root_file_signal = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_2_1_DiJet/src/CMSDIJET/DijetRootTreeAnalyzer/test_fit/Resonance_Shapes_qg_PU20_13TeV_newJEC.root"
+input_root_file_signal = "/afs/cern.ch/work/g/gdimperi/Dijet/CMSSW_7_4_3_Dijet/src/DijetShapeInterpolator/ResonanceShapes_qq_13TeV_PU30_Spring15.root"
 
 file0 = TFile.Open( input_root_file )
 fileMC = TFile.Open( input_root_file_mc )
@@ -532,8 +532,8 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   vFrame = p11_1.DrawFrame(minX_mass,0.000005,maxX_mass,5.0)
   
   vFrame.SetTitle("")
-  vFrame.SetXTitle("Dijet Mass (GeV)")
-  vFrame.SetYTitle("d#sigma / dm_{jj}   (pb / GeV)")
+  vFrame.SetXTitle("Dijet Mass [GeV]")
+  vFrame.SetYTitle("d#sigma / dm_{jj}   [pb / GeV]")
   vFrame.GetXaxis().SetTitleSize(0.06)
   vFrame.GetXaxis().SetTitleOffset(0.95)
   vFrame.GetXaxis().SetLabelSize(0.05)
@@ -584,7 +584,7 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3.5, p11_1.GetUxmax(), 3.5)
   
   vFrame2.SetTitle("")
-  vFrame2.SetXTitle("Dijet Mass (GeV)")
+  vFrame2.SetXTitle("Dijet Mass [GeV]")
   vFrame2.GetXaxis().SetTitleSize(0.06)
   vFrame2.SetYTitle("(Data-MC)/#sigma")
   vFrame2.GetYaxis().SetTitleSize(0.15)
@@ -672,11 +672,11 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   p11_1.SetFrameBorderMode(0)
   
   #Pave text
-  pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
-  pave_fit = TPaveText(0.2058691,0.20735043,0.4750171,0.3670085,"NDC")
+  #pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
+  pave_fit = TPaveText(0.2358691,0.20735043,0.5050171,0.3670085,"NDC")
     
   pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
-  pave_fit.AddText("M_{jj} > 1.1 TeV")
+  pave_fit.AddText("M_{jj} > 1.2 TeV")
   pave_fit.AddText("Wide Jets")
   pave_fit.SetFillColor(0)
   pave_fit.SetLineColor(0)
@@ -720,16 +720,16 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   g.Draw("pe0 same")
     
   #leg = TLegend(0.5564991,0.55,0.8903575,0.705812)
-  leg =  TLegend(0.4564991,0.55,0.8903575,0.80)
-  leg.SetTextSize(0.03546853)
+  leg =  TLegend(0.5564991,0.60,0.8903575,0.85)
+  leg.SetTextSize(0.038)
   leg.SetLineColor(0)
   leg.SetLineStyle(1)
   leg.SetLineWidth(1)
   leg.SetFillColor(0)
   leg.SetFillStyle(0)
   leg.SetMargin(0.35)
-  leg.AddEntry(hist_mass,"data" ,"PLE");
-  leg.AddEntry(M1Bkg,"background fit to data","L");
+  leg.AddEntry(hist_mass,"Data" ,"PLE");
+  leg.AddEntry(M1Bkg,"Fit","L");
   leg.AddEntry(g_mc,"QCD MC","L");
   leg.AddEntry(h_w,"q* (4.5 TeV)","L");
   leg.Draw("same")
