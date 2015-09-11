@@ -21,6 +21,7 @@ pt0Cut				60		-		-		-		-1
 pt1Cut				30		-		-		-		-1
 ptCut				30		-		-		-		-1
 DeltaR				1.1		-		-		-		-1
+DetaJJforTrig			1.3		-		-		-		-1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
 useJECs				1               -               -               -               -1
 # turn on/off shift JECs (value1 0: off, 1: on, value2: sign of the shifting. The value is taken from a txt file with JEC uncertainties) 

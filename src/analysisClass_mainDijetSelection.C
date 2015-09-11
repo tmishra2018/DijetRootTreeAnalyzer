@@ -119,10 +119,11 @@ void analysisClass::Loop()
      10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
 
 
-   char* HLTname[50] = {"noTrig","PFHT475","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900","PFHT800_noPFHT475"};
-   TH1F* h_mjj_HLTpass[6];
+   char* HLTname[50] = {"noTrig","PFHT475","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900","PFHT800_noPFHT475", 
+                        "Mu45Eta2p1", "PFHT800AndMu45Eta2p1"};
+   TH1F* h_mjj_HLTpass[8];
    char name_histoHLT[50];
-   for (int i=0; i<6; i++){  
+   for (int i=0; i<8; i++){  
      sprintf(name_histoHLT,"h_mjj_HLTpass_%s",HLTname[i]);
      h_mjj_HLTpass[i]= new TH1F(name_histoHLT,"",103,massBoundaries);
    }
@@ -485,8 +486,8 @@ void analysisClass::Loop()
 	 && passedCut("etaAK4_j1")
 	 && passedCut("pTAK4_j2")
 	 && passedCut("etaAK4_j2")
-	 && passedCut("mjj") 
-	 && passedCut("deltaETAjj") ){
+	 //&& passedCut("mjj")         
+	 && getVariableValue("deltaETAjj") <  getPreCutValue1("DetaJJforTrig") ){
 
        h_mjj_HLTpass[0] -> Fill(MJJWide); 
 
@@ -497,6 +498,12 @@ void analysisClass::Loop()
 	   if(triggerResult->at(3) && triggerResult->at(10)) h_mjj_HLTpass[3] -> Fill(MJJWide); //PFHT650MJJ900
 	   if(triggerResult->at(3) && (triggerResult->at(0) || triggerResult->at(10))) h_mjj_HLTpass[4] -> Fill(MJJWide); //PFHT800 && PFHT650MJJ900
 	   if(triggerResult->at(0)) h_mjj_HLTpass[5] -> Fill(MJJWide); //PFHT800 without PFHT475
+
+	   if(triggerResult->size()>16) //not called in old ntuples used for 65 pb-1 publication (Francesco, 11/09/2015)
+	     {
+	       if(triggerResult->at(16)) h_mjj_HLTpass[6] -> Fill(MJJWide); //Mu45Eta2p1
+	       if(triggerResult->at(16) && triggerResult->at(0)) h_mjj_HLTpass[7] -> Fill(MJJWide); //Mu45Eta2p1 AND PFHT800
+	     }
 	 }
        //std::cout << "triggerResult->at(3) = " << triggerResult->at(3) << "  triggerResult->at(0) = " << triggerResult->at(0) << "  triggerResult->at(5) = " << triggerResult->at(5) << std::endl;
      }
@@ -553,7 +560,7 @@ void analysisClass::Loop()
    } // End loop over events
 
    //////////write histos 
-   for (int i=0; i<6; i++){
+   for (int i=0; i<8; i++){
      h_mjj_HLTpass[i]->Write();
    }
 
