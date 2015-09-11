@@ -379,6 +379,7 @@ void analysisClass::Loop()
      fillVariableWithValue("nJet",widejets.size());
      fillVariableWithValue("metSig",metSig);
      fillVariableWithValue("Nak4",Nak4);
+     fillVariableWithValue ( "PassJSON", passJSON (runNo, lumi, isData));
 
      // Trigger
      int NtriggerBits = triggerResult->size();
@@ -486,6 +487,7 @@ void analysisClass::Loop()
 	 && passedCut("etaAK4_j1")
 	 && passedCut("pTAK4_j2")
 	 && passedCut("etaAK4_j2")
+	 && passedCut("PassJSON")
 	 //&& passedCut("mjj")         
 	 && getVariableValue("deltaETAjj") <  getPreCutValue1("DetaJJforTrig") ){
 
