@@ -50,7 +50,7 @@ jetAlgo				AntiKt 		-		-		-		-1
 #
 #VariableName	      minValue1(<) maxValue1(>=)	minValue2(<)	maxValue2(>=)	level	histoNbinsMinMax  OptionalFlag
 #------------	      ------------ -------------	------------	-------------	-----	----------------  ------------
-PassJSON              0             1                   -               -               0       2 -0.5 1.5        SAVE  
+PassJSON              -1            1                   -               -               0       2 -0.5 1.5        SAVE  
 nVtx                  0             +inf                -               -               1       50  0 50	  SAVE
 IdTight_j1            0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
 IdTight_j2            0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
@@ -59,11 +59,15 @@ pTWJ_j1	      	      60	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j1             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 pTWJ_j2	      	      30	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j2             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
-deltaETAjj           0              1.3                -               -               1       100 0. 3.         SAVE
+deltaETAjj            0             1.3                	-               -               1       100 0. 3.         SAVE
 mjj            	     -inf           +inf                -               -               1       1000 0 10000      SAVE
 
 # no cut on these variables, just want to save histograms
-passHLT	             -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT800	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT475	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT200	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFJET500     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_Mu45         -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 lumi		     -inf	    +inf		-		-		1	50  0 10000	  SAVE
@@ -74,6 +78,8 @@ METoverHTAK4	     -inf	    +inf		-		-		1	1000 0 10000      SAVE
 HTAK4                -inf           +inf                -               -               1       500 0 10000       SAVE
 ptHat                -inf           +inf                -               -               1       500 0 10000       SAVE
 deltaPHIjj           -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
+deltaPHIjjAK4        -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
+deltaETAjjAK4        -inf           +inf                -               -               1       100 0. 3.         SAVE
 Nak4                 -inf           +inf                -               -               1       100 0 100         SAVE  
 pTAK4_j1	     -inf	    +inf		-	        -	        1	500 0 5000        SAVE
 etaAK4_j1            -inf           +inf                -               -               1       50  -2.5 2.5      SAVE
