@@ -7,8 +7,8 @@ TCanvas* example_plot( int iPeriod, int iPos );
 
 //###### EDIT THIS PART #######
 
-double xmin = 526;
-double xmax = 2231;
+double xmin = 156;
+double xmax = 4010;
 double ymin = 0;
 double ymax = 1.3;
 
@@ -17,15 +17,39 @@ double xmaxZoom = 1530;
 double yminZoom = 0.6;
 double ymaxZoom = 1.2;
 
-TString myinputFile = "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_plus_Run2015C_goldenJSON_JEC-Summer15_50nsV4_29Aug2015/rootfile_JetHT__Run2015B_plus_Run2015C__MINIAOD_Run2015B_goldenJSON_JEC-Summer15_50nsV4_29Aug2015_reduced_skim.root";
+//TString myinputFile = "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_plus_Run2015C_goldenJSON_JEC-Summer15_50nsV4_29Aug2015/rootfile_JetHT__Run2015B_plus_Run2015C__MINIAOD_Run2015B_goldenJSON_JEC-Summer15_50nsV4_29Aug2015_reduced_skim.root";
+//TString myinputFile = "/cmshome/santanas/CMS/Releases/CMSSW_7_4_3/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/output/output_test_reduced_skim.root";
+//--------
+//TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015B-17Jul2015-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
+//TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015B-PromptReco-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
+//TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
+TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015BandC-All-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 
-TString mynumerator = "h_mjj_HLTpass_PFHT800";
-TString mydenominator = "h_mjj_HLTpass_PFHT475";
-TString mytitle = ";Dijet Mass [GeV];Relative Efficiency";
+//TString mynumerator = "h_mjj_HLTpass_PFHT800";
+TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1";
+TString mytitlelegendNum = "PFHT800 AND Mu45Eta2p1";
+
+//TString mydenominator = "h_mjj_HLTpass_PFHT475";
+TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1";
+TString mytitlelegendDen = "Mu45Eta2p1";
+
+//TString mytitle = ";Dijet Mass [GeV];Relative Efficiency";
+TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency";
 TString mytitlelegend = "PF H_{T} > 800 GeV";
 
-TString myoutputfilename = "triggerEfficiency";
-TString myoutputfilename_zoom = "triggerEfficiencyZoom";
+TString xAxisTitle = "Dijet Mass [GeV]";
+TString yAxisTitle = "Number of events";
+
+//TString myoutputfilename = "triggerEfficiency";
+
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015B-17Jul2015";
+//
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015B-PromptReco";
+//
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-PromptReco";
+//
+TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015BAndC-All";
+
 
 //####### NOTE: #######
 //Change the style settings under triggerEfficiency()
@@ -35,6 +59,8 @@ TString myoutputfilename_zoom = "triggerEfficiencyZoom";
 void triggerEfficiency()
 {
   //=== General CMS Style ===
+
+  gROOT->ForceStyle();
 
   //gROOT->LoadMacro("tdrstyle.C");
   setTDRStyle();
@@ -75,7 +101,7 @@ void triggerEfficiency()
   // references for T, B, L, R
   float T = 0.08*H_ref;
   float B = 0.12*H_ref; 
-  float L = 0.12*W_ref;
+  float L = 0.15*W_ref;
   float R = 0.04*W_ref;
 
   TString canvName = "trigger";
@@ -129,7 +155,7 @@ void triggerEfficiency()
       h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xmin,xmax);
       h_efficiency->GetPaintedGraph()->GetXaxis()->SetNdivisions(505);
       h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(ymin,ymax);
-      // h_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(0.9);
+      //h_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(0.9);
       // h_efficiency->GetPaintedGraph()->GetYaxis()->SetLabelSize(0.04);
 
       for (int bin=0;bin<h_efficiency->GetPaintedGraph()->GetN();bin++)
@@ -146,7 +172,7 @@ void triggerEfficiency()
 	}
 
       // draw the legend
-      TLegend *legend=new TLegend(0.5,0.5,0.85,0.55);
+      TLegend *legend=new TLegend(0.5,0.25,0.85,0.3);
       //legend->SetTextFont(72);
       //legend->SetTextSize(0.04);
       legend->SetFillStyle(0);
@@ -159,7 +185,6 @@ void triggerEfficiency()
   //====================================================================================
   //Draw
 
-
   //## Trigger Efficiency plot ##
   // writing the lumi information and the CMS "logo"
   CMS_lumi( canv, iPeriod, iPos ); 
@@ -171,7 +196,7 @@ void triggerEfficiency()
   //canv->Print(canvName+"Effieciency"+".pdf",".pdf");
   canv->Print(myoutputfilename+".pdf",".pdf");
   canv->Print(myoutputfilename+".png",".png");
-
+  
   //## Trigger Efficiency plot (zoom) ## 
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xminZoom,xmaxZoom);
   h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(yminZoom,ymaxZoom);
@@ -182,9 +207,44 @@ void triggerEfficiency()
   canv->GetFrame()->Draw();
   gPad->SetTickx(1);
   gPad->SetTicky(1);
-  canv->Print(myoutputfilename_zoom+".pdf",".pdf");
-  canv->Print(myoutputfilename_zoom+".png",".png");
+  canv->Print(myoutputfilename+"_zoom.pdf",".pdf");
+  canv->Print(myoutputfilename+"_zoom.png",".png");
+  
+  //## Mjj Spectra ##
+  canv->SetGridx(false);
+  canv->SetGridy(false);
+  canv->SetLogy(true);
+  h_denominator->UseCurrentStyle();  
+  h_denominator->SetLineColor(2);
+  h_numerator->SetLineColor(1);
+  h_denominator->Draw();
+  h_numerator->Draw("same");
+  h_denominator->GetXaxis()->SetRangeUser(xmin,xmax);
+  h_denominator->GetXaxis()->SetTitle(xAxisTitle);
+  h_denominator->GetYaxis()->SetTitle(yAxisTitle);
+  h_denominator->GetYaxis()->SetTitleOffset(1.3);
 
+  //CMS_lumi( canv, iPeriod, iPos ); 
+  canv->Update();
+  canv->RedrawAxis();
+  canv->GetFrame()->Draw();
+  gPad->SetTickx(1);
+  gPad->SetTicky(1);
+
+  // draw the legend
+  TLegend *legend1=new TLegend(0.4,0.65,0.91,0.83);
+  //legend->SetTextFont(72);
+  //legend->SetTextSize(0.06);
+  legend1->SetFillStyle(0);
+  legend1->SetLineColor(0);
+  legend1->SetShadowColor(0);
+  legend1->AddEntry(h_denominator,mytitlelegendDen,"l");
+  legend1->AddEntry(h_numerator,mytitlelegendNum,"l");
+  legend1->Draw();
+
+  canv->Print(myoutputfilename+"_histo.pdf",".pdf");
+  canv->Print(myoutputfilename+"_histo.png",".png");
+  
   //-----------------------------------------------------------------------------
 
 }

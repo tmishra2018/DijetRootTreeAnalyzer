@@ -59,12 +59,15 @@ c) test code
 ### edit script
 emacs $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/submit_batch_T2_split.py &
 change line 
-command = "./main "+opt.input+"/"+line+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+"/rootfile_"+sample+" "+opt.output+"/cutEfficiencyFile_"+sample
+command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
 if needed 
 
 ### submit 
+For analysis:
 python scripts/submit_batch_T2_split.py -i $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/config/lists_40pb-1_30_07_2015/ -o /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015 -q cmsan -m JetHT --split 5 --tag santanas__40pb-1_30_07_2015 -c config/cutFile_mainDijetSelection.txt
 python scripts/submit_batch_T2_split.py -i $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/config/lists_40pb-1_30_07_2015/ -o /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/mc/santanas__40pb-1_30_07_2015 -q cmsan -m RunIISpring15DR74 --split 5 --tag santanas__40pb-1_30_07_2015 -c config/cutFile_mainDijetSelection.txt
+For trigger:
+python  scripts/submit_batch_T2_split.py -i  $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/config/lists_65pb-1_11_09_2015_SingleMuon/ -o /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015  -q cmsan -m SingleMuon  --split 5 --tag santanas__SingleMu__65pb-1_50ns_11_09_2015 -c config/cutFile_mainDijetSelection.txt
 
 note: you must specify the folder that contains all the lists you want to submit (the submit_batch_T2_split only works at the moment 
 for output directories in /pnfs/...)
@@ -91,9 +94,31 @@ hadd /tmp/rootfile_JetHT__Run2015B-All-v1__MINIAOD__reduced_skim.root /tmp/rootf
 dccp /tmp/rootfile_JetHT__Run2015B-All-v1__MINIAOD__reduced_skim.root /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015/merged/
 
 
+### check number of events processed (for data)
+
+root -l /tmp/rootfile_SingleMuon__Run2015B-17Jul2015-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root
+DijetFilter->cd()
+EventCount->cd()
+root [8] EventCounter->GetBinContent(2)
+(Double_t) 9.029780e+05
+Note: The number should match the number of events reported by crab report (and reported usually in the Twiki) for the entire dataset considered.
+
+
 #######################################
 4) Draw histograms from reduced trees
 #######################################
+
+
+####################
+Trigger efficiency
+####################
+
+..................
+
+
+####################
+Standard selection
+####################
 
 cd $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/
 
