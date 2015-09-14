@@ -31,7 +31,7 @@ public :
   virtual ~analysisClass();
   void Loop();
 private :
-  ClusterSequencePtr  fjClusterSeq;
+  ClusterSequencePtr  fjClusterSeq, fjClusterSeq_shift;
   JetDefPtr           fjJetDefinition;
   // For JECs
   JetCorrectorParameters *L1Par;

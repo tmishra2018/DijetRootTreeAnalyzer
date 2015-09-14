@@ -138,8 +138,8 @@ void analysisClass::Loop()
    ////// If the root version is updated and rootNtupleClass regenerated,     /////
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
-   //for (Long64_t jentry=0; jentry<nentries;jentry++) {
-   for (Long64_t jentry=0; jentry<2000;jentry++) {
+   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   //for (Long64_t jentry=0; jentry<2000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -154,6 +154,7 @@ void analysisClass::Loop()
 
      vector<TLorentzVector> widejets;
      TLorentzVector wj1, wj2, wdijet; 
+     TLorentzVector wj1_shift, wj2_shift, wdijet_shift; 
 
      vector<TLorentzVector> AK4jets;
      TLorentzVector ak4j1, ak4j2, ak4dijet;      
@@ -281,7 +282,7 @@ void analysisClass::Loop()
      if( int(getPreCutValue1("useFastJet"))==1 )
      {
        // vector of ak4 jets used for wide jet clustering
-       std::vector<fastjet::PseudoJet> fjInputs;
+       std::vector<fastjet::PseudoJet> fjInputs, fjInputs_shift;
 
        for(size_t j=0; j<no_jets_ak4; ++j)
        {
@@ -294,26 +295,33 @@ void analysisClass::Loop()
 	 else if( j==1 && !( rescale*jetPtAK4->at(sortedJetIdx[j]) > getPreCutValue1("pt1Cut")) ) continue;
 	 else if( !( rescale*jetPtAK4->at(sortedJetIdx[j]) > getPreCutValue1("ptCut")) ) continue;
 
-	 TLorentzVector tempJet;
+	 TLorentzVector tempJet, tempJet_shift;
 
-	 tempJet.SetPtEtaPhiM(  rescale*jetPtAK4->at(sortedJetIdx[j]) , jetEtaAK4->at(sortedJetIdx[j]) , jetPhiAK4->at(sortedJetIdx[j]) , rescale*jetMassAK4->at(sortedJetIdx[j]));
+	 tempJet.SetPtEtaPhiM( rescale*jetPtAK4->at(sortedJetIdx[j]) , jetEtaAK4->at(sortedJetIdx[j]) , jetPhiAK4->at(sortedJetIdx[j]) , rescale*jetMassAK4->at(sortedJetIdx[j]));
+	 tempJet_shift.SetPtEtaPhiM( (1+jecUncertainty[sortedJetIdx[j]])* rescale*jetPtAK4->at(sortedJetIdx[j]) , jetEtaAK4->at(sortedJetIdx[j]) , jetPhiAK4->at(sortedJetIdx[j]) ,  (1+jecUncertainty[sortedJetIdx[j]])* rescale*jetMassAK4->at(sortedJetIdx[j]));
 
 	 fjInputs.push_back(fastjet::PseudoJet(tempJet.Px(),tempJet.Py(),tempJet.Pz(),tempJet.E()));
+	 fjInputs_shift.push_back(fastjet::PseudoJet(tempJet_shift.Px(),tempJet_shift.Py(),tempJet_shift.Pz(),tempJet_shift.E()));
        }
 
        fjClusterSeq = ClusterSequencePtr( new fastjet::ClusterSequence( fjInputs, *fjJetDefinition ) );
+       fjClusterSeq_shift = ClusterSequencePtr( new fastjet::ClusterSequence( fjInputs_shift, *fjJetDefinition ) );
 
        std::vector<fastjet::PseudoJet> inclusiveWideJets = fastjet::sorted_by_pt( fjClusterSeq->inclusive_jets(0.) );
+       std::vector<fastjet::PseudoJet> inclusiveWideJets_shift = fastjet::sorted_by_pt( fjClusterSeq_shift->inclusive_jets(0.) );
 
        if( inclusiveWideJets.size()>1 )
        {
 	 wj1.SetPxPyPzE(inclusiveWideJets.at(0).px(), inclusiveWideJets.at(0).py(), inclusiveWideJets.at(0).pz(), inclusiveWideJets.at(0).e());
 	 wj2.SetPxPyPzE(inclusiveWideJets.at(1).px(), inclusiveWideJets.at(1).py(), inclusiveWideJets.at(1).pz(), inclusiveWideJets.at(1).e());
+	 wj1_shift.SetPxPyPzE(inclusiveWideJets_shift.at(0).px(), inclusiveWideJets_shift.at(0).py(), inclusiveWideJets_shift.at(0).pz(), inclusiveWideJets_shift.at(0).e());
+	 wj2_shift.SetPxPyPzE(inclusiveWideJets_shift.at(1).px(), inclusiveWideJets_shift.at(1).py(), inclusiveWideJets_shift.at(1).pz(), inclusiveWideJets_shift.at(1).e());
        }
      }
      else
      {
        TLorentzVector wj1_tmp, wj2_tmp;
+       TLorentzVector wj1_shift_tmp, wj2_shift_tmp;
        double wideJetDeltaR_ = getPreCutValue1("DeltaR");
 
        if(no_jets_ak4>=2)
@@ -324,13 +332,19 @@ void analysisClass::Loop()
 	       if(fabs(jetEtaAK4->at(sortedJetIdx[1])) < getPreCutValue1("jetFidRegion") 
 		  && (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) > getPreCutValue1("pt1Cut"))
 		 {
-		   TLorentzVector jet1, jet2;
+		   TLorentzVector jet1, jet2, jet1_shift, jet2_shift;
 		   jet1.SetPtEtaPhiM( (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0])
 				      ,jetEtaAK4->at(sortedJetIdx[0]),jetPhiAK4->at(sortedJetIdx[0])
 				      , (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) * jetMassAK4->at(sortedJetIdx[0]));
 		   jet2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) *jetPtAK4->at(sortedJetIdx[1])
 				      ,jetEtaAK4->at(sortedJetIdx[1]),jetPhiAK4->at(sortedJetIdx[1])
 				      , (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) * jetMassAK4->at(sortedJetIdx[1]));
+		   jet1_shift.SetPtEtaPhiM( (1+jecUncertainty[sortedJetIdx[0]])*(jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0])
+				      ,jetEtaAK4->at(sortedJetIdx[0]),jetPhiAK4->at(sortedJetIdx[0])
+				      , (1+jecUncertainty[sortedJetIdx[0]])*(jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) * jetMassAK4->at(sortedJetIdx[0]));
+		   jet2_shift.SetPtEtaPhiM( (1+jecUncertainty[sortedJetIdx[1]])* (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) *jetPtAK4->at(sortedJetIdx[1])
+				      ,jetEtaAK4->at(sortedJetIdx[1]),jetPhiAK4->at(sortedJetIdx[1])
+				      , (1+jecUncertainty[sortedJetIdx[0]])*(jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) * jetMassAK4->at(sortedJetIdx[1]));
 		   
 		   for(Long64_t ijet=0; ijet<no_jets_ak4; ijet++)
 		     { //jet loop for ak4
@@ -340,10 +354,13 @@ void analysisClass::Loop()
 			  && idTAK4->at(sortedJetIdx[ijet]) == getPreCutValue1("tightJetID") 
 			  && (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) > getPreCutValue1("ptCut"))
 			 {
-			   TLorentzVector currentJet;
+			   TLorentzVector currentJet, currentJet_shift;
 			   currentJet.SetPtEtaPhiM( (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet])) *jetPtAK4->at(sortedJetIdx[ijet])
 						    ,jetEtaAK4->at(sortedJetIdx[ijet]),jetPhiAK4->at(sortedJetIdx[ijet])
 						    , (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet])) *jetMassAK4->at(sortedJetIdx[ijet]));   
+			   currentJet_shift.SetPtEtaPhiM( (1+jecUncertainty[sortedJetIdx[ijet]])*(jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet])) *jetPtAK4->at(sortedJetIdx[ijet])
+						    ,jetEtaAK4->at(sortedJetIdx[ijet]),jetPhiAK4->at(sortedJetIdx[ijet])
+						    , (1+jecUncertainty[sortedJetIdx[ijet]])*(jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet])) *jetMassAK4->at(sortedJetIdx[ijet]));   
 			   
 			   double DeltaR1 = currentJet.DeltaR(jet1);
 			   double DeltaR2 = currentJet.DeltaR(jet2);
@@ -351,10 +368,12 @@ void analysisClass::Loop()
 			   if(DeltaR1 < DeltaR2 && DeltaR1 < wideJetDeltaR_)
 			     {
 			       wj1_tmp += currentJet;
+			       wj1_shift_tmp += currentJet_shift;
 			     }
 			   else if(DeltaR2 < wideJetDeltaR_)
 			     {
 			       wj2_tmp += currentJet;
+			       wj2_shift_tmp += currentJet_shift;
 			     }			 
 			 } // if AK4 jet passes fid and jetid.
 		     } //end of ak4 jet loop		     
@@ -371,17 +390,22 @@ void analysisClass::Loop()
 	 {
 	   wj1 = wj1_tmp;
 	   wj2 = wj2_tmp;
+	   wj1_shift = wj1_shift_tmp;
+	   wj2_shift = wj2_shift_tmp;
 	 }
        else
 	 {
 	   wj1 = wj2_tmp;
 	   wj2 = wj1_tmp;
+	   wj1_shift = wj2_shift_tmp;
+	   wj2_shift = wj1_shift_tmp;
 	 }
      }
 
      double MJJWide = 0; 
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
+     double MJJWide_shift = 0; 
      if( wj1.Pt()>0 && wj2.Pt()>0 )
      {
        // Create dijet system
@@ -389,6 +413,9 @@ void analysisClass::Loop()
        MJJWide = wdijet.M();
        DeltaEtaJJWide = fabs(wj1.Eta()-wj2.Eta());
        DeltaPhiJJWide = fabs(wj1.DeltaPhi(wj2));
+       
+       wdijet_shift = wj1_shift + wj2_shift;
+       MJJWide_shift = wdijet_shift.M();
 
        // Put widejets in the container
        widejets.push_back( wj1 );
@@ -450,6 +477,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "phiAK4_j1", AK4jets[0].Phi());
        fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(sortedJetIdx[0]));
        fillVariableWithValue( "jetJecAK4_j1", jecFactors[sortedJetIdx[0]] );
+       fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "chargedHadEnFrac_j1", jetChfAK4->at(sortedJetIdx[0]));
@@ -469,6 +497,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "phiAK4_j2", AK4jets[1].Phi());
        fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
        fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[1]]); 
+       fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[1]] );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(sortedJetIdx[1]));
        fillVariableWithValue( "chargedHadEnFrac_j2", jetChfAK4->at(sortedJetIdx[1]));
@@ -500,6 +529,7 @@ void analysisClass::Loop()
          fillVariableWithValue( "etaWJ_j2", widejets[1].Eta());
 	 fillVariableWithValue( "deltaETAjj", DeltaEtaJJWide ) ;
          fillVariableWithValue( "mjj", MJJWide ) ;
+         fillVariableWithValue( "mjj_shiftJEC", MJJWide_shift ) ;
 	 //no cuts on these variables, just to store in output
          fillVariableWithValue( "massWJ_j2", widejets[1].M());
          fillVariableWithValue( "phiWJ_j2", widejets[1].Phi());	
