@@ -18,12 +18,14 @@
 #list="list_for_plots_data4T_Run2015B_plus_Run2015C_50ns_jsonDCSonly_26Aug2015.txt"
 #outputdir="plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/"
 #list="list_for_plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15.txt"
-outputdir="plots_data4T_Run2015C_25ns_2Sept2015_JEC_Summer15_50s_V4_blinded4TeV_withSF/"
-list="list_for_plots_data4T_Run2015C_25ns_2Sept2015.txt"
+#outputdir="plots_data4T_Run2015C_25ns_2Sept2015_JEC_Summer15_50s_V4_blinded4TeV_withSF/"
+#list="list_for_plots_data4T_Run2015C_25ns_2Sept2015.txt"
+outputdir="Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF/" 
+list="list_for_plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC.txt"
 
 #outputdir="$MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/plots/santanas__40pb-1_30_07_2015_v2/"
 #lumi="42"
-lumi=8.103
+lumi=65.
 
 mkdir -p $outputdir
 
