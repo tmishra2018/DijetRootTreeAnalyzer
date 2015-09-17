@@ -17,6 +17,8 @@ double xmaxZoom = 1530;
 double yminZoom = 0.6;
 double ymaxZoom = 1.2;
 
+double threshold = 1213;
+
 //TString myinputFile = "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_plus_Run2015C_goldenJSON_JEC-Summer15_50nsV4_29Aug2015/rootfile_JetHT__Run2015B_plus_Run2015C__MINIAOD_Run2015B_goldenJSON_JEC-Summer15_50nsV4_29Aug2015_reduced_skim.root";
 //TString myinputFile = "/cmshome/santanas/CMS/Releases/CMSSW_7_4_3/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/output/output_test_reduced_skim.root";
 //--------
@@ -168,7 +170,7 @@ void triggerEfficiency()
 	  h_efficiency->GetPaintedGraph()->GetPoint(bin,x,y);
 	  eyh = h_efficiency->GetPaintedGraph()->GetErrorYhigh(bin);
 	  eyl = h_efficiency->GetPaintedGraph()->GetErrorYlow(bin);
-	  cout << "x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;       
+	  cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;       
 	}
 
       // draw the legend
@@ -210,6 +212,19 @@ void triggerEfficiency()
   canv->Print(myoutputfilename+"_zoom.pdf",".pdf");
   canv->Print(myoutputfilename+"_zoom.png",".png");
   
+  //Integral above threshold
+  int totalNev =  h_denominator->Integral(h_denominator->FindFixBin(threshold),h_denominator->GetNbinsX());
+  int passedNev =  h_numerator->Integral(h_numerator->FindFixBin(threshold),h_numerator->GetNbinsX());
+  //int totalNev =  h_denominator->Integral(h_denominator->FindFixBin(threshold),h_denominator->FindFixBin(threshold));
+  //int passedNev =  h_numerator->Integral(h_numerator->FindFixBin(threshold),h_numerator->FindFixBin(threshold));
+  float effIntegrated = float(passedNev)/float(totalNev);
+  cout << "totalNev = " << totalNev <<  " , passedNev=" << passedNev << " , efficiency=" << effIntegrated << endl;       
+  TEfficiency* pEff = 0;
+  float effIntegrated_errUp = pEff->Wilson(totalNev,passedNev,0.683,true) - effIntegrated;
+  float effIntegrated_errDown = pEff->Wilson(totalNev,passedNev,0.683,false) - effIntegrated;
+  cout << "efficiency integrated above threshold of "<< threshold <<" = " << effIntegrated << " + " << effIntegrated_errUp << " - " << effIntegrated_errDown << endl;
+
+
   //## Mjj Spectra ##
   canv->SetGridx(false);
   canv->SetGridy(false);
@@ -245,6 +260,9 @@ void triggerEfficiency()
   canv->Print(myoutputfilename+"_histo.pdf",".pdf");
   canv->Print(myoutputfilename+"_histo.png",".png");
   
+
+
+
   //-----------------------------------------------------------------------------
 
 }
