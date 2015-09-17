@@ -8,11 +8,6 @@ import CMS_lumi
 
 import optparse
 
-CMS_lumi.extraText = "Simulation Preliminary"
-CMS_lumi.lumi_sqrtS = "1 fb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
-iPos = 11
-iPeriod = 0
-
 gROOT.SetBatch(kTRUE);
 gStyle.SetOptStat(0)
 gStyle.SetOptTitle(0)
@@ -69,10 +64,16 @@ gROOT.Reset()
 setTDRStyle()
 gROOT.ForceStyle()
 gROOT.SetStyle('tdrStyle')
+
+CMS_lumi.extraText = "Preliminary"
+CMS_lumi.lumi_sqrtS = str(int(lumi))+" pb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+iPos = 11
+iPeriod = 0
+
 #####################
 
 minX_mass = 1118
-maxX_mass = 6099 
+maxX_mass = 5877 
 
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
     
@@ -146,7 +147,7 @@ for f in fileNames:
   h_allCuts = TH1F("h_allCuts", "", bins, xmin, xmax)
   h_allCuts.Sumw2()
   tree = inf.Get('rootTupleTree/tree')
-  tree.Project(h_allCuts.GetName(), var1,' deltaETAjj < 1.3')
+  tree.Project(h_allCuts.GetName(), var,' deltaETAjj < 1.3')
   Npassed = h_allCuts.GetEntries()
   eff = float(Npassed)/Nev
   print('eff : %f' % eff)
@@ -248,7 +249,7 @@ for i in range(9, len(fileNames)):
   hist_allCuts_2[i].Write()
 
 
-can_allCuts = TCanvas('can_allCuts_'+var,'can_allCuts_'+var,900,600)
+can_allCuts = TCanvas('can_allCuts_'+var,'can_allCuts_'+var,600,650)
 
 leg = TLegend(0.6, 0.7, 0.85, 0.85)
 leg.SetLineColor(0)
@@ -261,42 +262,31 @@ leg.AddEntry(hist_allCutsQCD_2, name2, "l")
 can_allCuts.cd()
 
 #----- pad 1 -----------
-pad1 = TPad("pad1", "pad1",0.01,0.13,0.75,1.)  
+pad1 = TPad("pad1", "pad1",0.,0.13,1.,1.)  
 pad1.SetRightMargin(0.1)
 
 pad1.Draw()
 pad1.cd()
 pad1.Clear()
      
-if logy:
-  pad1.SetLogy()
-  max=hist_allCutsQCD.GetBinContent(hist_allCutsQCD.GetMaximumBin())
-  hist_allCutsQCD.SetMaximum(500*max)
 
 #hist_allCutsQCD.Reset()
 hist_allCutsQCD.GetXaxis().SetRangeUser(xmin,xmax)
 hist_allCutsQCD.GetXaxis().SetTitle(xtitle)
-hist_allCutsQCD.GetXaxis().SetTitleFont(42)
-hist_allCutsQCD.GetXaxis().SetTitleSize(0.05)
-#hist_allCutsQCD.GetXaxis().SetLabelOffset(999)
-hist_allCutsQCD.GetXaxis().SetLabelSize(0)
-size = hist_allCutsQCD.GetBinWidth(1)
+size = hist_allCutsQCD_2.GetBinWidth(1)
 title_y = "events / "+str(size)+" GeV"
-hist_allCutsQCD.GetYaxis().SetTitleFont(42)
-hist_allCutsQCD.GetYaxis().SetTitleSize(0.04)
 hist_allCutsQCD.GetYaxis().SetTitle(title_y)
+hist_allCutsQCD_2.GetYaxis().SetTitle(title_y)
 
 ###
 title_y = "arb. units"
 for i in range(9,len(fileNames)):
   hist_allCuts[i].GetXaxis().SetRangeUser(xmin,xmax)
   hist_allCuts[i].GetXaxis().SetTitle(xtitle)
-  hist_allCuts[i].GetXaxis().SetTitleFont(42)
-  hist_allCuts[i].GetXaxis().SetTitleSize(0.05)
-  hist_allCuts[i].GetXaxis().SetLabelSize(0)
-  hist_allCuts[i].GetYaxis().SetTitleFont(42)
-  hist_allCuts[i].GetYaxis().SetTitleSize(0.04)
   hist_allCuts[i].GetYaxis().SetTitle(title_y)
+  hist_allCuts_2[i].GetXaxis().SetRangeUser(xmin,xmax)
+  hist_allCuts_2[i].GetXaxis().SetTitle(xtitle)
+  hist_allCuts_2[i].GetYaxis().SetTitle(title_y)
 
 
 #maximumBin = array('f',  [hist_allCutsQCD.GetBinContent(hist_allCutsQCD.GetMaximumBin()), hist_allCutsSig_1000.GetBinContent(hist_allCutsSig_1000.GetMaximumBin()), hist_allCutsSig_5000.GetBinContent(hist_allCutsSig_5000.GetMaximumBin()), hist_allCutsSig_8000.GetBinContent(hist_allCutsSig_8000.GetMaximumBin())])
@@ -333,6 +323,11 @@ else :
     hist_allCuts_rebin.append(hist_allCuts[i].Clone(dataset1[i]+"_"+name1+"_rebin")) 
     hist_allCuts_2_rebin.append(hist_allCuts_2[i].Clone(dataset2[i]+"_"+name2+"_rebin"))
 
+if logy:
+  pad1.SetLogy(1)
+  max=hist_allCutsQCD_rebin.GetBinContent(hist_allCutsQCD_rebin.GetMaximumBin())
+  hist_allCutsQCD_rebin.SetMaximum(500*max)
+
 hist_allCutsQCD_rebin.Draw("hist")
 hist_allCutsQCD_2_rebin.Draw("hist same")
 leg.Draw()
@@ -342,7 +337,7 @@ CMS_lumi.CMS_lumi(pad1, iPeriod, iPos)
 
 can_allCuts.cd()
 #-------pad 2------
-pad2 = TPad("pad2", "pad2",0.01,0.001,0.75,0.222)
+pad2 = TPad("pad2", "pad2",0.,0.001,1,0.255555)
 pad2.SetGrid()
 	      
 pad2.SetTopMargin(0)
@@ -351,27 +346,30 @@ pad2.SetRightMargin(0.1)
 pad2.Draw()	       
 pad2.cd()
 
-ratio = hist_allCutsQCD_rebin.Clone("ratio")
-ratio.Divide(hist_allCutsQCD_2_rebin)
+ratio = hist_allCutsQCD_2_rebin.Clone("ratio")
+ratio.Divide(hist_allCutsQCD_rebin)
 ratio.SetFillColor(0)
 ratio.SetLineColor(kBlack)
 ratio.SetMarkerColor(kBlack)
 ratio.Draw("p")
-ratio.GetYaxis().SetRangeUser(0., 2.)
-ratio.GetYaxis().SetNdivisions(4, kTRUE)
+ratio.GetYaxis().SetRangeUser(0.95, 1.05)
+ratio.GetYaxis().SetNdivisions(405, kTRUE)
 ratio.GetYaxis().SetTitleFont(42)
-ratio.GetYaxis().SetTitle("#frac{"+name1+"}{"+name2+"}")
+ratio.GetYaxis().SetTitle("#frac{"+name2+"}{"+name1+"}")
 ratio.GetXaxis().SetTitleSize(0.2)
 ratio.GetXaxis().SetLabelSize(0.16)
 ratio.GetYaxis().SetLabelSize(0.16)
 ratio.GetYaxis().SetTitleSize(0.15)
-#ratio.GetYaxis().SetTitleOffset(0.65)
-ratio.GetXaxis().SetTitleOffset(0.8)
+#ratio.GetXaxis().SetTitleOffset(0.5)
 ratio.Draw()
 
 can_allCuts.Write()   
-can_allCuts.SaveAs(outputDir+var+'_allCuts.png')
-can_allCuts.SaveAs(outputDir+var+'_allCuts.svg')
+if logy:
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.png')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts_logy.pdf')
+else:
+  can_allCuts.SaveAs(outputDir+var+'_allCuts.png')
+  can_allCuts.SaveAs(outputDir+var+'_allCuts.pdf')
 
 ######
 # do the same for all signals
@@ -391,14 +389,14 @@ for i in range(9, len(fileNames)):
   #-------pad 2------
   pad2.cd()
   pad2.Clear()
-  ratio = hist_allCuts_rebin[i-9].Clone("ratio")
-  ratio.Divide(hist_allCuts_2_rebin[i-9])
+  ratio = hist_allCuts_2_rebin[i-9].Clone("ratio")
+  ratio.Divide(hist_allCuts_rebin[i-9])
   ratio.SetFillColor(0)
   ratio.SetLineColor(kBlack)
   ratio.SetMarkerColor(kBlack)
   ratio.Draw("p")
-  ratio.GetYaxis().SetRangeUser(0., 2.)
-  ratio.GetYaxis().SetNdivisions(4, kTRUE)
+  ratio.GetYaxis().SetRangeUser(0.95, 1.05)
+  ratio.GetYaxis().SetNdivisions(405, kTRUE)
   ratio.GetYaxis().SetTitleFont(42)
   ratio.GetYaxis().SetTitle("#frac{"+name1+"}{"+name2+"}")
   ratio.GetXaxis().SetTitleSize(0.2)
