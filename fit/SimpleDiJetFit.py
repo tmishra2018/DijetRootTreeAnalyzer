@@ -72,11 +72,13 @@ fileNameSuffix = "JEC_V4_firstbin1181"
 
 ####### INPUT #############
 # data 
-input_root_file = "/afs/cern.ch/work/g/gdimperi/Dijet/CMSSW_7_4_3_Dijet/src/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
+#input_root_file = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF//histo_data_mjj_fromTree.root"
+input_root_file = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
 ###mc
-input_root_file_mc = "/afs/cern.ch/work/g/gdimperi/Dijet/CMSSW_7_4_3_Dijet/src/DijetRootTreeAnalyzer/scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
+#input_root_file_mc = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
+input_root_file_mc = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
 ### input file and 1D histo
-input_root_file_signal = "/afs/cern.ch/work/g/gdimperi/Dijet/CMSSW_7_4_3_Dijet/src/DijetShapeInterpolator/ResonanceShapes_qq_13TeV_PU30_Spring15.root"
+input_root_file_signal = "ResonanceShapes_qq_13TeV_PU30_Spring15.root"
 
 file0 = TFile.Open( input_root_file )
 fileMC = TFile.Open( input_root_file_mc )
@@ -102,7 +104,7 @@ h_sig.Scale( sigmaQstar4500 / integral_sig)
 
 
 ##########OUTPUT########
-outputDir="fit_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015/"
+outputDir="fit_Run2015B_plus_Run2015C_50ns_Cert_json_fixedJEC_15Sept2015/"
 os.system("mkdir -p "+outputDir)
 
 #================================================================================================================
