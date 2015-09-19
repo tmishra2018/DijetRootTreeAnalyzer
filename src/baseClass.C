@@ -243,7 +243,7 @@ void baseClass::readCutFile()
 	    }
 	    jsonFileName_ = v[1];
 	    STDOUT("Getting JSON file: " << v[1]);
-	    jsonParser_.parseJSONFile ( & v[1] ) ;
+	    jsonParser_.parseJSONFile ( v[1] ) ;
 	    jsonParser_.printGoodLumis();
 	    jsonFileWasUsed_ = true;
 	    continue;
