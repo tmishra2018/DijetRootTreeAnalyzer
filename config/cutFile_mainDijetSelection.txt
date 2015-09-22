@@ -1,4 +1,5 @@
-JSON json/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt
+JSON json/lumiSummary_75X_RelVal.json
+#JSON json/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -25,6 +26,8 @@ DeltaR				1.1		-		-		-		-1
 DetaJJforTrig                   1.3             -               -               -               -1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
 useJECs				1               -               -               -               -1
+# turn on/off the removal of JEC 
+noJECs                          0               -               -               -               -1
 # turn on/off shift JECs (value1 0: off, 1: on, value2: sign of the shifting. The value is taken from a txt file with JEC uncertainties) 
 shiftJECs                       0               -1               -               -               -1		
 # turn on/off FastJet clustering of wide jets (0: off, 1: on)
@@ -61,7 +64,7 @@ pTWJ_j2	      	      30	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j2             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 deltaETAjj            0             1.3                	-               -               1       100 0. 3.         SAVE
 mjj            	     -inf           +inf                -               -               1       1000 0 10000      SAVE
-mjj_shiftJEC           	     -inf           +inf                -               -               1       1000 0 10000      SAVE
+mjj_shiftJEC         -inf           +inf                -               -               1       1000 0 10000      SAVE
 
 # no cut on these variables, just want to save histograms
 passHLT_PFHT800	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE

@@ -36,13 +36,20 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //std::string L1DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
     //std::string L2DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
     //std::string L3DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt"; 
-    std::string L3Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt";
-    std::string L2DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt"; 
-    std::string L3DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt" ;
+    //std::string L1Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt";
+    //std::string L2Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt"; 
+    //std::string L3Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt";
+    //std::string L1DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt";
+    //std::string L2DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt"; 
+    //std::string L3DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt";
+    //std::string L2L3ResidualPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt" ;
+    std::string L1Path = "data/Summer15_25nsV3_MC/Summer15_25nsV3_MC_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "data/Summer15_25nsV3_MC/Summer15_25nsV3_MC_L2Relative_AK4PFchs.txt"; 
+    std::string L3Path = "data/Summer15_25nsV3_MC/Summer15_25nsV3_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1DATAPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L1FastJet_AK4PFchs.txt";
+    std::string L2DATAPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L2Relative_AK4PFchs.txt"; 
+    std::string L3DATAPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L2L3Residual_AK4PFchs.txt" ;
     
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
@@ -68,7 +75,8 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     JetCorrector_data = new FactorizedJetCorrector(vPar_data);
 
     //uncertainty
-    unc = new JetCorrectionUncertainty("data/Summer15_50nsV4/Summer15_50nsV4_DATA_Uncertainty_AK4PFchs.txt");
+    //unc = new JetCorrectionUncertainty("data/Summer15_50nsV4/Summer15_50nsV4_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_Uncertainty_AK4PFchs.txt");
 
   }
   
@@ -213,8 +221,7 @@ void analysisClass::Loop()
 	     double uncertainty = unc->getUncertainty(true);
 	     jecUncertainty.push_back(uncertainty); 
 
-	     // 
-	     //std::cout << "run:" << runNo << "    lumi:" << lumi << "   event:" << evtNo << "   jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction <<   "   uncertainty:" <<  uncertainty  << "  nominal correction:" << nominal_correction  << " old correction: " << old_correction << std::endl;
+	     // std::cout << "run:" << runNo << "    lumi:" << lumi << "   event:" << evtNo << "   jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction <<   "   uncertainty:" <<  uncertainty  << "  nominal correction:" << nominal_correction  << " old correction: " << old_correction << std::endl;
 	     //use "shifted" JECs for study of systematic uncertainties 
 	     if( int(getPreCutValue1("shiftJECs"))==1 ){
 	       //flat shift
@@ -235,14 +242,29 @@ void analysisClass::Loop()
 	 sortedJetIdx.push_back(it->second);
      
      }
-     else
-     {
-       for(size_t j=0; j<no_jets_ak4; ++j) //same ordering of original root trees
+     else if( int(getPreCutValue1("noJECs"))==1  )
        {
-	 jecFactors.push_back(jetJecAK4->at(j));
-	 sortedJetIdx.push_back(j);
+	 // sort jets by increasing pT
+	 std::multimap<double, unsigned> sortedJets;
+	 for(size_t j=0; j<no_jets_ak4; ++j) //same ordering of original root trees
+	   {
+	     jecUncertainty.push_back(0.); 
+	     jecFactors.push_back(1.);
+	     sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j)), j)); //raw
+	   }       
+	 // get jet indices in decreasing pT order
+	 for(std::multimap<double, unsigned>::const_reverse_iterator it = sortedJets.rbegin(); it != sortedJets.rend(); ++it)
+	   sortedJetIdx.push_back(it->second);
        }
-     }
+     else
+       {
+	 for(size_t j=0; j<no_jets_ak4; ++j) //same ordering of original root trees
+	   {
+	     jecFactors.push_back(jetJecAK4->at(j));
+	     jecUncertainty.push_back(0.); 
+	     sortedJetIdx.push_back(j);
+	   }
+       }
 
 
      //#############################################################
@@ -263,12 +285,13 @@ void analysisClass::Loop()
      double HTak4 = 0;
      for(size_t ijet=0; ijet<no_jets_ak4; ++ijet)
        {	 
-	 // cout << "ijet=" << ijet << " , sortedJetIdx[ijet]=" << sortedJetIdx[ijet] 
-	 //      << " , initial corrected pT=" << jetPtAK4->at(ijet) 
-	 //      << " , final corrected pT - old =" << jetPtAK4->at(sortedJetIdx[ijet] ) 
-	 //      << " , final corrected pT - new =" << (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet])
-	 //      << endl;
+	  //cout << "ijet=" << ijet << " , sortedJetIdx[ijet]=" << sortedJetIdx[ijet] 
+	  //     << " , raw pT=" << jetPtAK4->at(sortedJetIdx[ijet])/jetJecAK4->at(sortedJetIdx[ijet]) 
+	  //     << " , final corrected pT - old =" << jetPtAK4->at(sortedJetIdx[ijet] ) 
+	  //     << " , final corrected pT - new =" << (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet])
+	  //     << endl;
 
+	 //////////////cout << "id Tight jet" << sortedJetIdx[1] << " = " << idTAK4->at(sortedJetIdx[1]) << endl;
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[ijet])) < getPreCutValue1("jetFidRegion")
 	    && idTAK4->at(sortedJetIdx[ijet]) == getPreCutValue1("tightJetID")
 	    && (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) > getPreCutValue1("ptCut"))
@@ -402,6 +425,7 @@ void analysisClass::Loop()
 	 }
      }
 
+
      double MJJWide = 0; 
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
@@ -424,6 +448,8 @@ void analysisClass::Loop()
 
      //AK4 jets
      if(no_jets_ak4>=2)
+       //cout << "eta j1 " << jetEtaAK4->at(sortedJetIdx[0]) << endl;
+       //cout << "pt j1 " << (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0]) << endl;
        {
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[0])) < getPreCutValue1("jetFidRegion") 
 	    && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) > getPreCutValue1("pt0Cut"))
@@ -431,6 +457,8 @@ void analysisClass::Loop()
 	     if(fabs(jetEtaAK4->at(sortedJetIdx[1])) < getPreCutValue1("jetFidRegion") 
 		&& (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) > getPreCutValue1("pt1Cut"))
 	       {
+		 //cout << "filling ak4j1 and ak4j2" << endl;
+		 //cout << "pt ak4 j1 = " << (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0]) << endl;
 		 ak4j1.SetPtEtaPhiM( (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0])
 				     ,jetEtaAK4->at(sortedJetIdx[0])
 				     ,jetPhiAK4->at(sortedJetIdx[0])
@@ -446,6 +474,8 @@ void analysisClass::Loop()
      double MJJAK4 = 0; 
      double DeltaEtaJJAK4 = 0;
      double DeltaPhiJJAK4 = 0;
+     
+     //std::cout << "ak4j1.Pt()=" << ak4j1.Pt() << "   ak4j2.Pt()=" << ak4j2.Pt() << std::endl;
      if( ak4j1.Pt()>0 && ak4j2.Pt()>0 )
      {
        // Create dijet system
@@ -471,6 +501,8 @@ void analysisClass::Loop()
      fillVariableWithValue ( "PassJSON", passJSON (runNo, lumi, isData));
 
      if( AK4jets.size() >=1 ){
+       //cout << "AK4jets.size() " <<  AK4jets.size() << endl;
+       //cout << "IdTight_j1 : " << idTAK4->at(sortedJetIdx[0]) << endl;
        fillVariableWithValue( "IdTight_j1",idTAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "pTAK4_j1", AK4jets[0].Pt());
        fillVariableWithValue( "etaAK4_j1", AK4jets[0].Eta());
@@ -491,6 +523,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "photonMult_j1", phoMultAK4->at(sortedJetIdx[0]));
      }
      if( AK4jets.size() >=2 ){
+       //cout << "IdTight_j2 : " << idTAK4->at(sortedJetIdx[1]) << endl << endl;
        fillVariableWithValue( "IdTight_j2",idTAK4->at(sortedJetIdx[1]));
        fillVariableWithValue( "pTAK4_j2", AK4jets[1].Pt() );
        fillVariableWithValue( "etaAK4_j2", AK4jets[1].Eta());
