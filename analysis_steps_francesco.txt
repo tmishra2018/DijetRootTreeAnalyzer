@@ -86,12 +86,15 @@ and then
 DIR='/pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/mc/santanas__40pb-1_30_07_2015/'
 ./scripts/mergeJobs.sh
 
+--> the files merged will be in '/pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/mc/santanas__40pb-1_30_07_2015/merged/
+
 note: 
 For data you need to merge manually the files corresponding to different datasets:
 dccp /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015/merged/rootfile_JetHT__Run2015B-PromptReco-v1__MINIAOD__reduced_skim.root /tmp/
 dccp /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015/merged/rootfile_JetHT__Run2015B-17Jul2015-v1__MINIAOD__reduced_skim.root /tmp/
 hadd /tmp/rootfile_JetHT__Run2015B-All-v1__MINIAOD__reduced_skim.root /tmp/rootfile_JetHT__Run2015B-17Jul2015-v1__MINIAOD__reduced_skim.root /tmp/rootfile_JetHT__Run2015B-PromptReco-v1__MINIAOD__reduced_skim.root
 dccp /tmp/rootfile_JetHT__Run2015B-All-v1__MINIAOD__reduced_skim.root /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__40pb-1_30_07_2015/merged/
+
 
 
 ### check number of events processed (for data)
