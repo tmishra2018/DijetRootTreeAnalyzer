@@ -19,7 +19,7 @@ CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
 CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
 CMS_lumi.lumi_13TeV = "65 pb^{-1}"
 CMS_lumi.writeExtraText = 1
-CMS_lumi.extraText = "Preliminary"
+CMS_lumi.extraText = ""
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 
 iPos = 11
@@ -58,6 +58,16 @@ lumi = 65.0
 #sf = 1.07
 sf=1.
 sigmaQstar4500 = 0.2827E-01
+sigmaQstar3000 = 0.8116E+00
+sigmaAxigluon3000 =  0.6610
+sigmaString5300 = 0.11940
+sigmaS82200 = 3.27
+label_Qstar3000 = "Excited quark (3 TeV)"
+label_Qstar4500 = "Excited quark (4.5 TeV)"
+label_String5300 = "String (5.3 TeV)"
+label_S82200 = "S8 (2.2 TeV)"
+label_Axigluon3000 = "Axigluon (3 TeV)"
+
 #minX_mass = 1000.
 minX_mass = 1181.
 #maxX_mass = 3019.
@@ -68,7 +78,13 @@ FunctionType = -1
 #fileNameSuffix = "test_range_1118_3704"
 #fileNameSuffix = "test"
 #fileNameSuffix = "JEC_L2L3Residuals"
-fileNameSuffix = "JEC_V4_firstbin1181"
+#fileNameSuffix_Qstar4500 = "Qstar4500"
+fileNameSuffix_Qstar4500 = "Qstar4500_noSignif"
+fileNameSuffix_Qstar3000 = "Qstar3000"
+fileNameSuffix_String5300 = "String5300"
+fileNameSuffix_S8_2200 = "S8_2200"
+fileNameSuffix_Axigluon3000 = "Axigluon3000"
+fileNameSuffix = "3signals"
 
 ####### INPUT #############
 # data 
@@ -78,14 +94,22 @@ input_root_file = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xs
 #input_root_file_mc = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
 input_root_file_mc = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
 ### input file and 1D histo
-input_root_file_signal = "ResonanceShapes_qq_13TeV_PU30_Spring15.root"
+input_root_file_signal_qq = "ResonanceShapes_qq_13TeV_PU30_Spring15.root"
+input_root_file_signal_qg = "ResonanceShapes_qg_13TeV_PU30_Spring15.root"
+input_root_file_signal_gg = "ResonanceShapes_gg_13TeV_PU30_Spring15.root"
 
 file0 = TFile.Open( input_root_file )
 fileMC = TFile.Open( input_root_file_mc )
-file_sig = TFile.Open(input_root_file_signal)
+file_sig_qq = TFile.Open(input_root_file_signal_qq)
+file_sig_qg = TFile.Open(input_root_file_signal_qg)
+file_sig_gg = TFile.Open(input_root_file_signal_gg)
 input_1Dhistogram = "h_dat"
 input_1Dhistogram_mc = "hist_allCutsQCD"
-input_sig = "h_qg_4500" 
+input_sig_Qstar4500 = "h_qg_4500" 
+input_sig_Qstar3000 = "h_qg_3000" 
+input_sig_Axigluon3000 = "h_qq_3000" 
+input_sig_String5300 = "h_qg_5300" 
+input_sig_S82200 = "h_gg_2200" 
 
 hist_mass_original = file0.Get(input_1Dhistogram)
 hist_binned = hist_mass_original.Rebin(number_of_variableWidth_bins,"hist_binned",v_massBins)
@@ -97,11 +121,25 @@ hist_mass_original_mc.Scale(sf)
 hist_binned_mc = hist_mass_original_mc.Rebin(number_of_variableWidth_bins,"hist_binned_MC",v_massBins)
 hist_mass_mc = TH1F("hist_mass_mc","",number_of_variableWidth_bins,v_massBins)
 
-h_sig = file_sig.Get(input_sig)
-integral_sig = h_sig.Integral()
-h_sig.Scale( sigmaQstar4500 / integral_sig)
+h_sig_Qstar4500 = file_sig_qg.Get(input_sig_Qstar4500)
+integral_sig_Qstar4500 = h_sig_Qstar4500.Integral()
+h_sig_Qstar4500.Scale( sigmaQstar4500 / integral_sig_Qstar4500)
 
+h_sig_Qstar3000 = file_sig_qg.Get(input_sig_Qstar3000)
+integral_sig_Qstar3000 = h_sig_Qstar3000.Integral()
+h_sig_Qstar3000.Scale( sigmaQstar3000 / integral_sig_Qstar3000)
 
+h_sig_String5300 = file_sig_qg.Get(input_sig_String5300)
+integral_sig_String5300 = h_sig_String5300.Integral()
+h_sig_String5300.Scale( sigmaString5300 / integral_sig_String5300)
+
+h_sig_S82200 = file_sig_gg.Get(input_sig_S82200)
+integral_sig_S82200 = h_sig_S82200.Integral()
+h_sig_S82200.Scale( sigmaS82200 / integral_sig_S82200)
+
+h_sig_Axigluon3000 = file_sig_qq.Get(input_sig_Axigluon3000)
+integral_sig_Axigluon3000 = h_sig_Axigluon3000.Integral()
+h_sig_Axigluon3000.Scale( sigmaAxigluon3000 / integral_sig_Axigluon3000)
 
 ##########OUTPUT########
 outputDir="fit_Run2015B_plus_Run2015C_50ns_Cert_json_fixedJEC_15Sept2015/"
@@ -158,7 +196,7 @@ def main():
     eyh.append( (h-n)/(lumi*dm) )
     #print "%f   %f    %f    %f    %f     %f" % (x[i],y[i],exl[i],exh[i],eyl[i],eyh[i])
     n_mc = hist_binned_mc.GetBinContent(i+1)
-    if (i>=40 and i<103):
+    if (i>=41 and i<103):
       x_mc.append((xl+xh)/2.)
       y_mc.append( n_mc / (dm*lumi)) 
 
@@ -176,7 +214,7 @@ def main():
   g.SetName("g_data")
   g.Print()
   #mc
-  g_mc = TGraph(number_of_variableWidth_bins-40,vx_mc,vy_mc)
+  g_mc = TGraph(number_of_variableWidth_bins-41,vx_mc,vy_mc)
   g_mc.SetName("g_mc")
   g_mc.Print()
   
@@ -193,14 +231,19 @@ def main():
   M1Bkg = fitresult[3]
   hist_fit_residual_vsMass = fitresult[4]
   nPar = nBins_fit - fitresult[1]
-  DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNameSuffix)
+  DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_S82200,h_sig_Axigluon3000,h_sig_String5300,label_S82200,label_Axigluon3000,label_String5300,2200,3000,5300,fileNameSuffix)
+  #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_String5300,label_String5300,5300,fileNameSuffix_String5300)
+  #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_Qstar3000,label_Qstar3000,3000,fileNameSuffix_Qstar3000)
+  #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_Qstar4500,label_Qstar4500,4500,fileNameSuffix_Qstar4500)
+  #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_S82200,label_S82200,2200,fileNameSuffix_S8_2200)
+  #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_Axigluon3000,label_Axigluon3000,3000,fileNameSuffix)
   print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
   
   result_mc = doChi2MC(g,hist_mass,hist_mass_mc)  
   chi2_mc = result_mc[0] 
   Ndof_mc = result_mc[1] 
   hist_mc_residual_vsMass = result_mc[2] 
-  DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix)
+  #DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix)
 
 
 def doChi2MC(g,hist_mass,hist_mass_mc):
@@ -516,12 +559,13 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   p11_1.SetFrameBorderMode(0)
   
   #Pave text
-  pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
-  pave_fit = TPaveText(0.2058691,0.20735043,0.4750171,0.3670085,"NDC")
+  #pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
+  pave_fit = TPaveText(0.2058691,0.1235043,0.4750171,0.2870085,"NDC")
     
-  pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
-  pave_fit.AddText("M_{jj} > 1.2 TeV")
   pave_fit.AddText("Wide Jets")
+  pave_fit.AddText("M_{jj} > 1.2 TeV")
+  pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
+  
   pave_fit.SetFillColor(0)
   pave_fit.SetLineColor(0)
   pave_fit.SetFillStyle(0)
@@ -531,7 +575,7 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   pave_fit.SetTextAlign(12) 
   
   
-  vFrame = p11_1.DrawFrame(minX_mass,0.000005,maxX_mass,5.0)
+  vFrame = p11_1.DrawFrame(minX_mass,0.000007,maxX_mass,5.0)
   
   vFrame.SetTitle("")
   vFrame.SetXTitle("Dijet Mass [GeV]")
@@ -550,7 +594,7 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   g.SetMarkerStyle(20)
   g.Draw("pe0 same")
     
-  leg = TLegend(0.5564991,0.55,0.8903575,0.705812)
+  leg = TLegend(0.5564991,0.55,0.9203575,0.805812)
   #leg =  TLegend(0.5564991,0.55,0.8903575,0.80)
   leg.SetTextSize(0.03546853)
   leg.SetLineColor(0)
@@ -629,7 +673,8 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   c.SaveAs(outputDir+"/"+c_fileName)
 
 
-def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNameSuffix):
+def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2,h_sig3,label_sig,label_sig2,label_sig3,mass_sig,mass_sig2,mass_sig3,fileNameSuffix):
+#def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,label_sig,mass_sig,fileNameSuffix):
 
   nbins_sig = h_sig.GetNbinsX()
   massBinsSig_list=[]
@@ -638,16 +683,25 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
 
   massBinsSig = array("d",massBinsSig_list)
   h_w = TH1D("h_w","", h_sig.GetNbinsX(), massBinsSig)
+  h_w2 = TH1D("h_w2","", h_sig2.GetNbinsX(), massBinsSig)
+  h_w3 = TH1D("h_w3","", h_sig3.GetNbinsX(), massBinsSig)
   for i in range(1,nbins_sig+1):
     bincontent = h_sig.GetBinContent(i) / h_sig.GetBinWidth(i)
     h_w.SetBinContent(i, bincontent )
-  
+    bincontent2 = h_sig2.GetBinContent(i) / h_sig2.GetBinWidth(i)
+    h_w2.SetBinContent(i, bincontent2 )
+    bincontent3 = h_sig3.GetBinContent(i) / h_sig3.GetBinWidth(i)
+    h_w3.SetBinContent(i, bincontent3 )
+ 
+  h_w.GetXaxis().SetRangeUser(mass_sig*0.8, mass_sig*1.2)
+  h_w2.GetXaxis().SetRangeUser(mass_sig2*0.8, mass_sig2*1.2)
+  h_w3.GetXaxis().SetRangeUser(mass_sig3*0.8, mass_sig3*1.2)
   h_w.Print();
    
   #  //### Draw plots
   W = 600
-  H = 650
-  H_ref = 650 
+  H = 700
+  H_ref = 700 
   W_ref = 600 
   T = 0.08*H_ref
   B = 0.12*H_ref
@@ -664,7 +718,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   #------------ pad 1  ----------------
   c.cd(1)
   p11_1 = c.GetPad(1)
-  p11_1.SetPad(0.01,0.23,0.99,0.98)
+  p11_1.SetPad(0.01,0.26,0.99,0.98)
   p11_1.SetLogy()
   p11_1.SetRightMargin(0.05)
   p11_1.SetTopMargin(0.05)
@@ -675,7 +729,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   
   #Pave text
   #pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
-  pave_fit = TPaveText(0.2358691,0.20735043,0.5050171,0.3670085,"NDC")
+  pave_fit = TPaveText(0.2358691,0.03735043,0.5050171,0.1970085,"NDC")
     
   pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
   pave_fit.AddText("M_{jj} > 1.2 TeV")
@@ -689,7 +743,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   pave_fit.SetTextAlign(12) 
   
   
-  vFrame = p11_1.DrawFrame(minX_mass,0.000002,maxX_mass,5.0)
+  vFrame = p11_1.DrawFrame(minX_mass,0.000005,maxX_mass,5.0)
   
   vFrame.SetTitle("")
   vFrame.SetXTitle("Dijet Mass [GeV]")
@@ -698,16 +752,25 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   vFrame.GetXaxis().SetTitleOffset(0.95)
   vFrame.GetXaxis().SetLabelSize(0.05)
   vFrame.GetYaxis().SetTitleSize(0.06)
-  vFrame.GetYaxis().SetTitleOffset(0.95)
+  #vFrame.GetYaxis().SetTitleOffset(1.0)
   vFrame.GetYaxis().SetLabelSize(0.05)
-  
+ 
+  g.GetXaxis().SetNdivisions(405)
   g.SetMarkerSize(0.9)
   g.SetMarkerStyle(20)
-  g.Draw("pe0")
-  h_w.SetLineColor(kBlack)
+  #g.Draw("pe0")
+  h_w.SetLineColor(kMagenta-2)
   h_w.SetLineWidth(2)
-  h_w.SetLineStyle(2)
-  h_w.Draw("same")
+  h_w.SetLineStyle(4)
+  h_w.Draw("c same")
+  h_w2.SetLineColor(kAzure-7)
+  h_w2.SetLineWidth(2)
+  h_w2.SetLineStyle(6)
+  h_w2.Draw("c same")
+  h_w3.SetLineColor(kTeal+3)
+  h_w3.SetLineWidth(2)
+  h_w3.SetLineStyle(8)
+  h_w3.Draw("c same")
   g_mc.SetLineWidth(2)
   g_mc.SetLineStyle(2)
   g_mc.SetLineColor(kBlue)
@@ -722,7 +785,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   g.Draw("pe0 same")
     
   #leg = TLegend(0.5564991,0.55,0.8903575,0.705812)
-  leg =  TLegend(0.5564991,0.60,0.8903575,0.85)
+  leg =  TLegend(0.4564991,0.62,0.9303575,0.90)
   leg.SetTextSize(0.038)
   leg.SetLineColor(0)
   leg.SetLineStyle(1)
@@ -733,7 +796,9 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   leg.AddEntry(hist_mass,"Data" ,"PLE");
   leg.AddEntry(M1Bkg,"Fit","L");
   leg.AddEntry(g_mc,"QCD MC","L");
-  leg.AddEntry(h_w,"q* (4.5 TeV)","L");
+  leg.AddEntry(h_w,label_sig,"L");
+  leg.AddEntry(h_w2,label_sig2,"L");
+  leg.AddEntry(h_w3,label_sig3,"L");
   leg.Draw("same")
   pave_fit.Draw("same")
   
@@ -750,13 +815,13 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   
   c.cd(2)
   p11_2 = c.GetPad(2)
-  p11_2.SetPad(0.01,0.02,0.99,0.24)
+  p11_2.SetPad(0.01,0.02,0.99,0.27)
   p11_2.SetBottomMargin(0.35)
   p11_2.SetRightMargin(0.05)
   p11_2.SetGridx()
   p11_2.SetGridy()
   
-  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3.5, p11_1.GetUxmax(), 3.5)
+  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -2.7, p11_1.GetUxmax(), 2.7)
   
   vFrame2.SetTitle("")
   vFrame2.SetXTitle("Dijet Mass [GeV]")
@@ -765,41 +830,42 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   vFrame2.GetYaxis().SetTitleSize(0.15)
   vFrame2.GetYaxis().SetTitleOffset(0.40)
   vFrame2.GetYaxis().SetLabelSize(0.09)
-  vFrame2.GetXaxis().SetTitleSize(0.18)
+  vFrame2.GetXaxis().SetTitleSize(0.15)
   vFrame2.GetXaxis().SetTitleOffset(0.90)
-  vFrame2.GetXaxis().SetLabelSize(0.15)
+  vFrame2.GetXaxis().SetLabelSize(0.12)
   
+  hist_fit_residual_vsMass.GetXaxis().SetNdivisions(405)
   hist_fit_residual_vsMass.GetXaxis().SetRangeUser(minX_mass,maxX_mass)
-  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-3.5,3.5)
+  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-2.7,2.7)
   hist_fit_residual_vsMass.SetLineWidth(0)
   hist_fit_residual_vsMass.SetFillColor(2)
   hist_fit_residual_vsMass.SetLineColor(1)
   hist_fit_residual_vsMass.Draw("SAMEHIST")
  
+  hist_sig_significance = histSignificance(M1Bkg,hist_mass,h_sig)
+  hist_sig_significance2 = histSignificance(M1Bkg,hist_mass,h_sig2)
+  hist_sig_significance3 = histSignificance(M1Bkg,hist_mass,h_sig3)
 
-  ##histogram signal significance 
-  hist_sig_significance = TH1D("hist_sig_significance","hist_sig_significance",nbins_sig,massBinsSig)
-  
-  for  i in range(1,number_of_variableWidth_bins+1):
-    fit = M1Bkg.Integral(hist_mass.GetXaxis().GetBinLowEdge(i), hist_mass.GetXaxis().GetBinUpEdge(i) )
-    significance = 0
-
-    if((h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))+fit) != 0 and h_sig.GetBinLowEdge(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))<12000):
-      significance  = h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i))) / TMath.Sqrt(h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i))) + fit )
-    
-    print  "low edge bin: " +str( h_sig.GetBinLowEdge(i)) +"  bin low edge bkg = "+str(hist_mass.GetBinLowEdge(i))+ "  "+str( fit) + " + " +str( h_sig.GetBinContent(i))+ "  sqrt(fit + sig) = " +str( TMath.Sqrt(h_sig.GetBinContent(i) + fit))
-    print "significance = "+ str(significance)
-    hist_sig_significance.SetBinContent(i,significance);
-
-  
-  hist_sig_significance.SetLineColor(kBlack)
+  hist_sig_significance.GetXaxis().SetRangeUser(mass_sig*0.8,mass_sig*1.2)
+  hist_sig_significance.SetLineColor(kMagenta-2)
   hist_sig_significance.SetLineWidth(2)
-  hist_sig_significance.SetLineStyle(2)
-  hist_sig_significance.Draw("same")
+  hist_sig_significance.SetLineStyle(4)
+  hist_sig_significance.Draw("c same")
+
+  hist_sig_significance2.GetXaxis().SetRangeUser(mass_sig2*0.8,mass_sig2*1.2)
+  hist_sig_significance2.SetLineColor(kAzure-7)
+  hist_sig_significance2.SetLineWidth(2)
+  hist_sig_significance2.SetLineStyle(6)
+  hist_sig_significance2.Draw("c same")
+
+  hist_sig_significance3.GetXaxis().SetRangeUser(mass_sig3*0.8,mass_sig3*1.2)
+  hist_sig_significance3.SetLineColor(kTeal+3)
+  hist_sig_significance3.SetLineWidth(2)
+  hist_sig_significance3.SetLineStyle(8)
+  hist_sig_significance3.Draw("c same")
 
   line = TLine(minX_mass,0,maxX_mass,0)
   line.Draw("")
-  p11_1.RedrawAxis()
   p11_2.RedrawAxis()
   line2=TLine()
   line2.DrawLine(p11_2.GetUxmin(), p11_2.GetUymax(), p11_2.GetUxmax(), p11_2.GetUymax())
@@ -822,6 +888,34 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,fileNa
   c.SaveAs(outputDir+"/"+c_fileName)
   c_fileName = "fitAndResiduals_FuncType%d_nParFit%d_%s.pdf" %(FunctionType,nPar,fileNameSuffix)
   c.SaveAs(outputDir+"/"+c_fileName)
+  c_fileName = "fitAndResiduals_FuncType%d_nParFit%d_%s.root" %(FunctionType,nPar,fileNameSuffix)
+  c.SaveAs(outputDir+"/"+c_fileName)
+
+def histSignificance(M1Bkg,hist_mass,h_sig):
+  nbins_sig = h_sig.GetNbinsX()
+  massBinsSig_list=[]
+  for i in range(0,nbins_sig+1):
+    massBinsSig_list.append(h_sig.GetXaxis().GetBinLowEdge(i+1))  
+
+  massBinsSig = array("d",massBinsSig_list)
+  ##histogram signal significance  
+  hist_sig_significance = TH1D("hist_sig_significance","hist_sig_significance",nbins_sig,massBinsSig)
+  
+  for  i in range(1,number_of_variableWidth_bins+1):
+    if( hist_mass.GetXaxis().GetBinLowEdge(i)>=minX_mass and hist_mass.GetXaxis().GetBinUpEdge(i)<=maxX_mass ):
+      fit = M1Bkg.Integral(hist_mass.GetXaxis().GetBinLowEdge(i), hist_mass.GetXaxis().GetBinUpEdge(i) )
+      significance = 0
+    
+      #if((h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))+fit) != 0 and h_sig.GetBinLowEdge(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))<12000):
+      significance  = h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi / TMath.Sqrt(h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi + fit*lumi)
+
+      print  "low edge bin: " +str( h_sig.GetBinLowEdge(i)) +"  bin low edge bkg = "+str(hist_mass.GetBinLowEdge(i))+ "  "+str( fit) + " + " +str( h_sig.GetBinContent(i))+ "  sqrt(fit + sig) = " +str( TMath.Sqrt(h_sig.GetBinContent(i) + fit))
+      print "significance = "+ str(significance)
+      hist_sig_significance.SetBinContent(i,significance);
+
+  return hist_sig_significance
+
+
 
 #if __name__ == "__main__":
 
