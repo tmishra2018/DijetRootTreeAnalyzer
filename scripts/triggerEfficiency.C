@@ -26,6 +26,8 @@ double threshold = 1213;
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015B-PromptReco-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015BandC-All-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
+//TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905_reduced_skim.root";
+
 
 //TString mynumerator = "h_mjj_HLTpass_PFHT800";
 TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1";
@@ -51,6 +53,7 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-PromptReco";
 //
 TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015BAndC-All";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-25ns-PromptReco";
 
 
 //####### NOTE: #######
@@ -71,7 +74,9 @@ void triggerEfficiency()
   extraText  = "Preliminary";  // default extra text is "Preliminary"
   writeExtraText = true;       // remove or keep "Preliminary"
 
-  lumi_13TeV  = "2015";  // for trigger
+  //lumi_13TeV  = "2015";  // for trigger
+  lumi_13TeV  = "65 pb^{-1}, 50ns";  // for trigger
+
   //lumi_13TeV  = "65 pb^{-1}";  // default is ""
   //lumi_8TeV  = "19.1 fb^{-1}"; // default is "19.7 fb^{-1}"
   //lumi_7TeV  = "4.9 fb^{-1}";  // default is "5.1 fb^{-1}"
@@ -198,6 +203,7 @@ void triggerEfficiency()
   //canv->Print(canvName+"Effieciency"+".pdf",".pdf");
   canv->Print(myoutputfilename+".pdf",".pdf");
   canv->Print(myoutputfilename+".png",".png");
+  canv->Print(myoutputfilename+".root",".root");
   
   //## Trigger Efficiency plot (zoom) ## 
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xminZoom,xmaxZoom);
@@ -239,7 +245,7 @@ void triggerEfficiency()
   h_denominator->GetYaxis()->SetTitle(yAxisTitle);
   h_denominator->GetYaxis()->SetTitleOffset(1.3);
 
-  //CMS_lumi( canv, iPeriod, iPos ); 
+  CMS_lumi( canv, iPeriod, iPos ); 
   canv->Update();
   canv->RedrawAxis();
   canv->GetFrame()->Draw();
