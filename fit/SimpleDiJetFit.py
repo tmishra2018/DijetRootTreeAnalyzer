@@ -248,8 +248,10 @@ def main():
 
 def doChi2MC(g,hist_mass,hist_mass_mc):
   hist_mc_residual_vsMass =  TH1D("hist_mc_residual_vsMass","hist_mc_residual_vsMass",number_of_variableWidth_bins,v_massBins)
+  NumberOfObservations_VarBin_5entries = 0
   NumberOfObservations_VarBin = 0
   NumberOfVarBins = 0
+  chi2_VarBin_5entries = 0
   chi2_VarBin_zeroes = 0
   chi2_VarBin = 0
   for bin in range (1,number_of_variableWidth_bins):
@@ -278,15 +280,26 @@ def doChi2MC(g,hist_mass,hist_mass_mc):
       if (hist_mass.GetBinContent(bin)>0): 
 	NumberOfObservations_VarBin+=1
         chi2_VarBin += pow( (data - mc) , 2 ) / pow( err_tot , 2 )	 
+      
+      ##skip bin with less than 5 entries
+      if (hist_mass.GetBinContent(bin)*lumi*hist_mass.GetBinWidth(bin)>=5): 
+	NumberOfObservations_VarBin_5entries+=1
+        chi2_VarBin_5entries += pow( (data - mc) , 2 ) / pow( err_tot , 2 )	 
+      
+      
       hist_mc_residual_vsMass.SetBinContent(bin,mc_residual)
     print "bin : %d   mc_residual : %f" % (bin,mc_residual) 
     
+
+  ndf_VarBin_5entries = NumberOfObservations_VarBin_5entries #-1 
   ndf_VarBin = NumberOfObservations_VarBin #-1 
   ndf_VarBin_withzeroes = NumberOfVarBins #-1 
   print "============ MC ==============" 
   print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
   print "ndf_VarBin: %d" % ndf_VarBin 
-  print "chi2_VarBin: %f" % chi2_VarBin
+  print "NumberOfObservations_VarBin_5entries: %d" %  NumberOfObservations_VarBin_5entries
+  print "ndf_VarBin_5entries: %d" % ndf_VarBin_5entries 
+  print "chi2_VarBin_5entries: %f" % chi2_VarBin_5entries
   print "ndf_VarBin with zeroes: %d" % ndf_VarBin_withzeroes 
   print "chi2_VarBin with zeroes: %f" % chi2_VarBin_zeroes
   print "============================"   
@@ -485,8 +498,10 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   hist_fit_residual = TH1D("hist_fit_residual","hist_fit_residual",10,-5,5)
   NumberOfVarBins = 0
   NumberOfObservations_VarBin = 0
+  NumberOfObservations_VarBin_5entries = 0
   chi2_VarBin = 0.
   chi2_VarBin_notNorm = 0.
+  chi2_VarBin_5entries = 0.
   chi2_VarBin_zeroes = 0.
 
   for bin in range (1,number_of_variableWidth_bins):
@@ -510,19 +525,26 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
         chi2_VarBin += pow( (data - fit) , 2 ) / pow( err_tot , 2 )	 
         chi2_VarBin_notNorm += pow( (data - fit) , 2 ) 	 
   
+      ##skip bin with less than 5 entries
+      if (hist_mass.GetBinContent(bin)*lumi*hist_mass.GetBinWidth(bin)>=5): 
+	NumberOfObservations_VarBin_5entries+=1
+        chi2_VarBin_5entries += pow( (data - fit) , 2 ) / pow( err_tot , 2 )	 
   
       hist_fit_residual_vsMass.SetBinContent(bin,fit_residual)
       hist_fit_residual_vsMass.SetBinError(bin,err_fit_residual)
       hist_fit_residual.Fill(fit_residual)
     
+  ndf_VarBin_5entries = NumberOfObservations_VarBin_5entries - nPar# -1
   ndf_VarBin = NumberOfObservations_VarBin - nPar# -1
   ndf_VarBin_withzeroes = NumberOfVarBins - nPar# -1
   print "============================" 
   print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
   print "ndf_VarBin: %d" % ndf_VarBin 
   print "ndf_VarBin with zeroes: %d" % ndf_VarBin_withzeroes 
+  print "ndf_VarBin with 5entries: %d" % ndf_VarBin_5entries
   print "chi2_VarBin with zeroes: %f" % chi2_VarBin_zeroes
   print "chi2_VarBin: %f" % chi2_VarBin
+  print "chi2_VarBin_5entries: %f" % chi2_VarBin_5entries
   print "chi2_VarBin_notNorm: %f" % chi2_VarBin_notNorm
   print "============================"   
   return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,M1Bkg,hist_fit_residual_vsMass]
@@ -729,11 +751,11 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   
   #Pave text
   #pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
-  pave_fit = TPaveText(0.2358691,0.03735043,0.5050171,0.1970085,"NDC")
+  pave_fit = TPaveText(0.2358691,0.04035043,0.5050171,0.1870085,"NDC")
     
-  pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
-  pave_fit.AddText("M_{jj} > 1.2 TeV")
   pave_fit.AddText("Wide Jets")
+  pave_fit.AddText("|#eta| < 2.5, |#Delta#eta_{jj}| < 1.3")
+  #pave_fit.AddText("M_{jj} > 1.2 TeV")
   pave_fit.SetFillColor(0)
   pave_fit.SetLineColor(0)
   pave_fit.SetFillStyle(0)
