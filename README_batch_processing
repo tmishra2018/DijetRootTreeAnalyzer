@@ -1,0 +1,41 @@
+Instructions
+============
+Full working example.
+
+cd DijetRootTreeAnalyzer
+git pull
+mkdir batch (only the first time )
+
+Create  and submit jobs
+=======================
+python scripts/submit_batch_EOS_split.py -i lists/ -m JetHT__Run2015D-PromptReco-v3__MINIAOD_test -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/giulia/test -q 1nh --tag test_Run2015D --split 5 --cut config/cutFile_mainDijetSelection.txt
+
+Usage:
+-i    input directory with the lists to process
+-m    string contained in the list name(s) to match
+-o    output directory (/eos/cms/store/...)
+-q    queue
+--cut   source cutfile
+--tag   useful tag name (a datetime string will be added automatically)
+--split   number of files processed for each job (typical number from 5-10)
+
+This will create in batch/ directory
+- a copy of your input cutfile at the time of submission with your tag and date+time
+- a directory Tagname_datetime with
+ * all the submission scripts (one for each splitted job)
+ * all the log files (one for each splitted job)
+- the output directory *(the script is configured to create the directory in eos)*
+
+(You can monitor interactively the jobs doing  "bpeek -f jobid". And you can see the job ids with "bjobs")
+
+Merge jobs
+==========
+Once the jobs areall finished
+
+cd scripts/
+
+Open mergeJobs_EOS.sh  and change by hand the directory where you have your files to be merged
+Then run:
+./mergeJobs_EOS.sh
+
+The scripts automatically recognize a pattern BASENAME_jobid_reduced_skim.root and creates in the same directory (in eos) a subdirectory merged with the output of merging. If there are different datasets (and the have different "basenames") in the same directory the script will not mix the two datasets. 
