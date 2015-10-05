@@ -1,0 +1,76 @@
+===============
+Reduced ntuples
+===============
+Path of reduced ntuples.
+For data lumiSummary and corresponding luminosity calculated with brilcalc (http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and the lates recipee (https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/507.html)  
+
+====== DATA =====
+
+Full 50ns dataset 1) + 2)
+=========================
+
+1) Run2015B 50ns
+
+/JetHT/Run2015B-17Jul2015-v1/MINIAOD + /JetHT/Run2015B-PromptReco-v1/MINIAOD	
+Standard selection
+JEC Summer15_50nsV4
+lumiSummary_JetHT_Run2015B_50ns_golden.json  => 44.3 \pb
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_50ns_JEC_V4_fixJEC/_20150915_000802/merged/rootfile_JetHT__Run2015B-all__MINIAOD_Run2015B_50ns_JEC_V4_fixJEC_20150915_000802_reduced_skim.root 
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015B/PromptReco-v1_plus_17July_goldenJSON_JEC_Summer15_50nsV4/
+
+2) Run2015C 50ns
+
+/JetHT/Run2015C-PromptReco-v1/MINIAOD
+Standard selection
+JEC Summer15_50nsV4
+lumiSummary_JetHT_Run2015C_50ns_254833.json  =>  23.6 \pb
+(Rome T2)  /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015C_50ns_JEC_V4_fixJEC/_20150915_000727/merged/ 
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015C/PromptReco-v1_50ns_goldenJSON_JEC_Summer15_50nsV4/ 
+
+
+Data 25ns 
+=========
+
+3) Run2015D 25ns
+
+/JetHT/Run2015D-PromptReco-v3/MINIAOD
+Standard selection
+JEC Summer15_25nsV5
+lumiSummary_crab_JetHT__Run2015D-PromptReco-v3__MINIAOD__150930_155913.json  =>  390 \pb
+lumiSummary_JetHT_Run2015D_25ns_golden.json  => 205.0 \pb (PassJSON==1)
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV5_20151005_144856/merged/
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/DCSonly_390pb-1_JEC_Summer15_25nsV5_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSONv_20151005_150749/merged/ 
+
+
+====== Monte Carlo =====
+Spring15                                      xsec 
+========================================================
+QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8    7823 pb
+QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8    648.2 pb
+QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8    186.9 pb
+QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8   32.293 pb
+QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8  9.4183 pb
+QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8  0.84265 pb
+QCD_Pt_1800to2400_TuneCUETP8M1_13TeV_pythia8  0.114943 pb
+QCD_Pt_2400to3200_TuneCUETP8M1_13TeV_pythia8  0.0068298 pb
+QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8   0.000165445 pb
+
+50ns MC samples
+===============
+
+/QCD_Pt_*_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM
+Standard selection
+JEC Summer15_50nsV4 
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/mc/Spring15_50ns_JEC-Summer15_50nsV4_fixJEC_20150915_101659/merged/
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring15_JEC_Summer15_50nsV4/
+
+
+25ns MC samples
+================
+
+/QCD_Pt_*_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM
+Standard selection
+JEC Summer15_25nsV3 (for MC are same as V5)
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/mc/Spring15_25ns_JEC-Summer15_25nsV3_18Sept2015/_20150918_000922/merged/ 
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring15_JEC_Summer15_25nsV3/
+
