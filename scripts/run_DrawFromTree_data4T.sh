@@ -20,12 +20,14 @@
 #list="list_for_plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15.txt"
 #outputdir="plots_data4T_Run2015C_25ns_2Sept2015_JEC_Summer15_50s_V4_blinded4TeV_withSF/"
 #list="list_for_plots_data4T_Run2015C_25ns_2Sept2015.txt"
-outputdir="Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF/" 
-list="list_for_plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC.txt"
+#outputdir="Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF/" 
+#list="list_for_plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC.txt"
+outputdir="plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/"
+list="list_for_plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3.txt"
 
 #outputdir="$MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/plots/santanas__40pb-1_30_07_2015_v2/"
 #lumi="42"
-lumi=65.
+lumi=390.
 
 mkdir -p $outputdir
 
@@ -40,6 +42,18 @@ python DrawFromTree_data.py --var etaWJ_j2 --xmin -3 --xmax 3 --xtitle "#eta(j2)
 python DrawFromTree_data.py --var deltaETAjj --xmin 0 --xmax 2 --xtitle "#Delta#eta(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi
 python DrawFromTree_data.py --var deltaPHIjj --xmin 0 --xmax 3.14 --xtitle "#Delta#phi(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi
 python DrawFromTree_data.py --var deltaPHIjj --xmin 0 --xmax 3.14 --xtitle "#Delta#phi(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
+python DrawFromTree_data.py --var  phiWJ_j1  --xmin -3.1415 --xmax 3.1415  --xtitle "#phi (j1)" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
+python DrawFromTree_data.py --var  phiWJ_j2  --xmin -3.1415 --xmax 3.1415  --xtitle "#phi (j2)" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
+python DrawFromTree_data.py --var  massWJ_j1  --xmin 0 --xmax 1000  --xtitle "#m (j1) [GeV]" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi --logy 
+python DrawFromTree_data.py --var  massWJ_j2  --xmin 0 --xmax 1000  --xtitle "#m (j2) [GeV]" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi --logy 
+python DrawFromTree_data.py --var CosThetaStarWJ --xmin -1 --xmax 1  --xtitle "cos #theta *" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
+python DrawFromTree_data.py --var Dijet_MassAK4 --xmin 1 --xmax 14000 --xtitle "Dijet Mass AK4 [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList $list  --lumi $lumi --logy
+python DrawFromTree_data.py --var Dijet_MassAK4 --xmin 1 --xmax 14000 --xtitle "Dijet Mass AK4 [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList $list --lumi $lumi 
+python DrawFromTree_data.py --var  Nak4 --xmin 0 --xmax 15  --xtitle "N jets" --bins 15  --outputDir $outputdir --inputList $list --lumi $lumi 
+python DrawFromTree_data.py --var pTAK4_j1 --xmin 30 --xmax 6000 --xtitle "p_{T}(j1) AK4 [GeV]" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
+python DrawFromTree_data.py --var pTAK4_j2 --xmin 30 --xmax 6000 --xtitle "p_{T}(j2) AK4 [GeV]" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
+python DrawFromTree_data.py --var etaAK4_j1 --xmin -3 --xmax 3 --xtitle "#eta(j1) AK4" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi
+python DrawFromTree_data.py --var etaAK4_j2 --xmin -3 --xmax 3 --xtitle "#eta(j2) AK4" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list  --lumi $lumi
 python DrawFromTree_data.py --var MET  --xmin 0 --xmax 1000 --xtitle "MET [GeV]" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
 python DrawFromTree_data.py --var metSig  --xmin 0 --xmax 1 --xtitle "MET / #Sigma E_{T}" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
 python DrawFromTree_data.py --var nVtx --xmin 0 --xmax 50 --xtitle "nvtx" --bins 50 --outputDir $outputdir --inputList $list --lumi $lumi --logy
@@ -65,9 +79,3 @@ python DrawFromTree_data.py --var chargedMult_j2 --xmin 0 --xmax 50 --xtitle "ch
 python DrawFromTree_data.py --var neutrMult_j2  --xmin 0 --xmax 50 --xtitle "neutral mult. j2" --bins 50 --outputDir $outputdir --inputList $list --lumi $lumi --logy        
 python DrawFromTree_data.py --var photonMult_j2 --xmin 0 --xmax 50 --xtitle "photon mult. j2" --bins 50 --outputDir $outputdir --inputList $list --lumi $lumi --logy        
 python DrawFromTree_data.py --var jetPtAK4matchCaloJet_j2  --xmin 30 --xmax 5000 --xtitle "pT(j2)calo match [GeV]" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
-python DrawFromTree_data.py --var CosThetaStarWJ --xmin -1 --xmax 1  --xtitle "cos #theta *" --bins 200 --rebin 5 --outputDir $outputdir --inputList $list --lumi $lumi --logy
-python DrawFromTree_data.py --var  Nak4 --xmin 0 --xmax 15  --xtitle "N jets" --bins 15  --outputDir $outputdir --inputList $list --lumi $lumi 
-python DrawFromTree_data.py --var  phiWJ_j1  --xmin -3.1415 --xmax 3.1415  --xtitle "#phi (j1)" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
-python DrawFromTree_data.py --var  phiWJ_j2  --xmin -3.1415 --xmax 3.1415  --xtitle "#phi (j2)" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi 
-python DrawFromTree_data.py --var  massWJ_j1  --xmin 0 --xmax 1000  --xtitle "#m (j1) [GeV]" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi --logy 
-python DrawFromTree_data.py --var  massWJ_j2  --xmin 0 --xmax 1000  --xtitle "#m (j2) [GeV]" --bins 200 --rebin 5  --outputDir $outputdir --inputList $list --lumi $lumi --logy 
