@@ -79,7 +79,7 @@ label_Axigluon3000 = "Axigluon (3 TeV)"
 minX_mass = 1181.
 #maxX_mass = 3019.
 #maxX_mass = 5253.
-maxX_mass = 7320.
+maxX_mass = 6564.
 #FunctionType = -1
 FunctionType = 0
 #fileNameSuffix = "test_range_1118_3704"
@@ -91,17 +91,19 @@ fileNameSuffix_Qstar3000 = "Qstar3000"
 fileNameSuffix_String5300 = "String5300"
 fileNameSuffix_S8_2200 = "S8_2200"
 fileNameSuffix_Axigluon3000 = "Axigluon3000"
-fileNameSuffix = "RunD_DCSonly_4param"
+fileNameSuffix = "RunD_DCSonly_4param_JEC_Summer15_25nsV5"
 
 ####### INPUT #############
 # data 
 #input_root_file = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF//histo_data_mjj_fromTree.root"
 #input_root_file = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
-input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+#input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+input_root_file="../scripts/plots_data_Run2015D_DCSonly_MC_Spring15_25ns_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
 ###mc
 #input_root_file_mc = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
 #input_root_file_mc = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
-input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+#input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+input_root_file_mc="../scripts/plots_data_Run2015D_DCSonly_MC_Spring15_25ns_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
 
 ### input file and 1D histo
 input_root_file_signal_qq = "ResonanceShapes_qq_13TeV_PU30_Spring15.root"
@@ -347,11 +349,12 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   if( FunctionType==0 ):    
     nPar=4
     M1Bkg = TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",minX_mass,maxX_mass)
-    M1Bkg.SetParameter(0,0.08)
+    M1Bkg.SetParameter(0,0.0014)
     M1Bkg.SetParameter(1,12)
     M1Bkg.SetParameter(2,2)
     M1Bkg.SetParameter(3,-0.5)
   
+    M1Bkg.SetParLimits(0,0.,1000);
     #1 fb-1
     #M1Bkg.SetParLimits(0,0.,10);
     #10 fb-1
@@ -485,7 +488,8 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   #TFitResultPtr r;
   stopProgram=1;
   for loop in range (0,10):
-    r = hist_mass_original.Fit("M1Bkg","ELLSR","",minX_mass,maxX_mass)      
+    r = hist_mass_original.Fit("M1Bkg","ELSR","",minX_mass,maxX_mass)      
+    #r = hist_mass_original.Fit("M1Bkg","ELLSR","",minX_mass,maxX_mass)      
     #r = hist_mass_original.Fit("M1Bkg","MSR","",minX_mass,maxX_mass)      
     fitStatus = int(r)
     print "fit status : %d" % fitStatus
@@ -855,7 +859,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   p11_2.SetGridx()
   p11_2.SetGridy()
   
-  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -2.7, p11_1.GetUxmax(), 2.7)
+  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -3.5, p11_1.GetUxmax(), 3.5)
   
   vFrame2.SetTitle("")
   vFrame2.SetXTitle("Dijet Mass [GeV]")
@@ -870,7 +874,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   
   hist_fit_residual_vsMass.GetXaxis().SetNdivisions(405)
   hist_fit_residual_vsMass.GetXaxis().SetRangeUser(minX_mass,maxX_mass)
-  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-2.7,2.7)
+  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-3.5,3.5)
   hist_fit_residual_vsMass.SetLineWidth(0)
   hist_fit_residual_vsMass.SetFillColor(2)
   hist_fit_residual_vsMass.SetLineColor(1)
