@@ -1,5 +1,4 @@
-#JSON json/lumiSummary_75X_RelVal.json
-JSON json/Cert_246908-255031_13TeV_PromptReco_Collisions15_25ns_JSON_v2.txt
+JSON json/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt
 #
 #############################     Example of file with list of cuts
 #
