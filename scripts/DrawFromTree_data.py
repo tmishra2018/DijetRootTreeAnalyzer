@@ -125,7 +125,9 @@ for f in fileNames:
   h_allCuts.Sumw2()
   tree = inf.Get('rootTupleTree/tree')
   #standard
-  tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
+  #passJSON
+  tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && PassJSON==1')
   # blinded 4 TeV
   #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && mjj<4000')
   # "peak mjj 2 TeV"
