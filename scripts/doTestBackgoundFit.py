@@ -17,7 +17,7 @@ tdrstyle.setTDRStyle()
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
 CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
-CMS_lumi.lumi_13TeV = "65 pb^{-1}"
+CMS_lumi.lumi_13TeV = "390 pb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -30,7 +30,8 @@ iPeriod = 4
 #fileNameSuffix = "test_range_1118_3704"
 #fileNameSuffix = "test"
 #fileNameSuffix = "JEC_L2L3Residuals"
-fileNameSuffix = "JEC_V4_firstbin1181"
+#fileNameSuffix = "JEC_V4_firstbin1181"
+fileNameSuffix = "JEC_Summer15_25nsV3"
 
 
 #Fit functions
@@ -58,14 +59,15 @@ number_of_variableWidth_bins = 103
 massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430,10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000];
 
 v_massBins = array("d",massBins)
-lumi = 65.0
+lumi = 390.
 #sf = 1.07
 sf=1.
 #minX_mass = 1000.
 minX_mass = 1181.
 #maxX_mass = 3019.
 #maxX_mass = 5253.
-maxX_mass = 5663.
+#maxX_mass = 5663.
+maxX_mass = 7320.
 #================================================================================================================
   
 def main():
@@ -73,10 +75,12 @@ def main():
   # data 
   #input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals/histo_data_mjj_fromTree.root"
   #input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
-  input_root_file = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+  #input_root_file = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+  input_root_file = "plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
   ###mc
   #input_root_file_mc = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
-  input_root_file_mc = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+  #input_root_file_mc = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
+  input_root_file_mc = "plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
   ### input file and 1D histo
   
   file0 = TFile.Open( input_root_file )
