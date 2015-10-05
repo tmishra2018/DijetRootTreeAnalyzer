@@ -9,6 +9,7 @@ import imp
 import multiprocessing
 from itertools import repeat
 import math
+import optparse
 
 gStyle.SetOptFit(1111) 
 #set the tdr style
@@ -17,7 +18,7 @@ tdrstyle.setTDRStyle()
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
 CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
-CMS_lumi.lumi_13TeV = "65 pb^{-1}"
+CMS_lumi.lumi_13TeV = "390 pb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = ""
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -26,7 +27,12 @@ iPos = 11
 if( iPos==0 ): CMS_lumi.relPosX = 0.12
 iPeriod = 4
  
+usage = "usage: %prog [options]"
+parser = optparse.OptionParser(usage)
+parser.add_option("--plotSig",action="store_true",dest="plotSig",default=False)
   
+(options, args) = parser.parse_args() 
+plotSig = options.plotSig
 
 
 #Fit function
@@ -54,7 +60,8 @@ number_of_variableWidth_bins = 103
 massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430,10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000];
 
 v_massBins = array("d",massBins)
-lumi = 65.0
+lumi = 390.
+#lumi = 65.0
 #sf = 1.07
 sf=1.
 sigmaQstar4500 = 0.2827E-01
@@ -72,9 +79,9 @@ label_Axigluon3000 = "Axigluon (3 TeV)"
 minX_mass = 1181.
 #maxX_mass = 3019.
 #maxX_mass = 5253.
-maxX_mass = 5663.
-FunctionType = -1
-
+maxX_mass = 7320.
+#FunctionType = -1
+FunctionType = 0
 #fileNameSuffix = "test_range_1118_3704"
 #fileNameSuffix = "test"
 #fileNameSuffix = "JEC_L2L3Residuals"
@@ -84,15 +91,18 @@ fileNameSuffix_Qstar3000 = "Qstar3000"
 fileNameSuffix_String5300 = "String5300"
 fileNameSuffix_S8_2200 = "S8_2200"
 fileNameSuffix_Axigluon3000 = "Axigluon3000"
-fileNameSuffix = "3signals"
+fileNameSuffix = "RunD_DCSonly_4param"
 
 ####### INPUT #############
 # data 
 #input_root_file = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF//histo_data_mjj_fromTree.root"
-input_root_file = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
+#input_root_file = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
+input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
 ###mc
 #input_root_file_mc = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
-input_root_file_mc = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
+#input_root_file_mc = "../scripts/Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF//histo_data_mjj_fromTree.root"
+input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+
 ### input file and 1D histo
 input_root_file_signal_qq = "ResonanceShapes_qq_13TeV_PU30_Spring15.root"
 input_root_file_signal_qg = "ResonanceShapes_qg_13TeV_PU30_Spring15.root"
@@ -784,15 +794,16 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   h_w.SetLineColor(kMagenta-2)
   h_w.SetLineWidth(2)
   h_w.SetLineStyle(4)
-  h_w.Draw("c same")
   h_w2.SetLineColor(kAzure-7)
   h_w2.SetLineWidth(2)
   h_w2.SetLineStyle(6)
-  h_w2.Draw("c same")
   h_w3.SetLineColor(kTeal+3)
   h_w3.SetLineWidth(2)
   h_w3.SetLineStyle(8)
-  h_w3.Draw("c same")
+  if plotSig: 
+    h_w.Draw("c same")
+    h_w2.Draw("c same")
+    h_w3.Draw("c same")
   g_mc.SetLineWidth(2)
   g_mc.SetLineStyle(2)
   g_mc.SetLineColor(kBlue)
@@ -818,9 +829,10 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   leg.AddEntry(hist_mass,"Data" ,"PLE");
   leg.AddEntry(M1Bkg,"Fit","L");
   leg.AddEntry(g_mc,"QCD MC","L");
-  leg.AddEntry(h_w,label_sig,"L");
-  leg.AddEntry(h_w2,label_sig2,"L");
-  leg.AddEntry(h_w3,label_sig3,"L");
+  if plotSig:
+    leg.AddEntry(h_w,label_sig,"L");
+    leg.AddEntry(h_w2,label_sig2,"L");
+    leg.AddEntry(h_w3,label_sig3,"L");
   leg.Draw("same")
   pave_fit.Draw("same")
   
@@ -872,19 +884,19 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   hist_sig_significance.SetLineColor(kMagenta-2)
   hist_sig_significance.SetLineWidth(2)
   hist_sig_significance.SetLineStyle(4)
-  hist_sig_significance.Draw("c same")
-
   hist_sig_significance2.GetXaxis().SetRangeUser(mass_sig2*0.8,mass_sig2*1.2)
   hist_sig_significance2.SetLineColor(kAzure-7)
   hist_sig_significance2.SetLineWidth(2)
   hist_sig_significance2.SetLineStyle(6)
-  hist_sig_significance2.Draw("c same")
-
   hist_sig_significance3.GetXaxis().SetRangeUser(mass_sig3*0.8,mass_sig3*1.2)
   hist_sig_significance3.SetLineColor(kTeal+3)
   hist_sig_significance3.SetLineWidth(2)
   hist_sig_significance3.SetLineStyle(8)
-  hist_sig_significance3.Draw("c same")
+  
+  if plotSig:
+    hist_sig_significance.Draw("c same")
+    hist_sig_significance2.Draw("c same")
+    hist_sig_significance3.Draw("c same")
 
   line = TLine(minX_mass,0,maxX_mass,0)
   line.Draw("")
