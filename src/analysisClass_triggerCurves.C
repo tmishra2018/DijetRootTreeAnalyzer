@@ -99,12 +99,10 @@ void analysisClass::Loop()
 
 
 
-   char* HLTname[50] = {"noTrig","PFHT350","PFHT900","PFHT650MJJ900","PFHT900_OR_PFHT650MJJ900"};
+   std::vector<std::string> HLTname({"noTrig","PFHT350","PFHT900","PFHT650MJJ900","PFHT900_OR_PFHT650MJJ900"});
    TH1F* h_mjj_HLTpass[5];
-   char name_histoHLT[50];
    for (int i=0; i<5; i++){  
-     sprintf(name_histoHLT,"h_mjj_HLTpass_%s",HLTname[i]);
-     h_mjj_HLTpass[i]= new TH1F(name_histoHLT,"",103,massBoundaries);
+     h_mjj_HLTpass[i]= new TH1F(("h_mjj_HLTpass_" + HLTname[i]).c_str(),"",103,massBoundaries);
    }
   
    /////////initialize variables

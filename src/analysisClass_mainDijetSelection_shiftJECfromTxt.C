@@ -119,12 +119,10 @@ void analysisClass::Loop()
      10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
 
 
-   char* HLTname[50] = {"noTrig","PFHT475","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900","PFHT800_noPFHT475"};
+   std::vector<std::string> HLTname({"noTrig","PFHT475","PFHT800","PFHT650MJJ900","PFHT800_OR_PFHT650MJJ900","PFHT800_noPFHT475"});
    TH1F* h_mjj_HLTpass[6];
-   char name_histoHLT[50];
    for (int i=0; i<6; i++){  
-     sprintf(name_histoHLT,"h_mjj_HLTpass_%s",HLTname[i]);
-     h_mjj_HLTpass[i]= new TH1F(name_histoHLT,"",103,massBoundaries);
+     h_mjj_HLTpass[i]= new TH1F(("h_mjj_HLTpass_" + HLTname[i]).c_str(),"",103,massBoundaries);
    }
   
 

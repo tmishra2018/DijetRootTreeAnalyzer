@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Jul 13 13:33:03 2015 by ROOT version 6.02/05
+// Wed Oct  7 00:09:24 2015 by ROOT version 6.02/05
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -384,7 +384,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("dcap://cmsrm-se01.roma1.infn.it//pnfs/roma1.infn.it/data/cms//store/user/gdimperi/Dijet/data/Run2015B_JetHT_12June2015DCSJson_JECV5_4422c9ba9d/JetHT/crab_JetHT__Run2015B-PromptReco-v1__MINIAOD/150712_211959/0000/JetHT__Run2015B-PromptReco-v1__MINIAOD_1.root/dijets/events");
+      chain->Add("/tmp/ferencek/RSGravitonToQuarkQuark_kMpl01_M_3000_TuneCUETP8M1_13TeV_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1__MINIAODSIM_4.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
