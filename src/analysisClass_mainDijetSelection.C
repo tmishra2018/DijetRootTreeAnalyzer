@@ -83,7 +83,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
 
     //uncertainty
     //unc = new JetCorrectionUncertainty("data/Summer15_50nsV4/Summer15_50nsV4_DATA_Uncertainty_AK4PFchs.txt");
-    unc = new JetCorrectionUncertainty("data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_Uncertainty_AK4PFchs.txt");
 
   }
   

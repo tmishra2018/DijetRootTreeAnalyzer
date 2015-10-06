@@ -1,4 +1,5 @@
-JSON json/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt
+#JSON data/json/Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt
+JSON data/json/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt
 #
 #############################     Example of file with list of cuts
 #
