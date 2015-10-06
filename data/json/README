@@ -14,18 +14,20 @@ Full 50ns dataset 1) + 2)
 /JetHT/Run2015B-17Jul2015-v1/MINIAOD + /JetHT/Run2015B-PromptReco-v1/MINIAOD	
 Standard selection
 JEC Summer15_50nsV4
-lumiSummary_JetHT_Run2015B_50ns_golden.json  => 44.3 \pb
-(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_50ns_JEC_V4_fixJEC/_20150915_000802/merged/rootfile_JetHT__Run2015B-all__MINIAOD_Run2015B_50ns_JEC_V4_fixJEC_20150915_000802_reduced_skim.root 
-(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015B/PromptReco-v1_plus_17July_goldenJSON_JEC_Summer15_50nsV4/
+lumiSummary_JetHT_Run2015B_50ns_DCS.json  => 51.11 /pb
+lumiSummary_JetHT_Run2015B_50ns_golden.json  => 45.01 /pb  (PassJSON==1)
+(Rome T2)  /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015B/PromptReco-v1_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2_20151006_144447/merged/rootfile_JetHT__Run2015B-all__MINIAOD_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2_JEC_Summer15_50nsV4_20151006_144447_reduced_skim.root  
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015B/PromptReco_plus_17July2015-v1_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_JEC_Summer15_50nsV4//rootfile_JetHT__Run2015B-17Jul2015-v1__MINIAOD_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2_JEC_Summer15_50nsV4_20151006_144447_reduced_skim.root
 
 2) Run2015C 50ns
 
 /JetHT/Run2015C-PromptReco-v1/MINIAOD
 Standard selection
 JEC Summer15_50nsV4
-lumiSummary_JetHT_Run2015C_50ns_254833.json  =>  23.6 \pb
-(Rome T2)  /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015C_50ns_JEC_V4_fixJEC/_20150915_000727/merged/ 
-(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015C/PromptReco-v1_50ns_goldenJSON_JEC_Summer15_50nsV4/ 
+lumiSummary_JetHT_Run2015C_50ns_254833_DCS.json  => 47.267 /pb
+lumiSummary_JetHT_Run2015C_50ns_254833_golden.json  =>  26.48 /pb (passJSON==1)
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015C/PromptReco-v1_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2_20151006_144611/merged/ 
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015C/PromptReco-v1_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_JEC_Summer15_50nsV4/ 
 
 
 Data 25ns 
@@ -36,11 +38,10 @@ Data 25ns
 /JetHT/Run2015D-PromptReco-v3/MINIAOD
 Standard selection
 JEC Summer15_25nsV5
-lumiSummary_crab_JetHT__Run2015D-PromptReco-v3__MINIAOD__150930_155913.json  =>  390 \pb
-lumiSummary_JetHT_Run2015D_25ns_golden.json  => 205.0 \pb (PassJSON==1)
-(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV5_20151005_144856/merged/
-(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/DCSonly_390pb-1_JEC_Summer15_25nsV5_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSONv_20151005_150749/merged/ 
-
+lumiSummary_JetHT_Run2015D_25ns_DCS.json  =>  389.98 /pb
+lumiSummary_JetHT_Run2015D_25ns_golden.json  => 205.06 /pb (PassJSON==1)
+(Rome T2)  /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015D/PromptReco-v3_DCSonly_flag_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON_20151006_141240/merged/
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/PromptReco-v3_DCSonly_flag_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON_JEC_Summer15_25nsV5/
 
 ====== Monte Carlo =====
 Spring15                                      xsec 
