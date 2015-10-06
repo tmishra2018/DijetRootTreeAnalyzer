@@ -54,7 +54,7 @@ cutfileName = timeMarker+os.path.split(opt.cutfile)[1]
 print cutfileName
 ###
 pwd = os.environ['PWD']
-os.system("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select mkdir -p "+opt.output+simpletimeMarker)
+os.system("/afs/cern.ch/project/eos/installation/cms/bin/eos.select mkdir -p "+opt.output+simpletimeMarker)
 #os.system("rm -rf batch")
 os.system("mkdir -p batch")
 ###
@@ -150,15 +150,15 @@ for line in  ins:
     outputfile.write('cd '+pwd+' \n')
     outputfile.write('eval `scramv1 runtime -sh`\n')
     outputfile.write(command+"\n")
-    outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
-    outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
-    outputfile.write("xrdcp /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat root://eoscms/"+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
+    outputfile.write("xrdcp -v /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
+    outputfile.write("xrdcp -v /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
+    outputfile.write("xrdcp -v /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat root://eoscms/"+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
     #outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
     #outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
     #outputfile.write("xrdcp /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat "+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
-    outputfile.write("rm /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
-    outputfile.write("rm /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
-    outputfile.write("rm /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
+    outputfile.write("rm -v /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
+    outputfile.write("rm -v /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
+    outputfile.write("rm -v /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
     
     print outputname 
     if opt.interactive==False:

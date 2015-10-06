@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DIR='/eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/giulia/test/'
-eos="/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select"
+DIR=$1
+eos="/afs/cern.ch/project/eos/installation/cms/bin/eos.select"
 $eos mkdir -p $DIR/merged/
 ENDPOINT="root://eoscms/"
 for i in `$eos ls $DIR/*_reduced_skim.root|sed 's/[0-9]*_reduced_skim.root//'|sort -u`

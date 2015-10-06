@@ -29,7 +29,7 @@ def unique(keys):
 
 def make_filenamelist_eos(inputDir):
     filenamelist = []
-    proc = subprocess.Popen( '/afs/cern.ch/project/eos/installation/0.3.4/bin/eos.select ls ' + inputDir , shell=True,stdout = subprocess.PIPE, stderr = subprocess.STDOUT )
+    proc = subprocess.Popen( '/afs/cern.ch/project/eos/installation/cms/bin/eos.select ls ' + inputDir , shell=True,stdout = subprocess.PIPE, stderr = subprocess.STDOUT )
     output = proc.communicate()[0]
     if proc.returncode != 0:
         print output
@@ -75,6 +75,9 @@ def process_input_dir(inputDir, match, filelist):
         filenamelist = make_filenamelist_castor(inputDir)
     elif( re.search("^/eos/cms/", inputDir) ):
         prefix = "root://eoscms/"
+        filenamelist = make_filenamelist_eos(inputDir)
+    elif( re.search("^/pnfs/roma1.infn.it/", inputDir) ):
+        prefix = "dcap://cmsrm-se01.roma1.infn.it/"
         filenamelist = make_filenamelist_eos(inputDir)
     else:
         filenamelist = make_filenamelist_default(inputDir)
