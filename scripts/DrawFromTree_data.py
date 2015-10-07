@@ -44,7 +44,8 @@ parser.add_option("--bins",action="store",type="int",dest="bins",default=1111111
 parser.add_option("--rebin",action="store",type="int",dest="rebin",default=1)
 parser.add_option("--logy",action="store_true",default=False,dest="logy")
 parser.add_option("--outputDir",action="store",type="string",default="./",dest="outputDir")
-parser.add_option("--inputList",action="store",type="string",default="list.txt",dest="inputList")
+parser.add_option("--inputList_mc",action="store",type="string",default="list_mc.txt",dest="inputList_mc")
+parser.add_option("--inputList_data",action="store",type="string",default="list_data.txt",dest="inputList_data")
 parser.add_option("--lumi",action="store",type="float",default="1000.",dest="lumi")
 
 (options, args) = parser.parse_args()
@@ -57,7 +58,8 @@ xtitle = options.xtitle
 rebin = options.rebin
 logy = options.logy
 outputDir = options.outputDir
-inputList = options.inputList
+inputList_mc = options.inputList_mc
+inputList_data = options.inputList_data
 lumi = options.lumi
 #############################
 
@@ -86,9 +88,9 @@ hist_allCuts      = []
 #PATH      = inputDir
 
 #---- read the list -----------------
-lines = [line.strip() for line in open(inputList)]
+lines = [line.strip() for line in open(inputList_mc)]
 
-#---- split sample name and xsec
+#---- split sample name and xsec (mc list)
 fileNames = []
 xsecs = []
 ii = 0
@@ -97,9 +99,13 @@ for line in lines:
   fileNames.append(parts[0])
   xsecs.append(parts[1])
   print ("dataset : %s    xsec : %s" % (fileNames[ii], xsecs[ii]))
-
-
   ii+=1
+
+fileNames_data = []
+lines_data = [line.strip() for line in open(inputList_data)]
+for line in lines_data:
+  fileNames_data.append(line)
+
 
 #---- open the files --------------------
 #var1 = ""
@@ -111,6 +117,8 @@ for line in lines:
 #elif var=="phiWJ_j2" : var1 = "phi_j2"
 #else : var1 = var
 
+
+#------------  MC  ---------------
 i_f = 0
 for f in fileNames:
   inf = TFile.Open(f)
@@ -160,14 +168,25 @@ for f in fileNames:
    
   i_f += 1
 
-h_dat = hist_allCuts[9].Clone()
-h_dat.SetName("h_dat")
+#--------- data  --------------
+chain = TChain("rootTupleTree/tree")
+for i in range(0,len(fileNames_data)):
+  chain.Add(fileNames_data[i])
+  print fileNames_data[i]
+
+h_dat = TH1F("h_dat", "", bins, xmin, xmax)
+h_dat.Sumw2()
+chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && PassJSON==1')
+
+#h_dat = hist_allCuts[9].Clone()
+#h_dat.SetName("h_dat")
 #h_dat.SetLineStyle(2)
 #h_dat.SetLineWidth(2)
 h_dat.SetMarkerColor(kBlack)
 h_dat.SetLineColor(kBlack)
 
-                                      
+                   
+#--------------------------		   
 NQCD_allCuts = hist_allCuts[0].Integral()
 
 #for i in range(0,len(fileNames)) :
@@ -193,6 +212,8 @@ NQCD = hist_allCutsQCD.Integral(0,hist_allCutsQCD.GetNbinsX()+1)
 kFactor = NDAT/NQCD
 #kFactor = 1.
 print ("kFactor set to %f" % kFactor)
+print("NQCD = "+str(NQCD))
+print("NDAT = "+str(NDAT))
 print ("NDAT / NQCD = = %f" % (NDAT/NQCD))
 
 hist_allCutsQCD.Scale(kFactor)
@@ -283,10 +304,11 @@ pad1.cd()
 max = hist_allCutsQCD_rebin.GetBinContent(hist_allCutsQCD_rebin.GetMaximumBin())
 
 if logy:
-  gPad.SetLogy()
+  gPad.SetLogy(1)
   hist_allCutsQCD_rebin.SetMaximum(100.*max)  
   h_dat_rebin.SetMaximum(100.*max)
 else:
+  gPad.SetLogy(0)
   hist_allCutsQCD_rebin.SetMaximum(max + 0.3*max)
   h_dat_rebin.SetMaximum(max + 0.3*max)
 
