@@ -11,13 +11,13 @@ For data lumiSummary and corresponding luminosity calculated with brilcalc (http
 
 ====== DATA =====
 
-Full 50ns dataset 1) + 2)
+Full 50ns dataset 1-2) + 3)
 =========================
 
-1) Run2015B 50ns
+1-2) Run2015B 50ns
 
 /JetHT/Run2015B-17Jul2015-v1/MINIAOD + /JetHT/Run2015B-PromptReco-v1/MINIAOD	
-Standard selection
+Standard selection without DeltaEta cut
 JEC Summer15_50nsV4
 lumiSummary_JetHT_Run2015B_50ns_DCS.json  => 51.11 /pb
 lumiSummary_JetHT_Run2015B_50ns_golden.json  => 45.01 /pb  (PassJSON==1)
@@ -25,10 +25,10 @@ lumiSummary_JetHT_Run2015B_50ns_golden.json  => 45.01 /pb  (PassJSON==1)
 (CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015B/PromptReco_plus_17July2015-v1_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_JEC_Summer15_50nsV5/rootfile_JetHT__Run2015B-all__MINIAOD_DCSonly_flag_Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2_JEC_Summer15_50nsV4_20151007_103540_reduced_skim.root 
 
 
-2) Run2015C 50ns
+3) Run2015C 50ns
 
 /JetHT/Run2015C-PromptReco-v1/MINIAOD
-Standard selection
+Standard selection without DeltaEta cut
 JEC Summer15_50nsV4
 lumiSummary_JetHT_Run2015C_50ns_254833_DCS.json  => 47.267 /pb
 lumiSummary_JetHT_Run2015C_50ns_254833_golden.json  =>  26.48 /pb (passJSON==1)
@@ -38,15 +38,27 @@ lumiSummary_JetHT_Run2015C_50ns_254833_golden.json  =>  26.48 /pb (passJSON==1)
 Data 25ns 
 =========
 
-3) Run2015D 25ns
+4) Run2015D 25ns
 
 /JetHT/Run2015D-PromptReco-v3/MINIAOD
-Standard selection
+Standard selection without DeltaEta cut
 JEC Summer15_25nsV5
 lumiSummary_JetHT_Run2015D_25ns_DCS.json  =>  389.98 /pb
 lumiSummary_JetHT_Run2015D_25ns_golden.json  => 205.06 /pb (PassJSON==1)
 (Rome T2)  /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015D/PromptReco-v3_DCSonly_flag_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON_20151006_141240/merged/
 (CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/PromptReco-v3_DCSonly_flag_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON_JEC_Summer15_25nsV5/
+
+
+5) Run2015D 25ns
+
+Standard selection without DeltaEta cut
+JEC Summer15_25nsV5
+lumiSummary_JetHT_Run2015D_25ns_DCS_413pb-1_151007_090551.json  =>  412.711 /pb
+lumiSummary_JetHT_Run2015D_25ns_golden.json  => ... (PassJSON==1)
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015D/PromptReco-v3_DCSonly_flag_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON_sample5_20151007_164656/ 
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/DCSonly_803pb-1_JEC_Summer15_25nsV5_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON/ 
+ 
+
 
 ====== Monte Carlo =====
 Spring15                                      xsec 
@@ -65,7 +77,7 @@ QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8   0.000165445 pb
 ===============
 
 /QCD_Pt_*_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt50ns_MCRUN2_74_V9A-v2/MINIAODSIM
-Standard selection
+Standard selection 
 JEC Summer15_50nsV4 
 (Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/mc/Spring15_50ns_JEC-Summer15_50nsV4_fixJEC_20150915_101659/merged/
 (CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring15_JEC_Summer15_50nsV4/
@@ -75,8 +87,8 @@ JEC Summer15_50nsV4
 ================
 
 /QCD_Pt_*_TuneCUETP8M1_13TeV_pythia8/RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/MINIAODSIM
-Standard selection
+Standard selection without DeltaEta cut
 JEC Summer15_25nsV3 (for MC are same as V5)
-(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/mc/Spring15_25ns_JEC-Summer15_25nsV3_18Sept2015/_20150918_000922/merged/ 
-(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring15_JEC_Summer15_25nsV3/
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/mc/Spring15_25ns_JEC-Summer15_25nsV5_20151007_163727/merged/ 
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring15_JEC_Summer15_25nsV5_nodEta_cut/
 
