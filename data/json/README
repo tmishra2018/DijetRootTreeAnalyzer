@@ -56,7 +56,18 @@ JEC Summer15_25nsV5
 lumiSummary_JetHT_Run2015D_25ns_DCS_413pb-1_151007_090551.json  =>  412.711 /pb
 lumiSummary_JetHT_Run2015D_25ns_golden.json  => ... (PassJSON==1)
 (Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015D/PromptReco-v3_DCSonly_flag_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON_sample5_20151007_164656/ 
-(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/DCSonly_413pb-1_JEC_Summer15_25nsV5_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON/ 
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/DCSonly_413pb-1_JEC_Summer15_25nsV5_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON/
+
+
+== Run2015D 4+5+6 Combined ==
+
+4+5+6)
+JEC Summer15_25nsV5
+lumisum_runD_files_4_5_6_DCSOnly.json => 974.408 /pb
+lumiSummary_JetHT_Run2015D_25ns_golden_files456_20151013.json => 546.592 /pb (PassJSON==1)
+Files at CERN eos:
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/reduced_skims_2015D_round3/ (batch fragments)
+cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/reduced_skims_2015D_round3/hadded/rootfile_2015D_Run2015D_round3_20151013.root (hadded, 8Gb)
  
 
 
