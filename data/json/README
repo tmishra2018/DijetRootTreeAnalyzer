@@ -65,9 +65,9 @@ lumiSummary_JetHT_Run2015D_25ns_golden.json  => ... (PassJSON==1)
 JEC Summer15_25nsV5
 lumisum_runD_files_4_5_6_DCSOnly.json => 974.408 /pb
 lumiSummary_JetHT_Run2015D_25ns_golden_files456_20151013.json => 546.592 /pb (PassJSON==1)
-Files at CERN eos:
+Files at CERN eos (fixed after a file move failure causing duplicity):
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/reduced_skims_2015D_round3/ (batch fragments)
-cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/reduced_skims_2015D_round3/hadded/rootfile_2015D_Run2015D_round3_20151013.root (hadded, 8Gb)
+cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/reduced_skims_2015D_round3/hadded/rootfile_2015D_Run2015D_round3_20151013_try2.root (hadded, 8Gb)
  
 
 
