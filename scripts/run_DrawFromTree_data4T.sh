@@ -22,26 +22,72 @@
 #list="list_for_plots_data4T_Run2015C_25ns_2Sept2015.txt"
 #outputdir="Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC_withSF/" 
 #list="list_for_plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_fixedJEC.txt"
-outputdir="plots_data4T_DCSreprocessing_Run2015BC_50ns_golden_JEC_Summer15_50nsV5_withSF/"
-list_mc="list_for_plots_mc_Spring15_50ns.txt"
-list_data="list_for_plots_data4T_DCSreprocessed_RunBC_50ns.txt"
+#outputdir="plots_data4T_paper_Run2015BC_50ns_golden_JEC_Summer15_50nsV5_withSF/"
+#outputdir="plots_data4T_Run2015D_DCSonly_JEC_Summer15_50nsV5_withSF/"
+#outputdir="plots_data4T_Run2015D_golden_JEC_Summer15_25nsV5_205pb-1/"
+#outputdir="plots_data4T_Run2015D_golden_547pb-1_JEC_Summer15_25nsV5_withSF/"
+#outputdir="plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_4TeVregion/"
+#outputdir="plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period1/"
+#outputdir="plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period2/"
+#outputdir="plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period3/"
+#outputdir="plots_data4T_Run2015D_golden_547pb-1_JEC_Summer15_25nsV5_withSF_period1/"
+#outputdir="plots_data4T_Run2015D_golden_547pb-1_JEC_Summer15_25nsV5_withSF_period2/"
+#outputdir="plots_data4T_Run2015D_golden_547pb-1_JEC_Summer15_25nsV5_withSF_period3/"
+#outputdir="plots_data4T_Run2015D_golden_547pb-1_JEC_Summer15_25nsV5_withSF_periodA/"
+#outputdir="plots_data4T_Run2015D_golden_547pb-1_JEC_Summer15_25nsV5_withSF_periodB/"
+#outputdir="plots_data4T_Run2015D_golden_547pb-1_JEC_Summer15_25nsV5_withSF_periodC/"
+outputdir="plots_data4T_Run2015D_DCSonly_JEC_Summer15_25nsV5_withSF_sample45678/"
+#list_mc="list_for_plots_mc_Spring15_25ns.txt"
+list_mc="list_for_plots_mc_Spring15_25ns_plusSig.txt"
+#list_data="list_for_plots_data4T_DCSreprocessed_RunBC_50ns.txt"
+#list_data="list_for_comparison_Run2015B_plus_Run2015C_50ns_goldenJson_29Aug2015_JEC-Summer15_50nsV4.txt"
+#list_data="list_for_plots_data4T_Run2015D_DCSonly_803pb-1_JEC_Summer15_25nsV5.txt"
+#list_data="list_for_plots_data4T_Run2015D_DCSonly_974pb-1_flag_golden_547pb-1_JEC_Summer15_25nsV5.txt"
+#list_data="list_for_plots_data4T_Run2015D_DCSonly_sample78.txt"
+list_data="list_for_plots_data4T_Run2015D_DCSonly_samples45678.txt"
 
 #outputdir="$MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/plots/santanas__40pb-1_30_07_2015_v2/"
-#lumi="42"
-lumi=71.5
+#lumi="68"
+#lumi=71.5
+#lumi=803.
+#lumi=547.
+#lumi=789.
+lumi=1763
 
 mkdir -p $outputdir
+
+##mass -- different periods
+#Period 1 cert
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --golden --runMin 256630 --runMax 257399 
+#Period 2 cert
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --golden --runMin 257400 --runMax 257682 
+#Period 3 cert
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --golden --runMin 257722 --runMax 258158 
+#Period A cert
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --golden --runMin 256630 --runMax 257613 
+#Period B cert
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --golden --runMin 257614 --runMax 257816  
+#Period C cert
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --golden --runMin 257819 --runMax 258158  
+
+#Period 1 DCS
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy  --runMin  256630 --runMax 257399  
+#Period 2 DCS
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --runMin 257400 --runMax 257682 
+#Period 3 DCS
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy --runMin 257722 --runMax  258158 
 
 #----- kinematics ----
 #python DrawFromTree_data.py --var mjj --xmin 1200 --xmax 2500 --xtitle "mjj [GeV]" --bins 1300  --rebin 20 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy
 #python DrawFromTree_data.py --var mjj --xmin 1200 --xmax 2500 --xtitle "mjj [GeV]" --bins 1300 --rebin 20 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi 
-python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "mjj [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy
-#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "mjj [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi 
+python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy
+#python DrawFromTree_data.py --var mjj --xmin 1 --xmax 14000 --xtitle "Dijet Mass [GeV]" --bins 13999 --rebin -1 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi 
 #python DrawFromTree_data.py --var pTWJ_j1 --xmin 30 --xmax 5000 --xtitle "pT(j1) [GeV]" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy
 #python DrawFromTree_data.py --var pTWJ_j2 --xmin 30 --xmax 5000 --xtitle "pT(j2) [GeV]" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy
 #python DrawFromTree_data.py --var etaWJ_j1 --xmin -3 --xmax 3 --xtitle "#eta(j1)" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi
 #python DrawFromTree_data.py --var etaWJ_j2 --xmin -3 --xmax 3 --xtitle "#eta(j2)" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi
-#python DrawFromTree_data.py --var deltaETAjj --xmin 0 --xmax 2 --xtitle "#Delta#eta(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi
+#python DrawFromTree_data.py --var deltaETAjj --xmin 0 --xmax 3 --xtitle "#Delta#eta(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy
+#python DrawFromTree_data.py --var deltaETAjj --xmin 0 --xmax 3 --xtitle "#Delta#eta(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi
 #python DrawFromTree_data.py --var deltaPHIjj --xmin 0 --xmax 3.14 --xtitle "#Delta#phi(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi
 #python DrawFromTree_data.py --var deltaPHIjj --xmin 0 --xmax 3.14 --xtitle "#Delta#phi(jj)" --bins 200 --rebin 5 --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi --logy
 #python DrawFromTree_data.py --var  phiWJ_j1  --xmin -3.1415 --xmax 3.1415  --xtitle "#phi (j1)" --bins 200 --rebin 5  --outputDir $outputdir --inputList_data $list_data --inputList_mc $list_mc --lumi $lumi 

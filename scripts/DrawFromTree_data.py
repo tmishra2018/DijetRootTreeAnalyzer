@@ -47,6 +47,10 @@ parser.add_option("--outputDir",action="store",type="string",default="./",dest="
 parser.add_option("--inputList_mc",action="store",type="string",default="list_mc.txt",dest="inputList_mc")
 parser.add_option("--inputList_data",action="store",type="string",default="list_data.txt",dest="inputList_data")
 parser.add_option("--lumi",action="store",type="float",default="1000.",dest="lumi")
+parser.add_option("--runMin",action="store",type="float",default="-1",dest="runMin")
+parser.add_option("--runMax",action="store",type="float",default="100000000000",dest="runMax")
+parser.add_option("--golden",action="store_true",default=False,dest="golden")
+parser.add_option("--plotSig",action="store_true",default=False,dest="plotSig")
 
 (options, args) = parser.parse_args()
 
@@ -61,6 +65,10 @@ outputDir = options.outputDir
 inputList_mc = options.inputList_mc
 inputList_data = options.inputList_data
 lumi = options.lumi
+runMin = options.runMin
+runMax = options.runMax
+golden = options.golden
+plotSig = options.plotSig
 #############################
 
 CMS_lumi.extraText = "Preliminary"
@@ -70,6 +78,7 @@ iPeriod = 0
 #######################
 #minX_mass = 526.
 minX_mass = 1181.
+#maxX_mass = 5877. 
 maxX_mass = 7320. 
 
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
@@ -132,14 +141,13 @@ for f in fileNames:
   h_allCuts = TH1F("h_allCuts", "", bins, xmin, xmax)
   h_allCuts.Sumw2()
   tree = inf.Get('rootTupleTree/tree')
+
   #standard
-  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
-  #passJSON
-  tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && PassJSON==1')
+  tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
   # blinded 4 TeV
   #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && mjj<4000')
-  # "peak mjj 2 TeV"
-  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1856. && mjj < 2332.')
+  # "peak mjj 4 TeV"
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<3 && mjj > 3558 && mjj < 4509.')
   #MET 200-300 GeV
   #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > 1118 && MET > 200 && MET < 300')
   #EE
@@ -156,6 +164,9 @@ for f in fileNames:
   print('(not using efficiency in the weight)')
   if not (i_f == 9):
     wt = options.lumi*float(xsecs[i_f])/Nev
+  else:
+    wt = options.lumi*float(xsecs[i_f])/(Nev*eff)  ###for the signal the eff is already in the xsec
+
   print('weight : %f' % wt)
   h_allCuts.Scale(wt)
   h_allCuts.SetDirectory(0)
@@ -176,7 +187,18 @@ for i in range(0,len(fileNames_data)):
 
 h_dat = TH1F("h_dat", "", bins, xmin, xmax)
 h_dat.Sumw2()
-chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && PassJSON==1')
+#passJSON
+#chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && PassJSON==1')
+#standard
+#chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
+# "peak mjj 4 TeV"
+#chain.Project(h_dat.GetName(), var,'deltaETAjj<3 && mjj>3558 && mjj<4509.')
+
+if golden:
+  chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + '&& run <= ' + str(runMax) +' && PassJSON==1')
+else:
+  chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + ' && run <= ' + str(runMax) )
+
 
 #h_dat = hist_allCuts[9].Clone()
 #h_dat.SetName("h_dat")
@@ -206,18 +228,25 @@ hsQCD_allCuts = THStack('QCD_allCuts','QCD_allCuts')
 for i in range(0,9) :
   hsQCD_allCuts.Add(hist_allCuts[i])
 
+#--- signal ---
+h_sig = hist_allCuts[9]
+h_sig.SetLineColor(2)
+h_sig.SetLineWidth(2)
+h_sig.SetFillStyle(0)
+
 NDAT = h_dat.GetEntries()
 NQCD = hist_allCutsQCD.Integral(0,hist_allCutsQCD.GetNbinsX()+1)
+NSIG = h_sig.Integral(0,hist_allCutsQCD.GetNbinsX()+1)
 ## k factor calculated including overflow and underflow
 kFactor = NDAT/NQCD
 #kFactor = 1.
 print ("kFactor set to %f" % kFactor)
 print("NQCD = "+str(NQCD))
 print("NDAT = "+str(NDAT))
+print("NSIG = "+str(NSIG))
 print ("NDAT / NQCD = = %f" % (NDAT/NQCD))
 
 hist_allCutsQCD.Scale(kFactor)
-
 
 print ("---- After scaling signal to bkg (if not plotting mjj) -----")
 print ("bkg integral all cuts = %f" % NQCD_allCuts)
@@ -239,11 +268,14 @@ integral_qcd = hist_allCutsQCD.Integral()
 #rebin only for plot
 hist_allCutsQCD.Write()
 h_dat.Write()
+h_sig.SetName("h_sig")
+h_sig.Write()
 
 #Rebin only for the plots, add last bin overflow only for the plot
 #hist_allCutsQCD.Rebin(rebin)
 #h_dat.Rebin(rebin)
 if (var=="mjj" or var=="Dijet_MassAK4") and rebin==-1:
+  h_sig_rebin = h_sig.Rebin(len(massBins_list)-1,var+"_rebin",massBins)
   hist_allCutsQCD_rebin = hist_allCutsQCD.Rebin(len(massBins_list)-1,var+"_rebin",massBins)
   h_dat_rebin = h_dat.Rebin(len(massBins_list)-1,var+"_data_rebin",massBins)
   hist_allCutsQCD_rebin.GetXaxis().SetRangeUser(minX_mass,maxX_mass)  
@@ -267,6 +299,7 @@ if (var=="mjj" or var=="Dijet_MassAK4") and rebin==-1:
   filetxt_mc.close() 
 
 else :
+  h_sig_rebin = h_sig.Rebin(rebin)
   hist_allCutsQCD.Rebin(rebin)
   h_dat.Rebin(rebin)
   hist_allCutsQCD_rebin = hist_allCutsQCD.Clone(var+"_rebin")
@@ -289,6 +322,8 @@ leg.SetLineColor(0)
 leg.SetFillColor(0)
 leg.SetFillStyle(0)
 leg.AddEntry(hist_allCutsQCD_rebin, "QCD", "f")
+if plotSig:
+  leg.AddEntry(h_sig, "q* (4 TeV)", "l")
 leg.AddEntry(h_dat_rebin, "data", "p")
 
 can_allCuts.cd()
@@ -324,6 +359,8 @@ h_dat_rebin.GetYaxis().SetTitle("Events")
 hist_allCutsQCD_rebin.SetMinimum(0.0002)
 #h_dat_rebin.Draw("p")
 hist_allCutsQCD_rebin.Draw("hist")
+if plotSig:
+  h_sig_rebin.Draw("hist same")
 h_dat_rebin.Draw("p same")
 leg.Draw()
 
