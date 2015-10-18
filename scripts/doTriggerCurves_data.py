@@ -91,10 +91,9 @@ ii = 0
 for line in lines:
   parts = line.split()
   fileNames.append(parts[0])
-  xsecs.append(parts[1])
-  print ("dataset : %s    xsec : %s" % (fileNames[ii], xsecs[ii]))
-
-
+  #xsecs.append(parts[1])
+  #print ("dataset : %s    xsec : %s" % (fileNames[ii], xsecs[ii]))
+  print ("dataset : %s " % fileNames[ii])
   ii+=1
 
 #---- open the files --------------------
@@ -160,7 +159,7 @@ h_mjj_HLTpass_PFHT800_OR_PFHT650MJJ900_all = h_mjj_HLTpass_PFHT800_OR_PFHT650MJJ
 h_mjj_HLTpass_PFHT800_noPFHT475_all = h_mjj_HLTpass_PFHT800_noPFHT475_list[0].Clone("h_mjj_HLTpass_PFHT800_noPFHT475_all")
 
 if(i_f>1):
-  for i in range(1,9):
+  for i in range(1,len(fileNames)):
     h_mjj_HLTpass_noTrig_all.Add(h_mjj_HLTpass_noTrig_list[i])
     h_mjj_HLTpass_PFHT475_all.Add(h_mjj_HLTpass_PFHT475_list[i])
     h_mjj_HLTpass_PFHT800_all.Add(h_mjj_HLTpass_PFHT800_list[i])

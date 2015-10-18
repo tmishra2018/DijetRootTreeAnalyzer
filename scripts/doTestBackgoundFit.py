@@ -17,7 +17,7 @@ tdrstyle.setTDRStyle()
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
 CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
-CMS_lumi.lumi_13TeV = "390 pb^{-1}"
+CMS_lumi.lumi_13TeV = "803 pb^{-1}"
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -31,7 +31,7 @@ iPeriod = 4
 #fileNameSuffix = "test"
 #fileNameSuffix = "JEC_L2L3Residuals"
 #fileNameSuffix = "JEC_V4_firstbin1181"
-fileNameSuffix = "JEC_Summer15_25nsV3"
+fileNameSuffix = "DCSonly_JEC_Summer15_25nsV5_803pb-1"
 
 
 #Fit functions
@@ -59,7 +59,7 @@ number_of_variableWidth_bins = 103
 massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430,10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000];
 
 v_massBins = array("d",massBins)
-lumi = 390.
+lumi = 803.
 #sf = 1.07
 sf=1.
 #minX_mass = 1000.
@@ -67,7 +67,7 @@ minX_mass = 1181.
 #maxX_mass = 3019.
 #maxX_mass = 5253.
 #maxX_mass = 5663.
-maxX_mass = 7320.
+maxX_mass = 6564.
 #================================================================================================================
   
 def main():
@@ -76,11 +76,12 @@ def main():
   #input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_JEC_Summer15_50nsV2_L2L3Residuals/histo_data_mjj_fromTree.root"
   #input_root_file = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
   #input_root_file = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
-  input_root_file = "plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+  #input_root_file = "plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+  input_root_file = "plots_data4T_Run2015D_DCSonly_JEC_Summer15_50nsV5_withSF/histo_data_mjj_fromTree.root"
   ###mc
   #input_root_file_mc = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_3_Dijet/src/CMSDIJET/DijetRootTreeAnalyzer/scripts/plots_data4T_finalJSON_25_07_15_JEC_Summer15_50nsV2/histo_data_mjj_fromTree.root"
   #input_root_file_mc = "plots_data4T_Run2015B_plus_Run2015C_50ns_Cert_json_29Aug2015_xsecSpring15_withSF/histo_data_mjj_fromTree.root"
-  input_root_file_mc = "plots_data4T_Run2015D_DCSonly_390pb-1_JEC_Summer15_25nsV3_withSF/histo_data_mjj_fromTree.root"
+  input_root_file_mc = "plots_data4T_Run2015D_DCSonly_JEC_Summer15_50nsV5_withSF/histo_data_mjj_fromTree.root"
   ### input file and 1D histo
   
   file0 = TFile.Open( input_root_file )
@@ -197,7 +198,7 @@ def main():
     DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix)
     print "chi2 / dof for f%d = %f / %d" % (FunctionType,fitresult[2],fitresult[1])
     list_pvalue_WaldTest.append(result_WaldTest)
-    list_CL_WaldTest.append(1-result_WaldTest)
+    list_CL_WaldTest.append(result_WaldTest)
     if (i_f > 0):
       result = FisherTest(list_RSS[i_f-1],list_RSS[i_f],list_dof[i_f-1],list_dof[i_f],nBins_fit)
       F = result[0]
@@ -304,11 +305,12 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   if( FunctionType==0 ):    
     nPar=4
     M1Bkg = TF1("M1Bkg","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )",minX_mass,maxX_mass)
-    M1Bkg.SetParameter(0,0.08)
+    M1Bkg.SetParameter(0,0.0014)
     M1Bkg.SetParameter(1,12)
     M1Bkg.SetParameter(2,2)
     M1Bkg.SetParameter(3,-0.5)
   
+    M1Bkg.SetParLimits(0,0.,1000);
     #1 fb-1
     #M1Bkg.SetParLimits(0,0.,10);
     #10 fb-1
@@ -442,7 +444,7 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   #TFitResultPtr r;
   stopProgram=1;
   for loop in range (0,10):
-    r = hist_mass_original.Fit("M1Bkg","ELLSR","",minX_mass,maxX_mass)      
+    r = hist_mass_original.Fit("M1Bkg","ELSR","",minX_mass,maxX_mass)      
     #r = hist_mass_original.Fit("M1Bkg","MSR","",minX_mass,maxX_mass)      
     fitStatus = int(r)
     print "fit status : %d" % fitStatus
@@ -495,6 +497,8 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
       hist_fit_residual_vsMass.SetBinError(bin,err_fit_residual)
       hist_fit_residual.Fill(fit_residual)
     
+  expected = M1Bkg.Integral(5058,10072) * lumi
+  observed = hist_binned.Integral(hist_mass.FindBin(5058),hist_mass.FindBin(10072)) 
   ndf_VarBin = NumberOfObservations_VarBin - nPar# -1
   ndf_VarBin_withzeroes = NumberOfVarBins - nPar# -1
   print "============================" 
@@ -504,6 +508,8 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   print "chi2_VarBin with zeroes: %f" % chi2_VarBin_zeroes
   print "chi2_VarBin: %f" % chi2_VarBin
   print "chi2_VarBin_notNorm: %f" % chi2_VarBin_notNorm
+  print "expected events > 5 TeV (fit) : %f" % expected
+  print "observed events > 5 TeV  : %f" % observed
   print "============================"   
   return [chi2_VarBin_notNorm,ndf_VarBin,chi2_VarBin,M1Bkg,hist_fit_residual_vsMass]
 
