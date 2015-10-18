@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Jul 13 13:33:03 2015 by ROOT version 6.02/05
+// Tue Oct 13 15:59:53 2015 by ROOT version 5.34/32
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -17,14 +17,9 @@ using namespace std;
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
-#include "vector"
-#include "vector"
-#include "vector"
-
-class rootNtupleClass {
-public :
-   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-   Int_t           fCurrent; //!current Tree number in a TChain
+#include <vector>
+#include <vector>
+#include <vector>
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
    const Int_t kMaxrun = 1;
@@ -61,6 +56,11 @@ public :
    const Int_t kMaxweight = 1;
    const Int_t kMaxnGenJetsAK4 = 1;
    const Int_t kMaxnGenJetsAK8 = 1;
+
+class rootNtupleClass {
+public :
+   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+   Int_t           fCurrent; //!current Tree number in a TChain
 
    // Declaration of leaf types
    Int_t           runNo;
@@ -384,7 +384,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("dcap://cmsrm-se01.roma1.infn.it//pnfs/roma1.infn.it/data/cms//store/user/gdimperi/Dijet/data/Run2015B_JetHT_12June2015DCSJson_JECV5_4422c9ba9d/JetHT/crab_JetHT__Run2015B-PromptReco-v1__MINIAOD/150712_211959/0000/JetHT__Run2015B-PromptReco-v1__MINIAOD_1.root/dijets/events");
+      chain->Add("/afs/cern.ch/user/j/juska/dijet_eos/santanas/crab_JetHT__Run2015D-PromptReco-v3__MINIAOD__151012_071719/JetHT__Run2015D-PromptReco-v3__MINIAOD_1.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
