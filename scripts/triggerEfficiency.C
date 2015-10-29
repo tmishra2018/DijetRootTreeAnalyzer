@@ -7,6 +7,8 @@ TCanvas* example_plot( int iPeriod, int iPos );
 
 //###### EDIT THIS PART #######
 
+int histoFromFile = 1; //=1 histograms available in root file, =0 create histo from tree
+
 double xmin = 156;
 double xmax = 4010;
 double ymin = 0;
@@ -18,6 +20,7 @@ double yminZoom = 0.6;
 double ymaxZoom = 1.2;
 
 double threshold = 1213;
+//double threshold = 1700;
 
 //TString myinputFile = "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_plus_Run2015C_goldenJSON_JEC-Summer15_50nsV4_29Aug2015/rootfile_JetHT__Run2015B_plus_Run2015C__MINIAOD_Run2015B_goldenJSON_JEC-Summer15_50nsV4_29Aug2015_reduced_skim.root";
 //TString myinputFile = "/cmshome/santanas/CMS/Releases/CMSSW_7_4_3/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/output/output_test_reduced_skim.root";
@@ -25,35 +28,37 @@ double threshold = 1213;
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015B-17Jul2015-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015B-PromptReco-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
-TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015BandC-All-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
+//TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015BandC-All-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905_reduced_skim.root";
+TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__721pb-1_25ns_28_10_2015_20151029_003601_reduced_skim.root";
 
+//TString mynumerator = "h_mjj_HLTpass_PFHT800"; // only used if histoFromFile = 1
+TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1"; // only used if histoFromFile = 1
+//TString mytitlelegendNum = "PFHT800 AND Mu45Eta2p1";
+TString mytitlelegendNum = "(PFHT800 OR PFJET500) AND Mu45Eta2p1";
 
-//TString mynumerator = "h_mjj_HLTpass_PFHT800";
-TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1";
-TString mytitlelegendNum = "PFHT800 AND Mu45Eta2p1";
-
-//TString mydenominator = "h_mjj_HLTpass_PFHT475";
-TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1";
+//TString mydenominator = "h_mjj_HLTpass_PFHT475"; // only used if histoFromFile = 1
+TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1"; // only used if histoFromFile = 1
 TString mytitlelegendDen = "Mu45Eta2p1";
 
 //TString mytitle = ";Dijet Mass [GeV];Relative Efficiency";
 TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency";
-TString mytitlelegend = "PF H_{T} > 800 GeV";
+//TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency (control region)";
+//TString mytitlelegend = "PF H_{T} > 800 GeV";
+TString mytitlelegend = "PF H_{T} > 800 GeV OR p_{T}^{PF jet} > 500 GeV ";
 
 TString xAxisTitle = "Dijet Mass [GeV]";
 TString yAxisTitle = "Number of events";
 
 //TString myoutputfilename = "triggerEfficiency";
-
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015B-17Jul2015";
-//
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015B-PromptReco";
-//
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-PromptReco";
-//
-TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015BAndC-All";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015BAndC-All";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-25ns-PromptReco";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HT_DetaJJLess1p3";
+TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJLess1p3";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJFrom1p3To2p6";
 
 
 //####### NOTE: #######
@@ -74,8 +79,9 @@ void triggerEfficiency()
   extraText  = "Preliminary";  // default extra text is "Preliminary"
   writeExtraText = true;       // remove or keep "Preliminary"
 
-  //lumi_13TeV  = "2015";  // for trigger
-  lumi_13TeV  = "65 pb^{-1}, 50ns";  // for trigger
+  lumi_13TeV  = "2015";  // for trigger
+  //lumi_13TeV  = "65 pb^{-1}, 50ns";  // for trigger
+  //lumi_13TeV  = "15.5 pb^{-1}, 25ns";  // for trigger
 
   //lumi_13TeV  = "65 pb^{-1}";  // default is ""
   //lumi_8TeV  = "19.1 fb^{-1}"; // default is "19.7 fb^{-1}"
@@ -147,8 +153,40 @@ void triggerEfficiency()
 
   TEfficiency* h_efficiency = 0;
 
-  TH1F *h_denominator = (TH1F*)fileInput->Get(mydenominator);
-  TH1F *h_numerator   = (TH1F*)fileInput->Get(mynumerator);
+  TH1F *h_denominator;
+  TH1F *h_numerator;
+  if(histoFromFile==1)
+    {
+      //== taking histo from file       
+      h_denominator = (TH1F*)fileInput->Get(mydenominator);
+      h_numerator   = (TH1F*)fileInput->Get(mynumerator);
+    }
+  else
+    {
+      //== creating histo from tree   
+      TTree *thistree = (TTree*)fileInput->Get("rootTupleTree/tree");
+      thistree->Print();
+      TH1F *h_denominator_tmp = (TH1F*)fileInput->Get(mydenominator);
+      h_denominator = (TH1F*)h_denominator_tmp->Clone();
+      h_numerator = (TH1F*)h_denominator_tmp->Clone();
+      h_denominator->Reset();
+      h_numerator->Reset();
+      h_denominator->SetName("h_denominator");
+      h_numerator->SetName("h_numerator");
+      //fill histograms
+      //--
+      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1");
+      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1");
+      //--
+      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && passHLT_PFHT800==1");
+      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
+      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
+      //-- option placeholder 
+      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1","",10000);
+      //--  
+    }
+
+  //==========================
 
   if(TEfficiency::CheckConsistency(*h_numerator,*h_denominator))
     {
@@ -179,7 +217,7 @@ void triggerEfficiency()
 	}
 
       // draw the legend
-      TLegend *legend=new TLegend(0.5,0.25,0.85,0.3);
+      TLegend *legend=new TLegend(0.35,0.22,0.89,0.32);
       //legend->SetTextFont(72);
       //legend->SetTextSize(0.04);
       legend->SetFillStyle(0);
@@ -200,7 +238,6 @@ void triggerEfficiency()
   canv->GetFrame()->Draw();
   gPad->SetTickx(1);
   gPad->SetTicky(1);
-  //canv->Print(canvName+"Effieciency"+".pdf",".pdf");
   canv->Print(myoutputfilename+".pdf",".pdf");
   canv->Print(myoutputfilename+".png",".png");
   canv->Print(myoutputfilename+".root",".root");
