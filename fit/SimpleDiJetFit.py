@@ -15,7 +15,9 @@ gStyle.SetOptFit(1111)
 #set the tdr style
 tdrstyle.setTDRStyle()
 
-lumi=344
+lumi=1769
+#lumi=809
+#lumi=344
 #lumi=974.
 #lumi = 803.
 #lumi = 65.0
@@ -72,17 +74,25 @@ sigmaQstar3000 = 0.8116E+00
 sigmaAxigluon3000 =  0.6610
 sigmaString5300 = 0.11940
 sigmaS82200 = 3.27
+sigmaAxigluon5100 = 0.007539 
+sigmaString6700 = 0.006634 
+sigmaS83200 = 0.137 
+
 label_Qstar3000 = "Excited quark (3 TeV)"
 label_Qstar4500 = "Excited quark (4.5 TeV)"
 label_String5300 = "String (5.3 TeV)"
 label_S82200 = "S8 (2.2 TeV)"
 label_Axigluon3000 = "Axigluon (3 TeV)"
+label_String6700 = "String (6.7 TeV)"
+label_S83200 = "S8 (3.2 TeV)"
+label_Axigluon5100 = "Axigluon (5.1 TeV)"
 
 #minX_mass = 2546.
 minX_mass = 1181.
 #maxX_mass = 3019.
 #maxX_mass = 5253.
-maxX_mass = 6564.
+#maxX_mass = 6564.
+maxX_mass = 7589
 #FunctionType = -1
 FunctionType = 0
 #fileNameSuffix = "test_range_1118_3704"
@@ -104,11 +114,14 @@ fileNameSuffix_Axigluon3000 = "Axigluon3000"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_974pb-1_fullPeriod"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_period1"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_period2"
-fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_period3"
+#fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_period3"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_974pb-1_fitFrom2500"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_974pb-1_fitTo3000"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_974pb-1"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_974pb-1_AK4"
+#fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_golden_809pb-1"
+#fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_1769pb-1"
+fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_1769pb-1_plotSig"
 
 ####### INPUT #############
 # data 
@@ -128,8 +141,11 @@ fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_period3"
 #input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF//histo_data_mjj_fromTree.root"
 #input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period1/histo_data_mjj_fromTree.root"
 #input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period2/histo_data_mjj_fromTree.root"
-input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period3/histo_data_mjj_fromTree.root"
+#input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period3/histo_data_mjj_fromTree.root"
 #input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF//histo_data_Dijet_MassAK4_fromTree.root"
+#input_root_file="../scripts/plots_data4T_Run2015D_golden_809pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
+input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
+#input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_JEC_Summer15_25nsV5_withSF_sample45678_dEta_less_2.6//histo_data_mjj_fromTree.root"
 
 ###mc
 #input_root_file_mc = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
@@ -148,8 +164,11 @@ input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_2
 #input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF//histo_data_mjj_fromTree.root"
 #input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period1/histo_data_mjj_fromTree.root"
 #input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period2/histo_data_mjj_fromTree.root"
-input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period3/histo_data_mjj_fromTree.root"
+#input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period3/histo_data_mjj_fromTree.root"
 #input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF//histo_data_Dijet_MassAK4_fromTree.root"
+#input_root_file_mc="../scripts/plots_data4T_Run2015D_golden_809pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
+input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
+#input_root_filei_mc="../scripts/plots_data4T_Run2015D_DCSonly_JEC_Summer15_25nsV5_withSF_sample45678_dEta_less_2.6//histo_data_mjj_fromTree.root"
 
 ### input file and 1D histo
 input_root_file_signal_qq = "ResonanceShapes_qq_13TeV_PU30_Spring15.root"
@@ -168,6 +187,9 @@ input_sig_Qstar3000 = "h_qg_3000"
 input_sig_Axigluon3000 = "h_qq_3000" 
 input_sig_String5300 = "h_qg_5300" 
 input_sig_S82200 = "h_gg_2200" 
+input_sig_Axigluon5100 = "h_qq_5100" 
+input_sig_String6700 = "h_qg_6700" 
+input_sig_S83200 = "h_gg_3200" 
 
 hist_mass_original = file0.Get(input_1Dhistogram)
 hist_binned = hist_mass_original.Rebin(number_of_variableWidth_bins,"hist_binned",v_massBins)
@@ -199,10 +221,22 @@ h_sig_Axigluon3000 = file_sig_qq.Get(input_sig_Axigluon3000)
 integral_sig_Axigluon3000 = h_sig_Axigluon3000.Integral()
 h_sig_Axigluon3000.Scale( sigmaAxigluon3000 / integral_sig_Axigluon3000)
 
+h_sig_String6700 = file_sig_qg.Get(input_sig_String6700)
+integral_sig_String6700 = h_sig_String6700.Integral()
+h_sig_String6700.Scale( sigmaString6700 / integral_sig_String6700)
+
+h_sig_S83200 = file_sig_gg.Get(input_sig_S83200)
+integral_sig_S83200 = h_sig_S83200.Integral()
+h_sig_S83200.Scale( sigmaS83200 / integral_sig_S83200)
+
+h_sig_Axigluon5100 = file_sig_qq.Get(input_sig_Axigluon5100)
+integral_sig_Axigluon5100 = h_sig_Axigluon5100.Integral()
+h_sig_Axigluon5100.Scale( sigmaAxigluon5100 / integral_sig_Axigluon5100)
 ##########OUTPUT########
 #outputDir="fit_Run2015D_DCSonly_json_JEC_Summer15_25nsV5_974pb-1/"
 #outputDir="fit_Run2015D_goldenjson_JEC_Summer15_25nsV5_547pb-1/"
-outputDir="fit_Run2015D_studies_vs_time/"
+#outputDir="fit_Run2015D_studies_vs_time/"
+outputDir="fit_Run2015D_JEC_Summer15_25nsV5_sample45678/"
 os.system("mkdir -p "+outputDir)
 
 #================================================================================================================
@@ -291,7 +325,8 @@ def main():
   M1Bkg = fitresult[3]
   hist_fit_residual_vsMass = fitresult[4]
   nPar = nBins_fit - fitresult[1]
-  DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_S82200,h_sig_Axigluon3000,h_sig_String5300,label_S82200,label_Axigluon3000,label_String5300,2200,3000,5300,fileNameSuffix)
+  #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_S82200,h_sig_Axigluon3000,h_sig_String5300,label_S82200,label_Axigluon3000,label_String5300,2200,3000,5300,fileNameSuffix)
+  DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_S83200,h_sig_Axigluon5100,h_sig_String6700,label_S83200,label_Axigluon5100,label_String6700,3200,5100,6700,fileNameSuffix)
   #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_String5300,label_String5300,5300,fileNameSuffix_String5300)
   #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_Qstar3000,label_Qstar3000,3000,fileNameSuffix_Qstar3000)
   #DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig_Qstar4500,label_Qstar4500,4500,fileNameSuffix_Qstar4500)
@@ -588,7 +623,7 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
         chi2_VarBin_notNorm += pow( (data - fit) , 2 ) 	 
   
       ##skip bin with less than 5 entries
-      if (hist_mass.GetBinContent(bin)*hist_mass.GetBinWidth(bin)>=5): 
+      if (hist_mass.GetBinContent(bin)*hist_mass.GetBinWidth(bin)*lumi>=5): 
 	NumberOfObservations_VarBin_5entries+=1
         chi2_VarBin_5entries += pow( (data - fit) , 2 ) / pow( err_tot , 2 )	 
   
@@ -606,6 +641,7 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
   print "NumberOfObservations_VarBin: %d" %  NumberOfObservations_VarBin
   print "chi2 / dof: %f / %d" % (chi2_VarBin,ndf_VarBin)
   print "chi2 / dof (with zeroes) : %f / %d " % (chi2_VarBin_zeroes,ndf_VarBin_withzeroes)
+  print "chi2 / dof (> 5 evt) : %f / %d " % (chi2_VarBin_5entries,ndf_VarBin_5entries)
   #print "ndf_VarBin with 5entries: %d" % ndf_VarBin_5entries
   #print "chi2_VarBin_5entries: %f" % chi2_VarBin_5entries
   #print "chi2_VarBin_notNorm: %f" % chi2_VarBin_notNorm
@@ -653,6 +689,7 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   #pave_fit.AddText("AK4 Jets")
   pave_fit.AddText("M_{jj} > 1.2 TeV")
   pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
+  #pave_fit.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
   
   pave_fit.SetFillColor(0)
   pave_fit.SetLineColor(0)
@@ -663,7 +700,7 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   pave_fit.SetTextAlign(12) 
   
   
-  vFrame = p11_1.DrawFrame(1181,0.0000005,6564.,5.0)
+  vFrame = p11_1.DrawFrame(minX_mass,0.00000005,maxX_mass,5.0)
   
   vFrame.SetTitle("")
   vFrame.SetXTitle("Dijet Mass [GeV]")
@@ -729,13 +766,13 @@ def DrawMC(g,g_mc,hist_mass,hist_mc_residual_vsMass,fileNameSuffix):
   vFrame2.GetXaxis().SetLabelSize(0.15)
   
   hist_mc_residual_vsMass.GetXaxis().SetRangeUser(minX_mass,maxX_mass)
-  hist_mc_residual_vsMass.GetYaxis().SetRangeUser(-4.5,4.5)
+  hist_mc_residual_vsMass.GetYaxis().SetRangeUser(-2.5,2.5)
   hist_mc_residual_vsMass.SetLineWidth(0)
   hist_mc_residual_vsMass.SetFillColor(kBlue)
   hist_mc_residual_vsMass.SetLineColor(1)
   hist_mc_residual_vsMass.Draw("SAMEHIST")
   
-  line = TLine(1181,0,6564.,0)
+  line = TLine(minX_mass,0,maxX_mass,0)
   line.Draw("")
   p11_2.RedrawAxis()
   line2=TLine()
@@ -840,7 +877,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   pave_fit.SetTextAlign(12) 
   
   
-  vFrame = p11_1.DrawFrame(1181,0.0000005,6564.,5.0)
+  vFrame = p11_1.DrawFrame(minX_mass,0.00000005,maxX_mass,5.0)
   
   vFrame.SetTitle("")
   #vFrame.SetXTitle("Dijet Mass AK4 [GeV]")
@@ -922,7 +959,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   p11_2.SetGridx()
   p11_2.SetGridy()
   
-  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -4.5, p11_1.GetUxmax(), 4.5)
+  vFrame2 = p11_2.DrawFrame(p11_1.GetUxmin(), -2.2, p11_1.GetUxmax(), 2.2)
   
   vFrame2.SetTitle("")
   #vFrame2.SetXTitle("Dijet Mass AK4 [GeV]")
@@ -938,7 +975,7 @@ def DrawFit(g,g_mc,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,h_sig,h_sig2
   
   hist_fit_residual_vsMass.GetXaxis().SetNdivisions(405)
   hist_fit_residual_vsMass.GetXaxis().SetRangeUser(minX_mass,maxX_mass)
-  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-4.5,4.5)
+  hist_fit_residual_vsMass.GetYaxis().SetRangeUser(-2.5,2.5)
   hist_fit_residual_vsMass.SetLineWidth(0)
   hist_fit_residual_vsMass.SetFillColor(2)
   hist_fit_residual_vsMass.SetLineColor(1)
@@ -1011,7 +1048,9 @@ def histSignificance(M1Bkg,hist_mass,h_sig):
       significance = 0
     
       #if((h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))+fit) != 0 and h_sig.GetBinLowEdge(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))<12000):
-      significance  = h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi / TMath.Sqrt(h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi + fit*lumi)
+      #significance  = h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi / TMath.Sqrt(h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi + fit*lumi)
+      ## fit does not have to be multiplied by lumi 
+      significance  = h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi / TMath.Sqrt(h_sig.GetBinContent(h_sig.FindBin(hist_mass.GetBinLowEdge(i)))*lumi + fit)
 
       #print  "low edge bin: " +str( h_sig.GetBinLowEdge(i)) +"  bin low edge bkg = "+str(hist_mass.GetBinLowEdge(i))+ "  "+str( fit) + " + " +str( h_sig.GetBinContent(i))+ "  sqrt(fit + sig) = " +str( TMath.Sqrt(h_sig.GetBinContent(i) + fit))
       #print "significance = "+ str(significance)
