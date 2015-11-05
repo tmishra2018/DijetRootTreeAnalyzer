@@ -92,8 +92,10 @@ minX_mass = 1181.
 #maxX_mass = 3019.
 #maxX_mass = 5253.
 #maxX_mass = 6564.
-maxX_mass = 7589
+#maxX_mass = 7589
 #FunctionType = -1
+maxX_mass = 7320
+
 FunctionType = 0
 #fileNameSuffix = "test_range_1118_3704"
 #fileNameSuffix = "test"
@@ -121,7 +123,8 @@ fileNameSuffix_Axigluon3000 = "Axigluon3000"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_974pb-1_AK4"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_golden_809pb-1"
 #fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_1769pb-1"
-fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_1769pb-1_plotSig"
+#fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_1769pb-1_plotSig"
+fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV6_DCSonly_1769pb-1_plotSig"
 
 ####### INPUT #############
 # data 
@@ -144,8 +147,9 @@ fileNameSuffix = "RunD_4param_JEC_Summer15_25nsV5_DCSonly_1769pb-1_plotSig"
 #input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period3/histo_data_mjj_fromTree.root"
 #input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF//histo_data_Dijet_MassAK4_fromTree.root"
 #input_root_file="../scripts/plots_data4T_Run2015D_golden_809pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
-input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
+#input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
 #input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_JEC_Summer15_25nsV5_withSF_sample45678_dEta_less_2.6//histo_data_mjj_fromTree.root"
+input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV6_withSF/histo_data_mjj_fromTree.root"
 
 ###mc
 #input_root_file_mc = "../scripts/plots_data4T_Run2015B_plus_Run2015C_50ns_Spring15_JEC_Summer15_50ns_V4_withSF/histo_data_mjj_fromTree.root"
@@ -167,8 +171,9 @@ input_root_file="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_
 #input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF_period3/histo_data_mjj_fromTree.root"
 #input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_974pb-1_JEC_Summer15_25nsV5_withSF//histo_data_Dijet_MassAK4_fromTree.root"
 #input_root_file_mc="../scripts/plots_data4T_Run2015D_golden_809pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
-input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
+#input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV5_withSF/histo_data_mjj_fromTree.root"
 #input_root_filei_mc="../scripts/plots_data4T_Run2015D_DCSonly_JEC_Summer15_25nsV5_withSF_sample45678_dEta_less_2.6//histo_data_mjj_fromTree.root"
+input_root_file_mc="../scripts/plots_data4T_Run2015D_DCSonly_1769pb-1_JEC_Summer15_25nsV6_withSF/histo_data_mjj_fromTree.root"
 
 ### input file and 1D histo
 input_root_file_signal_qq = "ResonanceShapes_qq_13TeV_PU30_Spring15.root"
@@ -236,7 +241,7 @@ h_sig_Axigluon5100.Scale( sigmaAxigluon5100 / integral_sig_Axigluon5100)
 #outputDir="fit_Run2015D_DCSonly_json_JEC_Summer15_25nsV5_974pb-1/"
 #outputDir="fit_Run2015D_goldenjson_JEC_Summer15_25nsV5_547pb-1/"
 #outputDir="fit_Run2015D_studies_vs_time/"
-outputDir="fit_Run2015D_JEC_Summer15_25nsV5_sample45678/"
+outputDir="fit_Run2015D_JEC_Summer15_25nsV6_DCSonly_1769pb-1/"
 os.system("mkdir -p "+outputDir)
 
 #================================================================================================================

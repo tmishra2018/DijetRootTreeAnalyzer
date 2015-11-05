@@ -42,6 +42,7 @@ parser.add_option("--xmax",action="store",type="float",dest="xmax",default=1)
 parser.add_option("--xtitle",action="store",type="string",dest="xtitle",default='')
 parser.add_option("--bins",action="store",type="int",dest="bins",default=11111111111)
 parser.add_option("--rebin",action="store",type="int",dest="rebin",default=1)
+parser.add_option("--units",action="store",type="string",dest="units",default='')
 parser.add_option("--logy",action="store_true",default=False,dest="logy")
 parser.add_option("--outputDir",action="store",type="string",default="./",dest="outputDir")
 parser.add_option("--inputList_mc",action="store",type="string",default="list_mc.txt",dest="inputList_mc")
@@ -60,6 +61,7 @@ xmax = options.xmax
 bins = options.bins
 xtitle = options.xtitle
 rebin = options.rebin
+units = options.units
 logy = options.logy
 outputDir = options.outputDir
 inputList_mc = options.inputList_mc
@@ -72,14 +74,14 @@ plotSig = options.plotSig
 #############################
 
 CMS_lumi.extraText = "Preliminary"
-CMS_lumi.lumi_sqrtS = str(options.lumi)+" pb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+CMS_lumi.lumi_sqrtS = str(int(options.lumi))+" pb^{-1} (13 TeV)" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
 iPos = 11
 iPeriod = 0
 #######################
 #minX_mass = 526.
 minX_mass = 1181.
 #maxX_mass = 5877. 
-maxX_mass = 7320. 
+maxX_mass = 7866. 
 
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
     
@@ -142,6 +144,9 @@ for f in fileNames:
   h_allCuts.Sumw2()
   tree = inf.Get('rootTupleTree/tree')
 
+  #no deta
+  #tree.Project(h_allCuts.GetName(), var,'deltaETAjj<2.6 && mjj > '+str(minX_mass))
+
   #standard
   tree.Project(h_allCuts.GetName(), var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
   # blinded 4 TeV
@@ -193,12 +198,14 @@ h_dat.Sumw2()
 #chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
 # "peak mjj 4 TeV"
 #chain.Project(h_dat.GetName(), var,'deltaETAjj<3 && mjj>3558 && mjj<4509.')
+#no deta
+#chain.Project("h_dat",var,'deltaETAjj<2.6 && mjj > '+str(minX_mass))
 
 if golden:
   chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + '&& run <= ' + str(runMax) +' && PassJSON==1')
 else:
   chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + ' && run <= ' + str(runMax) )
-
+  
 
 #h_dat = hist_allCuts[9].Clone()
 #h_dat.SetName("h_dat")
@@ -315,7 +322,7 @@ else :
       )
 
 
-can_allCuts = TCanvas('can_allCuts_'+var,'can_allCuts_'+var,600,600)
+can_allCuts = TCanvas('can_allCuts_'+var,'can_allCuts_'+var,600,650)
 
 leg = TLegend(0.6, 0.7, 0.85, 0.85)
 leg.SetLineColor(0)
@@ -329,8 +336,8 @@ leg.AddEntry(h_dat_rebin, "data", "p")
 can_allCuts.cd()
 
 #----- pad 1 -----------
-pad1 = TPad("pad1", "pad1",0.01,0.13,0.99,0.99)  
-pad1.SetRightMargin(0.1)
+pad1 = TPad("pad1", "pad1",0,0.15,1,1)  
+#pad1.SetRightMargin(0.1)
 
 pad1.Draw()
 pad1.Clear()
@@ -342,22 +349,37 @@ if logy:
   gPad.SetLogy(1)
   hist_allCutsQCD_rebin.SetMaximum(100.*max)  
   h_dat_rebin.SetMaximum(100.*max)
+  if not (var=="mjj" or var=="Dijet_MassAK4"):
+    hist_allCutsQCD_rebin.SetMinimum(0.1)
+    h_dat_rebin.SetMinimum(0.1)
 else:
   gPad.SetLogy(0)
-  hist_allCutsQCD_rebin.SetMaximum(max + 0.3*max)
-  h_dat_rebin.SetMaximum(max + 0.3*max)
+  hist_allCutsQCD_rebin.SetMaximum(max + 0.5*max)
+  h_dat_rebin.SetMaximum(max + 0.5*max)
+  h_sig_rebin.Scale(h_dat_rebin.Integral()/h_sig_rebin.Integral())
+  if not (var=="mjj" or var=="Dijet_MassAK4"):
+    hist_allCutsQCD_rebin.SetMinimum(0.)
+    h_dat_rebin.SetMinimum(0.)
 
 
 #hist_allCutsQCD.Reset()
 hist_allCutsQCD_rebin.GetXaxis().SetTitle(xtitle)
 h_dat_rebin.GetXaxis().SetTitle(xtitle)
-hist_allCutsQCD_rebin.GetYaxis().SetTitle("Events")
-h_dat_rebin.GetYaxis().SetTitle("Events")
+binwidth = hist_allCutsQCD_rebin.GetBinWidth(1)
+if not (var=="mjj" or var=="Dijet_MassAK4"):
+  hist_allCutsQCD_rebin.GetYaxis().SetTitle("Events / %.2f %s" % (binwidth, units))
+  h_dat_rebin.GetYaxis().SetTitle("Events / %2f %s" )
+  h_sig_rebin.GetYaxis().SetTitle("Events / %2f %s")
+else:
+  hist_allCutsQCD_rebin.GetYaxis().SetTitle("Events / GeV")
+  h_dat_rebin.GetYaxis().SetTitle("Events / GeV" )
+  h_sig_rebin.GetYaxis().SetTitle("Events / GeV")
+
 #maximumBin = array('f',  [hist_allCutsQCD_rebin.GetBinContent(hist_allCutsQCD_rebin.GetMaximumBin()), h_dat_rebin.GetBinContent(h_dat_rebin.GetMaximumBin())])
 #max = TMath.MaxElement(2, maximumBin)
 #hist_allCutsQCD_rebin.SetMaximum(1.2*max)
 hist_allCutsQCD_rebin.SetMinimum(0.0002)
-#h_dat_rebin.Draw("p")
+h_dat_rebin.Draw("p")
 hist_allCutsQCD_rebin.Draw("hist")
 if plotSig:
   h_sig_rebin.Draw("hist same")
@@ -365,17 +387,18 @@ h_dat_rebin.Draw("p same")
 leg.Draw()
 
 #draw the lumi text on the canvas
-CMS_lumi.CMS_lumi(can_allCuts, iPeriod, iPos)
+CMS_lumi.CMS_lumi(pad1, iPeriod, iPos)
 
 gPad.RedrawAxis()
 
 #-------pad 2------
-pad2 = TPad("pad2", "pad2",0.01,0.001,0.99,0.25)
+can_allCuts.cd()
+pad2 = TPad("pad2", "pad2",0.,0.,1,0.26)
 pad2.SetGrid()
 	      
 pad2.SetTopMargin(0)
 pad2.SetBottomMargin(0.4)
-pad2.SetRightMargin(0.1)
+#pad2.SetRightMargin(0.1)
 pad2.Draw()	       
 pad2.cd()
 
@@ -398,8 +421,6 @@ ratio.GetYaxis().SetTitleOffset(0.5)
 ratio.Draw("p")
 
 #RedrawAxis
-pad1.cd()
-gPad.RedrawAxis()
 pad2.cd()
 gPad.RedrawAxis()
 
