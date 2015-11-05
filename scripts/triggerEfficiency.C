@@ -7,17 +7,20 @@ TCanvas* example_plot( int iPeriod, int iPos );
 
 //###### EDIT THIS PART #######
 
-int histoFromFile = 1; //=1 histograms available in root file, =0 create histo from tree
+int histoFromFile = 0; //=1 histograms available in root file, =0 create histo from tree
 
 double xmin = 156;
 double xmax = 4010;
 double ymin = 0;
 double ymax = 1.3;
 
-double xminZoom = 944;
-double xmaxZoom = 1530;
+//double xminZoom = 944;
+//double xmaxZoom = 1530;
+double xminZoom = 1181;
+double xmaxZoom = 2438;
 double yminZoom = 0.6;
 double ymaxZoom = 1.2;
+
 
 double threshold = 1213;
 //double threshold = 1700;
@@ -30,22 +33,26 @@ double threshold = 1213;
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015BandC-All-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905_reduced_skim.root";
-TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__721pb-1_25ns_28_10_2015_20151029_003601_reduced_skim.root";
+//TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__721pb-1_25ns_28_10_2015_20151029_003601_reduced_skim.root";
+TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_29_10_2015_20151030_125632_reduced_skim.root";
 
 //TString mynumerator = "h_mjj_HLTpass_PFHT800"; // only used if histoFromFile = 1
 TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1"; // only used if histoFromFile = 1
 //TString mytitlelegendNum = "PFHT800 AND Mu45Eta2p1";
 TString mytitlelegendNum = "(PFHT800 OR PFJET500) AND Mu45Eta2p1";
+//TString mytitlelegendNum = "(All JetHT triggers) AND Mu45Eta2p1";
 
 //TString mydenominator = "h_mjj_HLTpass_PFHT475"; // only used if histoFromFile = 1
 TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1"; // only used if histoFromFile = 1
 TString mytitlelegendDen = "Mu45Eta2p1";
 
 //TString mytitle = ";Dijet Mass [GeV];Relative Efficiency";
-TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency";
-//TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency (control region)";
+//TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency";
+TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency (control region)";
 //TString mytitlelegend = "PF H_{T} > 800 GeV";
 TString mytitlelegend = "PF H_{T} > 800 GeV OR p_{T}^{PF jet} > 500 GeV ";
+//TString mytitlelegend = "All JetHT triggers";
+//TString mytitlelegend = "Selection of JetHT triggers";
 
 TString xAxisTitle = "Dijet Mass [GeV]";
 TString yAxisTitle = "Number of events";
@@ -57,9 +64,11 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015BAndC-All";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-25ns-PromptReco";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HT_DetaJJLess1p3";
-TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJLess1p3";
-//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJFrom1p3To2p6";
-
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJLess1p3";
+TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJFrom1p3To2p6";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_AllJetHT_DetaJJFrom1p3To2p6";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_JetHTBestGuess_DetaJJFrom1p3To2p6";
+//TString myoutputfilename = "pippo";
 
 //####### NOTE: #######
 //Change the style settings under triggerEfficiency()
@@ -175,12 +184,15 @@ void triggerEfficiency()
       h_numerator->SetName("h_numerator");
       //fill histograms
       //--
-      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1");
-      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1");
+      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1"); //signal region
+      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region
+      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
       //--
+      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && passHLT_PFHT800==1");
-      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
-      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
+      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
+      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
+      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1 || passHLT_PFHT650MJJ950==1 || passHLT_PFHT650MJJ900==1 || passHLT_AK8DiPFJet280200TrimMass30Btag==1 || passHLT_AK8PFHT600TriMass50Btag==1 || passHLT_AK8PFHT700TriMass50==1 || passHLT_AK8PFJet360TrimMass50==1 || passHLT_CaloJet500NoJetID==1 || passHLT_DiPFJetAve300HFJEC==1 || passHLT_DiPFJetAve500==1 || passHLT_PFHT400SixJet30Btag==1 || passHLT_PFHT450SixJet40Btag==1 || passHLT_PFHT750FourJetPt50==1 || passHLT_QuadPFJetVBF==1 || passHLT_PFHT650==1 || passHLT_PFHT475==1 || passHLT_PFHT200==1 || passHLT_PFJET450==1)");
       //-- option placeholder 
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1","",10000);
       //--  

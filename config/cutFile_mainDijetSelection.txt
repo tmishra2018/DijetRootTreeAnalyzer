@@ -70,10 +70,25 @@ mjj_shiftJEC         -inf           +inf                -               -       
 
 # no cut on these variables, just want to save histograms
 passHLT_PFHT800	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT650	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT475	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT200	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT650MJJ950	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT650MJJ900	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFJET500     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFJET450     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_Mu45         -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_AK8DiPFJet280200TrimMass30Btag         -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_AK8PFHT600TriMass50Btag                -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_AK8PFHT700TriMass50         	       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_AK8PFJet360TrimMass50         	       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_CaloJet500NoJetID       	       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_DiPFJetAve300HFJEC      	       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_DiPFJetAve500      		       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT400SixJet30Btag    		       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT450SixJet40Btag   		       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT750FourJetPt50   		       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_QuadPFJetVBF  -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 lumi		     -inf	    +inf		-		-		1	50  0 10000	  SAVE
@@ -104,7 +119,7 @@ neutrMult_j1         -inf	    +inf		-		-		1	100 0 100         SAVE
 photonMult_j1        -inf	    +inf		-		-		1	100 0 100         SAVE 
 jetPtAK4matchCaloJet_j1 -inf        +inf                 -	        -	        1	500 0 5000        SAVE
 jetJecAK4_j1            -inf        +inf                -               -               1       90  0 3           SAVE
-jetJecUncAK4_j1            -inf        +inf                -               -               1       90  0 3           SAVE
+jetJecUncAK4_j1         -inf        +inf                -               -               1       90  0 3           SAVE
 pTAK4_j2	     -inf	    +inf		-	        -	        1	500 0 5000        SAVE
 etaAK4_j2            -inf           +inf                -               -               1       50  -2.5 2.5      SAVE
 phiAK4_j2  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
@@ -122,8 +137,8 @@ neutrMult_j2         -inf	    +inf		-		-		1	100 0 100         SAVE
 photonMult_j2        -inf	    +inf		-		-		1	100 0 100         SAVE 
 jetPtAK4matchCaloJet_j2 -inf        +inf                 -	        -	        1	500 0 5000        SAVE
 jetJecAK4_j2            -inf        +inf                -               -               1       90  0 3           SAVE
-jetJecUncAK4_j2            -inf        +inf                -               -               1       90  0 3           SAVE
+jetJecUncAK4_j2         -inf        +inf                -               -               1       90  0 3           SAVE
 CosThetaStarWJ	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE	
 CosThetaStarAK4	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 Dijet_MassAK4  	     -inf           +inf                -               -               1       1000 0 10000      SAVE	
-#Dijet_MassAK8    	-inf           +inf                -               -               1       1000 0 10000      SAVE
+#Dijet_MassAK8       -inf           +inf                -               -               1       1000 0 10000      SAVE

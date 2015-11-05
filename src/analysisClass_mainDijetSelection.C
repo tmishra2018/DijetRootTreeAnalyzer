@@ -603,14 +603,45 @@ void analysisClass::Loop()
      int NtriggerBits = triggerResult->size();
      if( NtriggerBits > 0 && isData)
        fillVariableWithValue("passHLT_PFHT800",triggerResult->at(0));// HLT_PFHT800_v*    
+     if( NtriggerBits > 1 && isData)
+       fillVariableWithValue("passHLT_PFHT650",triggerResult->at(1));// HLT_PFHT650_v*    
      if( NtriggerBits > 3 && isData)
        fillVariableWithValue("passHLT_PFHT475",triggerResult->at(3));// HLT_PFHT475_v*    
      if( NtriggerBits > 8 && isData)
-       fillVariableWithValue("passHLT_PFHT200",triggerResult->at(8));// HLT_PFHT200_v*    
+       fillVariableWithValue("passHLT_PFHT200",triggerResult->at(8));// HLT_PFHT200_v*   
+     if( NtriggerBits > 9 && isData)
+       fillVariableWithValue("passHLT_PFHT650MJJ950",triggerResult->at(9));// HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*        
+     if( NtriggerBits > 10 && isData)
+       fillVariableWithValue("passHLT_PFHT650MJJ900",triggerResult->at(10));// HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*        
      if( NtriggerBits > 11 && isData)
        fillVariableWithValue("passHLT_PFJET500",triggerResult->at(11));// HLT_PFJET500_v*    
+     if( NtriggerBits > 12 && isData)
+       fillVariableWithValue("passHLT_PFJET450",triggerResult->at(12));// HLT_PFJET450_v*    
      if( NtriggerBits > 16 && isData)
        fillVariableWithValue("passHLT_Mu45",triggerResult->at(16));// HLT_Mu45Eta2p1_v*    
+     if( NtriggerBits > 17 && isData)
+       fillVariableWithValue("passHLT_AK8DiPFJet280200TrimMass30Btag",triggerResult->at(17));// HLT_AK8DiPFJet280_200_TrimMass30_BTagCSV0p45_v*    
+     if( NtriggerBits > 18 && isData)
+       fillVariableWithValue("passHLT_AK8PFHT600TriMass50Btag",triggerResult->at(18));// HLT_AK8PFHT600_TrimR0p1PT0p03Mass50_BTagCSV0p45_v*    
+     if( NtriggerBits > 19 && isData)
+       fillVariableWithValue("passHLT_AK8PFHT700TriMass50",triggerResult->at(19));// HLT_AK8PFHT700_TrimR0p1PT0p03Mass50_v*   
+     if( NtriggerBits > 20 && isData)
+       fillVariableWithValue("passHLT_AK8PFJet360TrimMass50",triggerResult->at(20));// HLT_AK8PFJet360_TrimMass30_v*   
+     if( NtriggerBits > 21 && isData)
+       fillVariableWithValue("passHLT_CaloJet500NoJetID",triggerResult->at(21));// HLT_CaloJet500_NoJetID_v*  
+     if( NtriggerBits > 22 && isData)
+       fillVariableWithValue("passHLT_DiPFJetAve300HFJEC",triggerResult->at(22));// HLT_DiPFJetAve300_HFJEC_v* 
+     if( NtriggerBits > 23 && isData)
+       fillVariableWithValue("passHLT_DiPFJetAve500",triggerResult->at(23));// HLT_DiPFJetAve500_v*
+     if( NtriggerBits > 24 && isData)
+       fillVariableWithValue("passHLT_PFHT400SixJet30Btag",triggerResult->at(24));// HLT_PFHT400_SixJet30_BTagCSV0p55_2PFBTagCSV0p72_v*
+     if( NtriggerBits > 25 && isData)
+       fillVariableWithValue("passHLT_PFHT450SixJet40Btag",triggerResult->at(25));// HLT_PFHT450_SixJet40_PFBTagCSV0p72_v*
+     if( NtriggerBits > 26 && isData)
+       fillVariableWithValue("passHLT_PFHT750FourJetPt50",triggerResult->at(26));// HLT_PFHT750_4JetPt50_v*
+     if( NtriggerBits > 27 && isData)
+       fillVariableWithValue("passHLT_QuadPFJetVBF",triggerResult->at(27));// HLT_QuadPFJet_VBF_v*
+
 
      // Evaluate cuts (but do not apply them)
      evaluateCuts();

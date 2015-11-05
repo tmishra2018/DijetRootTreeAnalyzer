@@ -1,4 +1,4 @@
-#######################################
+B41;309;0c#######################################
 0) Setup area
 #######################################
 
@@ -116,8 +116,14 @@ Note: The number should match the number of events reported by crab report (and 
 Trigger efficiency
 ####################
 
-..................
+cd $MYCMSSW/src/CMSDIJET/DijetRootTreeAnalyzer/scripts
+root -l -b triggerEfficiency.C
 
+Notes:
+setting histoFromFile=1 you take histograms (numerator and denominator) directly from the root file.
+setting histoFromFile=0 you create histograms from the flat root tree (here you need to edit the correspondent code part
+below "//== creating histo from tree")
+ 
 
 ####################
 Standard selection
