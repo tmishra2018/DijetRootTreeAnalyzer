@@ -195,16 +195,16 @@ h_dat.Sumw2()
 #passJSON
 #chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && PassJSON==1')
 #standard
-chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
+#chain.Project("h_dat",var,'deltaETAjj<1.3 && mjj > '+str(minX_mass))
 # "peak mjj 4 TeV"
 #chain.Project(h_dat.GetName(), var,'deltaETAjj<3 && mjj>3558 && mjj<4509.')
 #no deta
 #chain.Project("h_dat",var,'deltaETAjj<2.6 && mjj > '+str(minX_mass))
 
-#if golden:
-#  chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + '&& run <= ' + str(runMax) +' && PassJSON==1')
-#else:
-#  chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + ' && run <= ' + str(runMax) )
+if golden:
+  chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + '&& run <= ' + str(runMax) +' && PassJSON==1')
+else:
+  chain.Project("h_dat", var,'deltaETAjj<1.3 && mjj > '+str(minX_mass)+' && run >= '+ str(runMin) + ' && run <= ' + str(runMax) )
   
 
 #h_dat = hist_allCuts[9].Clone()
