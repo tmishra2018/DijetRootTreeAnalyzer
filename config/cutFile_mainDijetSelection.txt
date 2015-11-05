@@ -1,7 +1,8 @@
 #JSON data/json/Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt
 #JSON data/json/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt
 #JSON data/json/Cert_246908-258159_13TeV_PromptReco_Collisions15_25ns_JSON_v3.txt
-JSON data/json/Cert_246908-258714_13TeV_PromptReco_Collisions15_25ns_JSON.txt
+#JSON data/json/Cert_246908-258714_13TeV_PromptReco_Collisions15_25ns_JSON.txt
+JSON  data/json/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -65,9 +66,8 @@ etaWJ_j1             -2.5           2.5                 -               -       
 pTWJ_j2	      	      30	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j2             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 deltaETAjj           -inf           +inf               	-               -               1       100 0. 3.         SAVE
-mjj            	     -inf           +inf                -               -               1       1000 0 10000      SAVE
-mjj_shiftJEC         -inf           +inf                -               -               1       1000 0 10000      SAVE
-
+mjj            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
+mjj_shiftJEC         -inf           +inf                -               -               1       10000 0 10000      SAVE
 # no cut on these variables, just want to save histograms
 passHLT_PFHT800	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT650	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
