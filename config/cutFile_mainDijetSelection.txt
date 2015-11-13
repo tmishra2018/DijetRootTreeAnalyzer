@@ -2,7 +2,8 @@
 #JSON data/json/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt
 #JSON data/json/Cert_246908-258159_13TeV_PromptReco_Collisions15_25ns_JSON_v3.txt
 #JSON data/json/Cert_246908-258714_13TeV_PromptReco_Collisions15_25ns_JSON.txt
-JSON  data/json/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
+#JSON  data/json/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
+JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
 #
 #############################     Example of file with list of cuts
 #
