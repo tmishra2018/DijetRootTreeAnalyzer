@@ -78,11 +78,21 @@ lumisum_runD_files_4_5_6_7_8_Cert_246908-258714_13TeV_PromptReco_Collisions15_25
 (Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015D/PromptReco-v3_DCSonly_flag_Cert_246908-258714_13TeV_PromptReco_Collisions15_25ns_JSON_1769pb-1/
 (CERN EOS) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/DCSonly_1769pb-1_flag_Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON/ 
 
+<<<<<<< HEAD
 == Run2015D 4+5+6+7+8+9+10 Combined ==
 JEC Summer15_25nsV6
 lumisum_runD_files_4_5_6_7_8_9_10_DCSOnly.json => 2696.723 /pb
 lumisum_runD_files_4_5_6_7_8_9_10_SilverJSON.json =>  2444.707 /pb
 (Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/DCS_reprocessing_Sept15/Run2015D/PromptReco-v4_DCSonly_2697pb-1_flag_Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_2445pb-1/
+=======
+== Run2015D 4+5+6+7+8 Combined == (francesco)
+
+4+5+6+7+8)
+JEC Summer15_25nsV6
+lumisum_runD_files_4_5_6_7_8_DCSOnly.json => 1769.20 /pb
+lumisum_runD_files_4_5_6_7_8_Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.json => 1588.871 /pb (PassJSON==1)
+(Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/santanas/Dijet/reducedTrees/data/santanas__1769pb-1_05_11_2015_20151105_121809/
+>>>>>>> 8f1f3231d88a30e2ff010fe3d68942d582a02ff7
 
 
 ====== Monte Carlo =====
