@@ -10,14 +10,14 @@ TCanvas* example_plot( int iPeriod, int iPos );
 int histoFromFile = 0; //=1 histograms available in root file, =0 create histo from tree
 
 double xmin = 156;
-double xmax = 4010;
+double xmax = 3704;
 double ymin = 0;
 double ymax = 1.3;
 
-//double xminZoom = 944;
-//double xmaxZoom = 1530;
-double xminZoom = 1181;
-double xmaxZoom = 2438;
+double xminZoom = 944;
+double xmaxZoom = 1530;
+//double xminZoom = 1181;
+//double xmaxZoom = 2438;
 double yminZoom = 0.6;
 double ymaxZoom = 1.2;
 
@@ -34,7 +34,8 @@ double threshold = 1213;
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134/merged/rootfile_SingleMuon__Run2015BandC-All-v1__MINIAOD_santanas__SingleMu__65pb-1_50ns_11_09_2015_20150911_162134_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905/merged/rootfile_SingleMuon__Run2015C-PromptReco-v1__MINIAOD_santanas__SingleMu__15p5pb-1_25ns_22_09_2015_20150922_155905_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__721pb-1_25ns_28_10_2015_20151029_003601_reduced_skim.root";
-TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_29_10_2015_20151030_125632_reduced_skim.root";
+//TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_29_10_2015_20151030_125632_reduced_skim.root";
+TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__728pb-1_25ns_JECV6_17_11_2015_20151117_124841/merged/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_JECV6_17_11_2015_20151117_124841_reduced_skim.root";
 
 //TString mynumerator = "h_mjj_HLTpass_PFHT800"; // only used if histoFromFile = 1
 TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1"; // only used if histoFromFile = 1
@@ -46,11 +47,12 @@ TString mytitlelegendNum = "(PFHT800 OR PFJET500) AND Mu45Eta2p1";
 TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1"; // only used if histoFromFile = 1
 TString mytitlelegendDen = "Mu45Eta2p1";
 
-//TString mytitle = ";Dijet Mass [GeV];Relative Efficiency";
-//TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency";
-TString mytitle = ";Dijet Mass [GeV];Trigger Efficiency (control region)";
+//TString mytitle = ";Dijet Mass [GeV];Relative efficiency";
+TString mytitle = ";Dijet Mass [GeV];Trigger efficiency";
+//TString mytitle = ";Dijet Mass [GeV];Trigger efficiency (control region)";
 //TString mytitlelegend = "PF H_{T} > 800 GeV";
-TString mytitlelegend = "PF H_{T} > 800 GeV OR p_{T}^{PF jet} > 500 GeV ";
+//TString mytitlelegend = "PF H_{T} > 800 GeV OR p_{T}^{PF jet} > 500 GeV ";
+TString mytitlelegend = "PF H_{T} > 0.8 TeV OR p_{T}^{PF jet} > 0.5 TeV ";
 //TString mytitlelegend = "All JetHT triggers";
 //TString mytitlelegend = "Selection of JetHT triggers";
 
@@ -63,9 +65,9 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-PromptReco";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015BAndC-All";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015C-25ns-PromptReco";
-//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HT_DetaJJLess1p3";
-//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJLess1p3";
-TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJFrom1p3To2p6";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-JECV6-PromptReco_HT_DetaJJLess1p3";
+TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-JECV6-PromptReco_HTOrJetPt_DetaJJLess1p3";
+//TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_HTOrJetPt_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_AllJetHT_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_JetHTBestGuess_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "pippo";
@@ -85,7 +87,8 @@ void triggerEfficiency()
   setTDRStyle();
 
   //gROOT->LoadMacro("CMS_lumi.C");
-  extraText  = "Preliminary";  // default extra text is "Preliminary"
+  //extraText  = "Preliminary";  // default extra text is "Preliminary"
+  extraText  = "Supplementary";  // default extra text is "Preliminary"
   writeExtraText = true;       // remove or keep "Preliminary"
 
   lumi_13TeV  = "2015";  // for trigger
@@ -185,13 +188,13 @@ void triggerEfficiency()
       //fill histograms
       //--
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1"); //signal region
-      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region
-      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
+      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region
+      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
       //--
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && passHLT_PFHT800==1");
-      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
-      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
+      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
+      //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1 || passHLT_PFHT650MJJ950==1 || passHLT_PFHT650MJJ900==1 || passHLT_AK8DiPFJet280200TrimMass30Btag==1 || passHLT_AK8PFHT600TriMass50Btag==1 || passHLT_AK8PFHT700TriMass50==1 || passHLT_AK8PFJet360TrimMass50==1 || passHLT_CaloJet500NoJetID==1 || passHLT_DiPFJetAve300HFJEC==1 || passHLT_DiPFJetAve500==1 || passHLT_PFHT400SixJet30Btag==1 || passHLT_PFHT450SixJet40Btag==1 || passHLT_PFHT750FourJetPt50==1 || passHLT_QuadPFJetVBF==1 || passHLT_PFHT650==1 || passHLT_PFHT475==1 || passHLT_PFHT200==1 || passHLT_PFJET450==1)");
       //-- option placeholder 
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1","",10000);
@@ -229,7 +232,7 @@ void triggerEfficiency()
 	}
 
       // draw the legend
-      TLegend *legend=new TLegend(0.35,0.22,0.89,0.32);
+      TLegend *legend=new TLegend(0.35,0.22,0.95,0.32);
       //legend->SetTextFont(72);
       //legend->SetTextSize(0.04);
       legend->SetFillStyle(0);
@@ -245,11 +248,17 @@ void triggerEfficiency()
   //## Trigger Efficiency plot ##
   // writing the lumi information and the CMS "logo"
   CMS_lumi( canv, iPeriod, iPos ); 
+  TText *pave = new TText(2346.12,1.19462,"arxiv:1512.01224");
+  pave->SetTextColor(4);
+  pave->SetTextSize(0.04);
+  pave->SetTextFont(42);
+  pave->Draw();
   canv->Update();
   canv->RedrawAxis();
   canv->GetFrame()->Draw();
   gPad->SetTickx(1);
   gPad->SetTicky(1);
+  canv->Print(myoutputfilename+".eps",".eps");
   canv->Print(myoutputfilename+".pdf",".pdf");
   canv->Print(myoutputfilename+".png",".png");
   canv->Print(myoutputfilename+".root",".root");
