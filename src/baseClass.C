@@ -149,7 +149,11 @@ int baseClass::readInputList()
 
 	  //giulia test to count processed events
 	  TFile *f = TFile::Open(pName);
-	  string s0 = "dijets/TriggerPass";
+
+	  string s0prefix = treeName_->substr(0, treeName_->find("/"));
+	  string histoCountName = "/TriggerPass";	  
+	  string s0 = s0prefix + histoCountName;
+
 	  TriggerPass = (TH1F*)f->Get(s0.c_str());  
 	  if(f) STDOUT("file exists!");
 	  if(TriggerPass){
