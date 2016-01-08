@@ -174,8 +174,8 @@ void analysisClass::Loop()
    ////// If the root version is updated and rootNtupleClass regenerated,     /////
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-   //for (Long64_t jentry=0; jentry<2000;jentry++) {
+   //for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   for (Long64_t jentry=0; jentry<2;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -310,13 +310,15 @@ void analysisClass::Loop()
      //count ak4 jets passing pt threshold and id criteria
      int Nak4 = 0;
      double HTak4 = 0;
+
      for(size_t ijet=0; ijet<no_jets_ak4; ++ijet)
        {	 
-	  //cout << "ijet=" << ijet << " , sortedJetIdx[ijet]=" << sortedJetIdx[ijet] 
-	  //     << " , raw pT=" << jetPtAK4->at(sortedJetIdx[ijet])/jetJecAK4->at(sortedJetIdx[ijet]) 
-	  //     << " , final corrected pT - old =" << jetPtAK4->at(sortedJetIdx[ijet] ) 
-	  //     << " , final corrected pT - new =" << (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet])
-	  //     << endl;
+	 //cout << "evtNo: " << evtNo << endl;	 
+	 // cout << "ijet=" << ijet << " , sortedJetIdx[ijet]=" << sortedJetIdx[ijet] 
+	 //      << " , raw pT=" << jetPtAK4->at(sortedJetIdx[ijet])/jetJecAK4->at(sortedJetIdx[ijet]) 
+	 //      << " , final corrected pT - old =" << jetPtAK4->at(sortedJetIdx[ijet] ) 
+	 //      << " , final corrected pT - new =" << (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet])
+	 //      << endl;
 
 	 //////////////cout << "id Tight jet" << sortedJetIdx[1] << " = " << idTAK4->at(sortedJetIdx[1]) << endl;
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[ijet])) < getPreCutValue1("jetFidRegion")
@@ -523,9 +525,17 @@ void analysisClass::Loop()
      fillVariableWithValue("lumi",lumi);     
      fillVariableWithValue("nVtx",nvtx);     
      fillVariableWithValue("nJet",widejets.size());
-     fillVariableWithValue("metSig",metSig);
      fillVariableWithValue("Nak4",Nak4);
      fillVariableWithValue ( "PassJSON", passJSON (runNo, lumi, isData));
+
+     //directly taken from big root tree (i.e. jec not reapplied)
+     fillVariableWithValue("htAK4",htAK4); // summing all jets with minimum pT cut and no jetid cut (jec not reapplied)
+     fillVariableWithValue("mhtAK4",mhtAK4); //summing all jets with minimum pT cut and no jetid cut (jec not reapplied)
+     fillVariableWithValue("mhtAK4Sig",mhtAK4Sig); // mhtAK4/htAK4 summing all jets with minimum pT cut and no jetid cut (jec not reapplied)
+     fillVariableWithValue("met",met); //directly taken from event
+     fillVariableWithValue("metSig",metSig); // met/htAK4 (to be substituted with met/SumEt from event in future)
+     fillVariableWithValue("offMet",offMet); //recomputed from PF candidates (off=offline)
+     fillVariableWithValue("offMetSig",offMetSig); // offMet/offSumEt recomputed from PF candidates (off=offline)
 
      if( AK4jets.size() >=1 ){
        //cout << "AK4jets.size() " <<  AK4jets.size() << endl;
@@ -611,13 +621,6 @@ void analysisClass::Loop()
      // else if(isData)
      //   fillVariableWithValue("trueVtx",999);     
 
-     fillVariableWithValue("MET",met);
-     //double METoverHTAK4=double(met/htAK4);
-     double METoverHTAK4=double(met/HTak4);
-     fillVariableWithValue("METoverHTAK4",METoverHTAK4);
-     fillVariableWithValue("HTAK4",HTak4);
-     //fillVariableWithValue("ptHat",ptHat);
-
      // Trigger
      int NtriggerBits = triggerResult->size();
      int Run2015Period = 2; //1 or 2
@@ -656,13 +659,13 @@ void analysisClass::Loop()
 
        h_mjj_NoTrigger -> Fill(MJJWide); 
        
-       if( passedCut("passHLT_ZeroBias") )
+       if( getVariableValue("passHLT_ZeroBias") )
 	 h_mjj_HLTpass_ZeroBias -> Fill(MJJWide);  
-       if( passedCut("passHLT_ZeroBias") && passedCut("passHLT_L1HTT") )
+       if( getVariableValue("passHLT_ZeroBias") && getVariableValue("passHLT_L1HTT") )
 	 h_mjj_HLTpass_ZeroBias_L1HTT -> Fill(MJJWide);  
-       if( passedCut("passHLT_L1HTT") )
+       if( getVariableValue("passHLT_L1HTT") )
 	 h_mjj_HLTpass_L1HTT -> Fill(MJJWide);  
-       if( passedCut("passHLT_L1HTT") && passedCut("passHLT_PFHT450") )
+       if( getVariableValue("passHLT_L1HTT") && getVariableValue("passHLT_PFHT450") )
 	 h_mjj_HLTpass_L1HTT_HT450 -> Fill(MJJWide);  
        
      }
