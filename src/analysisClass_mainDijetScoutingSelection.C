@@ -635,7 +635,7 @@ void analysisClass::Loop()
 	 fillVariableWithValue("passHLT_L1DoubleMu",triggerResult->at(10));// DST_L1DoubleMu_PFScouting_v*
 	 fillVariableWithValue("passHLT_CaloJet40",triggerResult->at(1));// DST_CaloJet40_CaloScouting_PFScouting_v*  
 	 fillVariableWithValue("passHLT_L1HTT",triggerResult->at(3));// DST_L1HTT_CaloScouting_PFScouting_v*    
-	 fillVariableWithValue("passHLT_PFHT450",triggerResult->at(6));// DST_HT450_PFScouting_v*    
+	 fillVariableWithValue("passHLT_HT450",triggerResult->at(6));// DST_HT450_PFScouting_v*    
 	 fillVariableWithValue("passHLT_PFHT800",triggerResult->at(13));// HLT_PFHT800_v*    
 	 fillVariableWithValue("passHLT_PFHT650MJJ950",triggerResult->at(22));// HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v*        
 	 fillVariableWithValue("passHLT_PFHT650MJJ900",triggerResult->at(23));// HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v*        
@@ -665,7 +665,7 @@ void analysisClass::Loop()
 	 h_mjj_HLTpass_ZeroBias_L1HTT -> Fill(MJJWide);  
        if( getVariableValue("passHLT_L1HTT") )
 	 h_mjj_HLTpass_L1HTT -> Fill(MJJWide);  
-       if( getVariableValue("passHLT_L1HTT") && getVariableValue("passHLT_PFHT450") )
+       if( getVariableValue("passHLT_L1HTT") && getVariableValue("passHLT_HT450") )
 	 h_mjj_HLTpass_L1HTT_HT450 -> Fill(MJJWide);  
        
      }
