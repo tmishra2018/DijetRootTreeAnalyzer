@@ -70,14 +70,20 @@ deltaETAjj           -inf           +inf               	-               -       
 mjj            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
 mjj_shiftJEC         -inf           +inf                -               -               1       10000 0 10000      SAVE
 # no cut on these variables, just want to save histograms and variables
+passHLT_ZeroBias_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1DoubleMu_BtagSeq   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_CaloJet40_BtagSeq    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1HTT150_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_HT450_BtagSeq        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_ZeroBias     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_L1DoubleMu   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_CaloJet40    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1HTT	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1HTT150     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_HT450        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT800      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT650MJJ950	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT650MJJ900	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+isData		     -inf	    +inf		-		-		1	2  0 2.	  	  SAVE
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 lumi		     -inf	    +inf		-		-		1	50  0 10000	  SAVE
@@ -109,6 +115,7 @@ neutrMult_j1         -inf	    +inf		-		-		1	100 0 100         SAVE
 photonMult_j1        -inf	    +inf		-		-		1	100 0 100         SAVE 
 jetJecAK4_j1            -inf        +inf                -               -               1       90  0 3           SAVE
 jetJecUncAK4_j1         -inf        +inf                -               -               1       90  0 3           SAVE
+jetCSVAK4_j1         0              +2                  -               -               1       100 0 100         SAVE
 pTAK4_j2	     -inf	    +inf		-	        -	        1	500 0 5000        SAVE
 etaAK4_j2            -inf           +inf                -               -               1       50  -2.5 2.5      SAVE
 phiAK4_j2  	     -inf           +inf                -               -               1       200 -3.15 3.15    SAVE
@@ -126,6 +133,7 @@ neutrMult_j2         -inf	    +inf		-		-		1	100 0 100         SAVE
 photonMult_j2        -inf	    +inf		-		-		1	100 0 100         SAVE 
 jetJecAK4_j2            -inf        +inf                -               -               1       90  0 3           SAVE
 jetJecUncAK4_j2         -inf        +inf                -               -               1       90  0 3           SAVE
+jetCSVAK4_j2         0              +2                  -               -               1       100 0 100         SAVE
 CosThetaStarWJ	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE	
 CosThetaStarAK4	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 Dijet_MassAK4  	     -inf           +inf                -               -               1       1000 0 10000      SAVE	
