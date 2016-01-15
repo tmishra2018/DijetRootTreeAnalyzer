@@ -40,6 +40,12 @@ double ymaxZoom = 1.2;
 //scouting
 double threshold = 119;
 
+//
+int doFit = 0;
+double xminFit = 453;
+double xmaxFit = 2037;
+
+
 //high-mass
 //TString myinputFile = "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_plus_Run2015C_goldenJSON_JEC-Summer15_50nsV4_29Aug2015/rootfile_JetHT__Run2015B_plus_Run2015C__MINIAOD_Run2015B_goldenJSON_JEC-Summer15_50nsV4_29Aug2015_reduced_skim.root";
 //TString myinputFile = "/cmshome/santanas/CMS/Releases/CMSSW_7_4_3/src/CMSDIJET/DijetRootTreeAnalyzer/test/santanas/output/output_test_reduced_skim.root";
@@ -53,22 +59,24 @@ double threshold = 119;
 //TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_29_10_2015_20151030_125632_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__728pb-1_25ns_JECV6_17_11_2015_20151117_124841/merged/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_JECV6_17_11_2015_20151117_124841_reduced_skim.root"; //paper
 //scouting
-TString myinputFile =  "/cmshome/santanas/CMS/Releases/CMSSW_7_4_15_DijetScouting/src/CMSDIJET/DijetRootTreeAnalyzer/output/dijetscoutingOutput2_reduced_skim.root";
+//TString myinputFile =  "/cmshome/santanas/CMS/Releases/CMSSW_7_4_15_DijetScouting/src/CMSDIJET/DijetRootTreeAnalyzer/output/dijetscoutingOutput2_reduced_skim.root";
+//TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root";
+TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root";
 
-TString mybaselinehisto = "h_mjj_HLTpass_L1HTT"; // needed to define the x-axis range 
+TString mybaselinehisto = "h_mjj_HLTpass_L1HTT150"; // needed to define the x-axis range 
 
 //TString mynumerator = "h_mjj_HLTpass_PFHT800"; // only used if histoFromFile = 1
 TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1"; // only used if histoFromFile = 1
 //TString mytitlelegendNum = "PFHT800 AND Mu45Eta2p1";
 //TString mytitlelegendNum = "(PFHT800 OR PFJET500) AND Mu45Eta2p1";//paper
 //TString mytitlelegendNum = "(All JetHT triggers) AND Mu45Eta2p1";
-TString mytitlelegendNum = "HT450 AND L1HTT";//scouting HT450
+TString mytitlelegendNum = "HT450 AND L1HTT150";//scouting HT450
 //TString mytitlelegendNum = "L1HTT AND ZeroBias";//scouting L1HTT
 
 //TString mydenominator = "h_mjj_HLTpass_PFHT475"; // only used if histoFromFile = 1
 TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1"; // only used if histoFromFile = 1
 //TString mytitlelegendDen = "Mu45Eta2p1"; //paper
-TString mytitlelegendDen = "L1HTT"; //scouting HT450
+TString mytitlelegendDen = "L1HTT150"; //scouting HT450
 //TString mytitlelegendDen = "ZeroBias"; //scouting L1HTT
 
 //TString mytitle = ";Dijet Mass [GeV];Relative efficiency";
@@ -97,7 +105,7 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_AllJetHT_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_JetHTBestGuess_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "pippo";
-TString myoutputfilename = "triggerEfficiency_L1HTTseed_HT450_DetaJJLess1p3";//scouting HT450
+TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3";//scouting HT450
 //TString myoutputfilename = "triggerEfficiency_ZeroBiasSeed_L1HTT_DetaJJLess1p3";//scouting L1HTT
 
 
@@ -219,7 +227,7 @@ void triggerEfficiency()
       cout << "filling denominator" << endl;
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1"); //signal region
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region //paper
-      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_L1HTT==1"); //signal region //scouting HT450
+      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_L1HTT150_BtagSeq==1||passHLT_L1HTT150)"); //signal region //scouting HT450
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1"); //signal region //scouting L1HTT
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
       cout << "filled denominator" << endl;
@@ -228,7 +236,7 @@ void triggerEfficiency()
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");//paper
-      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_L1HTT==1 && passHLT_HT450==1");//scouting HT450
+      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_L1HTT150_BtagSeq==1||passHLT_L1HTT150) && (passHLT_HT450_BtagSeq==1 || passHLT_HT450==1)");//scouting HT450
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1 && passHLT_L1HTT==1");//scouting L1HTT
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1 || passHLT_PFHT650MJJ950==1 || passHLT_PFHT650MJJ900==1 || passHLT_AK8DiPFJet280200TrimMass30Btag==1 || passHLT_AK8PFHT600TriMass50Btag==1 || passHLT_AK8PFHT700TriMass50==1 || passHLT_AK8PFJet360TrimMass50==1 || passHLT_CaloJet500NoJetID==1 || passHLT_DiPFJetAve300HFJEC==1 || passHLT_DiPFJetAve500==1 || passHLT_PFHT400SixJet30Btag==1 || passHLT_PFHT450SixJet40Btag==1 || passHLT_PFHT750FourJetPt50==1 || passHLT_QuadPFJetVBF==1 || passHLT_PFHT650==1 || passHLT_PFHT475==1 || passHLT_PFHT200==1 || passHLT_PFJET450==1)");
@@ -247,6 +255,15 @@ void triggerEfficiency()
       h_efficiency->SetStatisticOption(TEfficiency::kFWilson);  
       //h_efficiency->SetStatisticOption(TEfficiency::kFCP); //default  
       h_efficiency->SetTitle(mytitle);
+
+      if(doFit==1)
+	{
+	  // //fit efficiency
+	  TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);
+	  f1->SetParameters(1,500,50);
+	  h_efficiency->Fit(f1,"VLRI");
+	}
+
       h_efficiency->Draw();
       gPad->Update();
       h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xmin,xmax);
@@ -299,7 +316,7 @@ void triggerEfficiency()
   canv->Print(myoutputfilename+".pdf",".pdf");
   canv->Print(myoutputfilename+".png",".png");
   canv->Print(myoutputfilename+".root",".root");
-  
+
   //## Trigger Efficiency plot (zoom) ## 
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xminZoom,xmaxZoom);
   h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(yminZoom,ymaxZoom);
@@ -361,7 +378,8 @@ void triggerEfficiency()
   canv->Print(myoutputfilename+"_histo.pdf",".pdf");
   canv->Print(myoutputfilename+"_histo.png",".png");
   
-
+  TFile outputFile("output.root","recreate");
+  h_efficiency->Write();  
 
 
   //-----------------------------------------------------------------------------
