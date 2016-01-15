@@ -6,26 +6,15 @@ Reduced root trees
 ====== DATA =====
 =================
 
-ScoutingPFHT
-============
-/ScoutingPFHT/Run2015D-v1/RAW
-Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
-JEC Summer15_25nsV6
-lumiSummary_crab_ScoutingPFCommissioning__Run2015D-v1__RAW__DCS.json  => ...... /pb
-lumiSummary_crab_ScoutingPFCommissioning__Run2015D-v1__RAW__SILVER.json  => ....... /pb  (PassJSON==1)
-(Rome T2)  /t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/...............
-(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/..................
-
-
 ScoutingPFCommissioning
 =======================
 
 /ScoutingPFCommissioning/Run2015D-v1/RAW	
 Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
 JEC Summer15_25nsV6
-lumiSummary_crab_ScoutingPFCommissioning__Run2015D-v1__RAW__DCS.json  => 1870.086 /pb
-lumiSummary_crab_ScoutingPFCommissioning__Run2015D-v1__RAW__SILVER.json  => 1710.574 /pb  (PassJSON==1)
-(Rome T2)  /t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root
-(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root
+lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__DCSonly.json  => 1922.867 /pb
+lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__SILVER.json  => 1804.603 /pb  (PassJSON==1) .....
+(Rome T2)  /t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root
 
 
