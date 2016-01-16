@@ -53,10 +53,10 @@ timeMarker = "mycutFile_%04d%02d%02d_%02d%02d%02d__" % (current_time.year,curren
 cutfileName = timeMarker+os.path.split(opt.cutfile)[1]
 print cutfileName
 ###
-pwd = os.environ['PWD']
 os.system("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select mkdir -p "+opt.output+simpletimeMarker)
 #os.system("rm -rf batch")
 os.system("mkdir -p batch")
+pwd = os.environ['PWD']
 ###
 os.system("cp "+opt.cutfile+" batch/"+cutfileName)
 ###
@@ -78,10 +78,11 @@ njobs_list = []
 #commands = []
 #hadd_cmd = []
 #filenames_skim = []
+splittedDir = "splitted"+"_"+simpletimeMarker
 
 ##create a directory to store logfiles containing the "tag" in the name
 os.system("mkdir batch/"+newTag)
-os.system("mkdir "+opt.input+"/splitted")
+os.system("mkdir "+opt.input+"/"+splittedDir)
 
 ##loop over lists (one for datasets) to create splitted lists
 for line in  ins:
@@ -100,21 +101,21 @@ for line in  ins:
   #open list
   list = open(opt.input+"/"+line,"r") 
   ## remove splitted lists if they already exist (necessary beacuse we append to txt file)
-  os.system("rm "+opt.input+"/splitted/"+sample+"_"+newTag+"*.txt")
+  os.system("rm "+opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"*.txt")
   for file in list:
     #print "file:%i  filesperjob:%i  job:%i op.modulo:%i  list %s " % (jf, opt.filesperjob,jj,(jf+1 % opt.filesperjob), opt.input+"/"+line)
     #print file
     modulo = int(jf+1) % int(opt.filesperjob)
     #print "modulo = %i" % modulo
-    splittedlist = open(opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt","a+")
+    splittedlist = open(opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"_"+str(jj)+".txt","a+")
     splittedlist.write(file)
     if ( modulo == 0 ):
-      lists_dataset.append(opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt")
+      lists_dataset.append(opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"_"+str(jj)+".txt")
       print "job "+str(jj)+"   appending "+opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt"
       jj += 1 #increment counter of jobs  
     jf += 1   #increment counter of files         
-  print "job "+str(jj)+"   appending "+opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt"
-  lists_dataset.append(opt.input+"/splitted/"+sample+"_"+newTag+"_"+str(jj)+".txt")  
+  print "job "+str(jj)+"   appending "+opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"_"+str(jj)+".txt"
+  lists_dataset.append(opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"_"+str(jj)+".txt")  
   njobs_list.append(jj)
   inputlists.append(lists_dataset)
 
@@ -137,7 +138,8 @@ for line in  ins:
     print sample+"  job "+str(jj)
     #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" "+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
     #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
-    command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
+    #command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
+    command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijetscouting/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
     print "submit "+command
     print ""
     
@@ -150,19 +152,17 @@ for line in  ins:
     outputfile.write('cd '+pwd+' \n')
     outputfile.write('eval `scramv1 runtime -sh`\n')
     outputfile.write(command+"\n")
-    outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
-    outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
-    outputfile.write("xrdcp /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat root://eoscms/"+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
-    #outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
-    #outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
-    #outputfile.write("xrdcp /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat "+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
+    outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")##NEW
+    outputfile.write("xrdcp /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root root://eoscms/"+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")##NEW
+    outputfile.write("xrdcp /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat root://eoscms/"+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")##NEW
     outputfile.write("rm /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root\n")
     outputfile.write("rm /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+".root\n")
     outputfile.write("rm /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+".dat\n")
     
     print outputname 
     if opt.interactive==False:
-      os.system("bsub -q "+opt.queue+" -o "+logfile+" source "+pwd+"/"+outputname)
+      print "bsub -q "+opt.queue+" -o "+pwd+"/"+logfile+" source "+pwd+"/"+outputname ##NEW
+      os.system("bsub -q "+opt.queue+" -o "+pwd+"/"+logfile+" source "+pwd+"/"+outputname)##NEW
     else:
       print logfile
       if imc==0: os.system(command+" >&! "+logfile+"&")
