@@ -18,6 +18,7 @@ do
 	#COMMAND="$COMMAND $i"
     done
     echo $COMMAND
+    echo $COMMAND2
     $COMMAND
     $COMMAND2
 done
