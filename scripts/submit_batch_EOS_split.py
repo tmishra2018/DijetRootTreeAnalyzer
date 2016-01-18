@@ -185,7 +185,7 @@ for line in  ins:
       bsubCommand = "bsub -q "+opt.queue+" -o "+pwd+"/"+crablogfile+" < "+pwd+"/"+outputname
       print bsubCommand ##NEW
       submitCommandsFile.write(bsubCommand+"\n")
-      #os.system(bsubCommand)##NEW
+      os.system(bsubCommand)##NEW
     else:
       print logfile
       if imc==0: os.system(command+" >&! "+logfile+"&")
