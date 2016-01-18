@@ -102,18 +102,23 @@ for line in  ins:
   jf=0  ##counter for num of files
   jj=0  ##counter for num of jobs
   #open list
+
+  total_num = 0
+  for file in open(opt.input+"/"+line,"r"):
+    total_num +=1
+  print total_num
+
   list = open(opt.input+"/"+line,"r") 
-  ## remove splitted lists if they already exist (necessary beacuse we append to txt file)
-  #os.system("rm "+opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"*.txt")
   print ""
+
   for file in list:
-    #print "file:%i  filesperjob:%i  job:%i op.modulo:%i  list %s " % (jf, opt.filesperjob,jj,(jf+1 % opt.filesperjob), opt.input+"/"+line)
+    print "file:%i  filesperjob:%i  job:%i op.modulo:%i  list %s " % (jf, opt.filesperjob,jj,(int(jf+1) % int(opt.filesperjob)), opt.input+"/"+line)
     print file
     modulo = int(jf+1) % int(opt.filesperjob)
     #print "modulo = %i" % modulo
     splittedlist = open(opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"_"+str(jj)+".txt","a+")
     splittedlist.write(file)
-    if ( modulo == 0 ):
+    if ( modulo == 0 or jf+1==total_num):
       lists_dataset.append(opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"_"+str(jj)+".txt")
       print "==> job "+str(jj)+"   appending "+opt.input+"/"+splittedDir+"/"+sample+"_"+newTag+"_"+str(jj)+".txt"
       print ""
@@ -124,11 +129,8 @@ for line in  ins:
   njobs_list.append(jj-1)
   inputlists.append(lists_dataset)
 
-print ""
-print njobs_list
-print ""
+#print njobs_list
 print inputlists
-print "inputlists size = "+str(len(inputlists))
 
 i_f = 0
 ins = open("config/lists_to_run.txt", "r") 
@@ -183,7 +185,7 @@ for line in  ins:
       bsubCommand = "bsub -q "+opt.queue+" -o "+pwd+"/"+crablogfile+" < "+pwd+"/"+outputname
       print bsubCommand ##NEW
       submitCommandsFile.write(bsubCommand+"\n")
-      os.system(bsubCommand)##NEW
+      #os.system(bsubCommand)##NEW
     else:
       print logfile
       if imc==0: os.system(command+" >&! "+logfile+"&")
