@@ -39,7 +39,7 @@ for srcFile in out:
 
     srcFile.rstrip('\n')
     numberOfJob = ((srcFile.split(".")[0]).split("_"))[-1]
-    #print numberOfJob + " " + srcFile
+    print numberOfJob + " " + srcFile
 
     logfile =  "logfile"+((srcFile.split("submit")[1]).split(".src")[0])+".log"
     #print logfile
