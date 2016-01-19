@@ -14,9 +14,9 @@ Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
 JEC Summer15_25nsV6
 lumiSummary_ScoutingPFHT__15_01_2016_20160115_192039__DCSonly.json  => 1924.187 /pb
 lumiSummary_ScoutingPFHT__15_01_2016_20160115_192039__SILVER.json  => 1805.923 /pb  (PassJSON==1)
-(Rome T2) /t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__15_01_2016_20160115_192039/merged/rootfile_ScoutingPFHT__Run2015D-v1__RAW_ScoutingPFHT__15_01_2016_20160115_192039_reduced_skim.root (34GB)
-(CERN eos) to be produced directly at CERN --> file is too big to be copied
-
+(CERN eos) 
+ALL files: /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__18_01_2016_20160118_170719/ | grep reduced (could not merge with hadd)
+(Rome T2) /t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__15_01_2016_20160115_192039/merged/rootfile_ScoutingPFHT__Run2015D-v1__RAW_ScoutingPFHT__15_01_2016_20160115_192039_reduced_skim.root
 
 ScoutingPFCommissioning
 =======================
