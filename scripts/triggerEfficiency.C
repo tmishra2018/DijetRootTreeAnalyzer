@@ -41,9 +41,10 @@ double ymaxZoom = 1.2;
 double threshold = 119;
 
 //
-int doFit = 0;
+int doFit = 1;
 double xminFit = 453;
-double xmaxFit = 2037;
+//double xmaxFit = 2037;
+double xmaxFit = 890;
 
 
 //high-mass
@@ -214,7 +215,7 @@ void triggerEfficiency()
     {
       //== creating histo from tree   
       TTree *thistree = (TTree*)fileInput->Get("rootTupleTree/tree");
-      thistree->Print();
+      //thistree->Print();
       TH1F *h_denominator_tmp = (TH1F*)fileInput->Get(mybaselinehisto);
       h_denominator = (TH1F*)h_denominator_tmp->Clone();
       h_numerator = (TH1F*)h_denominator_tmp->Clone();
@@ -256,11 +257,16 @@ void triggerEfficiency()
       //h_efficiency->SetStatisticOption(TEfficiency::kFCP); //default  
       h_efficiency->SetTitle(mytitle);
 
+      // //fit efficiency
+      TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);      
+      int numberOfParameters = f1->GetNpar();
       if(doFit==1)
 	{
-	  // //fit efficiency
-	  TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);
-	  f1->SetParameters(1,500,50);
+	  f1->SetParameters(1,500,95);
+	  //f1->SetParLimits(0,0.99,1);//unconstrained
+	  f1->SetParLimits(0,0.999999,1);//constrained
+	  f1->SetParLimits(1,450,550);
+	  f1->SetParLimits(2,80,120);
 	  h_efficiency->Fit(f1,"VLRI");
 	}
 
@@ -272,17 +278,67 @@ void triggerEfficiency()
       //h_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(0.9);
       // h_efficiency->GetPaintedGraph()->GetYaxis()->SetLabelSize(0.04);
 
+      double chi2 = 0;
+      int npoints = 0;
+      int ndf = 0;
+      double chi2Norm = 0;
       for (int bin=0;bin<h_efficiency->GetPaintedGraph()->GetN();bin++)
 	{
 	  double x=-1; 
+	  double exh=-1;
+	  double exl=-1;
 	  double y=-1;
 	  double eyh=-1;
 	  double eyl=-1;
+	  double fitValue = -1;
+	  double residual = -1;
 
 	  h_efficiency->GetPaintedGraph()->GetPoint(bin,x,y);
 	  eyh = h_efficiency->GetPaintedGraph()->GetErrorYhigh(bin);
 	  eyl = h_efficiency->GetPaintedGraph()->GetErrorYlow(bin);
-	  cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;       
+	  exh = h_efficiency->GetPaintedGraph()->GetErrorXhigh(bin);
+	  exl = h_efficiency->GetPaintedGraph()->GetErrorXlow(bin);
+
+	  cout << exl << " , " << exh << endl;
+
+	  if(doFit==1)
+	    {
+	      fitValue = (f1->Integral(x-exl , x+exl))/(exl+exl);
+
+	      if(y<fitValue)
+		residual = (y - fitValue) / eyh;
+	      else
+		residual = (y - fitValue) / eyl;
+	    }
+
+	  //cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;   	  
+	  if(x>xminFit && x<xmaxFit && doFit==1)
+	    {
+	      cout << "bin = " << bin << ": x bin = (" << x-exl << "-" << x+exh 
+		   << ") , y = " << y << " + " << eyh << " - " << eyl 
+		   << " , fit = " << fitValue 
+		   << " , (y-fit) / err = " << residual 
+		   << endl ;       
+
+	      chi2 += pow(residual,2); 
+	      npoints++;
+	    }
+	  else
+	    {
+	      cout << "bin = " << bin << ": x bin = (" << x-exl << "-" << x+exh 
+		   << ") , y = " << y << " + " << eyh << " - " << eyl 
+		   << endl ;       	      
+	    }
+	}
+
+      if(doFit==1)
+	{
+	  ndf = npoints - numberOfParameters;
+	  chi2Norm=chi2/ndf;
+	  cout << "=== chi2 = " << chi2 << endl;
+	  cout << "=== npoints = " << npoints << endl;
+	  cout << "=== numberOfParameters = " << numberOfParameters << endl;
+	  cout << "=== normalized chi2 = " << chi2Norm << endl;
 	}
 
       // draw the legend
