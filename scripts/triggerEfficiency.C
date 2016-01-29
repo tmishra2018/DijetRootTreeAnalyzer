@@ -26,19 +26,28 @@ double ymax = 1.3;
 //double xminZoom = 944;
 //double xmaxZoom = 1530;
 //scouting HT450
-double xminZoom = 419;
-double xmaxZoom = 1246;
+double xminZoom = 453;
+double xmaxZoom = 890;
+//double xmaxZoom = 1455;
 //scouting L1HTT
 //double xminZoom = 88;
 //double xmaxZoom = 325;
 //
-double yminZoom = 0.6;
+double yminZoom = 0.2;
 double ymaxZoom = 1.2;
 
 //high-mass
 //double threshold = 1213;
 //scouting
 double threshold = 119;
+
+//
+int doFit = 1;
+double xminFit = 453;
+//double xmaxFit = 2037;
+double xmaxFit = 890;
+//double xmaxFit = 1455;
+
 
 //high-mass
 //TString myinputFile = "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/data/Run2015B_plus_Run2015C_goldenJSON_JEC-Summer15_50nsV4_29Aug2015/rootfile_JetHT__Run2015B_plus_Run2015C__MINIAOD_Run2015B_goldenJSON_JEC-Summer15_50nsV4_29Aug2015_reduced_skim.root";
@@ -53,22 +62,24 @@ double threshold = 119;
 //TString myinputFile =  "/t3/users/santanas/Dijet/reducedRootTrees/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_29_10_2015_20151030_125632_reduced_skim.root";
 //TString myinputFile =  "dcap://cmsrm-se01.roma1.infn.it/pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/santanas__SingleMu__728pb-1_25ns_JECV6_17_11_2015_20151117_124841/merged/rootfile_SingleMuon__Run2015D-PromptReco-v4__MINIAOD_santanas__SingleMu__728pb-1_25ns_JECV6_17_11_2015_20151117_124841_reduced_skim.root"; //paper
 //scouting
-TString myinputFile =  "/cmshome/santanas/CMS/Releases/CMSSW_7_4_15_DijetScouting/src/CMSDIJET/DijetRootTreeAnalyzer/output/dijetscoutingOutput2_reduced_skim.root";
+//TString myinputFile =  "/cmshome/santanas/CMS/Releases/CMSSW_7_4_15_DijetScouting/src/CMSDIJET/DijetRootTreeAnalyzer/output/dijetscoutingOutput2_reduced_skim.root";
+//TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root";
+TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root";
 
-TString mybaselinehisto = "h_mjj_HLTpass_L1HTT"; // needed to define the x-axis range 
+TString mybaselinehisto = "h_mjj_HLTpass_L1HTT150"; // needed to define the x-axis range 
 
 //TString mynumerator = "h_mjj_HLTpass_PFHT800"; // only used if histoFromFile = 1
 TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1"; // only used if histoFromFile = 1
 //TString mytitlelegendNum = "PFHT800 AND Mu45Eta2p1";
 //TString mytitlelegendNum = "(PFHT800 OR PFJET500) AND Mu45Eta2p1";//paper
 //TString mytitlelegendNum = "(All JetHT triggers) AND Mu45Eta2p1";
-TString mytitlelegendNum = "HT450 AND L1HTT";//scouting HT450
+TString mytitlelegendNum = "HT450 AND L1HTT150";//scouting HT450
 //TString mytitlelegendNum = "L1HTT AND ZeroBias";//scouting L1HTT
 
 //TString mydenominator = "h_mjj_HLTpass_PFHT475"; // only used if histoFromFile = 1
 TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1"; // only used if histoFromFile = 1
 //TString mytitlelegendDen = "Mu45Eta2p1"; //paper
-TString mytitlelegendDen = "L1HTT"; //scouting HT450
+TString mytitlelegendDen = "L1HTT150"; //scouting HT450
 //TString mytitlelegendDen = "ZeroBias"; //scouting L1HTT
 
 //TString mytitle = ";Dijet Mass [GeV];Relative efficiency";
@@ -97,7 +108,7 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_AllJetHT_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_JetHTBestGuess_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "pippo";
-TString myoutputfilename = "triggerEfficiency_L1HTTseed_HT450_DetaJJLess1p3";//scouting HT450
+TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3";//scouting HT450
 //TString myoutputfilename = "triggerEfficiency_ZeroBiasSeed_L1HTT_DetaJJLess1p3";//scouting L1HTT
 
 
@@ -206,7 +217,7 @@ void triggerEfficiency()
     {
       //== creating histo from tree   
       TTree *thistree = (TTree*)fileInput->Get("rootTupleTree/tree");
-      thistree->Print();
+      //thistree->Print();
       TH1F *h_denominator_tmp = (TH1F*)fileInput->Get(mybaselinehisto);
       h_denominator = (TH1F*)h_denominator_tmp->Clone();
       h_numerator = (TH1F*)h_denominator_tmp->Clone();
@@ -219,7 +230,7 @@ void triggerEfficiency()
       cout << "filling denominator" << endl;
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1"); //signal region
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region //paper
-      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_L1HTT==1"); //signal region //scouting HT450
+      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_L1HTT150_BtagSeq==1||passHLT_L1HTT150)"); //signal region //scouting HT450
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1"); //signal region //scouting L1HTT
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
       cout << "filled denominator" << endl;
@@ -228,7 +239,7 @@ void triggerEfficiency()
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");//paper
-      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_L1HTT==1 && passHLT_HT450==1");//scouting HT450
+      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_L1HTT150_BtagSeq==1||passHLT_L1HTT150) && (passHLT_HT450_BtagSeq==1 || passHLT_HT450==1)");//scouting HT450
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1 && passHLT_L1HTT==1");//scouting L1HTT
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1 || passHLT_PFHT650MJJ950==1 || passHLT_PFHT650MJJ900==1 || passHLT_AK8DiPFJet280200TrimMass30Btag==1 || passHLT_AK8PFHT600TriMass50Btag==1 || passHLT_AK8PFHT700TriMass50==1 || passHLT_AK8PFJet360TrimMass50==1 || passHLT_CaloJet500NoJetID==1 || passHLT_DiPFJetAve300HFJEC==1 || passHLT_DiPFJetAve500==1 || passHLT_PFHT400SixJet30Btag==1 || passHLT_PFHT450SixJet40Btag==1 || passHLT_PFHT750FourJetPt50==1 || passHLT_QuadPFJetVBF==1 || passHLT_PFHT650==1 || passHLT_PFHT475==1 || passHLT_PFHT200==1 || passHLT_PFJET450==1)");
@@ -240,48 +251,127 @@ void triggerEfficiency()
 
   //==========================
 
-  if(TEfficiency::CheckConsistency(*h_numerator,*h_denominator))
+  if(!TEfficiency::CheckConsistency(*h_numerator,*h_denominator))
     {
-      h_efficiency = new TEfficiency(*h_numerator,*h_denominator);    
-      //stat option, see https://root.cern.ch/root/html/TEfficiency.html#TEfficiency:SetStatisticOption
-      h_efficiency->SetStatisticOption(TEfficiency::kFWilson);  
-      //h_efficiency->SetStatisticOption(TEfficiency::kFCP); //default  
-      h_efficiency->SetTitle(mytitle);
-      h_efficiency->Draw();
-      gPad->Update();
-      h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xmin,xmax);
-      h_efficiency->GetPaintedGraph()->GetXaxis()->SetNdivisions(505);
-      h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(ymin,ymax);
-      //h_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(0.9);
-      // h_efficiency->GetPaintedGraph()->GetYaxis()->SetLabelSize(0.04);
-
-      for (int bin=0;bin<h_efficiency->GetPaintedGraph()->GetN();bin++)
-	{
-	  double x=-1; 
-	  double y=-1;
-	  double eyh=-1;
-	  double eyl=-1;
-
-	  h_efficiency->GetPaintedGraph()->GetPoint(bin,x,y);
-	  eyh = h_efficiency->GetPaintedGraph()->GetErrorYhigh(bin);
-	  eyl = h_efficiency->GetPaintedGraph()->GetErrorYlow(bin);
-	  cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;       
-	}
-
-      // draw the legend
-      TLegend *legend=new TLegend(0.35,0.22,0.95,0.32);
-      //legend->SetTextFont(72);
-      //legend->SetTextSize(0.04);
-      legend->SetFillStyle(0);
-      legend->SetLineColor(0);
-      legend->SetShadowColor(0);
-      legend->AddEntry(h_efficiency,mytitlelegend,"lpe");
-      legend->Draw();
+      cout << "Numerator and denominator are not consistent! Exit" << endl;
+      gApplication->Terminate(0);
     }
 
+  //  if(TEfficiency::CheckConsistency(*h_numerator,*h_denominator))
+  //    {
+  h_efficiency = new TEfficiency(*h_numerator,*h_denominator);    
+  //stat option, see https://root.cern.ch/root/html/TEfficiency.html#TEfficiency:SetStatisticOption
+  h_efficiency->SetStatisticOption(TEfficiency::kFWilson);  
+  //h_efficiency->SetStatisticOption(TEfficiency::kFCP); //default  
+  h_efficiency->SetTitle(mytitle);
+  
+  // //fit efficiency
+  TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);      
+  int numberOfParameters = f1->GetNpar()-1;
+  if(doFit==1)
+    {
+      f1->SetParameters(1,500,95);
+      //f1->SetParLimits(0,0.99,1);//unconstrained
+      f1->SetParLimits(0,0.999999,1);//constrained
+      f1->SetParLimits(1,450,550);
+      f1->SetParLimits(2,80,120);
+      h_efficiency->Fit(f1,"VLRI");
+    }
+  
+  h_efficiency->Draw();
+  gPad->Update();
+  h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xmin,xmax);
+  h_efficiency->GetPaintedGraph()->GetXaxis()->SetNdivisions(505);
+  h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(ymin,ymax);
+  //h_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(0.9);
+  // h_efficiency->GetPaintedGraph()->GetYaxis()->SetLabelSize(0.04);
+  
+  double chi2 = 0;
+  int npoints = 0;
+  int ndf = 0;
+  double chi2Norm = 0;
+  TGraph *g_residual = new TGraph(0);
+  g_residual->SetName("");
+
+  for (int bin=0;bin<h_efficiency->GetPaintedGraph()->GetN();bin++)
+    {
+      double x=-1; 
+      double exh=-1;
+      double exl=-1;
+      double y=-1;
+      double eyh=-1;
+      double eyl=-1;
+      double fitValue = -1;
+      double residual = -1;
+      
+      h_efficiency->GetPaintedGraph()->GetPoint(bin,x,y);
+      eyh = h_efficiency->GetPaintedGraph()->GetErrorYhigh(bin);
+      eyl = h_efficiency->GetPaintedGraph()->GetErrorYlow(bin);
+      exh = h_efficiency->GetPaintedGraph()->GetErrorXhigh(bin);
+      exl = h_efficiency->GetPaintedGraph()->GetErrorXlow(bin);      
+      //cout << exl << " , " << exh << endl;
+
+      g_residual->SetPoint(bin,x,0);
+      g_residual->RemovePoint(bin);
+
+      if(doFit==1)
+	{
+	  fitValue = (f1->Integral(x-exl , x+exl))/(exl+exl);
+	  
+	  if(y<fitValue)
+	    residual = (y - fitValue) / eyh;
+	  else
+	    residual = (y - fitValue) / eyl;
+	}
+      
+      //cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;   	  
+      if(x>xminFit && x<xmaxFit && doFit==1)
+	{
+	  cout << "bin = " << bin << ": x bin = (" << x-exl << "-" << x+exh 
+	       << ") , y = " << y << " + " << eyh << " - " << eyl 
+	       << " , fit = " << fitValue 
+	       << " , (y-fit) / err = " << residual 
+	       << endl ;       
+	  
+	  chi2 += pow(residual,2); 
+	  npoints++;
+
+	  g_residual->SetPoint(bin,x,residual);
+	  //g_residual->SetPointError(bin,,0);
+
+	}
+      else
+	{
+	  cout << "bin = " << bin << ": x bin = (" << x-exl << "-" << x+exh 
+	       << ") , y = " << y << " + " << eyh << " - " << eyl 
+	       << endl ;       	      
+	}
+    }
+  
+  if(doFit==1)
+    {
+      ndf = npoints - numberOfParameters;
+      chi2Norm=chi2/ndf;
+      cout << "=== chi2 = " << chi2 << endl;
+      cout << "=== npoints = " << npoints << endl;
+      cout << "=== numberOfParameters = " << numberOfParameters << endl;
+      cout << "=== normalized chi2 = " << chi2Norm << endl;
+    }
+  
+  // draw the legend
+  TLegend *legend=new TLegend(0.35,0.22,0.95,0.32);
+  //legend->SetTextFont(72);
+  //legend->SetTextSize(0.04);
+  legend->SetFillStyle(0);
+  legend->SetLineColor(0);
+  legend->SetShadowColor(0);
+  legend->AddEntry(h_efficiency,mytitlelegend,"lpe");
+  legend->Draw();
+  //    }
+  
   //====================================================================================
   //Draw
-
+  
   //## Trigger Efficiency plot ##
   // writing the lumi information and the CMS "logo"
   CMS_lumi( canv, iPeriod, iPos ); 
@@ -299,7 +389,7 @@ void triggerEfficiency()
   canv->Print(myoutputfilename+".pdf",".pdf");
   canv->Print(myoutputfilename+".png",".png");
   canv->Print(myoutputfilename+".root",".root");
-  
+
   //## Trigger Efficiency plot (zoom) ## 
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xminZoom,xmaxZoom);
   h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(yminZoom,ymaxZoom);
@@ -362,6 +452,82 @@ void triggerEfficiency()
   canv->Print(myoutputfilename+"_histo.png",".png");
   
 
+  //## Fit result ##
+  TCanvas* canv2 = new TCanvas("canv2","canv2",50,50,W,H);
+
+  // //pad 1
+  TPad *pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
+  pad1->SetBottomMargin(0.15); // Upper and lower plot are joined
+  pad1->SetGridx();         // Vertical grid
+  pad1->SetGridy();         // Vertical grid
+  pad1->Draw();
+  pad1->cd(); 
+
+  TGraphAsymmErrors *g_efficiency = (TGraphAsymmErrors*) h_efficiency->GetPaintedGraph();
+  g_efficiency->Draw("ap");
+  f1->Draw("same");
+  gPad->Update();
+
+  TPaveStats *st = (TPaveStats*)g_efficiency->FindObject("stats");
+  st->Delete();
+  TPaveText *fit_stat = new TPaveText(0.52,0.22,0.91,0.58,"NDC");    
+  char chi2text[100]; 
+  sprintf (chi2text, "chi2/ndf = %.1f/%d = %.1f", chi2, ndf, chi2Norm);
+  fit_stat->AddText(chi2text);
+  char par0text[100]; 
+  sprintf (par0text, "p0 = %.6f #pm %.6f", f1->GetParameter(0), f1->GetParError(0));
+  fit_stat->AddText(par0text);
+  char par1text[100]; 
+  sprintf (par1text, "p1 = %.1f #pm %.1f", f1->GetParameter(1), f1->GetParError(1));
+  fit_stat->AddText(par1text);
+  char par2text[100]; 
+  sprintf (par2text, "p2 = %.1f #pm %.1f", f1->GetParameter(2), f1->GetParError(2));
+  fit_stat->AddText(par2text);
+
+  fit_stat->SetFillColor(0);
+  fit_stat->SetLineColor(1);
+  fit_stat->SetFillStyle(1001);
+  fit_stat->SetBorderSize(1);
+  fit_stat->SetTextFont(42);
+  fit_stat->SetTextSize(0.040);
+  fit_stat->SetTextAlign(12); 
+  fit_stat->SetTextColor(1); 
+  fit_stat->Draw("SAME");
+
+  // //pad 1
+  canv2->cd();
+  TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, 0.3);
+  pad2->SetTopMargin(0.); // Upper and lower plot are joined
+  pad2->SetBottomMargin(0.15); // Upper and lower plot are joined
+  pad2->SetGridx();         // Vertical grid
+  pad2->SetGridy();         // Vertical grid
+  pad2->Draw();
+  pad2->cd(); 
+  g_residual->SetFillColor(2);
+  g_residual->SetLineColor(0);
+  g_residual->GetXaxis()->SetRangeUser(pad1->GetUxmin(),pad1->GetUxmax()); 
+  g_residual->GetXaxis()->SetNdivisions(505);
+  g_residual->GetYaxis()->SetRangeUser(-3.5,3.5); 
+  g_residual->GetYaxis()->SetLabelSize(0.1); 
+  g_residual->GetYaxis()->SetTitleSize(0.1); 
+  g_residual->GetYaxis()->SetTitleOffset(0.5); 
+  g_residual->GetYaxis()->SetTitle("#frac{(Data-Fit)}{#sigma_{stat}}"); 
+
+  g_residual->Draw("AP");
+
+
+  canv2->Update();
+  canv2->Modified();
+  gPad->Update();
+  canv2->Print(myoutputfilename+"_fit.root",".root");
+  canv2->Print(myoutputfilename+"_fit.png",".png");
+
+
+
+
+  //## Store TEfficiency ##
+  TFile outputFile("output.root","recreate");
+  h_efficiency->Write();  
 
 
   //-----------------------------------------------------------------------------

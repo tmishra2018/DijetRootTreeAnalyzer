@@ -19,6 +19,12 @@ setenv MYCMSSW "/cmshome/santanas/CMS/Releases/CMSSW_7_4_3"
 Follow instructions at 
 https://twiki.cern.ch/twiki/bin/view/CMS/ExoDijet13TeVSubmitJobsWithCrab2014
 
+Copy files to your T2 if needed by using 
+https://github.com/CMSDIJET/Utilities/blob/master/scripts/copyWithLcg.py
+
+The big root trees for data are here 
+high-mass: https://github.com/CMSDIJET/DijetRootTreeMaker/blob/master/data/json/README
+
 #######################################
 2) Create lists to produce reduced skims
 #######################################
