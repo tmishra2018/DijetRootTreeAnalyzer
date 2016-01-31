@@ -185,9 +185,7 @@ void analysisClass::Loop()
      // if (Cut(ientry) < 0) continue;
    
      ////////////////////// User's code starts here ///////////////////////
-
-     if(evtNo==120812456 && runNo==258159 && lumi==94) verbose =true;
-
+     
      if(verbose) std::cout<< std::endl;
      if(verbose) std::cout<< "run number: "<< runNo << std::endl;
 
@@ -239,11 +237,8 @@ void analysisClass::Loop()
 
      if( int(getPreCutValue1("useJECs"))==1 )
        {
-
 	 if(verbose) std::cout << "USE JECS"<<std::endl;
-
 	 // sort jets by increasing pT
-	 std::multimap<double, unsigned> sortedJets;
 	 std::multimap<double, unsigned> sortedRecoJets;
 
 	 for(size_t j=0; j<no_jetsReco_ak4; ++j)
@@ -256,12 +251,12 @@ void analysisClass::Loop()
 	     JetCorrector->setJetEta(jetEtaAK4reco->at(j));
 	     JetCorrector->setJetPt(jetPtAK4reco->at(j)/jetJecAK4reco->at(j)); //pTraw
 	     JetCorrector->setJetA(jetAreaAK4reco->at(j));
-	     JetCorrector->setRho(rho);
+	     JetCorrector->setRho(rhoreco);
 	     //Data
   	     JetCorrector_data->setJetEta(jetEtaAK4reco->at(j));
 	     JetCorrector_data->setJetPt(jetPtAK4reco->at(j)/jetJecAK4reco->at(j)); //pTraw
 	     JetCorrector_data->setJetA(jetAreaAK4reco->at(j));
-	     JetCorrector_data->setRho(rho);
+	     JetCorrector_data->setRho(rhoreco);
 
   	     //nominal value of JECs
 	     double correction;//, old_correction, nominal_correction;
@@ -313,6 +308,8 @@ void analysisClass::Loop()
 	   }
 	 }
 	 
+	 // sort jets by increasing pT
+	 std::multimap<double, unsigned> sortedJets;
 	 for(size_t j=0; j<no_jets_ak4; ++j)
 	   { // HLT Jets
 	     //  if(verbose) std::cout << "HLT jets # "<< j << std::endl;
@@ -340,7 +337,7 @@ void analysisClass::Loop()
 	     //}
 	     
 	     //	     if(verbose) std::cout << "Corrections "<< correction << std::endl;
-	     
+	  	     
 	     //JEC uncertainties
 	     unc->setJetEta(jetEtaAK4->at(j));
 	     unc->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
@@ -456,7 +453,7 @@ void analysisClass::Loop()
      
      if(verbose) std::cout << "number of reco Jet "<< no_jetsReco_ak4 << std::endl;
      if(verbose) std::cout << "number of HLT Jet "<< no_jets_ak4 << std::endl;
-     
+   
      for(size_t ijet=0; ijet<no_jetsReco_ak4; ++ijet)
        {       // Reco Jets
 	 //cout << "evtNo: " << evtNo << endl;	 
@@ -505,7 +502,7 @@ void analysisClass::Loop()
 
      if(verbose) std::cout << "Nak4 HLT "<< Nak4 << std::endl;
      if(verbose) std::cout << "HTak4 HLT "<< HTak4 << std::endl;
-     
+   
      // +++++++++++++++++ Reco analysis
      
      if( int(getPreCutValue1("useFastJet"))==1 )
@@ -670,7 +667,7 @@ void analysisClass::Loop()
 	 widejetsReco.push_back( wj1Reco );
 	 widejetsReco.push_back( wj2Reco );
        }
-     
+       
      //AK4reco jets
      if(no_jetsReco_ak4>=2)
        //cout << "eta j1 " << jetEtaAK4reco->at(sortedRecoJetIdx[0]) << endl;
@@ -695,7 +692,7 @@ void analysisClass::Loop()
 	       }
 	   }
        }// end of two reco jets  
-
+   
      double MJJAK4reco = 0; 
      double DeltaEtaJJAK4reco = 0;
      double DeltaPhiJJAK4reco = 0;
@@ -714,7 +711,7 @@ void analysisClass::Loop()
        AK4recojets.push_back( ak4j2Reco );
      }
    
-     if(verbose)     std::cout<<"Qui ci arriva?"<<std::endl;
+     if(verbose)     std::cout<<"Start HLT analysis"<<std::endl;  
 
      // +++++++++++++++++++++ HLT Analysis
 
@@ -841,7 +838,7 @@ void analysisClass::Loop()
 	   }
        }// end building wide jet 
      
-     
+   
      double MJJWide = 0; 
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
@@ -904,125 +901,11 @@ void analysisClass::Loop()
 	 AK4jets.push_back( ak4j1 );
 	 AK4jets.push_back( ak4j2 );
        }
+   
         
-     if(verbose) std::cout<<"Qua ci arriva?"<<std::endl;
+     //////////////////////
+     if(verbose)     std::cout<<"Start fillVariableWithValue"<<std::endl;
 
-     /////////////////////////////////////
-     
-     //     if(verbose) std::cout << "number of ak4 RECO jet "<< AK4recojets.size() << std::endl;
-     //     if(verbose) std::cout << "number of ak4 HLT jet "<< AK4jets.size() << std::endl;
-
-     /*     
-     if( AK4recojets.size() !=0  && AK4jets.size() !=0 ) {
-       CreateAndFillUserTH1D("Nevents_Nojet", 10, 0, 10, 1 );
-       CreateAndFillUserTH2D("ptReco_vs_ptHLT", 100, 0, 1000, 100, 0, 1000, AK4recojets[0].Pt(), AK4jets[0].Pt() );
-       CreateAndFillUserTH2D("ptReco_vs_ptHLT", 100, 0, 1000, 100, 0, 1000, AK4recojets[1].Pt(), AK4jets[1].Pt() );
-     }
-     
-     
-     if( AK4recojets.size() ==1){
-       CreateAndFillUserTH1D("Nevents_Reco1", 10, 0, 10, 1 );
-       if(AK4jets.size() ==1 )
-       {
-       CreateAndFillUserTH1D("Nevents_Reco1HLT1", 10, 0, 10, 1 );
-       }else if(AK4jets.size() ==2 ){
-       CreateAndFillUserTH1D("Nevents_Reco1HLT2", 10, 0, 10, 1 );
-       }
-       }
-       if( AK4recojets.size() ==2){
-       CreateAndFillUserTH1D("Nevents_Reco2", 10, 0, 10, 1 );
-       if(AK4jets.size() ==1 ) {
-       CreateAndFillUserTH1D("Nevents_Reco2HLT1", 10, 0, 10, 1 );
-       }else if(AK4jets.size() ==2 ) {
-       CreateAndFillUserTH1D("Nevents_Reco2HLT2", 10, 0, 10, 1 );
-       }
-       }
-     */
-
-     // Compare with WIDEJETS
-     if( widejetsReco.size() !=0  && widejets.size() !=0 ) {
-       //       double R_min = 1000;
-       
-       double DeltaReco1HLT1 = widejetsReco[0].DeltaR(widejets[0]);
-       double DeltaReco1HLT2 = widejetsReco[0].DeltaR(widejets[1]);
-       double DeltaReco2HLT1 = widejetsReco[1].DeltaR(widejets[0]);
-       double DeltaReco2HLT2 = widejetsReco[1].DeltaR(widejets[1]);
-
-       /*
-       cout << endl;
-       cout << "deltaR Reco1-HLT1 " <<  DeltaReco1HLT1 << endl;
-       cout << "deltaR Reco1-HLT2 " <<  DeltaReco1HLT2 << endl;
-       cout << "deltaR Reco2-HLT1 " <<  DeltaReco2HLT1 << endl;
-       cout << "deltaR Reco2-HLT2 " <<  DeltaReco2HLT2 << endl;
-       */
-
-       vector<TLorentzVector> widejetsReco_SortedMatching;
-       if( DeltaReco1HLT1 <= DeltaReco2HLT1 )
-	 {
-	   widejetsReco_SortedMatching.push_back( widejetsReco[0] );
-	   widejetsReco_SortedMatching.push_back( widejetsReco[1] );	 
-	 }else
-	 {
-	   widejetsReco_SortedMatching.push_back( widejetsReco[1] );
-	   widejetsReco_SortedMatching.push_back( widejetsReco[0] );
-	 }
-       
-       double dR_min;
-       //il matching e' molto buono
-       for(int ii=0; ii<2; ii++){
-	 dR_min= widejetsReco_SortedMatching[ii].DeltaR(widejets[ii]);
-	 CreateAndFillUserTH1D("deltaR_minimum", 500, 0, 5, dR_min);
-	 //	 cout << "dR_min " << dR_min << endl;
-	 
-	 if(dR_min<0.3){
-	   CreateAndFillUserTH2D("ptReco_vs_ptHLT", 300, 0, 3000, 300, 0, 3000, widejetsReco_SortedMatching[ii].Pt(), widejets[ii].Pt() );
-	   //pT(Reco) - pT(HLT) / pT(Reco)	   
-	   double pTResolution = ( widejetsReco_SortedMatching[ii].Pt() - widejets[ii].Pt() )/ widejetsReco_SortedMatching[ii].Pt(); 
-	   CreateAndFillUserTH1D("pTResolution", 300, -2, 2, pTResolution);
-	   
-	   if( widejetsReco_SortedMatching[ii].Pt() > 300 && fabs(widejetsReco_SortedMatching[ii].Eta()) < 1.5 ){
-	     CreateAndFillUserTH1D("pTResolutionCut1", 300, -2, 2, pTResolution);
-	     CreateAndFillUserTH2D("ptReco_vs_ptHLTCut1", 300, 0, 3000, 300, 0, 3000, widejetsReco_SortedMatching[ii].Pt(), widejets[ii].Pt() );
-	   }
-
-	   if( widejetsReco_SortedMatching[ii].Pt() > 300 && fabs(widejetsReco_SortedMatching[ii].Eta()) >= 1.5 && fabs(widejetsReco_SortedMatching[ii].Eta()) < 2.5 ){
-	     CreateAndFillUserTH1D("pTResolutionCut2", 300, -2, 2, pTResolution);
-	     CreateAndFillUserTH2D("ptReco_vs_ptHLTCut2", 300, 0, 3000, 300, 0, 3000, widejetsReco_SortedMatching[ii].Pt(), widejets[ii].Pt() );
-	   }
-
-       	 }//dR cut
-       }// for on jets number
-     }// se ho almeno 1 jet
-   
-       /*
-       double dR_min = 100;
-       int RecoIdx = 10;
-       int HLTIdx = 10;
-       for(Long64_t iHLT=0; iHLT< AK4jets.size(); iHLT++){
-	 for(Long64_t iReco=0; iReco< AK4recojets.size(); iReco++){
-
-	   double dR = AK4recojets[iReco].DeltaR(AK4jets[iHLT]);
-
-	   cout << "dR = " <<  dR << endl;
-	   cout << "tra Reco = " <<  iReco << endl;
-	   cout << "e HLT = " <<  iHLT << endl;
-
-	   if(dR <= dR_min){
-	     dR_min = dR;
-	     RecoIdx = iReco;
-	     HLTIdx = iHLT;
-	   }
-
-	 }
-       }
-       cout << "dR_min " <<  dR_min << endl;
-       cout << "Reco Index " <<  RecoIdx << endl;
-       cout << "HLT Index " <<  HLTIdx << endl;
-       */
-   
-     if(verbose)     std::cout<<"fillVariableWithValue"<<std::endl;
-
-     /////////////////////////////////////////////////////////////////
      //== Fill Variables ==
      fillVariableWithValue("isData",isData);     
      fillVariableWithValue("run",runNo);     
