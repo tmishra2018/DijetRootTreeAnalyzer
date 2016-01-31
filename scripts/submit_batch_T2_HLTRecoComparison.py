@@ -54,7 +54,7 @@ for line in  ins:
     line = line.rstrip('\n')
     sample = sample.rstrip('\n')
     
-    command = "./main "+opt.input+"/"+line+" config/cutFile_mainDijetScoutingMonitor.txt dijetscouting/events "+opt.output+"/rootfile_"+sample+" "+opt.output+"/cutEfficiencyFile_"+sample
+    command = "./main "+opt.input+"/"+line+" config/cutFile_HLTRecoComparison.txt rootTupleTree/tree "+opt.output+"/rootfileCOmparison_"+sample+" "+opt.output+"/cutEfficiencyFileComparison_"+sample
     print "submit "+command
     print ""
     

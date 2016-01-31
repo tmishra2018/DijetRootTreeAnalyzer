@@ -79,7 +79,6 @@ njobs_list = []
 #hadd_cmd = []
 #filenames_skim = []
 splittedDir = "splitted"+"_"+simpletimeMarker
-
 ##create a directory to store logfiles containing the "tag" in the name
 os.system("mkdir batch/"+newTag)
 os.system("mkdir "+opt.input+"/"+splittedDir)
