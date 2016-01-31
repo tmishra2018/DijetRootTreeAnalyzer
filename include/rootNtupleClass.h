@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Oct 13 15:59:53 2015 by ROOT version 5.34/32
-// from TChain dijets/events/
+// Sat Jan 30 19:27:01 2016 by ROOT version 6.02/05
+// from TChain rootTupleTree/tree/
 //////////////////////////////////////////////////////////
 
 #ifndef rootNtupleClass_h
@@ -17,338 +17,293 @@ using namespace std;
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
-#include <vector>
-#include <vector>
-#include <vector>
-
-// Fixed size dimensions of array or collections stored in the TTree if any.
-   const Int_t kMaxrun = 1;
-   const Int_t kMaxevt = 1;
-   const Int_t kMaxlumi = 1;
-   const Int_t kMaxnVtx = 1;
-   const Int_t kMaxrho = 1;
-   const Int_t kMaxmet = 1;
-   const Int_t kMaxmetSig = 1;
-   const Int_t kMaxnJetsAK4 = 1;
-   const Int_t kMaxhtAK4 = 1;
-   const Int_t kMaxmjjAK4 = 1;
-   const Int_t kMaxdEtajjAK4 = 1;
-   const Int_t kMaxdPhijjAK4 = 1;
-   const Int_t kMaxnJetsAK8 = 1;
-   const Int_t kMaxhtAK8 = 1;
-   const Int_t kMaxmjjAK8 = 1;
-   const Int_t kMaxdEtajjAK8 = 1;
-   const Int_t kMaxdPhijjAK8 = 1;
-   const Int_t kMaxpassFilterHBHE = 1;
-   const Int_t kMaxpassFilterCSCHalo = 1;
-   const Int_t kMaxpassFilterHCALlaser = 1;
-   const Int_t kMaxpassFilterECALDeadCell = 1;
-   const Int_t kMaxpassFilterGoodVtx = 1;
-   const Int_t kMaxpassFilterTrkFailure = 1;
-   const Int_t kMaxpassFilterEEBadSc = 1;
-   const Int_t kMaxpassFilterECALlaser = 1;
-   const Int_t kMaxpassFilterTrkPOG = 1;
-   const Int_t kMaxpassFilterTrkPOG_manystrip = 1;
-   const Int_t kMaxpassFilterTrkPOG_toomanystrip = 1;
-   const Int_t kMaxpassFilterTrkPOG_logError = 1;
-   const Int_t kMaxptHat = 1;
-   const Int_t kMaxprocessID = 1;
-   const Int_t kMaxweight = 1;
-   const Int_t kMaxnGenJetsAK4 = 1;
-   const Int_t kMaxnGenJetsAK8 = 1;
 
 class rootNtupleClass {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
 
+// Fixed size dimensions of array or collections stored in the TTree if any.
+
    // Declaration of leaf types
-   Int_t           runNo;
-   Int_t           evtNo;
-   Int_t           lumi;
-   Int_t           nvtx;
-   Float_t         rho;
-   Float_t         met;
-   Float_t         metSig;
-   vector<float>   *gen_eta;
-   vector<float>   *gen_phi;
-   vector<float>   *gen_p;
-   vector<float>   *gen_px;
-   vector<float>   *gen_py;
-   vector<float>   *gen_pz;
-   vector<float>   *gen_pt;
-   vector<float>   *gen_energy;
-   vector<int>     *gen_pdgId;
-   vector<float>   *gen_vx;
-   vector<float>   *gen_vy;
-   vector<float>   *gen_vz;
-   vector<int>     *gen_numDaught;
-   vector<int>     *gen_status;
-   vector<int>     *gen_index;
-   vector<int>     *gen_motherIndex;
-   Int_t           nJetsAK4;
-   Float_t         htAK4;
-   Float_t         mjjAK4;
-   Float_t         dEtajjAK4;
-   Float_t         dPhijjAK4;
-   Int_t           nJetsAK8;
-   Float_t         htAK8;
-   Float_t         mjjAK8;
-   Float_t         dEtajjAK8;
-   Float_t         dPhijjAK8;
-   vector<float>   *jetPtAK4;
-   vector<float>   *jetJecAK4;
-   vector<float>   *jetEtaAK4;
-   vector<float>   *jetPhiAK4;
-   vector<float>   *jetMassAK4;
-   vector<float>   *jetEnergyAK4;
-   vector<float>   *jetAreaAK4;
-   vector<float>   *jetChfAK4;
-   vector<float>   *jetNhfAK4;
-   vector<float>   *jetPhfAK4;
-   vector<float>   *jetMufAK4;
-   vector<float>   *jetElfAK4;
-   vector<float>   *jetNemfAK4;
-   vector<float>   *jetCemfAK4;
-   vector<float>   *jetHf_hfAK4;
-   vector<float>   *jetHf_emfAK4;
-   vector<float>   *jetHofAK4;
-   vector<int>     *idLAK4;
-   vector<int>     *idTAK4;
-   vector<int>     *chHadMultAK4;
-   vector<int>     *chMultAK4;
-   vector<int>     *neHadMultAK4;
-   vector<int>     *neMultAK4;
-   vector<int>     *phoMultAK4;
-   vector<float>   *jetPtAK4matchCaloJet;
-   vector<float>   *jetEmfAK4matchCaloJet;
-   vector<float>   *jetPtAK4Calo;
-   vector<float>   *jetJecAK4Calo;
-   vector<float>   *jetEtaAK4Calo;
-   vector<float>   *jetPhiAK4Calo;
-   vector<float>   *jetMassAK4Calo;
-   vector<float>   *jetEnergyAK4Calo;
-   vector<float>   *jetAreaAK4Calo;
-   vector<float>   *jetEmfAK4Calo;
-   vector<float>   *jetPtAK4PFCluster;
-   vector<float>   *jetJecAK4PFCluster;
-   vector<float>   *jetEtaAK4PFCluster;
-   vector<float>   *jetPhiAK4PFCluster;
-   vector<float>   *jetMassAK4PFCluster;
-   vector<float>   *jetEnergyAK4PFCluster;
-   vector<float>   *jetAreaAK4PFCluster;
-   vector<float>   *jetPtAK4PFCalo;
-   vector<float>   *jetJecAK4PFCalo;
-   vector<float>   *jetEtaAK4PFCalo;
-   vector<float>   *jetPhiAK4PFCalo;
-   vector<float>   *jetMassAK4PFCalo;
-   vector<float>   *jetEnergyAK4PFCalo;
-   vector<float>   *jetAreaAK4PFCalo;
-   vector<float>   *jetEmfAK4PFCalo;
-   vector<float>   *jetPtAK8;
-   vector<float>   *jetJecAK8;
-   vector<float>   *jetEtaAK8;
-   vector<float>   *jetPhiAK8;
-   vector<float>   *jetMassAK8;
-   vector<float>   *jetEnergyAK8;
-   vector<float>   *jetAreaAK8;
-   vector<float>   *jetChfAK8;
-   vector<float>   *jetNhfAK8;
-   vector<float>   *jetPhfAK8;
-   vector<float>   *jetMufAK8;
-   vector<float>   *jetElfAK8;
-   vector<float>   *jetNemfAK8;
-   vector<float>   *jetCemfAK8;
-   vector<float>   *jetHf_hfAK8;
-   vector<float>   *jetHf_emfAK8;
-   vector<float>   *jetHofAK8;
-   vector<int>     *idLAK8;
-   vector<int>     *idTAK8;
-   vector<float>   *jetMassPrunedAK8;
-   vector<float>   *jetMassSoftDropAK8;
-   vector<float>   *jetTau1AK8;
-   vector<float>   *jetTau2AK8;
-   vector<float>   *jetTau3AK8;
-   vector<int>     *chHadMultAK8;
-   vector<int>     *chMultAK8;
-   vector<int>     *neHadMultAK8;
-   vector<int>     *neMultAK8;
-   vector<int>     *phoMultAK8;
-   vector<bool>    *triggerResult;
-   Bool_t          passFilterHBHE;
-   Bool_t          passFilterCSCHalo;
-   Bool_t          passFilterHCALlaser;
-   Bool_t          passFilterECALDeadCell;
-   Bool_t          passFilterGoodVtx;
-   Bool_t          passFilterTrkFailure;
-   Bool_t          passFilterEEBadSc;
-   Bool_t          passFilterECALlaser;
-   Bool_t          passFilterTrkPOG;
-   Bool_t          passFilterTrkPOG_manystrip;
-   Bool_t          passFilterTrkPOG_toomanystrip;
-   Bool_t          passFilterTrkPOG_logError;
-   vector<float>   *npu;
-   vector<int>     *PileupInteractions;
-   vector<int>     *PileupOriginBX;
-   Float_t         ptHat;
-   Int_t           processID;
-   Float_t         weight;
-   Int_t           nGenJetsAK4;
-   Int_t           nGenJetsAK8;
-   vector<float>   *jetPtGenAK4;
-   vector<float>   *jetEtaGenAK4;
-   vector<float>   *jetPhiGenAK4;
-   vector<float>   *jetMassGenAK4;
-   vector<float>   *jetEnergyGenAK4;
-   vector<float>   *jetPtGenAK8;
-   vector<float>   *jetEtaGenAK8;
-   vector<float>   *jetPhiGenAK8;
-   vector<float>   *jetMassGenAK8;
-   vector<float>   *jetEnergyGenAK8;
+   Double_t        CosThetaStarAK4;
+   Double_t        CosThetaStarAK4reco;
+   Double_t        CosThetaStarWJ;
+   Double_t        CosThetaStarWJreco;
+   Double_t        Dijet_MassAK4;
+   Double_t        Dijet_MassAK4reco;
+   Double_t        IdTight_j1;
+   Double_t        IdTight_j2;
+   Double_t        IdTight_recoj1;
+   Double_t        IdTight_recoj2;
+   Double_t        Nak4;
+   Double_t        Nak4reco;
+   Double_t        PassJSON;
+   Double_t        chargedElectromFrac_j1;
+   Double_t        chargedElectromFrac_j2;
+   Double_t        chargedElectromFrac_recoj1;
+   Double_t        chargedElectromFrac_recoj2;
+   Double_t        chargedHadEnFrac_j1;
+   Double_t        chargedHadEnFrac_j2;
+   Double_t        chargedHadEnFrac_recoj1;
+   Double_t        chargedHadEnFrac_recoj2;
+   Double_t        chargedMult_j1;
+   Double_t        chargedMult_j2;
+   Double_t        chargedMult_recoj1;
+   Double_t        chargedMult_recoj2;
+   Double_t        deltaETAjj;
+   Double_t        deltaETAjjAK4;
+   Double_t        deltaETAjjAK4reco;
+   Double_t        deltaETAjjreco;
+   Double_t        deltaPHIjj;
+   Double_t        deltaPHIjjAK4;
+   Double_t        deltaPHIjjAK4reco;
+   Double_t        deltaPHIjjreco;
+   Double_t        eleEnFract_j1;
+   Double_t        eleEnFract_j2;
+   Double_t        eleEnFract_recoj1;
+   Double_t        eleEnFract_recoj2;
+   Double_t        etaAK4_j1;
+   Double_t        etaAK4_j2;
+   Double_t        etaAK4_recoj1;
+   Double_t        etaAK4_recoj2;
+   Double_t        etaWJ_j1;
+   Double_t        etaWJ_j2;
+   Double_t        etaWJ_recoj1;
+   Double_t        etaWJ_recoj2;
+   Double_t        event;
+   Double_t        htAK4;
+   Double_t        htAK4reco;
+   Double_t        isData;
+   Double_t        jetCSVAK4_j1;
+   Double_t        jetCSVAK4_j2;
+   Double_t        jetCSVAK4_recoj1;
+   Double_t        jetCSVAK4_recoj2;
+   Double_t        jetJecAK4_j1;
+   Double_t        jetJecAK4_j2;
+   Double_t        jetJecAK4_recoj1;
+   Double_t        jetJecAK4_recoj2;
+   Double_t        jetJecUncAK4_j1;
+   Double_t        jetJecUncAK4_j2;
+   Double_t        jetJecUncAK4_recoj1;
+   Double_t        jetJecUncAK4_recoj2;
+   Double_t        lumi;
+   Double_t        massWJ_j1;
+   Double_t        massWJ_j2;
+   Double_t        massWJ_recoj1;
+   Double_t        massWJ_recoj2;
+   Double_t        met;
+   Double_t        metSig;
+   Double_t        metreco;
+   Double_t        metrecoSig;
+   Double_t        mhtAK4;
+   Double_t        mhtAK4Sig;
+   Double_t        mhtAK4reco;
+   Double_t        mhtAK4recoSig;
+   Double_t        mjj;
+   Double_t        mjj_shiftJEC;
+   Double_t        mjjreco;
+   Double_t        mjjreco_shiftJEC;
+   Double_t        muEnFract_j1;
+   Double_t        muEnFract_j2;
+   Double_t        muEnFract_recoj1;
+   Double_t        muEnFract_recoj2;
+   Double_t        nJet;
+   Double_t        nJetreco;
+   Double_t        nVtx;
+   Double_t        nVtxreco;
+   Double_t        neutrElectromFrac_j1;
+   Double_t        neutrElectromFrac_j2;
+   Double_t        neutrElectromFrac_recoj1;
+   Double_t        neutrElectromFrac_recoj2;
+   Double_t        neutrHadEnFrac_j1;
+   Double_t        neutrHadEnFrac_j2;
+   Double_t        neutrHadEnFrac_recoj1;
+   Double_t        neutrHadEnFrac_recoj2;
+   Double_t        neutrMult_j1;
+   Double_t        neutrMult_j2;
+   Double_t        neutrMult_recoj1;
+   Double_t        neutrMult_recoj2;
+   Double_t        offMet;
+   Double_t        offMetSig;
+   Double_t        pTAK4_j1;
+   Double_t        pTAK4_j2;
+   Double_t        pTAK4_recoj1;
+   Double_t        pTAK4_recoj2;
+   Double_t        pTWJ_j1;
+   Double_t        pTWJ_j2;
+   Double_t        pTWJ_recoj1;
+   Double_t        pTWJ_recoj2;
+   Double_t        passHLT_CaloJet40;
+   Double_t        passHLT_CaloJet40_BtagSeq;
+   Double_t        passHLT_HT450;
+   Double_t        passHLT_HT450_BtagSeq;
+   Double_t        passHLT_L1DoubleMu;
+   Double_t        passHLT_L1DoubleMu_BtagSeq;
+   Double_t        passHLT_L1HTT150;
+   Double_t        passHLT_L1HTT150_BtagSeq;
+   Double_t        passHLT_PFHT650MJJ900;
+   Double_t        passHLT_PFHT650MJJ950;
+   Double_t        passHLT_PFHT800;
+   Double_t        passHLT_ZeroBias;
+   Double_t        passHLT_ZeroBias_BtagSeq;
+   Double_t        phiAK4_j1;
+   Double_t        phiAK4_j2;
+   Double_t        phiAK4_recoj1;
+   Double_t        phiAK4_recoj2;
+   Double_t        phiWJ_j1;
+   Double_t        phiWJ_j2;
+   Double_t        phiWJ_recoj1;
+   Double_t        phiWJ_recoj2;
+   Double_t        photonEnFrac_j1;
+   Double_t        photonEnFrac_j2;
+   Double_t        photonEnFrac_recoj1;
+   Double_t        photonEnFrac_recoj2;
+   Double_t        photonMult_j1;
+   Double_t        photonMult_j2;
+   Double_t        photonMult_recoj1;
+   Double_t        photonMult_recoj2;
+   Double_t        run;
 
    // List of branches
-   TBranch        *b_run_;   //!
-   TBranch        *b_evt_;   //!
-   TBranch        *b_lumi_;   //!
-   TBranch        *b_nVtx_;   //!
-   TBranch        *b_rho_;   //!
-   TBranch        *b_met_;   //!
-   TBranch        *b_metSig_;   //!
-   TBranch        *b_gen_eta;   //!
-   TBranch        *b_gen_phi;   //!
-   TBranch        *b_gen_p;   //!
-   TBranch        *b_gen_px;   //!
-   TBranch        *b_gen_py;   //!
-   TBranch        *b_gen_pz;   //!
-   TBranch        *b_gen_pt;   //!
-   TBranch        *b_gen_energy;   //!
-   TBranch        *b_gen_pdgId;   //!
-   TBranch        *b_gen_vx;   //!
-   TBranch        *b_gen_vy;   //!
-   TBranch        *b_gen_vz;   //!
-   TBranch        *b_gen_numDaught;   //!
-   TBranch        *b_gen_status;   //!
-   TBranch        *b_gen_index;   //!
-   TBranch        *b_gen_motherIndex;   //!
-   TBranch        *b_nJetsAK4_;   //!
-   TBranch        *b_htAK4_;   //!
-   TBranch        *b_mjjAK4_;   //!
-   TBranch        *b_dEtajjAK4_;   //!
-   TBranch        *b_dPhijjAK4_;   //!
-   TBranch        *b_nJetsAK8_;   //!
-   TBranch        *b_htAK8_;   //!
-   TBranch        *b_mjjAK8_;   //!
-   TBranch        *b_dEtajjAK8_;   //!
-   TBranch        *b_dPhijjAK8_;   //!
-   TBranch        *b_jetPtAK4;   //!
-   TBranch        *b_jetJecAK4;   //!
-   TBranch        *b_jetEtaAK4;   //!
-   TBranch        *b_jetPhiAK4;   //!
-   TBranch        *b_jetMassAK4;   //!
-   TBranch        *b_jetEnergyAK4;   //!
-   TBranch        *b_jetAreaAK4;   //!
-   TBranch        *b_jetChfAK4;   //!
-   TBranch        *b_jetNhfAK4;   //!
-   TBranch        *b_jetPhfAK4;   //!
-   TBranch        *b_jetMufAK4;   //!
-   TBranch        *b_jetElfAK4;   //!
-   TBranch        *b_jetNemfAK4;   //!
-   TBranch        *b_jetCemfAK4;   //!
-   TBranch        *b_jetHf_hfAK4;   //!
-   TBranch        *b_jetHf_emfAK4;   //!
-   TBranch        *b_jetHofAK4;   //!
-   TBranch        *b_idLAK4;   //!
-   TBranch        *b_idTAK4;   //!
-   TBranch        *b_chHadMultAK4;   //!
-   TBranch        *b_chMultAK4;   //!
-   TBranch        *b_neHadMultAK4;   //!
-   TBranch        *b_neMultAK4;   //!
-   TBranch        *b_phoMultAK4;   //!
-   TBranch        *b_jetPtAK4matchCaloJet;   //!
-   TBranch        *b_jetEmfAK4matchCaloJet;   //!
-   TBranch        *b_jetPtAK4Calo;   //!
-   TBranch        *b_jetJecAK4Calo;   //!
-   TBranch        *b_jetEtaAK4Calo;   //!
-   TBranch        *b_jetPhiAK4Calo;   //!
-   TBranch        *b_jetMassAK4Calo;   //!
-   TBranch        *b_jetEnergyAK4Calo;   //!
-   TBranch        *b_jetAreaAK4Calo;   //!
-   TBranch        *b_jetEmfAK4Calo;   //!
-   TBranch        *b_jetPtAK4PFCluster;   //!
-   TBranch        *b_jetJecAK4PFCluster;   //!
-   TBranch        *b_jetEtaAK4PFCluster;   //!
-   TBranch        *b_jetPhiAK4PFCluster;   //!
-   TBranch        *b_jetMassAK4PFCluster;   //!
-   TBranch        *b_jetEnergyAK4PFCluster;   //!
-   TBranch        *b_jetAreaAK4PFCluster;   //!
-   TBranch        *b_jetPtAK4PFCalo;   //!
-   TBranch        *b_jetJecAK4PFCalo;   //!
-   TBranch        *b_jetEtaAK4PFCalo;   //!
-   TBranch        *b_jetPhiAK4PFCalo;   //!
-   TBranch        *b_jetMassAK4PFCalo;   //!
-   TBranch        *b_jetEnergyAK4PFCalo;   //!
-   TBranch        *b_jetAreaAK4PFCalo;   //!
-   TBranch        *b_jetEmfAK4PFCalo;   //!
-   TBranch        *b_jetPtAK8;   //!
-   TBranch        *b_jetJecAK8;   //!
-   TBranch        *b_jetEtaAK8;   //!
-   TBranch        *b_jetPhiAK8;   //!
-   TBranch        *b_jetMassAK8;   //!
-   TBranch        *b_jetEnergyAK8;   //!
-   TBranch        *b_jetAreaAK8;   //!
-   TBranch        *b_jetChfAK8;   //!
-   TBranch        *b_jetNhfAK8;   //!
-   TBranch        *b_jetPhfAK8;   //!
-   TBranch        *b_jetMufAK8;   //!
-   TBranch        *b_jetElfAK8;   //!
-   TBranch        *b_jetNemfAK8;   //!
-   TBranch        *b_jetCemfAK8;   //!
-   TBranch        *b_jetHf_hfAK8;   //!
-   TBranch        *b_jetHf_emfAK8;   //!
-   TBranch        *b_jetHofAK8;   //!
-   TBranch        *b_idLAK8;   //!
-   TBranch        *b_idTAK8;   //!
-   TBranch        *b_jetMassPrunedAK8;   //!
-   TBranch        *b_jetMassSoftDropAK8;   //!
-   TBranch        *b_jetTau1AK8;   //!
-   TBranch        *b_jetTau2AK8;   //!
-   TBranch        *b_jetTau3AK8;   //!
-   TBranch        *b_chHadMultAK8;   //!
-   TBranch        *b_chMultAK8;   //!
-   TBranch        *b_neHadMultAK8;   //!
-   TBranch        *b_neMultAK8;   //!
-   TBranch        *b_phoMultAK8;   //!
-   TBranch        *b_triggerResult;   //!
-   TBranch        *b_passFilterHBHE_;   //!
-   TBranch        *b_passFilterCSCHalo_;   //!
-   TBranch        *b_passFilterHCALlaser_;   //!
-   TBranch        *b_passFilterECALDeadCell_;   //!
-   TBranch        *b_passFilterGoodVtx_;   //!
-   TBranch        *b_passFilterTrkFailure_;   //!
-   TBranch        *b_passFilterEEBadSc_;   //!
-   TBranch        *b_passFilterECALlaser_;   //!
-   TBranch        *b_passFilterTrkPOG_;   //!
-   TBranch        *b_passFilterTrkPOG_manystrip_;   //!
-   TBranch        *b_passFilterTrkPOG_toomanystrip_;   //!
-   TBranch        *b_passFilterTrkPOG_logError_;   //!
-   TBranch        *b_npu;   //!
-   TBranch        *b_PileupInteractions;   //!
-   TBranch        *b_PileupOriginBX;   //!
-   TBranch        *b_ptHat_;   //!
-   TBranch        *b_processID_;   //!
-   TBranch        *b_weight_;   //!
-   TBranch        *b_nGenJetsAK4_;   //!
-   TBranch        *b_nGenJetsAK8_;   //!
-   TBranch        *b_jetPtGenAK4;   //!
-   TBranch        *b_jetEtaGenAK4;   //!
-   TBranch        *b_jetPhiGenAK4;   //!
-   TBranch        *b_jetMassGenAK4;   //!
-   TBranch        *b_jetEnergyGenAK4;   //!
-   TBranch        *b_jetPtGenAK8;   //!
-   TBranch        *b_jetEtaGenAK8;   //!
-   TBranch        *b_jetPhiGenAK8;   //!
-   TBranch        *b_jetMassGenAK8;   //!
-   TBranch        *b_jetEnergyGenAK8;   //!
+   TBranch        *b_CosThetaStarAK4;   //!
+   TBranch        *b_CosThetaStarAK4reco;   //!
+   TBranch        *b_CosThetaStarWJ;   //!
+   TBranch        *b_CosThetaStarWJreco;   //!
+   TBranch        *b_Dijet_MassAK4;   //!
+   TBranch        *b_Dijet_MassAK4reco;   //!
+   TBranch        *b_IdTight_j1;   //!
+   TBranch        *b_IdTight_j2;   //!
+   TBranch        *b_IdTight_recoj1;   //!
+   TBranch        *b_IdTight_recoj2;   //!
+   TBranch        *b_Nak4;   //!
+   TBranch        *b_Nak4reco;   //!
+   TBranch        *b_PassJSON;   //!
+   TBranch        *b_chargedElectromFrac_j1;   //!
+   TBranch        *b_chargedElectromFrac_j2;   //!
+   TBranch        *b_chargedElectromFrac_recoj1;   //!
+   TBranch        *b_chargedElectromFrac_recoj2;   //!
+   TBranch        *b_chargedHadEnFrac_j1;   //!
+   TBranch        *b_chargedHadEnFrac_j2;   //!
+   TBranch        *b_chargedHadEnFrac_recoj1;   //!
+   TBranch        *b_chargedHadEnFrac_recoj2;   //!
+   TBranch        *b_chargedMult_j1;   //!
+   TBranch        *b_chargedMult_j2;   //!
+   TBranch        *b_chargedMult_recoj1;   //!
+   TBranch        *b_chargedMult_recoj2;   //!
+   TBranch        *b_deltaETAjj;   //!
+   TBranch        *b_deltaETAjjAK4;   //!
+   TBranch        *b_deltaETAjjAK4reco;   //!
+   TBranch        *b_deltaETAjjreco;   //!
+   TBranch        *b_deltaPHIjj;   //!
+   TBranch        *b_deltaPHIjjAK4;   //!
+   TBranch        *b_deltaPHIjjAK4reco;   //!
+   TBranch        *b_deltaPHIjjreco;   //!
+   TBranch        *b_eleEnFract_j1;   //!
+   TBranch        *b_eleEnFract_j2;   //!
+   TBranch        *b_eleEnFract_recoj1;   //!
+   TBranch        *b_eleEnFract_recoj2;   //!
+   TBranch        *b_etaAK4_j1;   //!
+   TBranch        *b_etaAK4_j2;   //!
+   TBranch        *b_etaAK4_recoj1;   //!
+   TBranch        *b_etaAK4_recoj2;   //!
+   TBranch        *b_etaWJ_j1;   //!
+   TBranch        *b_etaWJ_j2;   //!
+   TBranch        *b_etaWJ_recoj1;   //!
+   TBranch        *b_etaWJ_recoj2;   //!
+   TBranch        *b_event;   //!
+   TBranch        *b_htAK4;   //!
+   TBranch        *b_htAK4reco;   //!
+   TBranch        *b_isData;   //!
+   TBranch        *b_jetCSVAK4_j1;   //!
+   TBranch        *b_jetCSVAK4_j2;   //!
+   TBranch        *b_jetCSVAK4_recoj1;   //!
+   TBranch        *b_jetCSVAK4_recoj2;   //!
+   TBranch        *b_jetJecAK4_j1;   //!
+   TBranch        *b_jetJecAK4_j2;   //!
+   TBranch        *b_jetJecAK4_recoj1;   //!
+   TBranch        *b_jetJecAK4_recoj2;   //!
+   TBranch        *b_jetJecUncAK4_j1;   //!
+   TBranch        *b_jetJecUncAK4_j2;   //!
+   TBranch        *b_jetJecUncAK4_recoj1;   //!
+   TBranch        *b_jetJecUncAK4_recoj2;   //!
+   TBranch        *b_lumi;   //!
+   TBranch        *b_massWJ_j1;   //!
+   TBranch        *b_massWJ_j2;   //!
+   TBranch        *b_massWJ_recoj1;   //!
+   TBranch        *b_massWJ_recoj2;   //!
+   TBranch        *b_met;   //!
+   TBranch        *b_metSig;   //!
+   TBranch        *b_metreco;   //!
+   TBranch        *b_metrecoSig;   //!
+   TBranch        *b_mhtAK4;   //!
+   TBranch        *b_mhtAK4Sig;   //!
+   TBranch        *b_mhtAK4reco;   //!
+   TBranch        *b_mhtAK4recoSig;   //!
+   TBranch        *b_mjj;   //!
+   TBranch        *b_mjj_shiftJEC;   //!
+   TBranch        *b_mjjreco;   //!
+   TBranch        *b_mjjreco_shiftJEC;   //!
+   TBranch        *b_muEnFract_j1;   //!
+   TBranch        *b_muEnFract_j2;   //!
+   TBranch        *b_muEnFract_recoj1;   //!
+   TBranch        *b_muEnFract_recoj2;   //!
+   TBranch        *b_nJet;   //!
+   TBranch        *b_nJetreco;   //!
+   TBranch        *b_nVtx;   //!
+   TBranch        *b_nVtxreco;   //!
+   TBranch        *b_neutrElectromFrac_j1;   //!
+   TBranch        *b_neutrElectromFrac_j2;   //!
+   TBranch        *b_neutrElectromFrac_recoj1;   //!
+   TBranch        *b_neutrElectromFrac_recoj2;   //!
+   TBranch        *b_neutrHadEnFrac_j1;   //!
+   TBranch        *b_neutrHadEnFrac_j2;   //!
+   TBranch        *b_neutrHadEnFrac_recoj1;   //!
+   TBranch        *b_neutrHadEnFrac_recoj2;   //!
+   TBranch        *b_neutrMult_j1;   //!
+   TBranch        *b_neutrMult_j2;   //!
+   TBranch        *b_neutrMult_recoj1;   //!
+   TBranch        *b_neutrMult_recoj2;   //!
+   TBranch        *b_offMet;   //!
+   TBranch        *b_offMetSig;   //!
+   TBranch        *b_pTAK4_j1;   //!
+   TBranch        *b_pTAK4_j2;   //!
+   TBranch        *b_pTAK4_recoj1;   //!
+   TBranch        *b_pTAK4_recoj2;   //!
+   TBranch        *b_pTWJ_j1;   //!
+   TBranch        *b_pTWJ_j2;   //!
+   TBranch        *b_pTWJ_recoj1;   //!
+   TBranch        *b_pTWJ_recoj2;   //!
+   TBranch        *b_passHLT_CaloJet40;   //!
+   TBranch        *b_passHLT_CaloJet40_BtagSeq;   //!
+   TBranch        *b_passHLT_HT450;   //!
+   TBranch        *b_passHLT_HT450_BtagSeq;   //!
+   TBranch        *b_passHLT_L1DoubleMu;   //!
+   TBranch        *b_passHLT_L1DoubleMu_BtagSeq;   //!
+   TBranch        *b_passHLT_L1HTT150;   //!
+   TBranch        *b_passHLT_L1HTT150_BtagSeq;   //!
+   TBranch        *b_passHLT_PFHT650MJJ900;   //!
+   TBranch        *b_passHLT_PFHT650MJJ950;   //!
+   TBranch        *b_passHLT_PFHT800;   //!
+   TBranch        *b_passHLT_ZeroBias;   //!
+   TBranch        *b_passHLT_ZeroBias_BtagSeq;   //!
+   TBranch        *b_phiAK4_j1;   //!
+   TBranch        *b_phiAK4_j2;   //!
+   TBranch        *b_phiAK4_recoj1;   //!
+   TBranch        *b_phiAK4_recoj2;   //!
+   TBranch        *b_phiWJ_j1;   //!
+   TBranch        *b_phiWJ_j2;   //!
+   TBranch        *b_phiWJ_recoj1;   //!
+   TBranch        *b_phiWJ_recoj2;   //!
+   TBranch        *b_photonEnFrac_j1;   //!
+   TBranch        *b_photonEnFrac_j2;   //!
+   TBranch        *b_photonEnFrac_recoj1;   //!
+   TBranch        *b_photonEnFrac_recoj2;   //!
+   TBranch        *b_photonMult_j1;   //!
+   TBranch        *b_photonMult_j2;   //!
+   TBranch        *b_photonMult_recoj1;   //!
+   TBranch        *b_photonMult_recoj2;   //!
+   TBranch        *b_run;   //!
 
    rootNtupleClass(TTree *tree=0);
    virtual ~rootNtupleClass();
@@ -377,14 +332,14 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       if (!f || !f->IsOpen()) {
          f = new TFile("Memory Directory");
       }
-      f->GetObject("dijets/events",tree);
+      f->GetObject("rootTupleTree/tree",tree);
 
 #else // SINGLE_TREE
 
       // The following code should be used if you want this class to access a chain
       // of trees.
-      TChain * chain = new TChain("dijets/events","");
-      chain->Add("/afs/cern.ch/user/j/juska/dijet_eos/santanas/crab_JetHT__Run2015D-PromptReco-v3__MINIAOD__151012_071719/JetHT__Run2015D-PromptReco-v3__MINIAOD_1.root/dijets/events");
+      TChain * chain = new TChain("rootTupleTree/tree","");
+      chain->Add("output/rootTest_reduced_skim.root/rootTupleTree/tree");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -427,263 +382,150 @@ void rootNtupleClass::Init(TTree *tree)
    // Init() will be called many times when running on PROOF
    // (once per file to be processed).
 
-   // Set object pointer
-   gen_eta = 0;
-   gen_phi = 0;
-   gen_p = 0;
-   gen_px = 0;
-   gen_py = 0;
-   gen_pz = 0;
-   gen_pt = 0;
-   gen_energy = 0;
-   gen_pdgId = 0;
-   gen_vx = 0;
-   gen_vy = 0;
-   gen_vz = 0;
-   gen_numDaught = 0;
-   gen_status = 0;
-   gen_index = 0;
-   gen_motherIndex = 0;
-   jetPtAK4 = 0;
-   jetJecAK4 = 0;
-   jetEtaAK4 = 0;
-   jetPhiAK4 = 0;
-   jetMassAK4 = 0;
-   jetEnergyAK4 = 0;
-   jetAreaAK4 = 0;
-   jetChfAK4 = 0;
-   jetNhfAK4 = 0;
-   jetPhfAK4 = 0;
-   jetMufAK4 = 0;
-   jetElfAK4 = 0;
-   jetNemfAK4 = 0;
-   jetCemfAK4 = 0;
-   jetHf_hfAK4 = 0;
-   jetHf_emfAK4 = 0;
-   jetHofAK4 = 0;
-   idLAK4 = 0;
-   idTAK4 = 0;
-   chHadMultAK4 = 0;
-   chMultAK4 = 0;
-   neHadMultAK4 = 0;
-   neMultAK4 = 0;
-   phoMultAK4 = 0;
-   jetPtAK4matchCaloJet = 0;
-   jetEmfAK4matchCaloJet = 0;
-   jetPtAK4Calo = 0;
-   jetJecAK4Calo = 0;
-   jetEtaAK4Calo = 0;
-   jetPhiAK4Calo = 0;
-   jetMassAK4Calo = 0;
-   jetEnergyAK4Calo = 0;
-   jetAreaAK4Calo = 0;
-   jetEmfAK4Calo = 0;
-   jetPtAK4PFCluster = 0;
-   jetJecAK4PFCluster = 0;
-   jetEtaAK4PFCluster = 0;
-   jetPhiAK4PFCluster = 0;
-   jetMassAK4PFCluster = 0;
-   jetEnergyAK4PFCluster = 0;
-   jetAreaAK4PFCluster = 0;
-   jetPtAK4PFCalo = 0;
-   jetJecAK4PFCalo = 0;
-   jetEtaAK4PFCalo = 0;
-   jetPhiAK4PFCalo = 0;
-   jetMassAK4PFCalo = 0;
-   jetEnergyAK4PFCalo = 0;
-   jetAreaAK4PFCalo = 0;
-   jetEmfAK4PFCalo = 0;
-   jetPtAK8 = 0;
-   jetJecAK8 = 0;
-   jetEtaAK8 = 0;
-   jetPhiAK8 = 0;
-   jetMassAK8 = 0;
-   jetEnergyAK8 = 0;
-   jetAreaAK8 = 0;
-   jetChfAK8 = 0;
-   jetNhfAK8 = 0;
-   jetPhfAK8 = 0;
-   jetMufAK8 = 0;
-   jetElfAK8 = 0;
-   jetNemfAK8 = 0;
-   jetCemfAK8 = 0;
-   jetHf_hfAK8 = 0;
-   jetHf_emfAK8 = 0;
-   jetHofAK8 = 0;
-   idLAK8 = 0;
-   idTAK8 = 0;
-   jetMassPrunedAK8 = 0;
-   jetMassSoftDropAK8 = 0;
-   jetTau1AK8 = 0;
-   jetTau2AK8 = 0;
-   jetTau3AK8 = 0;
-   chHadMultAK8 = 0;
-   chMultAK8 = 0;
-   neHadMultAK8 = 0;
-   neMultAK8 = 0;
-   phoMultAK8 = 0;
-   triggerResult = 0;
-   npu = 0;
-   PileupInteractions = 0;
-   PileupOriginBX = 0;
-   jetPtGenAK4 = 0;
-   jetEtaGenAK4 = 0;
-   jetPhiGenAK4 = 0;
-   jetMassGenAK4 = 0;
-   jetEnergyGenAK4 = 0;
-   jetPtGenAK8 = 0;
-   jetEtaGenAK8 = 0;
-   jetPhiGenAK8 = 0;
-   jetMassGenAK8 = 0;
-   jetEnergyGenAK8 = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
-   fChain->SetBranchAddress("runNo", &runNo, &b_run_);
-   fChain->SetBranchAddress("evtNo", &evtNo, &b_evt_);
-   fChain->SetBranchAddress("lumi", &lumi, &b_lumi_);
-   fChain->SetBranchAddress("nvtx", &nvtx, &b_nVtx_);
-   fChain->SetBranchAddress("rho", &rho, &b_rho_);
-   fChain->SetBranchAddress("met", &met, &b_met_);
-   fChain->SetBranchAddress("metSig", &metSig, &b_metSig_);
-   fChain->SetBranchAddress("gen_eta", &gen_eta, &b_gen_eta);
-   fChain->SetBranchAddress("gen_phi", &gen_phi, &b_gen_phi);
-   fChain->SetBranchAddress("gen_p", &gen_p, &b_gen_p);
-   fChain->SetBranchAddress("gen_px", &gen_px, &b_gen_px);
-   fChain->SetBranchAddress("gen_py", &gen_py, &b_gen_py);
-   fChain->SetBranchAddress("gen_pz", &gen_pz, &b_gen_pz);
-   fChain->SetBranchAddress("gen_pt", &gen_pt, &b_gen_pt);
-   fChain->SetBranchAddress("gen_energy", &gen_energy, &b_gen_energy);
-   fChain->SetBranchAddress("gen_pdgId", &gen_pdgId, &b_gen_pdgId);
-   fChain->SetBranchAddress("gen_vx", &gen_vx, &b_gen_vx);
-   fChain->SetBranchAddress("gen_vy", &gen_vy, &b_gen_vy);
-   fChain->SetBranchAddress("gen_vz", &gen_vz, &b_gen_vz);
-   fChain->SetBranchAddress("gen_numDaught", &gen_numDaught, &b_gen_numDaught);
-   fChain->SetBranchAddress("gen_status", &gen_status, &b_gen_status);
-   fChain->SetBranchAddress("gen_index", &gen_index, &b_gen_index);
-   fChain->SetBranchAddress("gen_motherIndex", &gen_motherIndex, &b_gen_motherIndex);
-   fChain->SetBranchAddress("nJetsAK4", &nJetsAK4, &b_nJetsAK4_);
-   fChain->SetBranchAddress("htAK4", &htAK4, &b_htAK4_);
-   fChain->SetBranchAddress("mjjAK4", &mjjAK4, &b_mjjAK4_);
-   fChain->SetBranchAddress("dEtajjAK4", &dEtajjAK4, &b_dEtajjAK4_);
-   fChain->SetBranchAddress("dPhijjAK4", &dPhijjAK4, &b_dPhijjAK4_);
-   fChain->SetBranchAddress("nJetsAK8", &nJetsAK8, &b_nJetsAK8_);
-   fChain->SetBranchAddress("htAK8", &htAK8, &b_htAK8_);
-   fChain->SetBranchAddress("mjjAK8", &mjjAK8, &b_mjjAK8_);
-   fChain->SetBranchAddress("dEtajjAK8", &dEtajjAK8, &b_dEtajjAK8_);
-   fChain->SetBranchAddress("dPhijjAK8", &dPhijjAK8, &b_dPhijjAK8_);
-   fChain->SetBranchAddress("jetPtAK4", &jetPtAK4, &b_jetPtAK4);
-   fChain->SetBranchAddress("jetJecAK4", &jetJecAK4, &b_jetJecAK4);
-   fChain->SetBranchAddress("jetEtaAK4", &jetEtaAK4, &b_jetEtaAK4);
-   fChain->SetBranchAddress("jetPhiAK4", &jetPhiAK4, &b_jetPhiAK4);
-   fChain->SetBranchAddress("jetMassAK4", &jetMassAK4, &b_jetMassAK4);
-   fChain->SetBranchAddress("jetEnergyAK4", &jetEnergyAK4, &b_jetEnergyAK4);
-   fChain->SetBranchAddress("jetAreaAK4", &jetAreaAK4, &b_jetAreaAK4);
-   fChain->SetBranchAddress("jetChfAK4", &jetChfAK4, &b_jetChfAK4);
-   fChain->SetBranchAddress("jetNhfAK4", &jetNhfAK4, &b_jetNhfAK4);
-   fChain->SetBranchAddress("jetPhfAK4", &jetPhfAK4, &b_jetPhfAK4);
-   fChain->SetBranchAddress("jetMufAK4", &jetMufAK4, &b_jetMufAK4);
-   fChain->SetBranchAddress("jetElfAK4", &jetElfAK4, &b_jetElfAK4);
-   fChain->SetBranchAddress("jetNemfAK4", &jetNemfAK4, &b_jetNemfAK4);
-   fChain->SetBranchAddress("jetCemfAK4", &jetCemfAK4, &b_jetCemfAK4);
-   fChain->SetBranchAddress("jetHf_hfAK4", &jetHf_hfAK4, &b_jetHf_hfAK4);
-   fChain->SetBranchAddress("jetHf_emfAK4", &jetHf_emfAK4, &b_jetHf_emfAK4);
-   fChain->SetBranchAddress("jetHofAK4", &jetHofAK4, &b_jetHofAK4);
-   fChain->SetBranchAddress("idLAK4", &idLAK4, &b_idLAK4);
-   fChain->SetBranchAddress("idTAK4", &idTAK4, &b_idTAK4);
-   fChain->SetBranchAddress("chHadMultAK4", &chHadMultAK4, &b_chHadMultAK4);
-   fChain->SetBranchAddress("chMultAK4", &chMultAK4, &b_chMultAK4);
-   fChain->SetBranchAddress("neHadMultAK4", &neHadMultAK4, &b_neHadMultAK4);
-   fChain->SetBranchAddress("neMultAK4", &neMultAK4, &b_neMultAK4);
-   fChain->SetBranchAddress("phoMultAK4", &phoMultAK4, &b_phoMultAK4);
-   fChain->SetBranchAddress("jetPtAK4matchCaloJet", &jetPtAK4matchCaloJet, &b_jetPtAK4matchCaloJet);
-   fChain->SetBranchAddress("jetEmfAK4matchCaloJet", &jetEmfAK4matchCaloJet, &b_jetEmfAK4matchCaloJet);
-   fChain->SetBranchAddress("jetPtAK4Calo", &jetPtAK4Calo, &b_jetPtAK4Calo);
-   fChain->SetBranchAddress("jetJecAK4Calo", &jetJecAK4Calo, &b_jetJecAK4Calo);
-   fChain->SetBranchAddress("jetEtaAK4Calo", &jetEtaAK4Calo, &b_jetEtaAK4Calo);
-   fChain->SetBranchAddress("jetPhiAK4Calo", &jetPhiAK4Calo, &b_jetPhiAK4Calo);
-   fChain->SetBranchAddress("jetMassAK4Calo", &jetMassAK4Calo, &b_jetMassAK4Calo);
-   fChain->SetBranchAddress("jetEnergyAK4Calo", &jetEnergyAK4Calo, &b_jetEnergyAK4Calo);
-   fChain->SetBranchAddress("jetAreaAK4Calo", &jetAreaAK4Calo, &b_jetAreaAK4Calo);
-   fChain->SetBranchAddress("jetEmfAK4Calo", &jetEmfAK4Calo, &b_jetEmfAK4Calo);
-   fChain->SetBranchAddress("jetPtAK4PFCluster", &jetPtAK4PFCluster, &b_jetPtAK4PFCluster);
-   fChain->SetBranchAddress("jetJecAK4PFCluster", &jetJecAK4PFCluster, &b_jetJecAK4PFCluster);
-   fChain->SetBranchAddress("jetEtaAK4PFCluster", &jetEtaAK4PFCluster, &b_jetEtaAK4PFCluster);
-   fChain->SetBranchAddress("jetPhiAK4PFCluster", &jetPhiAK4PFCluster, &b_jetPhiAK4PFCluster);
-   fChain->SetBranchAddress("jetMassAK4PFCluster", &jetMassAK4PFCluster, &b_jetMassAK4PFCluster);
-   fChain->SetBranchAddress("jetEnergyAK4PFCluster", &jetEnergyAK4PFCluster, &b_jetEnergyAK4PFCluster);
-   fChain->SetBranchAddress("jetAreaAK4PFCluster", &jetAreaAK4PFCluster, &b_jetAreaAK4PFCluster);
-   fChain->SetBranchAddress("jetPtAK4PFCalo", &jetPtAK4PFCalo, &b_jetPtAK4PFCalo);
-   fChain->SetBranchAddress("jetJecAK4PFCalo", &jetJecAK4PFCalo, &b_jetJecAK4PFCalo);
-   fChain->SetBranchAddress("jetEtaAK4PFCalo", &jetEtaAK4PFCalo, &b_jetEtaAK4PFCalo);
-   fChain->SetBranchAddress("jetPhiAK4PFCalo", &jetPhiAK4PFCalo, &b_jetPhiAK4PFCalo);
-   fChain->SetBranchAddress("jetMassAK4PFCalo", &jetMassAK4PFCalo, &b_jetMassAK4PFCalo);
-   fChain->SetBranchAddress("jetEnergyAK4PFCalo", &jetEnergyAK4PFCalo, &b_jetEnergyAK4PFCalo);
-   fChain->SetBranchAddress("jetAreaAK4PFCalo", &jetAreaAK4PFCalo, &b_jetAreaAK4PFCalo);
-   fChain->SetBranchAddress("jetEmfAK4PFCalo", &jetEmfAK4PFCalo, &b_jetEmfAK4PFCalo);
-   fChain->SetBranchAddress("jetPtAK8", &jetPtAK8, &b_jetPtAK8);
-   fChain->SetBranchAddress("jetJecAK8", &jetJecAK8, &b_jetJecAK8);
-   fChain->SetBranchAddress("jetEtaAK8", &jetEtaAK8, &b_jetEtaAK8);
-   fChain->SetBranchAddress("jetPhiAK8", &jetPhiAK8, &b_jetPhiAK8);
-   fChain->SetBranchAddress("jetMassAK8", &jetMassAK8, &b_jetMassAK8);
-   fChain->SetBranchAddress("jetEnergyAK8", &jetEnergyAK8, &b_jetEnergyAK8);
-   fChain->SetBranchAddress("jetAreaAK8", &jetAreaAK8, &b_jetAreaAK8);
-   fChain->SetBranchAddress("jetChfAK8", &jetChfAK8, &b_jetChfAK8);
-   fChain->SetBranchAddress("jetNhfAK8", &jetNhfAK8, &b_jetNhfAK8);
-   fChain->SetBranchAddress("jetPhfAK8", &jetPhfAK8, &b_jetPhfAK8);
-   fChain->SetBranchAddress("jetMufAK8", &jetMufAK8, &b_jetMufAK8);
-   fChain->SetBranchAddress("jetElfAK8", &jetElfAK8, &b_jetElfAK8);
-   fChain->SetBranchAddress("jetNemfAK8", &jetNemfAK8, &b_jetNemfAK8);
-   fChain->SetBranchAddress("jetCemfAK8", &jetCemfAK8, &b_jetCemfAK8);
-   fChain->SetBranchAddress("jetHf_hfAK8", &jetHf_hfAK8, &b_jetHf_hfAK8);
-   fChain->SetBranchAddress("jetHf_emfAK8", &jetHf_emfAK8, &b_jetHf_emfAK8);
-   fChain->SetBranchAddress("jetHofAK8", &jetHofAK8, &b_jetHofAK8);
-   fChain->SetBranchAddress("idLAK8", &idLAK8, &b_idLAK8);
-   fChain->SetBranchAddress("idTAK8", &idTAK8, &b_idTAK8);
-   fChain->SetBranchAddress("jetMassPrunedAK8", &jetMassPrunedAK8, &b_jetMassPrunedAK8);
-   fChain->SetBranchAddress("jetMassSoftDropAK8", &jetMassSoftDropAK8, &b_jetMassSoftDropAK8);
-   fChain->SetBranchAddress("jetTau1AK8", &jetTau1AK8, &b_jetTau1AK8);
-   fChain->SetBranchAddress("jetTau2AK8", &jetTau2AK8, &b_jetTau2AK8);
-   fChain->SetBranchAddress("jetTau3AK8", &jetTau3AK8, &b_jetTau3AK8);
-   fChain->SetBranchAddress("chHadMultAK8", &chHadMultAK8, &b_chHadMultAK8);
-   fChain->SetBranchAddress("chMultAK8", &chMultAK8, &b_chMultAK8);
-   fChain->SetBranchAddress("neHadMultAK8", &neHadMultAK8, &b_neHadMultAK8);
-   fChain->SetBranchAddress("neMultAK8", &neMultAK8, &b_neMultAK8);
-   fChain->SetBranchAddress("phoMultAK8", &phoMultAK8, &b_phoMultAK8);
-   fChain->SetBranchAddress("triggerResult", &triggerResult, &b_triggerResult);
-   fChain->SetBranchAddress("passFilterHBHE", &passFilterHBHE, &b_passFilterHBHE_);
-   fChain->SetBranchAddress("passFilterCSCHalo", &passFilterCSCHalo, &b_passFilterCSCHalo_);
-   fChain->SetBranchAddress("passFilterHCALlaser", &passFilterHCALlaser, &b_passFilterHCALlaser_);
-   fChain->SetBranchAddress("passFilterECALDeadCell", &passFilterECALDeadCell, &b_passFilterECALDeadCell_);
-   fChain->SetBranchAddress("passFilterGoodVtx", &passFilterGoodVtx, &b_passFilterGoodVtx_);
-   fChain->SetBranchAddress("passFilterTrkFailure", &passFilterTrkFailure, &b_passFilterTrkFailure_);
-   fChain->SetBranchAddress("passFilterEEBadSc", &passFilterEEBadSc, &b_passFilterEEBadSc_);
-   fChain->SetBranchAddress("passFilterECALlaser", &passFilterECALlaser, &b_passFilterECALlaser_);
-   fChain->SetBranchAddress("passFilterTrkPOG", &passFilterTrkPOG, &b_passFilterTrkPOG_);
-   fChain->SetBranchAddress("passFilterTrkPOG_manystrip", &passFilterTrkPOG_manystrip, &b_passFilterTrkPOG_manystrip_);
-   fChain->SetBranchAddress("passFilterTrkPOG_toomanystrip", &passFilterTrkPOG_toomanystrip, &b_passFilterTrkPOG_toomanystrip_);
-   fChain->SetBranchAddress("passFilterTrkPOG_logError", &passFilterTrkPOG_logError, &b_passFilterTrkPOG_logError_);
-   fChain->SetBranchAddress("npu", &npu, &b_npu);
-   fChain->SetBranchAddress("PileupInteractions", &PileupInteractions, &b_PileupInteractions);
-   fChain->SetBranchAddress("PileupOriginBX", &PileupOriginBX, &b_PileupOriginBX);
-   fChain->SetBranchAddress("ptHat", &ptHat, &b_ptHat_);
-   fChain->SetBranchAddress("processID", &processID, &b_processID_);
-   fChain->SetBranchAddress("weight", &weight, &b_weight_);
-   fChain->SetBranchAddress("nGenJetsAK4", &nGenJetsAK4, &b_nGenJetsAK4_);
-   fChain->SetBranchAddress("nGenJetsAK8", &nGenJetsAK8, &b_nGenJetsAK8_);
-   fChain->SetBranchAddress("jetPtGenAK4", &jetPtGenAK4, &b_jetPtGenAK4);
-   fChain->SetBranchAddress("jetEtaGenAK4", &jetEtaGenAK4, &b_jetEtaGenAK4);
-   fChain->SetBranchAddress("jetPhiGenAK4", &jetPhiGenAK4, &b_jetPhiGenAK4);
-   fChain->SetBranchAddress("jetMassGenAK4", &jetMassGenAK4, &b_jetMassGenAK4);
-   fChain->SetBranchAddress("jetEnergyGenAK4", &jetEnergyGenAK4, &b_jetEnergyGenAK4);
-   fChain->SetBranchAddress("jetPtGenAK8", &jetPtGenAK8, &b_jetPtGenAK8);
-   fChain->SetBranchAddress("jetEtaGenAK8", &jetEtaGenAK8, &b_jetEtaGenAK8);
-   fChain->SetBranchAddress("jetPhiGenAK8", &jetPhiGenAK8, &b_jetPhiGenAK8);
-   fChain->SetBranchAddress("jetMassGenAK8", &jetMassGenAK8, &b_jetMassGenAK8);
-   fChain->SetBranchAddress("jetEnergyGenAK8", &jetEnergyGenAK8, &b_jetEnergyGenAK8);
+   fChain->SetBranchAddress("CosThetaStarAK4", &CosThetaStarAK4, &b_CosThetaStarAK4);
+   fChain->SetBranchAddress("CosThetaStarAK4reco", &CosThetaStarAK4reco, &b_CosThetaStarAK4reco);
+   fChain->SetBranchAddress("CosThetaStarWJ", &CosThetaStarWJ, &b_CosThetaStarWJ);
+   fChain->SetBranchAddress("CosThetaStarWJreco", &CosThetaStarWJreco, &b_CosThetaStarWJreco);
+   fChain->SetBranchAddress("Dijet_MassAK4", &Dijet_MassAK4, &b_Dijet_MassAK4);
+   fChain->SetBranchAddress("Dijet_MassAK4reco", &Dijet_MassAK4reco, &b_Dijet_MassAK4reco);
+   fChain->SetBranchAddress("IdTight_j1", &IdTight_j1, &b_IdTight_j1);
+   fChain->SetBranchAddress("IdTight_j2", &IdTight_j2, &b_IdTight_j2);
+   fChain->SetBranchAddress("IdTight_recoj1", &IdTight_recoj1, &b_IdTight_recoj1);
+   fChain->SetBranchAddress("IdTight_recoj2", &IdTight_recoj2, &b_IdTight_recoj2);
+   fChain->SetBranchAddress("Nak4", &Nak4, &b_Nak4);
+   fChain->SetBranchAddress("Nak4reco", &Nak4reco, &b_Nak4reco);
+   fChain->SetBranchAddress("PassJSON", &PassJSON, &b_PassJSON);
+   fChain->SetBranchAddress("chargedElectromFrac_j1", &chargedElectromFrac_j1, &b_chargedElectromFrac_j1);
+   fChain->SetBranchAddress("chargedElectromFrac_j2", &chargedElectromFrac_j2, &b_chargedElectromFrac_j2);
+   fChain->SetBranchAddress("chargedElectromFrac_recoj1", &chargedElectromFrac_recoj1, &b_chargedElectromFrac_recoj1);
+   fChain->SetBranchAddress("chargedElectromFrac_recoj2", &chargedElectromFrac_recoj2, &b_chargedElectromFrac_recoj2);
+   fChain->SetBranchAddress("chargedHadEnFrac_j1", &chargedHadEnFrac_j1, &b_chargedHadEnFrac_j1);
+   fChain->SetBranchAddress("chargedHadEnFrac_j2", &chargedHadEnFrac_j2, &b_chargedHadEnFrac_j2);
+   fChain->SetBranchAddress("chargedHadEnFrac_recoj1", &chargedHadEnFrac_recoj1, &b_chargedHadEnFrac_recoj1);
+   fChain->SetBranchAddress("chargedHadEnFrac_recoj2", &chargedHadEnFrac_recoj2, &b_chargedHadEnFrac_recoj2);
+   fChain->SetBranchAddress("chargedMult_j1", &chargedMult_j1, &b_chargedMult_j1);
+   fChain->SetBranchAddress("chargedMult_j2", &chargedMult_j2, &b_chargedMult_j2);
+   fChain->SetBranchAddress("chargedMult_recoj1", &chargedMult_recoj1, &b_chargedMult_recoj1);
+   fChain->SetBranchAddress("chargedMult_recoj2", &chargedMult_recoj2, &b_chargedMult_recoj2);
+   fChain->SetBranchAddress("deltaETAjj", &deltaETAjj, &b_deltaETAjj);
+   fChain->SetBranchAddress("deltaETAjjAK4", &deltaETAjjAK4, &b_deltaETAjjAK4);
+   fChain->SetBranchAddress("deltaETAjjAK4reco", &deltaETAjjAK4reco, &b_deltaETAjjAK4reco);
+   fChain->SetBranchAddress("deltaETAjjreco", &deltaETAjjreco, &b_deltaETAjjreco);
+   fChain->SetBranchAddress("deltaPHIjj", &deltaPHIjj, &b_deltaPHIjj);
+   fChain->SetBranchAddress("deltaPHIjjAK4", &deltaPHIjjAK4, &b_deltaPHIjjAK4);
+   fChain->SetBranchAddress("deltaPHIjjAK4reco", &deltaPHIjjAK4reco, &b_deltaPHIjjAK4reco);
+   fChain->SetBranchAddress("deltaPHIjjreco", &deltaPHIjjreco, &b_deltaPHIjjreco);
+   fChain->SetBranchAddress("eleEnFract_j1", &eleEnFract_j1, &b_eleEnFract_j1);
+   fChain->SetBranchAddress("eleEnFract_j2", &eleEnFract_j2, &b_eleEnFract_j2);
+   fChain->SetBranchAddress("eleEnFract_recoj1", &eleEnFract_recoj1, &b_eleEnFract_recoj1);
+   fChain->SetBranchAddress("eleEnFract_recoj2", &eleEnFract_recoj2, &b_eleEnFract_recoj2);
+   fChain->SetBranchAddress("etaAK4_j1", &etaAK4_j1, &b_etaAK4_j1);
+   fChain->SetBranchAddress("etaAK4_j2", &etaAK4_j2, &b_etaAK4_j2);
+   fChain->SetBranchAddress("etaAK4_recoj1", &etaAK4_recoj1, &b_etaAK4_recoj1);
+   fChain->SetBranchAddress("etaAK4_recoj2", &etaAK4_recoj2, &b_etaAK4_recoj2);
+   fChain->SetBranchAddress("etaWJ_j1", &etaWJ_j1, &b_etaWJ_j1);
+   fChain->SetBranchAddress("etaWJ_j2", &etaWJ_j2, &b_etaWJ_j2);
+   fChain->SetBranchAddress("etaWJ_recoj1", &etaWJ_recoj1, &b_etaWJ_recoj1);
+   fChain->SetBranchAddress("etaWJ_recoj2", &etaWJ_recoj2, &b_etaWJ_recoj2);
+   fChain->SetBranchAddress("event", &event, &b_event);
+   fChain->SetBranchAddress("htAK4", &htAK4, &b_htAK4);
+   fChain->SetBranchAddress("htAK4reco", &htAK4reco, &b_htAK4reco);
+   fChain->SetBranchAddress("isData", &isData, &b_isData);
+   fChain->SetBranchAddress("jetCSVAK4_j1", &jetCSVAK4_j1, &b_jetCSVAK4_j1);
+   fChain->SetBranchAddress("jetCSVAK4_j2", &jetCSVAK4_j2, &b_jetCSVAK4_j2);
+   fChain->SetBranchAddress("jetCSVAK4_recoj1", &jetCSVAK4_recoj1, &b_jetCSVAK4_recoj1);
+   fChain->SetBranchAddress("jetCSVAK4_recoj2", &jetCSVAK4_recoj2, &b_jetCSVAK4_recoj2);
+   fChain->SetBranchAddress("jetJecAK4_j1", &jetJecAK4_j1, &b_jetJecAK4_j1);
+   fChain->SetBranchAddress("jetJecAK4_j2", &jetJecAK4_j2, &b_jetJecAK4_j2);
+   fChain->SetBranchAddress("jetJecAK4_recoj1", &jetJecAK4_recoj1, &b_jetJecAK4_recoj1);
+   fChain->SetBranchAddress("jetJecAK4_recoj2", &jetJecAK4_recoj2, &b_jetJecAK4_recoj2);
+   fChain->SetBranchAddress("jetJecUncAK4_j1", &jetJecUncAK4_j1, &b_jetJecUncAK4_j1);
+   fChain->SetBranchAddress("jetJecUncAK4_j2", &jetJecUncAK4_j2, &b_jetJecUncAK4_j2);
+   fChain->SetBranchAddress("jetJecUncAK4_recoj1", &jetJecUncAK4_recoj1, &b_jetJecUncAK4_recoj1);
+   fChain->SetBranchAddress("jetJecUncAK4_recoj2", &jetJecUncAK4_recoj2, &b_jetJecUncAK4_recoj2);
+   fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
+   fChain->SetBranchAddress("massWJ_j1", &massWJ_j1, &b_massWJ_j1);
+   fChain->SetBranchAddress("massWJ_j2", &massWJ_j2, &b_massWJ_j2);
+   fChain->SetBranchAddress("massWJ_recoj1", &massWJ_recoj1, &b_massWJ_recoj1);
+   fChain->SetBranchAddress("massWJ_recoj2", &massWJ_recoj2, &b_massWJ_recoj2);
+   fChain->SetBranchAddress("met", &met, &b_met);
+   fChain->SetBranchAddress("metSig", &metSig, &b_metSig);
+   fChain->SetBranchAddress("metreco", &metreco, &b_metreco);
+   fChain->SetBranchAddress("metrecoSig", &metrecoSig, &b_metrecoSig);
+   fChain->SetBranchAddress("mhtAK4", &mhtAK4, &b_mhtAK4);
+   fChain->SetBranchAddress("mhtAK4Sig", &mhtAK4Sig, &b_mhtAK4Sig);
+   fChain->SetBranchAddress("mhtAK4reco", &mhtAK4reco, &b_mhtAK4reco);
+   fChain->SetBranchAddress("mhtAK4recoSig", &mhtAK4recoSig, &b_mhtAK4recoSig);
+   fChain->SetBranchAddress("mjj", &mjj, &b_mjj);
+   fChain->SetBranchAddress("mjj_shiftJEC", &mjj_shiftJEC, &b_mjj_shiftJEC);
+   fChain->SetBranchAddress("mjjreco", &mjjreco, &b_mjjreco);
+   fChain->SetBranchAddress("mjjreco_shiftJEC", &mjjreco_shiftJEC, &b_mjjreco_shiftJEC);
+   fChain->SetBranchAddress("muEnFract_j1", &muEnFract_j1, &b_muEnFract_j1);
+   fChain->SetBranchAddress("muEnFract_j2", &muEnFract_j2, &b_muEnFract_j2);
+   fChain->SetBranchAddress("muEnFract_recoj1", &muEnFract_recoj1, &b_muEnFract_recoj1);
+   fChain->SetBranchAddress("muEnFract_recoj2", &muEnFract_recoj2, &b_muEnFract_recoj2);
+   fChain->SetBranchAddress("nJet", &nJet, &b_nJet);
+   fChain->SetBranchAddress("nJetreco", &nJetreco, &b_nJetreco);
+   fChain->SetBranchAddress("nVtx", &nVtx, &b_nVtx);
+   fChain->SetBranchAddress("nVtxreco", &nVtxreco, &b_nVtxreco);
+   fChain->SetBranchAddress("neutrElectromFrac_j1", &neutrElectromFrac_j1, &b_neutrElectromFrac_j1);
+   fChain->SetBranchAddress("neutrElectromFrac_j2", &neutrElectromFrac_j2, &b_neutrElectromFrac_j2);
+   fChain->SetBranchAddress("neutrElectromFrac_recoj1", &neutrElectromFrac_recoj1, &b_neutrElectromFrac_recoj1);
+   fChain->SetBranchAddress("neutrElectromFrac_recoj2", &neutrElectromFrac_recoj2, &b_neutrElectromFrac_recoj2);
+   fChain->SetBranchAddress("neutrHadEnFrac_j1", &neutrHadEnFrac_j1, &b_neutrHadEnFrac_j1);
+   fChain->SetBranchAddress("neutrHadEnFrac_j2", &neutrHadEnFrac_j2, &b_neutrHadEnFrac_j2);
+   fChain->SetBranchAddress("neutrHadEnFrac_recoj1", &neutrHadEnFrac_recoj1, &b_neutrHadEnFrac_recoj1);
+   fChain->SetBranchAddress("neutrHadEnFrac_recoj2", &neutrHadEnFrac_recoj2, &b_neutrHadEnFrac_recoj2);
+   fChain->SetBranchAddress("neutrMult_j1", &neutrMult_j1, &b_neutrMult_j1);
+   fChain->SetBranchAddress("neutrMult_j2", &neutrMult_j2, &b_neutrMult_j2);
+   fChain->SetBranchAddress("neutrMult_recoj1", &neutrMult_recoj1, &b_neutrMult_recoj1);
+   fChain->SetBranchAddress("neutrMult_recoj2", &neutrMult_recoj2, &b_neutrMult_recoj2);
+   fChain->SetBranchAddress("offMet", &offMet, &b_offMet);
+   fChain->SetBranchAddress("offMetSig", &offMetSig, &b_offMetSig);
+   fChain->SetBranchAddress("pTAK4_j1", &pTAK4_j1, &b_pTAK4_j1);
+   fChain->SetBranchAddress("pTAK4_j2", &pTAK4_j2, &b_pTAK4_j2);
+   fChain->SetBranchAddress("pTAK4_recoj1", &pTAK4_recoj1, &b_pTAK4_recoj1);
+   fChain->SetBranchAddress("pTAK4_recoj2", &pTAK4_recoj2, &b_pTAK4_recoj2);
+   fChain->SetBranchAddress("pTWJ_j1", &pTWJ_j1, &b_pTWJ_j1);
+   fChain->SetBranchAddress("pTWJ_j2", &pTWJ_j2, &b_pTWJ_j2);
+   fChain->SetBranchAddress("pTWJ_recoj1", &pTWJ_recoj1, &b_pTWJ_recoj1);
+   fChain->SetBranchAddress("pTWJ_recoj2", &pTWJ_recoj2, &b_pTWJ_recoj2);
+   fChain->SetBranchAddress("passHLT_CaloJet40", &passHLT_CaloJet40, &b_passHLT_CaloJet40);
+   fChain->SetBranchAddress("passHLT_CaloJet40_BtagSeq", &passHLT_CaloJet40_BtagSeq, &b_passHLT_CaloJet40_BtagSeq);
+   fChain->SetBranchAddress("passHLT_HT450", &passHLT_HT450, &b_passHLT_HT450);
+   fChain->SetBranchAddress("passHLT_HT450_BtagSeq", &passHLT_HT450_BtagSeq, &b_passHLT_HT450_BtagSeq);
+   fChain->SetBranchAddress("passHLT_L1DoubleMu", &passHLT_L1DoubleMu, &b_passHLT_L1DoubleMu);
+   fChain->SetBranchAddress("passHLT_L1DoubleMu_BtagSeq", &passHLT_L1DoubleMu_BtagSeq, &b_passHLT_L1DoubleMu_BtagSeq);
+   fChain->SetBranchAddress("passHLT_L1HTT150", &passHLT_L1HTT150, &b_passHLT_L1HTT150);
+   fChain->SetBranchAddress("passHLT_L1HTT150_BtagSeq", &passHLT_L1HTT150_BtagSeq, &b_passHLT_L1HTT150_BtagSeq);
+   fChain->SetBranchAddress("passHLT_PFHT650MJJ900", &passHLT_PFHT650MJJ900, &b_passHLT_PFHT650MJJ900);
+   fChain->SetBranchAddress("passHLT_PFHT650MJJ950", &passHLT_PFHT650MJJ950, &b_passHLT_PFHT650MJJ950);
+   fChain->SetBranchAddress("passHLT_PFHT800", &passHLT_PFHT800, &b_passHLT_PFHT800);
+   fChain->SetBranchAddress("passHLT_ZeroBias", &passHLT_ZeroBias, &b_passHLT_ZeroBias);
+   fChain->SetBranchAddress("passHLT_ZeroBias_BtagSeq", &passHLT_ZeroBias_BtagSeq, &b_passHLT_ZeroBias_BtagSeq);
+   fChain->SetBranchAddress("phiAK4_j1", &phiAK4_j1, &b_phiAK4_j1);
+   fChain->SetBranchAddress("phiAK4_j2", &phiAK4_j2, &b_phiAK4_j2);
+   fChain->SetBranchAddress("phiAK4_recoj1", &phiAK4_recoj1, &b_phiAK4_recoj1);
+   fChain->SetBranchAddress("phiAK4_recoj2", &phiAK4_recoj2, &b_phiAK4_recoj2);
+   fChain->SetBranchAddress("phiWJ_j1", &phiWJ_j1, &b_phiWJ_j1);
+   fChain->SetBranchAddress("phiWJ_j2", &phiWJ_j2, &b_phiWJ_j2);
+   fChain->SetBranchAddress("phiWJ_recoj1", &phiWJ_recoj1, &b_phiWJ_recoj1);
+   fChain->SetBranchAddress("phiWJ_recoj2", &phiWJ_recoj2, &b_phiWJ_recoj2);
+   fChain->SetBranchAddress("photonEnFrac_j1", &photonEnFrac_j1, &b_photonEnFrac_j1);
+   fChain->SetBranchAddress("photonEnFrac_j2", &photonEnFrac_j2, &b_photonEnFrac_j2);
+   fChain->SetBranchAddress("photonEnFrac_recoj1", &photonEnFrac_recoj1, &b_photonEnFrac_recoj1);
+   fChain->SetBranchAddress("photonEnFrac_recoj2", &photonEnFrac_recoj2, &b_photonEnFrac_recoj2);
+   fChain->SetBranchAddress("photonMult_j1", &photonMult_j1, &b_photonMult_j1);
+   fChain->SetBranchAddress("photonMult_j2", &photonMult_j2, &b_photonMult_j2);
+   fChain->SetBranchAddress("photonMult_recoj1", &photonMult_recoj1, &b_photonMult_recoj1);
+   fChain->SetBranchAddress("photonMult_recoj2", &photonMult_recoj2, &b_photonMult_recoj2);
+   fChain->SetBranchAddress("run", &run, &b_run);
    Notify();
 }
 
