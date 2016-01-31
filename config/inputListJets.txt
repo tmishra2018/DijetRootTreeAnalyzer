@@ -1,2 +1,1 @@
-/afs/cern.ch/user/g/gdimperi/public/4Eirini/dijetTree_signal.root
-#/root/DIJET_13TEV/dijetTree_signal.root
+../DijetScoutingRootTreeMaker/ntuple/bigTree_scouting_monitor-Jan13.root
