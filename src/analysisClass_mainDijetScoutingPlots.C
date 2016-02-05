@@ -90,8 +90,8 @@ void analysisClass::Loop()
    ////// If the root version is updated and rootNtupleClass regenerated,     /////
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
-   //for (Long64_t jentry=0; jentry<nentries;jentry++) {
-   for (Long64_t jentry=0; jentry<1000000;jentry++) {
+   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+   //for (Long64_t jentry=0; jentry<1000000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
