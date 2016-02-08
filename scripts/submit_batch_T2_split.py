@@ -5,12 +5,13 @@ import sys
 import optparse
 import datetime
 
-usage = "usage: To be run from DijetRootTreeAnalyzer/ :  python scripts/submit_batch_T2.py -i directory_containing_lists_to_run -o output_directory"
+usage = "usage: To be run from DijetRootTreeAnalyzer/ :  python scripts/submit_batch_T2_split.py -q cmslong -i config/list_to_run -o output --split 10 --tag ParkingScoutingMonitor -c co\
+nfig/cutFile_mainDijetScoutingMonitor.txt"
 
 parser = optparse.OptionParser("submitAllGJetsID.py")
 parser.add_option('-q', '--queue',       action='store',     dest='queue',       
     help='run in batch in queue specified as option (default -q cmslong)', 
-    default='cmsan',
+    default='cmslong',
     metavar="QUEUE")
 
 parser.add_option("-i", "--input", dest="input",

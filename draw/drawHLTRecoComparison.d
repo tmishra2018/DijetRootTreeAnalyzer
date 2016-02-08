@@ -315,4 +315,6 @@ drawHLTRecoComparison.o drawHLTRecoComparison.d : drawHLTRecoComparison.cpp /usr
  /cvmfs/cms.cern.ch/slc6_amd64_gcc491/external/gcc/4.9.1-cms/include/c++/4.9.1/bits/random.tcc \
  /cvmfs/cms.cern.ch/slc6_amd64_gcc491/external/gcc/4.9.1-cms/include/c++/4.9.1/numeric \
  /cvmfs/cms.cern.ch/slc6_amd64_gcc491/external/gcc/4.9.1-cms/include/c++/4.9.1/bits/stl_numeric.h \
+ /cmshome/fpreiato/Scouting_Dijet/CMSSW_7_4_15/src/CMSDIJET/DijetRootTreeAnalyzer/include/ptBinning.h \
+ /cmshome/fpreiato/Scouting_Dijet/CMSSW_7_4_15/src/CMSDIJET/DijetRootTreeAnalyzer/include/etaBinning.h \
  /cvmfs/cms.cern.ch/slc6_amd64_gcc491/cms/cmssw/CMSSW_7_4_15/external/slc6_amd64_gcc491/bin/../../../../../../lcg/root/6.02.00-odfocd7/include/TColor.h

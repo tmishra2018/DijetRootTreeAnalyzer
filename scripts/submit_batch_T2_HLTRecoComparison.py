@@ -35,8 +35,8 @@ parser.add_option('-I', '--interactive',
 ################################################
 
 os.system("mkdir -p "+opt.output)
-os.system("rm -rf batch")
-os.system("mkdir -p batch")
+#os.system("rm -rf batch") #calcella tutto questo, anche i logfile dei jobs
+#os.system("mkdir -p batch") #ricrea la cartella questa
 pwd = os.environ['PWD']
 
 if not opt.match:
@@ -54,7 +54,7 @@ for line in  ins:
     line = line.rstrip('\n')
     sample = sample.rstrip('\n')
     
-    command = "./main "+opt.input+"/"+line+" config/cutFile_HLTRecoComparison.txt rootTupleTree/tree "+opt.output+"/rootfileCOmparison_"+sample+" "+opt.output+"/cutEfficiencyFileComparison_"+sample
+    command = "./main "+opt.input+"/"+line+" config/cutFile_HLTRecoComparison.txt rootTupleTree/tree "+opt.output+"/rootfileComparison_"+sample+" "+opt.output+"/cutEfficiencyFileComparison_"+sample
     print "submit "+command
     print ""
     

@@ -55,14 +55,14 @@ void FitTH1(TFile* dataFile, const char *nameHisto, const char *XTitle, const ch
 
   TCanvas *canvas = new TCanvas("canvas","",800,800);
   h1    -> SetTitle(" ");
-  //  h1    -> SetLineColor(kColor);
   if(log) gPad->SetLogy();
-  h1    -> SetStats(0);
+  h1    -> SetStats(111); // with statistics
   h1    -> SetXTitle(XTitle);
   h1    -> SetYTitle(YTitle);
   h1    -> GetYaxis()->SetTitleOffset(1.4);
   h1    -> GetXaxis()->SetRangeUser(xmin, xmax);
 
+  
   double nSigma;
   nSigma=1.5;
 
@@ -84,7 +84,7 @@ void FitTH1(TFile* dataFile, const char *nameHisto, const char *XTitle, const ch
 
   h1 -> Fit(gaussian, "R");
 
-  int n_iter = 3;
+  int n_iter = 4;
   for (int i = 0; i < n_iter; ++i) {
     
     Float_t lowerBound = gaussian->GetParameter(1) - nSigma * gaussian->GetParameter(2);
@@ -102,8 +102,9 @@ void FitTH1(TFile* dataFile, const char *nameHisto, const char *XTitle, const ch
   
   std::cout<<"Mean "<<meanFit<<" +- "<<meanFitErr<<std::endl;
   std::cout<<"Sigma "<<sigmaFit<<" +- "<<sigmaFitErr<<std::endl;
+  std::cout<<"ChiSquare/NDF "<<gaussian->GetChisquare()<<" / "<<gaussian->GetNDF()<<std::endl;
   
-  TPaveText* fitlabel = new TPaveText(0.85, 0.88, 0.80, 0.80, "brNDC");
+  TPaveText* fitlabel = new TPaveText(0.75, 0.75, 0.60, 0.60, "brNDC");
   fitlabel->SetTextSize(0.03);
   fitlabel->SetFillColor(0);
   TString Text_Mean = TString::Format("Mean: %.4f #pm %.4f", meanFit, meanFitErr);
@@ -112,9 +113,9 @@ void FitTH1(TFile* dataFile, const char *nameHisto, const char *XTitle, const ch
   fitlabel->AddText(Text_Sigma);
   
   h1    -> Draw();
-  fitlabel->Draw("same");
+  //  fitlabel->Draw("same");
   
-  canvas ->SaveAs("Plot/"+HistoName+"_IterGauss_new.png");
+  canvas ->SaveAs("Plot/Fit_"+HistoName+".png");
   canvas ->Destructor();
 }
 
@@ -147,21 +148,33 @@ void DrawTH2(TFile* dataFile, const char *nameHisto, const char *XTitle, const c
 }
 
 
-void DrawComparison(const char *output_dir, const char *nameFile ,TH1D* h1, TH1D* h2, int xmin, int xmax, const char *XTitle, const char *YTitle, TLegend* leg){
-   
-  char * nameSaved ;
-  nameSaved = new char[strlen(output_dir) + strlen(nameFile) +20] ;
-  //copio stringa 1 in stringa nuova  
-  strcpy(nameSaved, output_dir);
-  //unisco szStringa3 con szStinga2
-  strcat(nameSaved, nameFile);
+void DrawComparison(TFile* dataFile, const char *nameHisto, const char *XTitle, const char *YTitle, bool log, bool colz, double xmin, double xmax){
+
+  TString HistoName =TString::Format(nameHisto);
+  double ymax;
+
+  TH1F *h1 = (TH1F*)dataFile->Get(HistoName+"HLT" );
+  TH1F *h2 = (TH1F*)dataFile->Get(HistoName+"Reco" );
+  
+  TLegend* legend = new TLegend(0.78, 0.78, 0.90, 0.90);
+  legend->SetTextFont(42);
+  legend->SetBorderSize(0);
+  legend->SetFillColor(kWhite);
+  legend->SetFillStyle(0);
+  legend->SetTextSize( 0.036);
+  legend->AddEntry(h1, "HLT", "LP");
+  legend->AddEntry(h2, "Reco", "LP");
   
   TCanvas *canvas = new TCanvas("canvas","",800,800);
+  if(log) gPad->SetLogy();
   h1->SetStats(0);
   h1->SetTitle(" ");
   h1->SetXTitle(XTitle);
   h1->GetXaxis()->SetRangeUser(xmin,xmax);
   h1->SetYTitle(YTitle);
+  if (h1->GetMaximum() >= h2->GetMaximum() ) ymax = h1->GetMaximum() ; 
+  if (h1->GetMaximum() < h2->GetMaximum() ) ymax = h2->GetMaximum() ; 
+  h1 -> SetMaximum(ymax+ 0.1*ymax);
   h1    -> GetYaxis()->SetTitleOffset(1.55);
   h1->SetLineColor(kBlue);
   h1->SetMarkerColor(kBlue);
@@ -171,11 +184,77 @@ void DrawComparison(const char *output_dir, const char *nameFile ,TH1D* h1, TH1D
   h2->SetMarkerStyle(3);
   h1->Draw();
   h2->Draw("same");
-  leg->Draw();
-  canvas ->SaveAs(nameSaved);
+  legend->Draw();
+  canvas ->SaveAs("Plot/Compare_"+HistoName+".png");
   canvas ->Destructor();
 }
 
+void DrawTProfile(TFile* dataFile, const char *nameProfile, const char *XTitle, const char *YTitle, bool log, double xmin, double xmax){
+  
+  TProfile *p1 = (TProfile*)dataFile->Get(nameProfile );
+
+  TString ProfileName =TString::Format(nameProfile);
+
+  TCanvas *canvas = new TCanvas("canvas","",800,800);
+  p1    -> SetTitle(" ");
+  //  p1    -> SetLineColor(kColor);
+  if(log) gPad->SetLogy();
+  p1    -> SetStats(0);
+  p1    -> SetMarkerStyle(20);
+  p1    -> SetXTitle(XTitle);
+  p1    -> SetYTitle(YTitle);
+  p1    -> GetYaxis()->SetTitleOffset(1.4);
+  p1    -> GetXaxis()->SetRangeUser(xmin, xmax);
+  p1    -> Draw();
+  canvas ->SaveAs("Plot/"+ProfileName+".png");
+  canvas ->Destructor();
+}
+
+void DrawCompareProfile(TFile* dataFile, const char *nameProfile, const char *XTitle, const char *YTitle, bool log, bool colz, double xmin, double xmax){
+
+  TString ProfileName =TString::Format(nameProfile);
+  double ymax;
+
+  TProfile *p1 = (TProfile*)dataFile->Get(ProfileName+"HLT" );
+  TProfile *p2 = (TProfile*)dataFile->Get(ProfileName+"Reco" );
+  
+  TLegend* legend = new TLegend(0.78, 0.78, 0.90, 0.90);
+  legend->SetTextFont(42);
+  legend->SetBorderSize(0);
+  legend->SetFillColor(kWhite);
+  legend->SetFillStyle(0);
+  legend->SetTextSize( 0.036);
+  legend->AddEntry(p1, "HLT", "LP");
+  legend->AddEntry(p2, "Reco", "LP");
+  
+  TCanvas *canvas = new TCanvas("canvas","",800,800);
+  //  if(log) gPad->SetLogy();
+  p1->SetStats(0);
+  p1->SetTitle(" ");
+  p1->SetXTitle(XTitle);
+  p1->GetXaxis()->SetRangeUser(xmin,xmax);
+  p1->SetYTitle(YTitle);
+  if (p1->GetMaximum() >= p2->GetMaximum() ) ymax = p1->GetMaximum() ; 
+  if (p1->GetMaximum() < p2->GetMaximum() ) ymax = p2->GetMaximum() ; 
+  p1 -> SetMaximum(ymax+ 0.1*ymax);
+  p1    -> GetYaxis()->SetTitleOffset(1.55);
+  p1->SetLineColor(kBlue);
+  p1->SetMarkerColor(kBlue);
+  p1->SetMarkerStyle(2);
+  p2->SetLineColor(kRed);
+  p2->SetMarkerColor(kRed);
+  p2->SetMarkerStyle(3);
+  p1->Draw();
+  p2->Draw("same");
+  legend->Draw();
+  canvas ->SaveAs("Plot/Compare_"+ProfileName+".png");
+  canvas ->Destructor();
+}
+
+
+
+
+//////////////////////////////// old stuff
 void DrawComparison(const char *output_dir, const char *nameFile ,TH1D* h1, TH1D* h2, int xmin, int xmax, const char *XTitle, const char *YTitle, int h1Color, int h2Color){
    
   char * nameSaved ;

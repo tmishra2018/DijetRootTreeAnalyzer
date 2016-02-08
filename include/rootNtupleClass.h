@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sat Jan 30 19:27:01 2016 by ROOT version 6.02/05
+// Wed Feb  3 00:00:38 2016 by ROOT version 6.02/05
 // from TChain rootTupleTree/tree/
 //////////////////////////////////////////////////////////
 
@@ -88,6 +88,10 @@ public :
    Double_t        jetJecUncAK4_recoj1;
    Double_t        jetJecUncAK4_recoj2;
    Double_t        lumi;
+   Double_t        massAK4_j1;
+   Double_t        massAK4_j2;
+   Double_t        massAK4_recoj1;
+   Double_t        massAK4_recoj2;
    Double_t        massWJ_j1;
    Double_t        massWJ_j2;
    Double_t        massWJ_recoj1;
@@ -228,6 +232,10 @@ public :
    TBranch        *b_jetJecUncAK4_recoj1;   //!
    TBranch        *b_jetJecUncAK4_recoj2;   //!
    TBranch        *b_lumi;   //!
+   TBranch        *b_massAK4_j1;   //!
+   TBranch        *b_massAK4_j2;   //!
+   TBranch        *b_massAK4_recoj1;   //!
+   TBranch        *b_massAK4_recoj2;   //!
    TBranch        *b_massWJ_j1;   //!
    TBranch        *b_massWJ_j2;   //!
    TBranch        *b_massWJ_recoj1;   //!
@@ -339,7 +347,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("rootTupleTree/tree","");
-      chain->Add("output/rootTest_reduced_skim.root/rootTupleTree/tree");
+      chain->Add("output/ParkingScountingMonitor/splittedJob_20160202_191206/merged/rootfile_ParkingScoutingMonitor_Run2015D-PromptReco-v4_20160202_191206_reduced_skim.root/rootTupleTree/tree");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -450,6 +458,10 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("jetJecUncAK4_recoj1", &jetJecUncAK4_recoj1, &b_jetJecUncAK4_recoj1);
    fChain->SetBranchAddress("jetJecUncAK4_recoj2", &jetJecUncAK4_recoj2, &b_jetJecUncAK4_recoj2);
    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
+   fChain->SetBranchAddress("massAK4_j1", &massAK4_j1, &b_massAK4_j1);
+   fChain->SetBranchAddress("massAK4_j2", &massAK4_j2, &b_massAK4_j2);
+   fChain->SetBranchAddress("massAK4_recoj1", &massAK4_recoj1, &b_massAK4_recoj1);
+   fChain->SetBranchAddress("massAK4_recoj2", &massAK4_recoj2, &b_massAK4_recoj2);
    fChain->SetBranchAddress("massWJ_j1", &massWJ_j1, &b_massWJ_j1);
    fChain->SetBranchAddress("massWJ_j2", &massWJ_j2, &b_massWJ_j2);
    fChain->SetBranchAddress("massWJ_recoj1", &massWJ_recoj1, &b_massWJ_recoj1);
