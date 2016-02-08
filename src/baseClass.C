@@ -2,6 +2,17 @@
 #include "baseClass.h"
 //#include <boost/lexical_cast.hpp>
 
+//=========================
+//(optional) 
+// The first bin of this histogram contains the number of events originally processed (may be different from the number of events in the tree)
+// This can be typically used for rescaling the MC samples
+// If histogram does not exist, the code assumes that the original number of events is what is available in the tree
+// The code searches if one of the following histograms exists
+string histoCountNstart1 = "dijets/TriggerPass"; 
+string histoCountNstart2 = "dijetscouting/TriggerPass";
+string histoCountNstart3 = "DijetFilter/EventCount/EventCounter"; //when running on a reduced skim
+//=========================
+
 baseClass::baseClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile):
   PileupWeight_ ( 1.0 ),
   fillSkim_                         ( true ) ,
@@ -54,7 +65,7 @@ void baseClass::init()
 {
   //STDOUT("begins");
   tree_ = NULL;
-  int processedEvents = readInputList();
+  int readInput = readInputList();
   readCutFile();
   if(tree_ == NULL){
     STDOUT("baseClass::init(): ERROR: tree_ = NULL ");
@@ -146,38 +157,7 @@ int baseClass::readInputList()
 	  NBeforeSkim = getGlobalInfoNstart(pName);
 	  NBeforeSkim_ = NBeforeSkim_ + NBeforeSkim;
 	  STDOUT("Initial number of events: NBeforeSkim, NBeforeSkim_ = "<<NBeforeSkim<<", "<<NBeforeSkim_);
-
-	  /*
-	  //giulia test to count processed events
-	  TFile *f = TFile::Open(pName);
-
-	  string s0prefix = treeName_->substr(0, treeName_->find("/"));
-	  string histoCountName = "/TriggerPass";	  
-	  string s0 = s0prefix + histoCountName;
-
-	  TriggerPass = (TH1F*)f->Get(s0.c_str());  
-	  if(f) STDOUT("file exists!");
-	  if(TriggerPass){
-	    STDOUT("object exists");
-	  }
-	  else{
-	    STDOUT("ERROR: object doesn't exist!!"); 
-	  }
-	  TriggerPass->Print();
-	  TriggerPass->SetName("TriggerPass");
-	  if(count_line == 1) {
-	    STDOUT("sono nell'if" << endl);
-	    TriggerPass_sum = (TH1F*)TriggerPass->Clone("TriggerPass_sum");
-	  }
-	  else 
-	    TriggerPass_sum->Add(TriggerPass);
-
-	  STDOUT( "processed events file " << count_line <<": " << TriggerPass->GetBinContent(1) << endl);
-	  */
 	}
-      STDOUT("###############################################");
-      //      STDOUT("total processed events: " << TriggerPass_sum->GetBinContent(1) << endl);
-      //end giulia test
 
       tree_ = chain;
       int entries = chain->GetEntries();
@@ -185,7 +165,6 @@ int baseClass::readInputList()
       STDOUT("baseClass::readInputList: Finished reading list: " << *inputList_ );
   
       return 1;
-      //      return TriggerPass_sum->GetBinContent(1);
     }
   else
     {
@@ -1341,38 +1320,23 @@ int baseClass::getGlobalInfoNstart(char *pName)
   int NBeforeSkim = 0;
   STDOUT(pName<<"  "<< NBeforeSkim);
   TFile *f = TFile::Open(pName);
-  string s1 = "DijetFilter/EventCount/EventCounter";
-  string s2 = "dijetscouting/TriggerPass";  
-  TH1I* hCount1 = (TH1I*)f->Get(s1.c_str());
-  TH1I* hCount2 = (TH1I*)f->Get(s2.c_str());
-  if( !hCount2 ){
-    if( !hCount1 ){
+  TH1I* hCount1 = (TH1I*)f->Get(histoCountNstart1.c_str());
+  TH1I* hCount2 = (TH1I*)f->Get(histoCountNstart2.c_str());
+  TH1I* hCount3 = (TH1I*)f->Get(histoCountNstart3.c_str());
+  if( !hCount1 && !hCount2 && !hCount3 )
+    {
       STDOUT("Skim filter histogram(s) not found. Will assume skim was not made for ALL files.");
       skimWasMade_ = false;
       return NBeforeSkim;
-    }else {
-      NBeforeSkim = (int)hCount1->GetBinContent(1);
     }
-  }else{
-    NBeforeSkim = (int)hCount2->GetBinContent(1);
-  }  
-  
-    /*
-  if( !hCount2 && !hCount1 ){
-    STDOUT("Skim filter histogram(s) not found. Will assume skim was not made for ALL files.");
-    skimWasMade_ = false;
-    return NBeforeSkim;
-  }
-  
-  if( hCount1 ) NBeforeSkim = (int)hCount1->GetBinContent(1);
-  if( hCount2 ) NBeforeSkim = (int)hCount2->GetBinContent(1);
-    */
+
+  if (hCount1) NBeforeSkim = (int)hCount1->GetBinContent(1);
+  else if (hCount2) NBeforeSkim = (int)hCount2->GetBinContent(1);
+  else if (hCount3) NBeforeSkim = (int)hCount3->GetBinContent(1);
+
   STDOUT(pName<<"  "<< NBeforeSkim);
-  
+  f->Close();
 
-
-f->Close();
-  
   return NBeforeSkim;
 }
 
@@ -1590,11 +1554,9 @@ bool baseClass::writeSkimTree()
   skim_file_->cd("DijetFilter/EventCount");
   int nEntRoottuple = fChain->GetEntriesFast();
   int nEntTot = (skimWasMade_ ? NBeforeSkim_ : nEntRoottuple );
-  // int processedEvents = readInputList();
-  int processedEvents = NBeforeSkim_;
   skim_file_->cd("DijetFilter/EventCount");
-  hCount_->SetBinContent(1,processedEvents);
-  hCount_->SetBinContent(2,nEntTot);
+  hCount_->SetBinContent(1,nEntTot);
+  hCount_->SetBinContent(2,nEntRoottuple);
   hCount_->SetBinContent(3,NAfterSkim_);
   hCount_->Write();
 
@@ -1633,11 +1595,9 @@ bool baseClass::writeReducedSkimTree()
   reduced_skim_file_->cd("DijetFilter/EventCount");
   int nEntRoottuple = fChain->GetEntriesFast();
   int nEntTot = (skimWasMade_ ? NBeforeSkim_ : nEntRoottuple );
-  // int processedEvents = readInputList();
-  int processedEvents = NBeforeSkim_;
   reduced_skim_file_->cd("DijetFilter/EventCount");
-  hReducedCount_->SetBinContent(1,processedEvents);
-  hReducedCount_->SetBinContent(2,nEntTot);
+  hReducedCount_->SetBinContent(1,nEntTot);
+  hReducedCount_->SetBinContent(2,nEntRoottuple);
   hReducedCount_->SetBinContent(3,NAfterReducedSkim_);
   hReducedCount_->Write();
 

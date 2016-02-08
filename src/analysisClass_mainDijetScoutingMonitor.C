@@ -942,6 +942,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_recoj1", AK4recojets[0].Pt());
        fillVariableWithValue( "etaAK4_recoj1", AK4recojets[0].Eta());
        fillVariableWithValue( "phiAK4_recoj1", AK4recojets[0].Phi());
+       fillVariableWithValue( "massAK4_recoj1", AK4recojets[0].M());
        //fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(sortedRecoJetIdx[0]));
        fillVariableWithValue( "jetJecAK4_recoj1", jecFactorsReco[sortedRecoJetIdx[0]] );
        fillVariableWithValue( "jetJecUncAK4_recoj1", jecUncertaintyReco[sortedRecoJetIdx[0]] );
@@ -964,6 +965,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_recoj2", AK4recojets[1].Pt() );
        fillVariableWithValue( "etaAK4_recoj2", AK4recojets[1].Eta());
        fillVariableWithValue( "phiAK4_recoj2", AK4recojets[1].Phi());
+       fillVariableWithValue( "massAK4_recoj2", AK4recojets[1].M());
        //fillVariableWithValue( "jetPtAK4matchCaloJet_recoj2", jetPtAK4matchCaloJet->at(sortedRecoJetIdx[1]));
        fillVariableWithValue( "jetJecAK4_recoj2", jecFactorsReco[sortedRecoJetIdx[1]]); 
        fillVariableWithValue( "jetJecUncAK4_recoj2", jecUncertaintyReco[sortedRecoJetIdx[1]] );
@@ -1024,6 +1026,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_j1", AK4jets[0].Pt());
        fillVariableWithValue( "etaAK4_j1", AK4jets[0].Eta());
        fillVariableWithValue( "phiAK4_j1", AK4jets[0].Phi());
+       fillVariableWithValue( "massAK4_j1", AK4jets[0].M());
        //fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(sortedJetIdx[0]));
        fillVariableWithValue( "jetJecAK4_j1", jecFactors[sortedJetIdx[0]] );
        fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
@@ -1046,6 +1049,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_j2", AK4jets[1].Pt() );
        fillVariableWithValue( "etaAK4_j2", AK4jets[1].Eta());
        fillVariableWithValue( "phiAK4_j2", AK4jets[1].Phi());
+       fillVariableWithValue( "massAK4_j2", AK4jets[1].M());
        //fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
        fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[1]]); 
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[1]] );
