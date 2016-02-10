@@ -218,7 +218,8 @@ void triggerEfficiency()
       //== creating histo from tree   
       TTree *thistree = (TTree*)fileInput->Get("rootTupleTree/tree");
       //thistree->Print();
-      TH1F *h_denominator_tmp = (TH1F*)fileInput->Get(mybaselinehisto);
+      //TH1F *h_denominator_tmp = (TH1F*)fileInput->Get(mybaselinehisto);
+      TH1F *h_denominator_tmp = new TH1F("h_denominator_tmp","h_denominator_tmp",10000,0,10000) ;
       h_denominator = (TH1F*)h_denominator_tmp->Clone();
       h_numerator = (TH1F*)h_denominator_tmp->Clone();
       h_denominator->Reset();
@@ -267,17 +268,19 @@ void triggerEfficiency()
   
   // //fit efficiency
   TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);      
-  int numberOfParameters = f1->GetNpar()-1;
+  //TF1* f1 = new TF1("f1","(1/2)* ( 1 + TMath::Erf((x-[0])/[1]))",xminFit,xmaxFit);      
   if(doFit==1)
     {
       f1->SetParameters(1,500,95);
       //f1->SetParLimits(0,0.99,1);//unconstrained
-      f1->SetParLimits(0,0.999999,1);//constrained
+      //f1->SetParLimits(0,0.999999,1);//constrained
+      f1->FixParameter(0,1);//fixed
       f1->SetParLimits(1,450,550);
       f1->SetParLimits(2,80,120);
       h_efficiency->Fit(f1,"VLRI");
     }
-  
+  int numberOfParameters = f1->GetNumberFreeParameters();  
+
   h_efficiency->Draw();
   gPad->Update();
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xmin,xmax);
@@ -327,12 +330,13 @@ void triggerEfficiency()
       //cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;   	  
       if(x>xminFit && x<xmaxFit && doFit==1)
 	{
+	  /*
 	  cout << "bin = " << bin << ": x bin = (" << x-exl << "-" << x+exh 
 	       << ") , y = " << y << " + " << eyh << " - " << eyl 
 	       << " , fit = " << fitValue 
 	       << " , (y-fit) / err = " << residual 
-	       << endl ;       
-	  
+	       << endl ;       	 
+	  */
 	  chi2 += pow(residual,2); 
 	  npoints++;
 
@@ -342,9 +346,11 @@ void triggerEfficiency()
 	}
       else
 	{
+	  /*
 	  cout << "bin = " << bin << ": x bin = (" << x-exl << "-" << x+exh 
 	       << ") , y = " << y << " + " << eyh << " - " << eyl 
 	       << endl ;       	      
+	  */
 	}
     }
   
