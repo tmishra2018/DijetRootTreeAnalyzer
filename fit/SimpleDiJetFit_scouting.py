@@ -60,7 +60,7 @@ massBins =[1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176,
 
 v_massBins = array("d",massBins)
 
-minX_mass = 606.0
+minX_mass = 606
 maxX_mass = 2037
 
 FunctionType = 10
@@ -147,7 +147,10 @@ def main():
     M1Bkg = fitresult[3]
     hist_fit_residual_vsMass = fitresult[4]
     nPar = nBins_fit - fitresult[1]
-    DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix)
+    chi2 = fitresult[2]
+    ndof = fitresult[1]
+    DrawFit(g, M1Bkg, hist_fit_residual_vsMass, FunctionType, nPar,
+            fileNameSuffix, chi2, ndof)
 
 
 def blinded4p(x, par):
@@ -429,7 +432,8 @@ def doFitAndChi2(FunctionType,hist_mass,g,hist_mass_original):
 
 
 
-def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
+def DrawFit(g, M1Bkg, hist_fit_residual_vsMass, FunctionType, nPar,
+            fileNameSuffix, chi2, ndof):
     ##rescale fit function
     M1Bkg_xsec = TF1("M1Bkg_xsec","( [0]*TMath::Power(1-x/13000,[1]) ) / ( TMath::Power(x/13000,[2]+[3]*log(x/13000)) )*(0.5*(1.0 + TMath::Erf((x - 507.1)/94.2)))", minX_mass, maxX_mass)
     M1Bkg_xsec.SetParameter(0,M1Bkg.GetParameter(0)/lumi)
@@ -472,6 +476,7 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
     #pave_fit = TPaveText(0.1558691,0.30735043,0.3750171,0.4070085,"NDC")
     pave_fit = TPaveText(0.2358691,0.04035043,0.5050171,0.1870085,"NDC")
 
+    pave_fit.AddText("#chi^{{2}}/ndof = {0:.4g}/{1}".format(chi2, ndof))
     pave_fit.AddText("Wide Jets")
     pave_fit.AddText("|#eta| < 2.5, |#Delta#eta_{jj}| < 1.3")
     #pave_fit.AddText("M_{jj} > 1.2 TeV")
@@ -484,8 +489,7 @@ def DrawFit(g,M1Bkg,hist_fit_residual_vsMass,FunctionType,nPar,fileNameSuffix):
     pave_fit.SetTextAlign(12)
 
 
-    #vFrame = p11_1.DrawFrame(minX_mass,0.00000005,maxX_mass,5.0)
-    vFrame = p11_1.DrawFrame(minX_mass,0.005,maxX_mass,50.0)
+    vFrame = p11_1.DrawFrame(minX_mass, 0.005, maxX_mass, 100.0)
 
     vFrame.SetTitle("")
     vFrame.SetXTitle("Dijet Mass [GeV]")
