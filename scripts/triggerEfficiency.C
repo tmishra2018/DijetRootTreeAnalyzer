@@ -33,7 +33,7 @@ double xmaxZoom = 890;
 //double xminZoom = 88;
 //double xmaxZoom = 325;
 //
-double yminZoom = 0.2;
+double yminZoom = 0.1;
 double ymaxZoom = 1.2;
 
 //high-mass
@@ -269,6 +269,8 @@ void triggerEfficiency()
   // //fit efficiency
   TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);      
   //TF1* f1 = new TF1("f1","(1/2)* ( 1 + TMath::Erf((x-[0])/[1]))",xminFit,xmaxFit);      
+  TGraphAsymmErrors* graph_efficiency = h_efficiency->CreateGraph();
+  TFitResultPtr fitResult;
   if(doFit==1)
     {
       f1->SetParameters(1,500,95);
@@ -277,17 +279,39 @@ void triggerEfficiency()
       f1->FixParameter(0,1);//fixed
       f1->SetParLimits(1,450,550);
       f1->SetParLimits(2,80,120);
-      h_efficiency->Fit(f1,"VLRI");
+      //fitResult = h_efficiency->Fit(f1,"S V R I");
+      fitResult = graph_efficiency->Fit(f1,"VLRS");      
     }
-  int numberOfParameters = f1->GetNumberFreeParameters();  
+  //fitResult->Print("V");
 
+  //int numberOfParameters = f1->GetNumberFreeParameters();  
+  int numberOfParameters = fitResult->NFreeParameters();  
+
+  //Correlation matrix
+  TMatrixDSym corrMatrix = fitResult->GetCorrelationMatrix();
+  // cout << corrMatrix[1][1] << endl;
+  // cout << corrMatrix[1][2] << endl;
+  // cout << corrMatrix[2][1] << endl;
+  // cout << corrMatrix[2][2] << endl;
+  TMatrixDSym covMatrix = fitResult->GetCovarianceMatrix();
+  //cout << covMatrix[1][1] << endl;
+  //cout << covMatrix[1][2] << endl;
+  //cout << covMatrix[2][1] << endl;
+  //cout << covMatrix[2][2] << endl;
+
+  graph_efficiency->Draw();
+  gPad->Update();
+  graph_efficiency->GetXaxis()->SetRangeUser(xmin,xmax);
+  graph_efficiency->GetXaxis()->SetNdivisions(505);
+  graph_efficiency->GetYaxis()->SetRangeUser(ymin,ymax);
+
+  /*
   h_efficiency->Draw();
   gPad->Update();
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xmin,xmax);
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetNdivisions(505);
   h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(ymin,ymax);
-  //h_efficiency->GetPaintedGraph()->GetYaxis()->SetTitleOffset(0.9);
-  // h_efficiency->GetPaintedGraph()->GetYaxis()->SetLabelSize(0.04);
+  */
   
   double chi2 = 0;
   int npoints = 0;
@@ -295,8 +319,11 @@ void triggerEfficiency()
   double chi2Norm = 0;
   TGraph *g_residual = new TGraph(0);
   g_residual->SetName("");
+  TGraphErrors *g_errorBand = new TGraphErrors(0);
+  g_errorBand->SetName("");
 
-  for (int bin=0;bin<h_efficiency->GetPaintedGraph()->GetN();bin++)
+  //  for (int bin=0;bin<h_efficiency->GetPaintedGraph()->GetN();bin++)
+  for (int bin=0;bin<graph_efficiency->GetN();bin++)
     {
       double x=-1; 
       double exh=-1;
@@ -306,25 +333,50 @@ void triggerEfficiency()
       double eyl=-1;
       double fitValue = -1;
       double residual = -1;
+      double fitError = -1;
+      double fitErrorRel = -1;
       
+      /*
       h_efficiency->GetPaintedGraph()->GetPoint(bin,x,y);
       eyh = h_efficiency->GetPaintedGraph()->GetErrorYhigh(bin);
       eyl = h_efficiency->GetPaintedGraph()->GetErrorYlow(bin);
       exh = h_efficiency->GetPaintedGraph()->GetErrorXhigh(bin);
       exl = h_efficiency->GetPaintedGraph()->GetErrorXlow(bin);      
       //cout << exl << " , " << exh << endl;
+      */
+
+      graph_efficiency->GetPoint(bin,x,y);
+      eyh = graph_efficiency->GetErrorYhigh(bin);
+      eyl = graph_efficiency->GetErrorYlow(bin);
+      exh = graph_efficiency->GetErrorXhigh(bin);
+      exl = graph_efficiency->GetErrorXlow(bin);      
+      //cout << exl << " , " << exh << endl;
 
       g_residual->SetPoint(bin,x,0);
       g_residual->RemovePoint(bin);
 
+      g_errorBand->SetPoint(bin,x,0);
+      g_errorBand->SetPointError(bin,0,0);
+      //g_errorBand->RemovePoint(bin);
+
       if(doFit==1)
 	{
 	  fitValue = (f1->Integral(x-exl , x+exl))/(exl+exl);
-	  
+
 	  if(y<fitValue)
 	    residual = (y - fitValue) / eyh;
 	  else
 	    residual = (y - fitValue) / eyl;
+
+	  double dfdP1   = f1->GradientPar(1,&x);
+	  double dfdP2   = f1->GradientPar(2,&x);
+	  double VarP1   = covMatrix[1][1] ; 
+	  double VarP2   = covMatrix[2][2] ;
+	  double CovP1P2 = covMatrix[1][2];
+
+	  //fitError = 0.05;
+	  fitError = sqrt(dfdP1*dfdP1*VarP1 + dfdP2*dfdP2*VarP2 + 2*dfdP1*dfdP2*CovP1P2);
+	  fitErrorRel = sqrt(dfdP1*dfdP1*VarP1 + dfdP2*dfdP2*VarP2 + 2*dfdP1*dfdP2*CovP1P2)/fitValue;
 	}
       
       //cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;   	  
@@ -343,6 +395,16 @@ void triggerEfficiency()
 	  g_residual->SetPoint(bin,x,residual);
 	  //g_residual->SetPointError(bin,,0);
 
+	  //cout << x << " - " << fitValue << " +/- " << fitError << endl;
+
+	  /*
+	  g_errorBand->SetPoint(bin,x,fitValue);
+	  g_errorBand->SetPointError(bin,0,fitError);
+	  */
+
+	  g_errorBand->SetPoint(bin,x,0);
+	  //g_errorBand->SetPointError(bin,0,fitErrorRel);
+	  g_errorBand->SetPointError(bin,0,fitError);
 	}
       else
 	{
@@ -371,7 +433,9 @@ void triggerEfficiency()
   legend->SetFillStyle(0);
   legend->SetLineColor(0);
   legend->SetShadowColor(0);
-  legend->AddEntry(h_efficiency,mytitlelegend,"lpe");
+  //  legend->AddEntry(h_efficiency,mytitlelegend,"lpe");
+  legend->AddEntry(graph_efficiency,mytitlelegend,"lpe");
+
   legend->Draw();
   //    }
   
@@ -397,8 +461,13 @@ void triggerEfficiency()
   canv->Print(myoutputfilename+".root",".root");
 
   //## Trigger Efficiency plot (zoom) ## 
+  /*
   h_efficiency->GetPaintedGraph()->GetXaxis()->SetRangeUser(xminZoom,xmaxZoom);
   h_efficiency->GetPaintedGraph()->GetYaxis()->SetRangeUser(yminZoom,ymaxZoom);
+  */
+  graph_efficiency->GetXaxis()->SetRangeUser(xminZoom,xmaxZoom);
+  graph_efficiency->GetYaxis()->SetRangeUser(yminZoom,ymaxZoom);
+
 
   CMS_lumi( canv, iPeriod, iPos ); 
   canv->Update();
@@ -469,12 +538,12 @@ void triggerEfficiency()
   pad1->Draw();
   pad1->cd(); 
 
-  TGraphAsymmErrors *g_efficiency = (TGraphAsymmErrors*) h_efficiency->GetPaintedGraph();
-  g_efficiency->Draw("ap");
+  //TGraphAsymmErrors *g_efficiency = (TGraphAsymmErrors*) h_efficiency->GetPaintedGraph();
+  graph_efficiency->Draw("ap");
   f1->Draw("same");
   gPad->Update();
 
-  TPaveStats *st = (TPaveStats*)g_efficiency->FindObject("stats");
+  TPaveStats *st = (TPaveStats*)graph_efficiency->FindObject("stats");
   st->Delete();
   TPaveText *fit_stat = new TPaveText(0.52,0.22,0.91,0.58,"NDC");    
   char chi2text[100]; 
@@ -500,7 +569,7 @@ void triggerEfficiency()
   fit_stat->SetTextColor(1); 
   fit_stat->Draw("SAME");
 
-  // //pad 1
+  // //pad 2
   canv2->cd();
   TPad *pad2 = new TPad("pad2", "pad2", 0, 0.05, 1, 0.3);
   pad2->SetTopMargin(0.); // Upper and lower plot are joined
@@ -518,9 +587,7 @@ void triggerEfficiency()
   g_residual->GetYaxis()->SetTitleSize(0.1); 
   g_residual->GetYaxis()->SetTitleOffset(0.5); 
   g_residual->GetYaxis()->SetTitle("#frac{(Data-Fit)}{#sigma_{stat}}"); 
-
   g_residual->Draw("AP");
-
 
   canv2->Update();
   canv2->Modified();
@@ -528,12 +595,42 @@ void triggerEfficiency()
   canv2->Print(myoutputfilename+"_fit.root",".root");
   canv2->Print(myoutputfilename+"_fit.png",".png");
 
-
-
-
   //## Store TEfficiency ##
   TFile outputFile("output.root","recreate");
   h_efficiency->Write();  
+
+  //## Fit error ##
+  TCanvas* canv3 = new TCanvas("canv3","canv3",50,50,W,H);
+  canv3->SetGridx();
+  canv3->SetGridy();
+  g_errorBand->SetLineColor(4);
+  g_errorBand->SetFillColor(4);
+  g_errorBand->SetFillStyle(3001);
+  g_errorBand->Draw("aE3");
+  g_errorBand->GetXaxis()->SetRangeUser(xminFit,xmaxFit);  
+  g_errorBand->GetXaxis()->SetTitle("Dijet mass [GeV]");  
+  g_errorBand->GetYaxis()->SetTitle("Relative efficiency uncertainty");  
+  g_errorBand->GetYaxis()->SetTitleOffset(1.3);  
+
+  TF1* fdefault = new TF1("fdefault","(1/2)* ( 1 + TMath::Erf((x-507.1)/94.2))",xminFit,xmaxFit);      
+  TF1* period1 = new TF1("period1","fdefault - (1/2)* ( 1 + TMath::Erf((x-505.1)/92.3))",xminFit,xmaxFit);      
+  TF1* period2 = new TF1("period2","fdefault - (1/2)* ( 1 + TMath::Erf((x-508.1)/93.7))",xminFit,xmaxFit);      
+  TF1* period3 = new TF1("period3","fdefault - (1/2)* ( 1 + TMath::Erf((x-509.0)/93.5))",xminFit,xmaxFit);      
+  TF1* period4 = new TF1("period4","fdefault - (1/2)* ( 1 + TMath::Erf((x-505.9)/94.7))",xminFit,xmaxFit);      
+  period1->SetLineColor(1);
+  period2->SetLineColor(2);
+  period3->SetLineColor(3);
+  period4->SetLineColor(4);
+  period1->Draw("lsame");
+  period2->Draw("lsame");
+  period3->Draw("lsame");
+  period4->Draw("lsame");
+  leg = new TLegend(0.55,0.71,0.93,0.91);
+  leg->AddEntry(period1,"tot - period1: run 257968-258440","l");
+  leg->AddEntry(period2,"tot - period2: run 258443-259637","l");
+  leg->AddEntry(period3,"tot - period3: run 259681-260431","l");
+  leg->AddEntry(period4,"tot - period4: run 260532-260627","l");
+  leg->Draw();
 
 
   //-----------------------------------------------------------------------------
