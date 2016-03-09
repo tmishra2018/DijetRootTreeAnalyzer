@@ -25,7 +25,7 @@ JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC (L123) + Summer15_25nsV7_DATA
 lumiSummary_ScoutingPFHT__15_01_2016_20160115_192039__DCSonly.json  => 1924.187 /pb
 lumiSummary_ScoutingPFHT__15_01_2016_20160115_192039__SILVER.json  => 1805.923 /pb  (PassJSON==1)
 (CERN eos) 
-ALL files: /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__09_03_2016/ScoutingPFHT__09_03_2016_20160309_184713/ | grep reduced (could not merge with hadd)
+ALL files: /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__09_03_2016/ScoutingPFHT__09_03_2016_20160309_184713/ | grep reduced 
 
 
 ScoutingPFCommissioning
@@ -38,6 +38,15 @@ lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__DCSonly.json  =
 lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__SILVER.json  => 1804.603 /pb  (PassJSON==1)
 (Rome T2)  /t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root
 (CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root
+
+/ScoutingPFCommissioning/Run2015D-v1/RAW	
+Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
+JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC (L123) + Summer15_25nsV7_DATA (L23Res)
+lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__DCSonly.json  => 1922.867 /pb
+lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__SILVER.json  => 1804.603 /pb  (PassJSON==1)
+(CERN eos) 
+All files: /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__09_03_2016/ScoutingPFCommissioning__09_03_2016_20160309_225640/ | grep reduced
+
 
 ParkingScoutingMonitor
 ======================
