@@ -61,13 +61,22 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //std::string L3DATAPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L3Absolute_AK4PFchs.txt";
     //std::string L2L3ResidualPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2L3Residual_AK4PFchs.txt" ;
     //
-    std::string L1Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt"; 
-    std::string L3Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt";
-    std::string L2DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt"; 
-    std::string L3DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt" ;
+    //std::string L1Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt";
+    //std::string L2Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt"; 
+    //std::string L3Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt";
+    //std::string L1DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt";
+    //std::string L2DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt"; 
+    //std::string L3DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt";
+    //std::string L2L3ResidualPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt" ;
+    //
+    std::string L1Path = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L2Relative_AK4PFchs.txt"; 
+    std::string L3Path = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L3Absolute_AK4PFchs.txt";
+    std::string L1DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L1FastJet_AK4PFchs.txt";
+    std::string L2DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L2Relative_AK4PFchs.txt"; 
+    std::string L3DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt" ;
+
 
     
     L1Par = new JetCorrectorParameters(L1Path);
@@ -96,7 +105,9 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //uncertainty
     //unc = new JetCorrectionUncertainty("data/Summer15_50nsV5_DATA/Summer15_50nsV5_DATA_Uncertainty_AK4PFchs.txt");
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_Uncertainty_AK4PFchs.txt");
-    unc = new JetCorrectionUncertainty("data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
+    //unc = new JetCorrectionUncertainty("data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
+
   }
   
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;
@@ -156,6 +167,7 @@ void analysisClass::Loop()
 
    //For trigger efficiency measurements
    //No trigger selection applied (full offline selection applied)
+   TH1F* h_mjj_NoTrigger_1GeVbin = new TH1F("h_mjj_NoTrigger_1GeVbin","",14000,0,14000);
    TH1F* h_mjj_NoTrigger = new TH1F("h_mjj_NoTrigger","",103,massBoundaries);
    //L1
    TH1F* h_mjj_HLTpass_ZeroBias = new TH1F("h_mjj_HLTpass_ZeroBias","",103,massBoundaries);
@@ -664,6 +676,7 @@ void analysisClass::Loop()
 	 && passedCut("etaWJ_j2")
 	 && getVariableValue("deltaETAjj") <  getPreCutValue1("DetaJJforTrig") ){
 
+       h_mjj_NoTrigger_1GeVbin -> Fill(MJJWide); 
        h_mjj_NoTrigger -> Fill(MJJWide); 
        
        if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) )
@@ -734,6 +747,8 @@ void analysisClass::Loop()
    } // End loop over events
 
    //////////write histos 
+
+   h_mjj_NoTrigger_1GeVbin -> Write();
    h_mjj_NoTrigger -> Write();
    h_mjj_HLTpass_ZeroBias -> Write();
    h_mjj_HLTpass_ZeroBias_L1HTT150 -> Write();
