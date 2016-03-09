@@ -63,7 +63,7 @@ NOTE:
 the files merged will be in '/..output../merged/' folder
 
 * The reduced root trees location+info is at 
-https://github.com/CMSDIJET/DijetScoutingRootTreeMaker/blob/master/data/json/README.md
+https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/data/json_scouting_2015/README
 
 #######################################
 3) Run on reduced trees
