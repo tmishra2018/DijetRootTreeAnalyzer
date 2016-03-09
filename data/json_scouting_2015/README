@@ -29,4 +29,23 @@ lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__SILVER.json  =>
 (Rome T2)  /t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root
 (CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root
 
+ParkingScoutingMonitor
+======================
+(at the moment only on CERN eos)
+First case)
+Reco: JEC Summer15_25nsV6
+HLT:  JEC Summer15_25nsV6
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ParkingScoutingMonitor-02-02-2016_20160202_191206/rootfile_ParkingScoutingMonitor_Run2015D-PromptReco-v4_JEC_v6_20160202_reduced_skim.root
+Second case)
+Reco: JEC Summer15_25nsV6
+HLT:  HLT JEC + Summer15_25nsV6 Residual
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ParkingScoutingMonitor-02-02-2016_20160202_191206/rootfile_ParkingScoutingMonitor_Run2015D-PromptReco-v4_JEC_HLT_v6_20160212_reduced_skim.root
+Third case)
+RECO: JEC Summer15_25nsV7
+HLT: HLT JEC + Summer15_25nsV7 Residual
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ParkingScoutingMonitor-02-02-2016_20160202_191206/rootfile_ParkingScoutingMonitor_Run2015D-PromptReco-v4_JEC_HLT_v7_20160214_reduced_skim.root
 
+With lower pT(HLT) cut: 30 GeV
+RECO: JEC Summer15_25nsV7
+HLT: HLT JEC + Summer15_25nsV7 Residual
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ParkingScoutingMonitor-02-02-2016_20160202_191206/rootfile_ParkingScoutingMonitor_Run2015D-PromptReco-v4_JEC_HLT_v7_LowerCuts_20160304_reduced_skim.root
