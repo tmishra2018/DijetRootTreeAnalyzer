@@ -64,9 +64,11 @@ double xmaxFit = 890;
 //scouting
 //TString myinputFile =  "/cmshome/santanas/CMS/Releases/CMSSW_7_4_15_DijetScouting/src/CMSDIJET/DijetRootTreeAnalyzer/output/dijetscoutingOutput2_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root";
-TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root";
+//TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root";
+TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__09_03_2016_20160309_225640/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__09_03_2016_20160309_225640_reduced_skim.root";
 
-TString mybaselinehisto = "h_mjj_HLTpass_L1HTT150"; // needed to define the x-axis range 
+//TString mybaselinehisto = "h_mjj_HLTpass_L1HTT150"; // needed to define the x-axis range 
+TString mybaselinehisto = "h_mjj_NoTrigger_1GeVbin"; // needed to define the x-axis range 
 
 //TString mynumerator = "h_mjj_HLTpass_PFHT800"; // only used if histoFromFile = 1
 TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1"; // only used if histoFromFile = 1
@@ -108,7 +110,9 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_AllJetHT_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "triggerEfficiency_SingleMu_Run2015Dv4-25ns-PromptReco_JetHTBestGuess_DetaJJFrom1p3To2p6";
 //TString myoutputfilename = "pippo";
-TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3";//scouting HT450
+//TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3";//scouting HT450
+//TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_RECOv6";//scouting HT450
+TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7";//scouting HT450
 //TString myoutputfilename = "triggerEfficiency_ZeroBiasSeed_L1HTT_DetaJJLess1p3";//scouting L1HTT
 
 
@@ -596,7 +600,7 @@ void triggerEfficiency()
   canv2->Print(myoutputfilename+"_fit.png",".png");
 
   //## Store TEfficiency ##
-  TFile outputFile("output.root","recreate");
+  TFile outputFile(myoutputfilename+"_output.root","recreate");
   h_efficiency->Write();  
 
   //## Fit error ##
