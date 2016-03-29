@@ -138,3 +138,7 @@ jetCSVAK4_j2         -inf           +inf                -               -       
 CosThetaStarWJ	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE	
 CosThetaStarAK4	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 Dijet_MassAK4  	     -inf           +inf                -               -               1       1000 0 10000      SAVE	
+gen_mjj              -inf           +inf                -               -               1       1000 0 10000      SAVE
+gen_deltaETAjj       -inf           +inf                -               -               1       100 0 3           SAVE
+pTGenAK4_j1          -inf           +inf                -               -               1       500 0 5000        SAVE
+pTGenAK4_j2          -inf           +inf                -               -               1       500 0 5000        SAVE

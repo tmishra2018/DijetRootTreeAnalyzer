@@ -485,7 +485,83 @@ void analysisClass::Loop()
        AK4jets.push_back( ak4j1 );
        AK4jets.push_back( ak4j2 );
      }
-    
+
+     // GenJets
+     double gen_mjj = -9999.0;
+     double gen_deltaETAjj = -9999.0;
+     TLorentzVector gen_wj1, gen_wj2;
+     double pTGenAK4_j1 = -9999.0;
+     double pTGenAK4_j2 = -9999.0;
+     if (!isData) {
+         double gen_wideJetDeltaR_ = getPreCutValue1("DeltaR");
+         if (nGenJetsAK4 >= 2) {
+             if (fabs(jetEtaGenAK4->at(0)) < getPreCutValue1("jetFidRegion")
+                 && jetPtGenAK4->at(0) > getPreCutValue1("pt0Cut")
+                 && fabs(jetEtaGenAK4->at(1)) < getPreCutValue1("jetFidRegion")
+                 && jetPtGenAK4->at(1) > getPreCutValue1("pt1Cut")) {
+                 TLorentzVector jet1, jet2;
+                 jet1.SetPtEtaPhiM(jetPtGenAK4->at(0), jetEtaGenAK4->at(0),
+                                   jetPhiGenAK4->at(0), jetMassGenAK4->at(0));
+                 jet2.SetPtEtaPhiM(jetPtGenAK4->at(1), jetEtaGenAK4->at(1),
+                                   jetPhiGenAK4->at(1), jetMassGenAK4->at(1));
+                 for (int i=0; i<nGenJetsAK4; ++i) {
+                     if(fabs(jetEtaGenAK4->at(i)) < getPreCutValue1("jetFidRegion")
+                        && jetPtGenAK4->at(i) > getPreCutValue1("ptCut")) {
+                         TLorentzVector currentJet;
+                         currentJet.SetPtEtaPhiM(jetPtGenAK4->at(i),
+                                                 jetEtaGenAK4->at(i),
+                                                 jetPhiGenAK4->at(i),
+                                                 jetMassGenAK4->at(i));
+                         double DeltaR1 = currentJet.DeltaR(jet1);
+                         double DeltaR2 = currentJet.DeltaR(jet2);
+
+                         if (DeltaR1 < DeltaR2 && DeltaR1 < gen_wideJetDeltaR_)
+                             gen_wj1 += currentJet;
+                         else if (DeltaR2 < gen_wideJetDeltaR_)
+                             gen_wj2 += currentJet;
+                     }
+                 }
+             }
+         }
+
+         if (gen_wj1.Pt() > 0.0 && gen_wj2.Pt() > 0.0) {
+             TLorentzVector gen_wdijet = gen_wj1 + gen_wj2;
+             gen_mjj = gen_wdijet.M();
+             gen_deltaETAjj = fabs(gen_wj1.Eta() - gen_wj2.Eta());
+         }
+
+         double gen_minDeltaR_j1 = 9999.0;
+         double gen_minDeltaR_j2 = 9999.0;
+         double gen_maxDeltaR = 0.4;
+         if (AK4jets.size() > 1) {
+             for (int i=0; i<nGenJetsAK4; ++i) {
+                 TLorentzVector currentJet;
+                 currentJet.SetPtEtaPhiM(jetPtGenAK4->at(i), jetEtaGenAK4->at(i),
+                                         jetPhiGenAK4->at(i), jetMassGenAK4->at(i));
+                 double DeltaR1 = currentJet.DeltaR(AK4jets[0]);
+                 double DeltaR2 = currentJet.DeltaR(AK4jets[1]);
+
+                 if (DeltaR1 < DeltaR2 && DeltaR1 < gen_maxDeltaR) {
+                     if (DeltaR1 < gen_minDeltaR_j1) {
+                         pTGenAK4_j1 = currentJet.Pt();
+                         gen_minDeltaR_j1 = DeltaR1;
+                     } else if (DeltaR2 < gen_minDeltaR_j2 && DeltaR2 < gen_maxDeltaR) {
+                         pTGenAK4_j2 = currentJet.Pt();
+                         gen_minDeltaR_j2 = DeltaR2;
+                     }
+                 } else { // DeltaR2 > DeltaR1
+                     if (DeltaR2 < gen_maxDeltaR && DeltaR2 < gen_minDeltaR_j2) {
+                         pTGenAK4_j2 = currentJet.Pt();
+                         gen_minDeltaR_j2 = DeltaR2;
+                     } else if (DeltaR1 < gen_minDeltaR_j1 && DeltaR1 < gen_maxDeltaR) {
+                         pTGenAK4_j1 = currentJet.Pt();
+                         gen_minDeltaR_j1 = DeltaR1;
+                     }
+                 }
+             }
+         }
+     }
+
      //== Fill Variables ==
      fillVariableWithValue("isData",isData);     
      fillVariableWithValue("run",runNo);     
@@ -584,6 +660,13 @@ void analysisClass::Loop()
 	 //    std::cout << " INV MASS FROM NTUPLE AK8 " << mjjAK8 << std::endl;
 	 //    //std::cout << " INV MASS FROM NTUPLE CA8 " << mjjCA8 << std::endl;
        }
+
+     if (!isData) {
+         fillVariableWithValue("gen_mjj", gen_mjj);
+         fillVariableWithValue("gen_deltaETAjj", gen_deltaETAjj);
+         fillVariableWithValue("pTGenAK4_j1", pTGenAK4_j1);
+         fillVariableWithValue("pTGenAK4_j2", pTGenAK4_j2);
+     }
 
      //no cuts on these variables, just to store in output
      // if(!isData)
