@@ -1,10 +1,4 @@
-#JSON data/json/Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt
-#JSON data/json/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt
-#JSON data/json/Cert_246908-258159_13TeV_PromptReco_Collisions15_25ns_JSON_v3.txt
-#JSON data/json/Cert_246908-258714_13TeV_PromptReco_Collisions15_25ns_JSON.txt
-#JSON  data/json/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
-#JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
-JSON data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
+#JSON data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -71,19 +65,19 @@ deltaETAjj           -inf           +inf               	-               -       
 mjj            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
 mjj_shiftJEC         -inf           +inf                -               -               1       10000 0 10000      SAVE
 # no cut on these variables, just want to save histograms and variables
-passHLT_ZeroBias_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1DoubleMu_BtagSeq   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_CaloJet40_BtagSeq    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1HTT150_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_HT450_BtagSeq        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_ZeroBias     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1DoubleMu   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_CaloJet40    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1HTT150     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_HT450        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_PFHT800      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_PFHT650MJJ950	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_PFHT650MJJ900	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_ZeroBias_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_L1DoubleMu_BtagSeq   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_CaloJet40_BtagSeq    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_L1HTT150_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_HT450_BtagSeq        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_ZeroBias     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_L1DoubleMu   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_CaloJet40    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_L1HTT150     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_HT450        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_PFHT800      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_PFHT650MJJ950	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+#passHLT_PFHT650MJJ900	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 isData		     -inf	    +inf		-		-		1	2  0 2.	  	  SAVE
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE

@@ -128,11 +128,11 @@ void analysisClass::Loop()
    TH1F* h_mjj_NoTrigger_1GeVbin = new TH1F("h_mjj_NoTrigger_1GeVbin","",14000,0,14000);
    TH1F* h_mjj_NoTrigger = new TH1F("h_mjj_NoTrigger","",103,massBoundaries);
    //L1
-   TH1F* h_mjj_HLTpass_ZeroBias = new TH1F("h_mjj_HLTpass_ZeroBias","",103,massBoundaries);
-   TH1F* h_mjj_HLTpass_ZeroBias_L1HTT150 = new TH1F("h_mjj_HLTpass_ZeroBias_L1HTT150","",103,massBoundaries);  
+   //TH1F* h_mjj_HLTpass_ZeroBias = new TH1F("h_mjj_HLTpass_ZeroBias","",103,massBoundaries);
+   //TH1F* h_mjj_HLTpass_ZeroBias_L1HTT150 = new TH1F("h_mjj_HLTpass_ZeroBias_L1HTT150","",103,massBoundaries);  
    //HLT
-   TH1F* h_mjj_HLTpass_L1HTT150 = new TH1F("h_mjj_HLTpass_L1HTT150","",103,massBoundaries);
-   TH1F* h_mjj_HLTpass_L1HTT150_HT450 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450","",103,massBoundaries);
+   //TH1F* h_mjj_HLTpass_L1HTT150 = new TH1F("h_mjj_HLTpass_L1HTT150","",103,massBoundaries);
+   //TH1F* h_mjj_HLTpass_L1HTT150_HT450 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450","",103,massBoundaries);
 
 
    /////////initialize variables
@@ -676,7 +676,7 @@ void analysisClass::Loop()
 
      // Trigger
      //int NtriggerBits = triggerResult->size();
-     if (isData)
+     /*if (isData)
        {
 	 fillVariableWithValue("passHLT_ZeroBias_BtagSeq",triggerResult->at(8));// DST_ZeroBias_BTagScouting_v* (run>=259636)
 	 fillVariableWithValue("passHLT_ZeroBias",triggerResult->at(7));// DST_ZeroBias_PFScouting_v* (run>=259636)
@@ -699,7 +699,7 @@ void analysisClass::Loop()
 	 fillVariableWithValue("passHLT_PFHT800",triggerResult->at(13));// HLT_PFHT800_v* (all runs)   
 	 fillVariableWithValue("passHLT_PFHT650MJJ950",triggerResult->at(22));// HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v* (all runs)        
 	 fillVariableWithValue("passHLT_PFHT650MJJ900",triggerResult->at(23));// HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v* (all runs)        
-       }
+       }*/
 
      // Evaluate cuts (but do not apply them)
      evaluateCuts();
@@ -720,7 +720,7 @@ void analysisClass::Loop()
        h_mjj_NoTrigger_1GeVbin -> Fill(MJJWide); 
        h_mjj_NoTrigger -> Fill(MJJWide); 
        
-       if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) )
+       /*if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) )
 	 h_mjj_HLTpass_ZeroBias -> Fill(MJJWide);  
 
        if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) 
@@ -732,7 +732,7 @@ void analysisClass::Loop()
 
        if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) 
 	   && (getVariableValue("passHLT_HT450_BtagSeq")||getVariableValue("passHLT_HT450")) )
-	 h_mjj_HLTpass_L1HTT150_HT450 -> Fill(MJJWide);  
+           h_mjj_HLTpass_L1HTT150_HT450 -> Fill(MJJWide);  */
        
      }
 
@@ -791,10 +791,10 @@ void analysisClass::Loop()
 
    h_mjj_NoTrigger_1GeVbin -> Write();
    h_mjj_NoTrigger -> Write();
-   h_mjj_HLTpass_ZeroBias -> Write();
+   /*h_mjj_HLTpass_ZeroBias -> Write();
    h_mjj_HLTpass_ZeroBias_L1HTT150 -> Write();
    h_mjj_HLTpass_L1HTT150 -> Write();
-   h_mjj_HLTpass_L1HTT150_HT450 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450 -> Write();*/
 
    // h_nVtx->Write();
    // h_trueVtx->Write();
