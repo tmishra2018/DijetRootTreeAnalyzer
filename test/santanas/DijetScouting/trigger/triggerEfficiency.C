@@ -267,6 +267,7 @@ void triggerEfficiency()
   //  if(TEfficiency::CheckConsistency(*h_numerator,*h_denominator))
   //    {
   h_efficiency = new TEfficiency(*h_numerator,*h_denominator);    
+  h_efficiency->SetName("efficiency"); 
   //stat option, see https://root.cern.ch/root/html/TEfficiency.html#TEfficiency:SetStatisticOption
   h_efficiency->SetStatisticOption(TEfficiency::kFWilson);  
   //h_efficiency->SetStatisticOption(TEfficiency::kFCP); //default  
