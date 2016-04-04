@@ -77,12 +77,7 @@ cutfile: https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/config/cu
 analyzer: https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/src/analysisClass_HLTRecoComparison.C
 cutfile: https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/config/cutFile_HLTRecoComparison.txt
 
-* Trigger efficiency
-https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/scripts/triggerEfficiency.C
-
 * MC Signal
 analyzer: https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/src/analysisClass_signalDijetScoutingPlots.C
 cutfile: https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/master/config/cutFile_signalDijetScoutingPlots.txt
 
-* Fit
-...
