@@ -66,7 +66,7 @@ double xmaxFit = 890;
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__09_03_2016_20160309_225640/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__09_03_2016_20160309_225640_reduced_skim.root";
-TString myinputFile =  "outputTrigger.root";
+TString myinputFile =  "outputTriggerCorr.root";
 
 //TString mybaselinehisto = "h_mjj_HLTpass_L1HTT150"; // needed to define the x-axis range 
 TString mybaselinehisto = "h_mjj_NoTrigger_1GeVbin"; // needed to define the x-axis range 
@@ -113,8 +113,8 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "pippo";
 //TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3";//scouting HT450
 //TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_RECOv6";//scouting HT450
-TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7";//scouting HT450
-//TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7Corr";//scouting HT450
+//TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7";//scouting HT450
+TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7Corr";//scouting HT450
 //TString myoutputfilename = "triggerEfficiency_ZeroBiasSeed_L1HTT_DetaJJLess1p3";//scouting L1HTT
 
 
