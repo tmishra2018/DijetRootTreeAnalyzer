@@ -1,5 +1,5 @@
-#include "tdrstyle.C"
-#include "CMS_lumi.C"
+#include "../style/tdrstyle.C"
+#include "../style/CMS_lumi.C"
 #include "TH1.h"
 #include "TH1F.h"
 
@@ -7,7 +7,7 @@ TCanvas* example_plot( int iPeriod, int iPos );
 
 //###### EDIT THIS PART #######
 
-int histoFromFile = 0; //=1 histograms available in root file, =0 create histo from tree
+int histoFromFile = 1; //=1 histograms available in root file, =0 create histo from tree
 
 //high-mass
 //double xmin = 156;
@@ -65,13 +65,14 @@ double xmaxFit = 890;
 //TString myinputFile =  "/cmshome/santanas/CMS/Releases/CMSSW_7_4_15_DijetScouting/src/CMSDIJET/DijetRootTreeAnalyzer/output/dijetscoutingOutput2_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root";
-TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__09_03_2016_20160309_225640/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__09_03_2016_20160309_225640_reduced_skim.root";
+//TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__09_03_2016_20160309_225640/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__09_03_2016_20160309_225640_reduced_skim.root";
+TString myinputFile =  "outputTriggerCorr.root";
 
 //TString mybaselinehisto = "h_mjj_HLTpass_L1HTT150"; // needed to define the x-axis range 
 TString mybaselinehisto = "h_mjj_NoTrigger_1GeVbin"; // needed to define the x-axis range 
 
 //TString mynumerator = "h_mjj_HLTpass_PFHT800"; // only used if histoFromFile = 1
-TString mynumerator = "h_mjj_HLTpass_PFHT800AndMu45Eta2p1"; // only used if histoFromFile = 1
+TString mynumerator = "h_mjj_HLTpass_L1HTT150_HT450_1GeVbin"; // only used if histoFromFile = 1
 //TString mytitlelegendNum = "PFHT800 AND Mu45Eta2p1";
 //TString mytitlelegendNum = "(PFHT800 OR PFJET500) AND Mu45Eta2p1";//paper
 //TString mytitlelegendNum = "(All JetHT triggers) AND Mu45Eta2p1";
@@ -79,7 +80,7 @@ TString mytitlelegendNum = "HT450 AND L1HTT150";//scouting HT450
 //TString mytitlelegendNum = "L1HTT AND ZeroBias";//scouting L1HTT
 
 //TString mydenominator = "h_mjj_HLTpass_PFHT475"; // only used if histoFromFile = 1
-TString mydenominator = "h_mjj_HLTpass_Mu45Eta2p1"; // only used if histoFromFile = 1
+TString mydenominator = "h_mjj_HLTpass_L1HTT150_1GeVbin"; // only used if histoFromFile = 1
 //TString mytitlelegendDen = "Mu45Eta2p1"; //paper
 TString mytitlelegendDen = "L1HTT150"; //scouting HT450
 //TString mytitlelegendDen = "ZeroBias"; //scouting L1HTT
@@ -112,7 +113,8 @@ TString yAxisTitle = "Number of events";
 //TString myoutputfilename = "pippo";
 //TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3";//scouting HT450
 //TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_RECOv6";//scouting HT450
-TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7";//scouting HT450
+//TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7";//scouting HT450
+TString myoutputfilename = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7Corr";//scouting HT450
 //TString myoutputfilename = "triggerEfficiency_ZeroBiasSeed_L1HTT_DetaJJLess1p3";//scouting L1HTT
 
 
@@ -234,7 +236,7 @@ void triggerEfficiency()
       //--
       cout << "filling denominator" << endl;
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1"); //signal region
-      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region //paper
+      //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region //paper      
       thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_L1HTT150_BtagSeq==1||passHLT_L1HTT150)"); //signal region //scouting HT450
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1"); //signal region //scouting L1HTT
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
@@ -265,6 +267,7 @@ void triggerEfficiency()
   //  if(TEfficiency::CheckConsistency(*h_numerator,*h_denominator))
   //    {
   h_efficiency = new TEfficiency(*h_numerator,*h_denominator);    
+  h_efficiency->SetName("efficiency"); 
   //stat option, see https://root.cern.ch/root/html/TEfficiency.html#TEfficiency:SetStatisticOption
   h_efficiency->SetStatisticOption(TEfficiency::kFWilson);  
   //h_efficiency->SetStatisticOption(TEfficiency::kFCP); //default  
