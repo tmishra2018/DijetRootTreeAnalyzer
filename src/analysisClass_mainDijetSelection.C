@@ -61,6 +61,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //std::string L3DATAPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L3Absolute_AK4PFchs.txt";
     //std::string L2L3ResidualPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2L3Residual_AK4PFchs.txt" ;
     //
+    /*
     std::string L1Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt";
     std::string L2Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt"; 
     std::string L3Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt";
@@ -68,6 +69,16 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L2DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt"; 
     std::string L3DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt";
     std::string L2L3ResidualPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt" ;
+    */
+    // New production with V7 JEC for comparing RECO and HLT datasets for dijet scouting
+    std::string L1Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L2Relative_AK4PFchs.txt"; 
+    std::string L3Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1DATAPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L1FastJet_AK4PFchs.txt";
+    std::string L2DATAPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2Relative_AK4PFchs.txt"; 
+    std::string L3DATAPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt" ;
+    
 
     
     L1Par = new JetCorrectorParameters(L1Path);
@@ -96,7 +107,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //uncertainty
     //unc = new JetCorrectionUncertainty("data/Summer15_50nsV5_DATA/Summer15_50nsV5_DATA_Uncertainty_AK4PFchs.txt");
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_Uncertainty_AK4PFchs.txt");
-    unc = new JetCorrectionUncertainty("data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
   }
   
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;

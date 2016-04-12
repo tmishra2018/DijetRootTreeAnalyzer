@@ -151,9 +151,9 @@ for line in  ins:
     ###################################
     #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" "+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
     #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
-    command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
+    #command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijets/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
     #command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijetscouting/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+" >& "+"/tmp/logfile_"+sample+"_"+newTag+"_"+str(jj)+".log"#NEW
-    #command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijetscouting/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+" >& "+pwd+"/"+logfile #NEW
+    command = "./main "+splittedlist[jj]+" batch/"+cutfileName+" dijetscouting/events /tmp/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" /tmp/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)+" >& "+pwd+"/"+logfile #NEW
     ###################################
 
     #print "submit "+command
