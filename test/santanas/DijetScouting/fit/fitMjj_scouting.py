@@ -1,39 +1,45 @@
 #!/usr/bin/env python
-
 import sys, os, copy, re
 from array import array
 from argparse import ArgumentParser
-from ROOT import * 
+import math
+from ROOT import *
 import CMS_lumi, setTDRStyle
 
 # configuration
-readExistingHisto=0
-inputHistoFileName="input.root"
+readExistingHisto=1
+inputHistoFileName="rawhistV7_Run2015D_scoutingPFHT_UNBLINDED_649_838_JEC_HLTplusV7_Mjj_cor_smooth.root"
 inputDataFileName = "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__15_01_2016_20160115_192039/merged/rootfile_ScoutingPFHT__Run2015D-v1__RAW_ScoutingPFHT__15_01_2016_20160115_192039_reduced_skim.root"
 treeName = "rootTupleTree/tree"
 outputLabel = "output"
 var = "mjj"
 sqrtS = 13000.
-lumiValue = 1800 #[pb]        
-showCrossSection = 1 #1=cross section [pb] , 0=number of events/GeV 
+lumiValue = 1806 #[pb]
+showCrossSection = 1 #1=cross section [pb] , 0=number of events/GeV
 #drawSignalShapeAlsoAlone = 1
-fixedRange = 0 #1=YES , 0=NO  (the option works only if showCrossSection=1; otherwise=0)
+fixedRange = 1 #1=YES , 0=NO  (the option works only if showCrossSection=1; otherwise=0)
 minY = 0.00000003
 maxY = 20
 if showCrossSection==1:
-    lumi = lumiValue 
+    lumi = lumiValue
 else:
-    lumi = 1 
-massMin = 1181
-massMax = 6328
-blindRegionMassMin = 1607
-blindRegionMassMax = 1607
+    lumi = 1
+massMin = 565
+massMax = 2037
+blindRegionMassMin = 0
+#blindRegionMassMin = 649
+blindRegionMassMax = 0
+#blindRegionMassMax = 838
+doBlind = False
+if blindRegionMassMin != blindRegionMassMax:
+    doBlind = True
 xaxisTitle = "Dijet Mass [GeV]"
 if showCrossSection==1:
-    yaxisTitle_main = "Cross section [pb]"
+    yaxisTitle_main = "d#sigma / dm_{jj}   [pb / GeV]"
 else:
     yaxisTitle_main = "Number of events / GeV"
 yaxisTitle_secondary = "#frac{(Data-Fit)}{#sigma_{Data}}   "
+#range_residual = 2.5
 range_residual = 3.5
 MinNumEvents = 10.
 nParFit = 4
@@ -87,12 +93,12 @@ iPeriod = 4
 
 W = 600
 H = 700
-H_ref = 700 
-W_ref = 600 
+H_ref = 700
+W_ref = 600
 T = 0.08*H_ref
 B = 0.12*H_ref
 L = 0.12*W_ref
-R = 0.04*W_ref 
+R = 0.04*W_ref
 
 #######################################################################
 
@@ -104,46 +110,51 @@ def main():
 
     # input data
     if (readExistingHisto==1):
-        inputDataFile = TFile(inputHistoFileName)        
-    else:    
+        inputDataFile = TFile(inputHistoFileName)
+    else:
         inputDataFile = TFile(inputDataFileName)
         treeData = inputDataFile.Get(treeName)
         print "number of entries in the data tree: ", treeData.GetEntries()
 
     # mass variable
-    mjj = RooRealVar('mjj','mjj',float(massMin),float(massMax))
-    mjj.setRange("RangeLow",massMin,blindRegionMassMin)
-    mjj.setRange("RangeHigh",blindRegionMassMax,massMax)
+    mjj = RooRealVar('mjj', 'mjj', float(massMin), float(massMax))
+    mjj.setRange("RangeLow", massMin, blindRegionMassMin)
+    mjj.setRange("RangeHigh", blindRegionMassMax, massMax)
 
-    # data 
+    # data
+    dataInt = 1
     if (readExistingHisto==1):
-        h_data = (inputDataFile.Get("h_data")).Clone("h_data")
+        h_data = (inputDataFile.Get("mjj_mjjcor_gev")).Clone("h_data")
+        if doBlind:
+            dataInt = h_data.Integral(massMin + 1, blindRegionMassMin) + h_data.Integral(blindRegionMassMax + 1, massMax)
+        else:
+            dataInt = h_data.Integral(massMin + 1, massMax)
     else:
         h_data = TH1F("h_data","",13000,0,13000);
-        treeData.Project("h_data",var,sel);        
-    dataInt = h_data.GetEntries()
-    print "number of events in the fit range: ", dataInt   
+        treeData.Project("h_data",var,sel);
+        dataInt = h_data.GetEntries()
+    print "number of events in the fit range:", int(dataInt)
 
-    h_data_roo = RooDataHist('h_data_roo','h_data_roo',RooArgList(mjj),h_data)
+    h_data_roo = RooDataHist('h_data_roo', 'h_data_roo', RooArgList(mjj), h_data)
     h_data_roo.Print()
 
 #    # trigger efficiency model
-#    m_eff = RooRealVar('m_eff','m_eff',507.1,450.,550.)
-#    sigma_eff = RooRealVar('sigma_eff','sigma_eff',94.2,80.,120.)
-#    m_eff.setConstant(kTRUE)
-#    sigma_eff.setConstant(kTRUE)
+    m_eff = RooRealVar('m_eff','m_eff',495.7,450.,550.)
+    sigma_eff = RooRealVar('sigma_eff','sigma_eff',96.0,80.,120.)
+    m_eff.setConstant(kTRUE)
+    sigma_eff.setConstant(kTRUE)
 #    efficiency = RooGenericPdf('efficiency','(1/2)* ( 1 + TMath::Erf((@0-@1)/@2))',RooArgList(mjj,m_eff,sigma_eff))    
 #    efficiency.Print()
 
     #old
     # background model
-    norm = RooRealVar('norm','norm',dataInt,0.,1e+09)
-    p1 = RooRealVar('p1','p1',10,0.,100.)
-    p2 = RooRealVar('p2','p2',5,0.,60.)
-    p3 = RooRealVar('p3','p3',0,-10.,10.)
-    background = RooGenericPdf('background','(pow(1-@0/%.1f,@1)/pow(@0/%.1f,@2+@3*log(@0/%.1f)))'%(sqrtS,sqrtS,sqrtS),RooArgList(mjj,p1,p2,p3))
+    norm = RooRealVar('norm', 'norm', dataInt, 0.0, 1.0e9)
+    p1 = RooRealVar('p1', 'p1', 6.845, 0.0, 100.0)
+    p2 = RooRealVar('p2', 'p2', 6.7807, 0.0, 100.0)
+    p3 = RooRealVar('p3', 'p3', 0.30685, -10.0, 10.0)
+    background = RooGenericPdf('background','(pow(1-@0/%.1f,@1)/pow(@0/%.1f,@2+@3*log(@0/%.1f)))*(0.5*(1.0 + TMath::Erf((@0 - @4)/@5)))'%(sqrtS,sqrtS,sqrtS),RooArgList(mjj, p1, p2, p3, m_eff, sigma_eff))
     background.Print()
-    #background_ext = RooExtendPdf("background_ext","",background,norm)    
+    background_ext = RooExtendPdf("background_ext","",background,norm)
 
     #new
     # background model
@@ -155,15 +166,24 @@ def main():
     #background.Print()
 
     # fit
-    #res_b = background_ext.fitTo(h_data_roo, RooFit.Extended(kTRUE), RooFit.Save(kTRUE), RooFit.Strategy(1))
-    #res_b = background_ext.fitTo(h_data_roo, RooFit.Range("RangeLow , RangeMiddle , RangeHigh"), RooFit.Extended(kTRUE), RooFit.Save(kTRUE))
-    res_b = background.fitTo(h_data_roo, RooFit.Range("RangeLow,RangeHigh"), RooFit.Save(kTRUE),RooFit.Strategy(1))
-    #res_b = background_ext.fitTo(h_data_roo, RooFit.Extended(kTRUE), RooFit.Range("RangeAll"), RooFit.Save(kTRUE), RooFit.Strategy(1))
+    num_regions = 1.0
+    if doBlind:
+        num_regions = 2.0
+    # res_b = background_ext.fitTo(h_data_roo, RooFit.Range("RangeLow , RangeHigh"),
+    #                              RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+    #                              RooFit.Strategy(1))
+    if doBlind:
+        res_b = background_ext.fitTo(h_data_roo, RooFit.Range("RangeLow,RangeHigh"),
+                                     RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+                                     RooFit.Strategy(1))
+    else:
+        res_b = background_ext.fitTo(h_data_roo, RooFit.Extended(kTRUE),
+                                     RooFit.Save(kTRUE), RooFit.Strategy(1))
     res_b.Print()
 
     # Try roosimultaneous fit
 
-    # fit by hand 
+    # fit by hand
     #nll = background_ext.createNLL(h_data_roo,RooFit.Range(" RangeLow , RangeHigh "))
     #m = RooMinuit(nll)
     #m.setVerbose(kTRUE)
@@ -172,31 +192,46 @@ def main():
     #res_b = m.save()
     #res_b.Print()
 
-    # fit results    
-    #norm_b = res_b.floatParsFinal().find("norm") #normalization in extended LL
-    norm_b = RooRealVar('norm_b','norm_b',dataInt,0.,1e+09) #normalization without extended LL
-    p1_b = res_b.floatParsFinal().find("p1") 
-    p2_b = res_b.floatParsFinal().find("p2") 
-    p3_b = res_b.floatParsFinal().find("p3") 
+    # fit results
+    norm_b = res_b.floatParsFinal().find("norm") #normalization in extended LL
+    #norm_b = RooRealVar('norm_b','norm_b',dataInt,0.,1e+09) #normalization without extended LL
+    # p1_b = res_b.floatParsFinal().find("p1")
+    # p2_b = res_b.floatParsFinal().find("p2")
+    # p3_b = res_b.floatParsFinal().find("p3")
+    p1_b = p1
+    p2_b = p2
+    p3_b = p3
 
-    background_noNorm = TF1("background_noNorm","( TMath::Power(1-x/%.1f,[0]) ) / ( TMath::Power(x/%.1f,[1]+[2]*log(x/%.1f)) )"%(sqrtS,sqrtS,sqrtS),float(massMin),float(massMax))
+    background_noNorm = TF1("background_noNorm","( TMath::Power(1-x/%.1f,[0]) ) / ( TMath::Power(x/%.1f,[1]+[2]*log(x/%.1f)) )*(0.5*(1.0 + TMath::Erf((x - [3])/[4])))"%(sqrtS,sqrtS,sqrtS),float(massMin),float(massMax))
     background_noNorm.SetParameter(0,p1_b.getVal())
     background_noNorm.SetParameter(1,p2_b.getVal())
     background_noNorm.SetParameter(2,p3_b.getVal())
+    background_noNorm.SetParameter(3,m_eff.getVal())
+    background_noNorm.SetParameter(4,sigma_eff.getVal())
     #int_b = background_noNorm.Integral(float(massMin),float(massMax))
-    int_b = background_noNorm.Integral(massMin,blindRegionMassMin) + background_noNorm.Integral(blindRegionMassMax,massMax)
-    print "rescale for background function: ", float(int_b) 
-    p0_b = norm_b.getVal() / (int_b*lumi) 
-    print "p0_b = " , norm_b.getVal()/int_b , " +" , norm_b.getErrorHi()/int_b , " -" , norm_b.getErrorLo()/int_b
+    int_b = 1.0
+    if doBlind:
+        int_b = background_noNorm.Integral(float(massMin), float(blindRegionMassMin)) \
+            + background_noNorm.Integral(float(blindRegionMassMax), float(massMax))
+    else:
+        int_b = background_noNorm.Integral(float(massMin), float(massMax))
+    print "rescale for background function:", float(int_b)
+    p0_b = norm_b.getVal() / (int_b*lumi) * num_regions
+    #print "p0_b = " , norm_b.getVal()/int_b , " +" , norm_b.getErrorHi()/int_b , " -" , norm_b.getErrorLo()/int_b
+    print "p0_b = " , p0_b , " +" , norm_b.getErrorHi()/int_b*math.sqrt(num_regions) , " -" , norm_b.getErrorLo()/int_b*math.sqrt(num_regions)
     print "p1_b = " , p1_b.getVal() , " +" , p1_b.getErrorHi() , " " , p1_b.getErrorLo()
     print "p2_b = " , p2_b.getVal() , " +" , p2_b.getErrorHi() , " " , p2_b.getErrorLo()
     print "p3_b = " , p3_b.getVal() , " +" , p3_b.getErrorHi() , " " , p3_b.getErrorLo()
+    print "m_eff =", m_eff.getVal()
+    print "sigma_eff =", sigma_eff.getVal()
 
-    background = TF1("background","( [0]*TMath::Power(1-x/%.1f,[1]) ) / ( TMath::Power(x/%.1f,[2]+[3]*log(x/%.1f)) )"%(sqrtS,sqrtS,sqrtS),float(massMin),float(massMax))
+    background = TF1("background","( [0]*TMath::Power(1-x/%.1f,[1]) ) / ( TMath::Power(x/%.1f,[2]+[3]*log(x/%.1f)) )*(0.5*(1.0 + TMath::Erf((x - [4])/[5])))"%(sqrtS,sqrtS,sqrtS),float(massMin),float(massMax))
     background.SetParameter(0,p0_b)
     background.SetParameter(1,p1_b.getVal())
     background.SetParameter(2,p2_b.getVal())
     background.SetParameter(3,p3_b.getVal())
+    background.SetParameter(4,m_eff.getVal())
+    background.SetParameter(5,sigma_eff.getVal())
 
     # plot test
     #canvas_test = TCanvas("canvas")
@@ -204,9 +239,9 @@ def main():
     #background.Draw("same l")
 
     # data graph
-    h_data.Rebin(N_massBins,"h_data_varBin",massBins)
-    g_data = TGraphAsymmErrors(h_data_varBin)     
-    #g_data_events = TGraphAsymmErrors(h_data_varBin)     
+    h_data.Rebin(N_massBins, "h_data_varBin", massBins)
+    g_data = TGraphAsymmErrors(h_data_varBin)
+    #g_data_events = TGraphAsymmErrors(h_data_varBin)
 
     alpha = 1-0.6827
     for i in range(0,g_data.GetN()):
@@ -233,34 +268,50 @@ def main():
             g_data.SetPointEYhigh(i, 0);
             g_data.SetPoint(i, g_data.GetX()[i], 0)
 
-    # output 
+    # output
     output = TFile(outputLabel+".root","RECREATE");
     h_data.Write()
-    
+
+    list_parameter = [p0_b, p1_b.getVal(), p2_b.getVal(), p3_b.getVal(),
+                      m_eff.getVal(), sigma_eff.getVal(),
+                      (norm_b.getErrorHi() - norm_b.getErrorLo())/(2.0*int_b)*math.sqrt(num_regions),
+                      (p1_b.getErrorHi() - p1_b.getErrorLo())/2.0,
+                      (p2_b.getErrorHi() - p2_b.getErrorLo())/2.0,
+                      (p3_b.getErrorHi() - p3_b.getErrorLo())/2.0]
+
     # plot
     h_background = convertFunctionToHisto(background,"h_background",N_massBins,massBins)
     h_fit_residual_vs_mass = TH1D("h_fit_residual_vs_mass","h_fit_residual_vs_mass",N_massBins,massBins)
     list_chi2AndNdf_background = calculateChi2AndFillResiduals(g_data,h_background,h_fit_residual_vs_mass,0)
-    drawAndSavePlot_background(g_data,h_background,h_fit_residual_vs_mass,outputLabel)
+    drawAndSavePlot_background(g_data,h_background,h_fit_residual_vs_mass,outputLabel, list_chi2AndNdf_background, list_parameter)
+
+    # h_fit_residual_vs_mass_unbinned = TH1D("h_fit_residual_vs_mass_unbinned",
+    #                                        "h_fit_residual_vs_mass_unbinned",
+    #                                        massMax - massMin, massMin, massMax)
+    # calculateChi2AndFillResiduals(g_data, h_background,
+    #                               h_fit_residual_vs_mass_unbinned, 0)
 
     # close output
     output.Close()
 
-    raw_input("Press Enter to exit...")
+    #raw_input("Press Enter to exit...")
 
 
 #==============================================================================
-        
+
 
 def convertFunctionToHisto(background_,name_,N_massBins_,massBins_):
-    
+
     background_hist_ = TH1D(name_,name_,N_massBins_,massBins_)
-    
+
     for bin in range (0,N_massBins_):
         xbinLow = massBins_[bin]
         xbinHigh = massBins_[bin+1]
         binWidth_current = xbinHigh - xbinLow
         value = background_.Integral(xbinLow , xbinHigh) / binWidth_current
+        print "{0}: {1} {2} {3} {4}".format(massBins_[bin], xbinLow, xbinHigh,
+                                            background_.Integral(xbinLow, xbinHigh),
+                                            value)
         background_hist_.SetBinContent(bin+1,value)
 
     return background_hist_
@@ -353,7 +404,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     chi2_ndf_PlotRangeNonZero = chi2_PlotRangeNonZero / ndf_PlotRangeNonZero
     chi2_ndf_PlotRangeMinNumEvents = chi2_PlotRangeMinNumEvents / ndf_PlotRangeMinNumEvents
 
-    print "chi2/ndf FullRangeAll : %.1f / %d = %.2f" % ( chi2_FullRangeAll , ndf_FullRangeAll , chi2_ndf_FullRangeAll ) 
+    print "chi2/ndf FullRangeAll : %.8f / %d = %.2f" % ( chi2_FullRangeAll , ndf_FullRangeAll , chi2_ndf_FullRangeAll ) 
     print "chi2/ndf PlotRangeAll : %.1f / %d = %.2f" % ( chi2_PlotRangeAll , ndf_PlotRangeAll , chi2_ndf_PlotRangeAll ) 
     print "chi2/ndf PlotRangeNonZero : %.1f / %d = %.2f" % ( chi2_PlotRangeNonZero , ndf_PlotRangeNonZero , chi2_ndf_PlotRangeNonZero ) 
     print "chi2/ndf PlotRangeMinNumEvents : %.1f / %d = %.2f" % ( chi2_PlotRangeMinNumEvents , ndf_PlotRangeMinNumEvents , chi2_ndf_PlotRangeMinNumEvents ) 
@@ -361,7 +412,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     return [chi2_FullRangeAll, ndf_FullRangeAll, chi2_PlotRangeAll, ndf_PlotRangeAll, chi2_PlotRangeNonZero, ndf_PlotRangeNonZero, chi2_PlotRangeMinNumEvents, ndf_PlotRangeMinNumEvents]
 
 
-def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residual_vsMass_,outputLabel_):
+def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residual_vsMass_,outputLabel_, list_chi2AndNdf_, list_parameter_):
 
     global minY, maxY
 
@@ -385,8 +436,9 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     pad_1.SetFrameFillStyle(0)
     pad_1.SetFrameBorderMode(0)
 
-    if ( (fixedRange==1 and showCrossSection==1)==0 ):
-        minY = 0.0001/lumi
+    if fixedRange==1 and showCrossSection==1:
+        #minY = 0.0001/lumi
+        minY = 10.0/lumi
         maxY = data_obs_TGraph_.GetY()[0]*10
         
     #vFrame = pad_1.DrawFrame(minX_mass_plot,0.0001/lumi,maxX_mass_plot,data_obs_TGraph_.GetY()[0]*10)
@@ -417,13 +469,20 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     #style background function
     background_TH1_.SetLineColor(2)
     background_TH1_.SetLineWidth(2)
+    background_TH1_.SetTitle("")
+    background_TH1_.GetXaxis().SetTitle(xaxisTitle)
+    background_TH1_.GetYaxis().SetTitle(yaxisTitle_main)
+    background_TH1_.GetXaxis().SetLimits(massMin,massMax)
+    background_TH1_.GetYaxis().SetRangeUser(minY,maxY)
 
     #draw objects
-    data_obs_TGraph_.Draw("A P E0")
-    background_TH1_.Draw("C SAME")
+    #data_obs_TGraph_.Draw("A P E0")
+    #background_TH1_.Draw("C SAME")
+    background_TH1_.Draw("C")
+    data_obs_TGraph_.Draw("P E0 SAME")
 
     #draw text
-    pave_general = TPaveText(0.566772,0.794229,0.83557,0.940972,"NDC")    
+    pave_general = TPaveText(0.566772,0.794229,0.83557,0.940972,"NDC")
     pave_general.AddText("background fit")
     pave_general.SetFillColor(0)
     pave_general.SetLineColor(1)
@@ -431,19 +490,49 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     pave_general.SetBorderSize(0)
     pave_general.SetTextFont(42)
     pave_general.SetTextSize(0.040)
-    pave_general.SetTextAlign(12) 
-    pave_general.SetTextColor(1) 
+    pave_general.SetTextAlign(12)
+    pave_general.SetTextColor(1)
     pave_general.Draw("SAME")
 
     #draw text
-    pave_sel = TPaveText(0.229489,0.0817972,0.464046,0.254608,"NDC")    
+    pave_sel = TPaveText(0.229489,0.0817972,0.464046,0.254608,"NDC")
     pave_sel.SetFillColor(0)
     pave_sel.SetBorderSize(0)
     pave_sel.SetFillStyle(0)
     pave_sel.AddText(0.5,1.2,"Wide Jets")
-    pave_sel.AddText(0.5,0.5,"m_{jj} > 1.2 TeV")
+    pave_sel.AddText(0.5,0.5,"m_{jj} > 565 GeV")
     pave_sel.AddText(0.5,0.,"|#eta| < 2.5, |#Delta#eta| < 1.3")
     pave_sel.Draw("SAME")
+
+    pave_chi2 = TPaveText(0.229489,0.3,0.55,0.35,"NDC")
+    pave_chi2.SetFillColor(0)
+    pave_chi2.SetBorderSize(0)
+    pave_chi2.SetFillStyle(0)
+    pave_chi2.AddText(0.5, 0.0,
+                      "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                          list_chi2AndNdf_[4], list_chi2AndNdf_[5],
+                          list_chi2AndNdf_[4]/list_chi2AndNdf_[5]))
+    pave_chi2.Draw("SAME")
+
+    pave_fit = TPaveText(0.47,0.082,0.8,0.25,"NDC")
+    pave_fit.SetFillColor(0)
+    pave_fit.SetBorderSize(0)
+    pave_fit.SetFillStyle(0)
+    pave_fit.AddText(0.5, 0.8, "p0 = {0:.4g} #pm {1:.4g}".format(list_parameter_[0], list_parameter_[6]))
+    pave_fit.AddText(0.5, 0.6, "p1 = {0:.3f} #pm {1:.3f}".format(list_parameter_[1], list_parameter_[7]))
+    pave_fit.AddText(0.5, 0.4, "p2 = {0:.3f} #pm {1:.3f}".format(list_parameter_[2], list_parameter_[8]))
+    pave_fit.AddText(0.5, 0.2, "p3 = {0:.3f} #pm {1:.3f}".format(list_parameter_[3], list_parameter_[9]))
+    pave_fit.AddText(0.5, 0.05, "m_{{eff}} = {0:.1f}".format(list_parameter_[4]))
+    pave_fit.AddText(0.5, 0.0, "#sigma_{{eff}} = {0:.1f}".format(list_parameter_[5]))
+    pave_fit.Draw("SAME")
+
+    # pave_toy = TPaveText(0.6,0.4,0.9,0.6,"NDC")
+    # pave_toy.SetFillColor(0)
+    # pave_toy.SetBorderSize(0)
+    # pave_toy.SetFillStyle(0)
+    # pave_toy.SetTextColor(2)
+    # pave_toy.AddText(0.5, 0.0, "Toy MC (sbtoy1)")
+    # pave_toy.Draw("SAME")
 
     #draw legend
     leg = TLegend(0.5564991,0.58,0.9203575,0.835812)
@@ -469,7 +558,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     canvas.cd(2)
     pad_2 = canvas.GetPad(2)
     #pad_2.SetPad(0.01,0.02,0.99,0.27) #FIXME
-    pad_2.SetPad(0.01,0.02,0.99,0.37) 
+    pad_2.SetPad(0.01,0.02,0.99,0.37)
     pad_2.SetBottomMargin(0.35)
     pad_2.SetRightMargin(0.05)
     pad_2.SetGridx()
@@ -507,6 +596,8 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     #write canvas
     canvas.SaveAs(outputLabel_+"_B"+".root")
     canvas.SaveAs(outputLabel_+"_B"+".png")
+
+    raw_input("Press Enter to exit...")
 
 
 #==============================================================================
