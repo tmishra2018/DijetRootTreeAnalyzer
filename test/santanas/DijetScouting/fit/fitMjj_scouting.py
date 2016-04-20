@@ -37,6 +37,7 @@ doBlind = False
 if blindRegionMassMin != blindRegionMassMax:
     doBlind = True
 xaxisTitle = "Dijet Mass [GeV]"
+doSimultaneousFit = True
 if showCrossSection==1:
     yaxisTitle_main = "d#sigma / dm_{jj}   [pb / GeV]"
 else:
@@ -84,7 +85,7 @@ setTDRStyle.setTDRStyle()
 #change the CMS_lumi variables (see CMS_lumi.py)
 CMS_lumi.lumi_7TeV = "%1.f fb^{-1}" % lumiValue
 CMS_lumi.lumi_8TeV = "%1.f fb^{-1}" % lumiValue
-CMS_lumi.lumi_13TeV = "%1.f pb^{-1}" % lumiValue
+CMS_lumi.lumi_13TeV = "%.1f fb^{-1}" % (lumiValue/1000.0)
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
 CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -170,23 +171,22 @@ def main():
     # trigger efficiency model
     m_eff = RooRealVar('m_eff','m_eff',495.7,450.,550.)
     sigma_eff = RooRealVar('sigma_eff','sigma_eff',96.0,80.,120.)
-    #m_eff.setConstant(kTRUE)
-    #sigma_eff.setConstant(kTRUE)
     effFunc = RooFormulaVar("effFunc", "0.5*(1.0 + TMath::Erf((mjj - m_eff)/sigma_eff))", RooArgList(mjj, m_eff, sigma_eff))
 #    efficiency = RooGenericPdf('efficiency','(1/2)* ( 1 + TMath::Erf((@0-@1)/@2))',RooArgList(mjj,m_eff,sigma_eff))
 #    efficiency.Print()
     effPdf = RooEfficiency("effPdf", "effPdf", effFunc, cut, "pass")
-    effPdf.fitTo(trigger_data)
-    effPdf.Print()
-    m_eff.setConstant(kTRUE)
-    sigma_eff.setConstant(kTRUE)
+    if not doSimultaneousFit:
+        effPdf.fitTo(trigger_data)
+        effPdf.Print()
+        m_eff.setConstant(kTRUE)
+        sigma_eff.setConstant(kTRUE)
 
     #old
     # background model
     norm = RooRealVar('norm', 'norm', dataInt, 0.0, 1.0e9)
-    p1 = RooRealVar('p1', 'p1', 6.845, 0.0, 100.0)
-    p2 = RooRealVar('p2', 'p2', 6.7807, 0.0, 100.0)
-    p3 = RooRealVar('p3', 'p3', 0.30685, -10.0, 10.0)
+    p1 = RooRealVar('p1', 'p1', 3.2, 0.0, 100.0)
+    p2 = RooRealVar('p2', 'p2', 7.59828, 0.0, 100.0)
+    p3 = RooRealVar('p3', 'p3', 0.425406, -10.0, 10.0)
     background = RooGenericPdf('background','(pow(1-@0/%.1f,@1)/pow(@0/%.1f,@2+@3*log(@0/%.1f)))*(0.5*(1.0 + TMath::Erf((@0 - @4)/@5)))'%(sqrtS,sqrtS,sqrtS),RooArgList(mjj, p1, p2, p3, m_eff, sigma_eff))
     background.Print()
     background_ext = RooExtendPdf("background_ext","",background,norm)
@@ -208,13 +208,31 @@ def main():
     #                              RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
     #                              RooFit.Strategy(1))
     if doBlind:
-        res_b = background_ext.fitTo(h_data_roo, RooFit.Range("RangeLow,RangeHigh"),
-                                     RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
-                                     RooFit.Strategy(1))
+        # res_b = background_ext.fitTo(h_data_roo, RooFit.Range("RangeLow,RangeHigh"),
+        #                              RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+        #                              RooFit.Strategy(1))
+        nll_mass = background_ext.createNLL(h_data_roo, RooFit.Range("RangeLow,RangeHigh"),
+                                         RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+                                         RooFit.Strategy(1))
     else:
-        res_b = background_ext.fitTo(h_data_roo, RooFit.Range("MassFit"),
-                                     RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
-                                     RooFit.Strategy(1))
+        # res_b = background_ext.fitTo(h_data_roo, RooFit.Range("MassFit"),
+        #                              RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+        #                              RooFit.Strategy(1))
+        nll_mass = background_ext.createNLL(h_data_roo, RooFit.Range("MassFit"),
+                                            RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+                                            RooFit.Strategy(1))
+
+    if doSimultaneousFit:
+        nll_efficiency = effPdf.createNLL(trigger_data)
+        nll_simultaneous = RooAddition("nll_simultaneous", "simultaneous nll",
+                                       RooArgList(nll_mass, nll_efficiency))
+        res_b = RooMinuit(nll_simultaneous)
+        res_b.migrad()
+        res_b.simplex()
+    else:
+        res_b = RooMinuit(nll_mass)
+        res_b.migrad()
+        res_b.simplex()
     res_b.Print()
 
     # Try roosimultaneous fit
@@ -229,7 +247,7 @@ def main():
     #res_b.Print()
 
     # fit results
-    norm_b = res_b.floatParsFinal().find("norm") #normalization in extended LL
+    norm_b = norm#res_b.floatParsFinal().find("norm") #normalization in extended LL
     #norm_b = RooRealVar('norm_b','norm_b',dataInt,0.,1e+09) #normalization without extended LL
     # p1_b = res_b.floatParsFinal().find("p1")
     # p2_b = res_b.floatParsFinal().find("p2")
