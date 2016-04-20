@@ -9,6 +9,7 @@ import CMS_lumi, setTDRStyle
 # configuration
 readExistingHisto=1
 inputHistoFileName="rawhistV7_Run2015D_scoutingPFHT_UNBLINDED_649_838_JEC_HLTplusV7_Mjj_cor_smooth.root"
+inputEfficiencyFileName="triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7Corr_output.root"
 inputDataFileName = "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__15_01_2016_20160115_192039/merged/rootfile_ScoutingPFHT__Run2015D-v1__RAW_ScoutingPFHT__15_01_2016_20160115_192039_reduced_skim.root"
 treeName = "rootTupleTree/tree"
 outputLabel = "output"
@@ -26,6 +27,8 @@ else:
     lumi = 1
 massMin = 565
 massMax = 2037
+efficiency_massMin = 450
+efficiency_massMax = 900
 blindRegionMassMin = 0
 #blindRegionMassMin = 649
 blindRegionMassMax = 0
@@ -115,9 +118,13 @@ def main():
         inputDataFile = TFile(inputDataFileName)
         treeData = inputDataFile.Get(treeName)
         print "number of entries in the data tree: ", treeData.GetEntries()
+    inputEfficiencyFile = TFile(inputEfficiencyFileName)
 
     # mass variable
-    mjj = RooRealVar('mjj', 'mjj', float(massMin), float(massMax))
+    mjj = RooRealVar('mjj', 'mjj', min(float(massMin), float(efficiency_massMin)),
+                     max(float(massMax), float(efficiency_massMax)))
+    mjj.setRange("MassFit", massMin, massMax)
+    mjj.setRange("EfficiencyFit", efficiency_massMin, efficiency_massMax)
     mjj.setRange("RangeLow", massMin, blindRegionMassMin)
     mjj.setRange("RangeHigh", blindRegionMassMax, massMax)
 
@@ -134,17 +141,45 @@ def main():
         treeData.Project("h_data",var,sel);
         dataInt = h_data.GetEntries()
     print "number of events in the fit range:", int(dataInt)
+    efficiency = inputEfficiencyFile.Get("efficiency")
 
     h_data_roo = RooDataHist('h_data_roo', 'h_data_roo', RooArgList(mjj), h_data)
     h_data_roo.Print()
 
-#    # trigger efficiency model
+    # Fill trigger efficiency dataset
+    h_passed = efficiency.GetPassedHistogram()
+    h_total = efficiency.GetTotalHistogram()
+    cut = RooCategory("cut", "cutr")
+    cut.defineType("pass", 1)
+    cut.defineType("fail", 0)
+    trigger_data = RooDataSet("trigger_data", "trigger data", RooArgSet(mjj, cut))
+    for i in range(efficiency_massMin+1, efficiency_massMax+1):
+        mjj.setVal(h_total.GetXaxis().GetBinCenter(i))
+        if h_passed.GetBinContent(i) > 0:
+            cut.setLabel("pass")
+            weight = h_passed.GetBinContent(i)
+            for j in range(int(weight)):
+                trigger_data.add(RooArgSet(mjj, cut))
+        if h_total.GetBinContent(i) > h_passed.GetBinContent(i):
+            cut.setLabel("fail")
+            weight = h_total.GetBinContent(i) - h_passed.GetBinContent(i)
+            for j in range(int(weight)):
+                trigger_data.add(RooArgSet(mjj, cut))
+    trigger_data.Print("v")
+
+    # trigger efficiency model
     m_eff = RooRealVar('m_eff','m_eff',495.7,450.,550.)
     sigma_eff = RooRealVar('sigma_eff','sigma_eff',96.0,80.,120.)
+    #m_eff.setConstant(kTRUE)
+    #sigma_eff.setConstant(kTRUE)
+    effFunc = RooFormulaVar("effFunc", "0.5*(1.0 + TMath::Erf((mjj - m_eff)/sigma_eff))", RooArgList(mjj, m_eff, sigma_eff))
+#    efficiency = RooGenericPdf('efficiency','(1/2)* ( 1 + TMath::Erf((@0-@1)/@2))',RooArgList(mjj,m_eff,sigma_eff))
+#    efficiency.Print()
+    effPdf = RooEfficiency("effPdf", "effPdf", effFunc, cut, "pass")
+    effPdf.fitTo(trigger_data)
+    effPdf.Print()
     m_eff.setConstant(kTRUE)
     sigma_eff.setConstant(kTRUE)
-#    efficiency = RooGenericPdf('efficiency','(1/2)* ( 1 + TMath::Erf((@0-@1)/@2))',RooArgList(mjj,m_eff,sigma_eff))    
-#    efficiency.Print()
 
     #old
     # background model
@@ -177,8 +212,9 @@ def main():
                                      RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
                                      RooFit.Strategy(1))
     else:
-        res_b = background_ext.fitTo(h_data_roo, RooFit.Extended(kTRUE),
-                                     RooFit.Save(kTRUE), RooFit.Strategy(1))
+        res_b = background_ext.fitTo(h_data_roo, RooFit.Range("MassFit"),
+                                     RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+                                     RooFit.Strategy(1))
     res_b.Print()
 
     # Try roosimultaneous fit
