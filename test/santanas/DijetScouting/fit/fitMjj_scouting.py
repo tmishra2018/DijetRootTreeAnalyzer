@@ -15,7 +15,7 @@ treeName = "rootTupleTree/tree"
 outputLabel = "output"
 var = "mjj"
 sqrtS = 13000.
-lumiValue = 1806 #[pb]
+lumiValue = 1866 #[pb]
 showCrossSection = 1 #1=cross section [pb] , 0=number of events/GeV
 #drawSignalShapeAlsoAlone = 1
 fixedRange = 1 #1=YES , 0=NO  (the option works only if showCrossSection=1; otherwise=0)
@@ -45,6 +45,7 @@ else:
 yaxisTitle_secondary = "#frac{(Data-Fit)}{#sigma_{Data}}   "
 #range_residual = 2.5
 range_residual = 3.5
+eff_range_residual = 4.5
 MinNumEvents = 10.
 nParFit = 4
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
@@ -69,6 +70,25 @@ for bin_boundary in massBins_list:
 print massBins_list_actual
 massBins = array("d",massBins_list_actual)
 N_massBins = len(massBins)-1
+eff_massBins_list_actual = []
+eff_firstBin = -1
+eff_lastBin = -1
+index_bin_boundary=-1
+for bin_boundary in massBins_list:
+    index_bin_boundary = index_bin_boundary+1
+    if (bin_boundary>=efficiency_massMin and eff_firstBin==-1):
+        efficiency_massMin = bin_boundary
+        eff_firstBin=1
+        print "FIRST EFFICIENCY BIN is "+str(efficiency_massMin)
+    if (bin_boundary>(efficiency_massMax+0.0000000001) and eff_lastBin==-1 ):
+        efficiency_massMax = massBins_list[index_bin_boundary-1]
+        eff_lastBin=1
+        print "LAST EFFICIENCY BIN is "+str(efficiency_massMax)
+    if (bin_boundary>=efficiency_massMin and bin_boundary<=efficiency_massMax):
+        eff_massBins_list_actual.append(bin_boundary)
+print eff_massBins_list_actual
+eff_massBins = array("d", eff_massBins_list_actual)
+N_eff_massBins = len(eff_massBins)-1
 #############################################
 #sel = "mjj>"+str(massMin)+" && (mjj<693 || mjj>838) && fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_HT450_BtagSeq==1 || passHLT_HT450==1)"
 #sel = "((mjj>1181 && mjj<2037) || (mjj>4686 && mjj<6328)) && fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_HT450_BtagSeq==1 || passHLT_HT450==1)"
@@ -228,11 +248,11 @@ def main():
                                        RooArgList(nll_mass, nll_efficiency))
         res_b = RooMinuit(nll_simultaneous)
         res_b.migrad()
-        res_b.simplex()
+        res_b.minos()
     else:
         res_b = RooMinuit(nll_mass)
         res_b.migrad()
-        res_b.simplex()
+        res_b.minos()
     res_b.Print()
 
     # Try roosimultaneous fit
@@ -287,6 +307,11 @@ def main():
     background.SetParameter(4,m_eff.getVal())
     background.SetParameter(5,sigma_eff.getVal())
 
+    eff_fit = TF1("eff_fit", "0.5*(1.0 + TMath::Erf((x - [0])/[1]))",
+                  float(efficiency_massMin), float(efficiency_massMax))
+    eff_fit.SetParameter(0, m_eff.getVal())
+    eff_fit.SetParameter(1, sigma_eff.getVal())
+
     # plot test
     #canvas_test = TCanvas("canvas")
     #h_data.Draw("p e")
@@ -335,9 +360,18 @@ def main():
 
     # plot
     h_background = convertFunctionToHisto(background,"h_background",N_massBins,massBins)
+    h_efficiency = convertEffFunctionToHisto(eff_fit, "h_efficiency",
+                                             N_eff_massBins, eff_massBins)
+    print h_efficiency.GetXaxis().GetNbins()
+    g_efficiency = convertEfficiencyToGraph(h_total, h_passed, "g_efficiency",
+                                            N_eff_massBins, eff_massBins)
     h_fit_residual_vs_mass = TH1D("h_fit_residual_vs_mass","h_fit_residual_vs_mass",N_massBins,massBins)
-    list_chi2AndNdf_background = calculateChi2AndFillResiduals(g_data,h_background,h_fit_residual_vs_mass,0)
-    drawAndSavePlot_background(g_data,h_background,h_fit_residual_vs_mass,outputLabel, list_chi2AndNdf_background, list_parameter)
+    h_efficiency_residual_vs_mass = TH1D("h_efficiency_residual_vs_mass",
+                                         "h_efficiency_residual_vs_mass",
+                                         N_eff_massBins, eff_massBins)
+    list_chi2AndNdf_background = calculateChi2AndFillResiduals(g_data, h_background, h_fit_residual_vs_mass, nParFit, 0)
+    list_chi2AndNdf_efficiency = calculateChi2AndFillResiduals(g_efficiency, h_efficiency, h_efficiency_residual_vs_mass, 2, 1)
+    drawAndSavePlot_background(g_data,h_background,h_fit_residual_vs_mass,outputLabel, list_chi2AndNdf_background, list_parameter, g_efficiency, eff_fit, h_efficiency_residual_vs_mass, list_chi2AndNdf_efficiency)
 
     # h_fit_residual_vs_mass_unbinned = TH1D("h_fit_residual_vs_mass_unbinned",
     #                                        "h_fit_residual_vs_mass_unbinned",
@@ -370,8 +404,28 @@ def convertFunctionToHisto(background_,name_,N_massBins_,massBins_):
 
     return background_hist_
 
+def convertEffFunctionToHisto(efficiency_, name_, N_massBins_, massBins_):
 
-def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_residual_vsMass_,prinToScreen_=0):
+    efficiency_hist_ = TH1D(name_, name_, N_massBins_, massBins_)
+
+    for bin in range (0,N_massBins_):
+        xbinLow = massBins_[bin]
+        xbinHigh = massBins_[bin+1]
+        xbinCenter = (xbinLow + xbinHigh)/2.0
+        value = efficiency_.Eval(xbinCenter)
+        efficiency_hist_.SetBinContent(bin+1,value)
+
+    return efficiency_hist_
+
+
+def convertEfficiencyToGraph(h_total_, h_passed_, name_, N_massBins_, massBins_):
+    h_total_rebinned = h_total_.Rebin(N_massBins_, "h_total_rebinned", massBins_)
+    h_passed_rebinned = h_passed_.Rebin(N_massBins_, "h_passed_rebinned", massBins_)
+    efficiency_rebinned = TEfficiency(h_passed_rebinned, h_total_rebinned)
+    return efficiency_rebinned.CreateGraph()
+
+
+def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_residual_vsMass_, params_, prinToScreen_=0):
     
     print "-- "+str(background_hist_.GetName())
 
@@ -448,10 +502,10 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     #==================
 
     # ndf
-    ndf_FullRangeAll = N_FullRangeAll - nParFit    
-    ndf_PlotRangeAll = N_PlotRangeAll - nParFit    
-    ndf_PlotRangeNonZero = N_PlotRangeNonZero - nParFit    
-    ndf_PlotRangeMinNumEvents = N_PlotRangeMinNumEvents - nParFit    
+    ndf_FullRangeAll = N_FullRangeAll - params_
+    ndf_PlotRangeAll = N_PlotRangeAll - params_
+    ndf_PlotRangeNonZero = N_PlotRangeNonZero - params_
+    ndf_PlotRangeMinNumEvents = N_PlotRangeMinNumEvents - params_
 
     chi2_ndf_FullRangeAll = chi2_FullRangeAll / ndf_FullRangeAll
     chi2_ndf_PlotRangeAll = chi2_PlotRangeAll / ndf_PlotRangeAll
@@ -466,9 +520,140 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     return [chi2_FullRangeAll, ndf_FullRangeAll, chi2_PlotRangeAll, ndf_PlotRangeAll, chi2_PlotRangeNonZero, ndf_PlotRangeNonZero, chi2_PlotRangeMinNumEvents, ndf_PlotRangeMinNumEvents]
 
 
-def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residual_vsMass_,outputLabel_, list_chi2AndNdf_, list_parameter_):
+def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residual_vsMass_,outputLabel_, list_chi2AndNdf_, list_parameter_, g_efficiency_, eff_fit_, hist_eff_residual_vsMass_, list_chi2AndNdf_eff_):
 
     global minY, maxY
+
+    eff_canvas = TCanvas("eff_canvas","canvas",W,H)
+    eff_canvas.GetWindowHeight()
+    eff_canvas.GetWindowWidth()
+    eff_canvas.SetTitle("")
+    eff_canvas.Divide(1,2,0,0,0)
+
+    eff_canvas.cd(1)
+    eff_pad_1 = eff_canvas.GetPad(1)
+    eff_pad_1.SetPad(0.01,0.36,0.99,0.98)
+    eff_pad_1.SetRightMargin(0.05)
+    eff_pad_1.SetTopMargin(0.05)
+    eff_pad_1.SetFillColor(0)
+    eff_pad_1.SetBorderMode(0)
+    eff_pad_1.SetFrameFillStyle(0)
+    eff_pad_1.SetFrameBorderMode(0)
+
+    effFrame = eff_pad_1.DrawFrame(450.0, 0.0, 900.0, 1.04)
+    effFrame.SetTitle("")
+    effFrame.GetXaxis().SetTitleSize(0.06)
+    effFrame.GetXaxis().SetTitleOffset(0.95)
+    effFrame.GetXaxis().SetLabelSize(0.05)
+    effFrame.GetYaxis().SetTitleSize(0.06)
+    effFrame.GetYaxis().SetLabelSize(0.05)
+
+    gStyle.SetErrorX(1)
+
+    eff_fit_.SetLineColor(2)
+
+    g_efficiency_.SetMarkerStyle(20)
+    g_efficiency_.SetMarkerColor(1)
+    g_efficiency_.SetTitle("")
+    g_efficiency_.GetXaxis().SetTitle(xaxisTitle)
+    g_efficiency_.GetXaxis().SetTitle("Trigger Efficiency")
+    g_efficiency_.GetXaxis().SetLimits(efficiency_massMin, efficiency_massMax)
+
+    #draw objects
+    eff_fit_.Draw("C")
+    eff_fit_.GetHistogram().SetTitle("")
+    eff_fit_.GetHistogram().GetXaxis().SetTitle(xaxisTitle)
+    eff_fit_.GetHistogram().GetYaxis().SetTitle("Trigger Efficiency")
+    eff_fit_.GetHistogram().GetXaxis().SetLimits(efficiency_massMin, efficiency_massMax)
+    g_efficiency_.Draw("P same")
+
+    #draw text
+    eff_pave_chi2 = TPaveText(0.469489, 0.3, 0.79, 0.35, "NDC")
+    eff_pave_chi2.SetFillColor(0)
+    eff_pave_chi2.SetBorderSize(0)
+    eff_pave_chi2.SetFillStyle(0)
+    eff_pave_chi2.AddText(0.5, 0.0,
+                          "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                          list_chi2AndNdf_eff_[0], list_chi2AndNdf_eff_[1],
+                          list_chi2AndNdf_eff_[0]/list_chi2AndNdf_eff_[1]))
+    eff_pave_chi2.Draw()
+
+    eff_pave_fit = TPaveText(0.47,0.082,0.8,0.25,"NDC")
+    eff_pave_fit.SetFillColor(0)
+    eff_pave_fit.SetBorderSize(0)
+    eff_pave_fit.SetFillStyle(0)
+    eff_pave_fit.AddText(0.5, 0.8, "p0 = {0:.4g} #pm {1:.4g}".format(list_parameter_[0], list_parameter_[6]))
+    eff_pave_fit.AddText(0.5, 0.6, "p1 = {0:.3f} #pm {1:.3f}".format(list_parameter_[1], list_parameter_[7]))
+    eff_pave_fit.AddText(0.5, 0.4, "p2 = {0:.3f} #pm {1:.3f}".format(list_parameter_[2], list_parameter_[8]))
+    eff_pave_fit.AddText(0.5, 0.2, "p3 = {0:.3f} #pm {1:.3f}".format(list_parameter_[3], list_parameter_[9]))
+    eff_pave_fit.AddText(0.5, 0.05, "m_{{eff}} = {0:.1f}".format(list_parameter_[4]))
+    eff_pave_fit.AddText(0.5, 0.0, "#sigma_{{eff}} = {0:.1f}".format(list_parameter_[5]))
+    eff_pave_fit.Draw()
+
+    #draw legend
+    eff_leg = TLegend(0.5564991,0.58,0.9203575,0.835812)
+    eff_leg.SetTextSize(0.03546853)
+    eff_leg.SetLineColor(0)
+    eff_leg.SetLineStyle(1)
+    eff_leg.SetLineWidth(1)
+    eff_leg.SetFillColor(0)
+    eff_leg.SetFillStyle(0)
+    eff_leg.SetMargin(0.35)
+    eff_leg.AddEntry(g_efficiency_,"Data" ,"EPL")
+    eff_leg.AddEntry(eff_fit_,"Fit","L")
+    eff_leg.Draw("SAME")
+
+    #draw pad
+    eff_pad_1.RedrawAxis()
+    eff_pad_1.Update()
+    eff_pad_1.GetFrame().Draw()
+    CMS_lumi.CMS_lumi(eff_pad_1, iPeriod, iPos)
+
+
+    #pad2 - residuals
+    eff_canvas.cd(2)
+    eff_pad_2 = eff_canvas.GetPad(2)
+    eff_pad_2.SetPad(0.01,0.02,0.99,0.37)
+    eff_pad_2.SetBottomMargin(0.35)
+    eff_pad_2.SetRightMargin(0.05)
+    eff_pad_2.SetGridx()
+    eff_pad_2.SetGridy()
+
+    effFrame2 = eff_pad_2.DrawFrame(eff_pad_1.GetUxmin(), -eff_range_residual,
+                                    eff_pad_1.GetUxmax(), +eff_range_residual)
+    effFrame2.SetTitle("")
+    effFrame2.SetXTitle(xaxisTitle)
+    effFrame2.GetXaxis().SetTitleSize(0.06)
+    effFrame2.SetYTitle(yaxisTitle_secondary)
+    effFrame2.GetYaxis().SetTitleSize(0.12)
+    effFrame2.GetYaxis().SetTitleOffset(0.60)
+    effFrame2.GetYaxis().SetLabelSize(0.09)
+    effFrame2.GetXaxis().SetTitleSize(0.15)
+    effFrame2.GetXaxis().SetTitleOffset(0.90)
+    effFrame2.GetXaxis().SetLabelSize(0.12)
+
+    #style residuals
+    hist_eff_residual_vsMass_.GetYaxis().SetRangeUser(-eff_range_residual,
+                                                       +eff_range_residual)
+    hist_eff_residual_vsMass_.GetYaxis().SetRangeUser(-5.5, 5.5)
+    hist_eff_residual_vsMass_.GetYaxis().SetNdivisions(206, kFALSE)
+    hist_eff_residual_vsMass_.SetLineWidth(0)
+    hist_eff_residual_vsMass_.SetFillColor(2)
+    hist_eff_residual_vsMass_.SetLineColor(1)
+    hist_eff_residual_vsMass_.Draw("SAME HIST")
+
+    eff_line = TLine(efficiency_massMin, 0.0, efficiency_massMax, 0.0)
+    eff_line.Draw("")
+
+    #draw pad
+    eff_pad_2.RedrawAxis()
+
+    eff_canvas.SaveAs(outputLabel_+"_eff"+".root")
+    eff_canvas.SaveAs(outputLabel_+"_eff"+".png")
+
+    ######################
+    ######################
+    ######################
 
     canvas = TCanvas("canvas","canvas",W,H)
     canvas.GetWindowHeight()
@@ -536,19 +721,6 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     data_obs_TGraph_.Draw("P E0 SAME")
 
     #draw text
-    pave_general = TPaveText(0.566772,0.794229,0.83557,0.940972,"NDC")
-    pave_general.AddText("background fit")
-    pave_general.SetFillColor(0)
-    pave_general.SetLineColor(1)
-    pave_general.SetFillStyle(0)
-    pave_general.SetBorderSize(0)
-    pave_general.SetTextFont(42)
-    pave_general.SetTextSize(0.040)
-    pave_general.SetTextAlign(12)
-    pave_general.SetTextColor(1)
-    pave_general.Draw("SAME")
-
-    #draw text
     pave_sel = TPaveText(0.229489,0.0817972,0.464046,0.254608,"NDC")
     pave_sel.SetFillColor(0)
     pave_sel.SetBorderSize(0)
@@ -567,6 +739,19 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
                           list_chi2AndNdf_[4], list_chi2AndNdf_[5],
                           list_chi2AndNdf_[4]/list_chi2AndNdf_[5]))
     pave_chi2.Draw("SAME")
+
+    pave_simultaneous_chi2 = TPaveText(0.529489, 0.5, 0.85, 0.6, "NDC")
+    pave_simultaneous_chi2.SetFillColor(0)
+    pave_simultaneous_chi2.SetBorderSize(0)
+    pave_simultaneous_chi2.SetFillStyle(0)
+    pave_simultaneous_chi2.SetTextColor(4)
+    pave_simultaneous_chi2.AddText(0.5, 0.5, "Combined")
+    pave_simultaneous_chi2.AddText(0.5, 0.0,
+                                   "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                                   list_chi2AndNdf_[4] + list_chi2AndNdf_eff_[0],
+                                   list_chi2AndNdf_[5] + list_chi2AndNdf_eff_[1],
+                                   (list_chi2AndNdf_[4] + list_chi2AndNdf_eff_[0])/(list_chi2AndNdf_[5] + list_chi2AndNdf_eff_[1])))
+    pave_simultaneous_chi2.Draw()
 
     pave_fit = TPaveText(0.47,0.082,0.8,0.25,"NDC")
     pave_fit.SetFillColor(0)
@@ -597,8 +782,8 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     leg.SetFillColor(0)
     leg.SetFillStyle(0)
     leg.SetMargin(0.35)
-    leg.AddEntry(data_obs_TGraph_,"data" ,"EPL")
-    leg.AddEntry(background_TH1_,"background","L")
+    leg.AddEntry(data_obs_TGraph_,"Data" ,"EPL")
+    leg.AddEntry(background_TH1_,"Fit","L")
     leg.Draw("SAME")
 
     #draw pad
