@@ -29,10 +29,15 @@ tightJetID			1		-		-		-		-1
 pt0Cut				60		-		-		-		-1
 pt1Cut				30		-		-		-		-1
 ptCut				30		-		-		-		-1
+verbose				0		-		-		-		-1
 # mJJ cuts on recowidejets for HLT_Reco Comparison
-MJJCut				500		-		-		-		-1
+MJJCut				400		-		-		-		-1
+# deltaEtaJJ cuts on recowidejets for HLT_Reco Comparison
+DeltaEtaJJ			1.3		-		-		-		-1
 #delta R for HLT-Reco Matching
 DeltaR				0.3		-		-		-		-1
+#AlphaCut for Asymmetry
+AlphaCut				0.1		-		-		-		-1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
 useJECs				0               -               -               -               -1
 # turn on/off the removal of JEC 
@@ -62,6 +67,10 @@ jetAlgo				AntiKt 		-		-		-		-1
 #
 #VariableName	      minValue1(<) maxValue1(>=)	minValue2(<)	maxValue2(>=)	level	histoNbinsMinMax  OptionalFlag
 #------------	      ------------ -------------	------------	-------------	-----	----------------  ------------
-PassJSON              0            1                   -               -               0       300 0 3000        SAVE  
-MJJ_reco              500            inf                  -               -               0       300 0 3000        SAVE  
-
+PassJSON              0            1                   -               -                  0       300 0 3000        SAVE  
+MJJ_reco             -inf         +inf                 -               -                  0       300 0 3000        SAVE  
+MJJ                  -inf         +inf                 -               -                  0       300 0 3000        SAVE  
+deltaETAjj_reco      -inf         +inf                 -               -                  0       100 0. 3.         SAVE
+deltaETAjj           -inf         +inf                 -               -                  0       100 0. 3.         SAVE
+AK4_pTBias           -inf         +inf                 -               -                  0       1200 -2. 2.        SAVE  
+WideJet_pTBias       -inf         +inf                 -               -                  0       1200 -2. 2.        SAVE  
