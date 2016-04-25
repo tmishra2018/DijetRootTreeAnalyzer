@@ -66,7 +66,7 @@ double xmaxFit = 890;
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__14_01_2016_20160114_175151/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__14_01_2016_20160114_175151_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__15_01_2016_20160115_143148/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__15_01_2016_20160115_143148_reduced_skim.root";
 //TString myinputFile =  "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__09_03_2016_20160309_225640/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__09_03_2016_20160309_225640_reduced_skim.root";
-TString myinputFile =  "outputTriggerCorr.root";
+TString myinputFile =  "outputTrigger.root";
 
 //TString mybaselinehisto = "h_mjj_HLTpass_L1HTT150"; // needed to define the x-axis range 
 TString mybaselinehisto = "h_mjj_NoTrigger_1GeVbin"; // needed to define the x-axis range 
@@ -327,7 +327,9 @@ void triggerEfficiency()
   TGraph *g_residual = new TGraph(0);
   g_residual->SetName("");
   TGraphErrors *g_errorBand = new TGraphErrors(0);
-  g_errorBand->SetName("");
+  g_errorBand->SetName("errorBand_graph");
+  TGraphErrors *g_fitValue = new TGraphErrors(0);
+  g_fitValue->SetName("fitValue_graph");
 
   //  for (int bin=0;bin<h_efficiency->GetPaintedGraph()->GetN();bin++)
   for (int bin=0;bin<graph_efficiency->GetN();bin++)
@@ -366,6 +368,9 @@ void triggerEfficiency()
       g_errorBand->SetPointError(bin,0,0);
       //g_errorBand->RemovePoint(bin);
 
+      g_fitValue->SetPoint(bin,x,0);
+      g_fitValue->SetPointError(bin,0,0);
+
       if(doFit==1)
 	{
 	  fitValue = (f1->Integral(x-exl , x+exl))/(exl+exl);
@@ -389,13 +394,12 @@ void triggerEfficiency()
       //cout << "bin = " << bin << ": x= " << x << " , y = " << y << " + " << eyh << " - " << eyl << endl;   	  
       if(x>xminFit && x<xmaxFit && doFit==1)
 	{
-	  /*
 	  cout << "bin = " << bin << ": x bin = (" << x-exl << "-" << x+exh 
 	       << ") , y = " << y << " + " << eyh << " - " << eyl 
 	       << " , fit = " << fitValue 
+	       << " , fit error = " << fitError 
 	       << " , (y-fit) / err = " << residual 
-	       << endl ;       	 
-	  */
+	       << endl ;  
 	  chi2 += pow(residual,2); 
 	  npoints++;
 
@@ -412,6 +416,9 @@ void triggerEfficiency()
 	  g_errorBand->SetPoint(bin,x,0);
 	  //g_errorBand->SetPointError(bin,0,fitErrorRel);
 	  g_errorBand->SetPointError(bin,0,fitError);
+
+	  g_fitValue->SetPoint(bin,x,fitValue);
+	  g_fitValue->SetPointError(bin,0,fitError);
 	}
       else
 	{
@@ -604,7 +611,9 @@ void triggerEfficiency()
 
   //## Store TEfficiency ##
   TFile outputFile(myoutputfilename+"_output.root","recreate");
-  h_efficiency->Write();  
+  h_efficiency->Write();
+  g_fitValue->Write();
+  g_errorBand->Write();
 
   //## Fit error ##
   TCanvas* canv3 = new TCanvas("canv3","canv3",50,50,W,H);
@@ -616,14 +625,13 @@ void triggerEfficiency()
   g_errorBand->Draw("aE3");
   g_errorBand->GetXaxis()->SetRangeUser(xminFit,xmaxFit);  
   g_errorBand->GetXaxis()->SetTitle("Dijet mass [GeV]");  
-  g_errorBand->GetYaxis()->SetTitle("Relative efficiency uncertainty");  
+  g_errorBand->GetYaxis()->SetTitle("Tot. fit uncertainty");  
   g_errorBand->GetYaxis()->SetTitleOffset(1.3);  
-
-  TF1* fdefault = new TF1("fdefault","(1/2)* ( 1 + TMath::Erf((x-507.1)/94.2))",xminFit,xmaxFit);      
-  TF1* period1 = new TF1("period1","fdefault - (1/2)* ( 1 + TMath::Erf((x-505.1)/92.3))",xminFit,xmaxFit);      
-  TF1* period2 = new TF1("period2","fdefault - (1/2)* ( 1 + TMath::Erf((x-508.1)/93.7))",xminFit,xmaxFit);      
-  TF1* period3 = new TF1("period3","fdefault - (1/2)* ( 1 + TMath::Erf((x-509.0)/93.5))",xminFit,xmaxFit);      
-  TF1* period4 = new TF1("period4","fdefault - (1/2)* ( 1 + TMath::Erf((x-505.9)/94.7))",xminFit,xmaxFit);      
+  TF1* ftot = new TF1("ftot","(1/2)* ( 1 + TMath::Erf((x-495.7)/95.0))",xminFit,xmaxFit);      
+  TF1* period1 = new TF1("period1","ftot - (1/2)* ( 1 + TMath::Erf((x-493.6)/92.1))",xminFit,xmaxFit);      
+  TF1* period2 = new TF1("period2","ftot - (1/2)* ( 1 + TMath::Erf((x-496.6)/93.9))",xminFit,xmaxFit);      
+  TF1* period3 = new TF1("period3","ftot - (1/2)* ( 1 + TMath::Erf((x-497.1)/96.1))",xminFit,xmaxFit);      
+  TF1* period4 = new TF1("period4","ftot - (1/2)* ( 1 + TMath::Erf((x-494.5)/92.4))",xminFit,xmaxFit);      
   period1->SetLineColor(1);
   period2->SetLineColor(2);
   period3->SetLineColor(3);
@@ -633,10 +641,10 @@ void triggerEfficiency()
   period3->Draw("lsame");
   period4->Draw("lsame");
   leg = new TLegend(0.55,0.71,0.93,0.91);
-  leg->AddEntry(period1,"tot - period1: run 257968-258440","l");
-  leg->AddEntry(period2,"tot - period2: run 258443-259637","l");
-  leg->AddEntry(period3,"tot - period3: run 259681-260431","l");
-  leg->AddEntry(period4,"tot - period4: run 260532-260627","l");
+  leg->AddEntry(period1,"(tot - period1): run 257968-258432 (415/pb)","l");
+  leg->AddEntry(period2,"(tot - period2): run 258434-258745 (461/pb)","l");
+  leg->AddEntry(period3,"(tot - period3): run 258749-260425 (457/pb)","l");
+  leg->AddEntry(period4,"(tot - period4): run 260426-260627 (471/pb)","l");
   leg->Draw();
 
 

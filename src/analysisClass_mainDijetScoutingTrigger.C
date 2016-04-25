@@ -77,22 +77,44 @@ void analysisClass::Loop()
    //L1
    TH1F* h_mjj_HLTpass_ZeroBias = new TH1F("h_mjj_HLTpass_ZeroBias","",103,massBoundaries);
    TH1F* h_mjj_HLTpass_ZeroBias_L1HTT150 = new TH1F("h_mjj_HLTpass_ZeroBias_L1HTT150","",103,massBoundaries);  
+   TH1F* h_mjj_HLTpass_CaloJet40 = new TH1F("h_mjj_HLTpass_CaloJet40","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_CaloJet40_L1HTT150 = new TH1F("h_mjj_HLTpass_CaloJet40_L1HTT150","",14000,0,14000);
    //HLT
    TH1F* h_mjj_HLTpass_L1HTT150 = new TH1F("h_mjj_HLTpass_L1HTT150","",103,massBoundaries);
    TH1F* h_mjj_HLTpass_L1HTT150_HT450 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_p1 = new TH1F("h_mjj_HLTpass_L1HTT150_p1","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_p1 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_p1","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_p2 = new TH1F("h_mjj_HLTpass_L1HTT150_p2","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_p2 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_p2","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_p3 = new TH1F("h_mjj_HLTpass_L1HTT150_p3","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_p3 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_p3","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_p4 = new TH1F("h_mjj_HLTpass_L1HTT150_p4","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_p4 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_p4","",103,massBoundaries);
 
    //1 GeV bin
    TH1F* h_mjj_NoTrigger_1GeVbin = new TH1F("h_mjj_NoTrigger_1GeVbin","",14000,0,14000);
    //L1
    TH1F* h_mjj_HLTpass_ZeroBias_1GeVbin = new TH1F("h_mjj_HLTpass_ZeroBias_1GeVbin","",14000,0,14000);
-   TH1F* h_mjj_HLTpass_ZeroBias_L1HTT150_1GeVbin = new TH1F("h_mjj_HLTpass_ZeroBias_L1HTT150_1GeVbin","",14000,0,14000);  
+   TH1F* h_mjj_HLTpass_ZeroBias_L1HTT150_1GeVbin = new TH1F("h_mjj_HLTpass_ZeroBias_L1HTT150_1GeVbin","",14000,0,14000); 
+   TH1F* h_mjj_HLTpass_CaloJet40_1GeVbin = new TH1F("h_mjj_HLTpass_CaloJet40_1GeVbin","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_CaloJet40_L1HTT150_1GeVbin = new TH1F("h_mjj_HLTpass_CaloJet40_L1HTT150_1GeVbin","",14000,0,14000);
+
    //HLT
    TH1F* h_mjj_HLTpass_L1HTT150_1GeVbin = new TH1F("h_mjj_HLTpass_L1HTT150_1GeVbin","",14000,0,14000);
    TH1F* h_mjj_HLTpass_L1HTT150_HT450_1GeVbin = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_1GeVbin","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_1GeVbin_p1 = new TH1F("h_mjj_HLTpass_L1HTT150_1GeVbin_p1","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p1 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p1","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_1GeVbin_p2 = new TH1F("h_mjj_HLTpass_L1HTT150_1GeVbin_p2","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p2 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p2","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_1GeVbin_p3 = new TH1F("h_mjj_HLTpass_L1HTT150_1GeVbin_p3","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p3 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p3","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_1GeVbin_p4 = new TH1F("h_mjj_HLTpass_L1HTT150_1GeVbin_p4","",14000,0,14000);
+   TH1F* h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p4 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p4","",14000,0,14000);
 
    //mjj correction factor (https://indico.cern.ch/event/515842/contribution/8/attachments/1251169/1845106/Aprile-01-2016_-_Meeting.pdf slide 6)
-   //TF1 *f_mjjCorr = new TF1("f_mjjCorr","-0.00119706*pow(log(x),3)+0.00910685*pow(log(x),2)+0.0547697*log(x)-0.402532", 0, 14000);
-   TF1 *f_mjjCorr = new TF1("f_mjjCorr","0.", 0, 14000);
+   TF1 *f_mjjCorr = new TF1("f_mjjCorr","-0.00119706*pow(log(x),3)+0.00910685*pow(log(x),2)+0.0547697*log(x)-0.402532", 0, 14000);
+   //TF1 *f_mjjCorr = new TF1("f_mjjCorr","0.", 0, 14000);
+   TH2F* h2_f_mjjCorr_vs_mjj = new TH2F("h2_f_mjjCorr_vs_mjj","",14000,0,14000,1000,0.5,1.5);
 
    /////////initialize variables
 
@@ -129,6 +151,11 @@ void analysisClass::Loop()
 
      if ( passedCut("all") )
        {
+
+	 //correction
+	 h2_f_mjjCorr_vs_mjj->Fill(getVariableValue("mjj"),getVariableValue("massCorrection"));
+
+	 //trigger
 	 h_mjj_NoTrigger -> Fill(getVariableValue("mjjCorr")); 
 	 h_mjj_NoTrigger_1GeVbin -> Fill(getVariableValue("mjjCorr")); 
 	 
@@ -144,11 +171,48 @@ void analysisClass::Loop()
 	     h_mjj_HLTpass_ZeroBias_L1HTT150 -> Fill(getVariableValue("mjjCorr"));  
 	     h_mjj_HLTpass_ZeroBias_L1HTT150_1GeVbin -> Fill(getVariableValue("mjjCorr"));  
 	   }
-	 
+
+	 if(passHLT_CaloJet40_BtagSeq || passHLT_CaloJet40)
+	   {
+	     h_mjj_HLTpass_CaloJet40 -> Fill(getVariableValue("mjjCorr"));  
+	     h_mjj_HLTpass_CaloJet40_1GeVbin -> Fill(getVariableValue("mjjCorr"));  
+	   }
+
+	 if( (passHLT_CaloJet40_BtagSeq || passHLT_CaloJet40) 
+	     && (passHLT_L1HTT150_BtagSeq || passHLT_L1HTT150) )
+	   {
+	     h_mjj_HLTpass_CaloJet40_L1HTT150 -> Fill(getVariableValue("mjjCorr"));  
+	     h_mjj_HLTpass_CaloJet40_L1HTT150_1GeVbin -> Fill(getVariableValue("mjjCorr"));  
+	   }
+
 	 if( (passHLT_L1HTT150_BtagSeq || passHLT_L1HTT150) )
 	   {
 	     h_mjj_HLTpass_L1HTT150 -> Fill(getVariableValue("mjjCorr"));  
 	     h_mjj_HLTpass_L1HTT150_1GeVbin -> Fill(getVariableValue("mjjCorr"));  
+
+	     if( run >= 257968 && run <=258432)// 415.879 pb-1
+	       {
+		 h_mjj_HLTpass_L1HTT150_p1 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_1GeVbin_p1 -> Fill(getVariableValue("mjjCorr"));  
+	       }
+
+	     if( run >= 258434 && run <=258745)// 460.903 pb-1
+	       {
+		 h_mjj_HLTpass_L1HTT150_p2 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_1GeVbin_p2 -> Fill(getVariableValue("mjjCorr"));  
+	       }
+
+	     if( run >= 258749 && run <=260425)// 457.316 pb-1
+	       {
+		 h_mjj_HLTpass_L1HTT150_p3 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_1GeVbin_p3 -> Fill(getVariableValue("mjjCorr"));  
+	       }
+
+	     if( run >= 260426 && run <=260627)// 470.504 pb-1
+	       {
+		 h_mjj_HLTpass_L1HTT150_p4 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_1GeVbin_p4 -> Fill(getVariableValue("mjjCorr"));  
+	       }
 	   }	
  
 	 if( (passHLT_L1HTT150_BtagSeq || passHLT_L1HTT150) 
@@ -156,7 +220,33 @@ void analysisClass::Loop()
 	   {
 	     h_mjj_HLTpass_L1HTT150_HT450 -> Fill(getVariableValue("mjjCorr"));  
 	     h_mjj_HLTpass_L1HTT150_HT450_1GeVbin -> Fill(getVariableValue("mjjCorr"));  
+
+	     if( run >= 257968 && run <=258432)// 415.879 pb-1
+	       {
+		 h_mjj_HLTpass_L1HTT150_HT450_p1 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p1 -> Fill(getVariableValue("mjjCorr"));  
+	       }
+
+	     if( run >= 258434 && run <=258745)// 460.903 pb-1
+	       {
+		 h_mjj_HLTpass_L1HTT150_HT450_p2 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p2 -> Fill(getVariableValue("mjjCorr"));  
+	       }
+
+	     if( run >= 258749 && run <=260425)// 457.316 pb-1
+	       {
+		 h_mjj_HLTpass_L1HTT150_HT450_p3 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p3 -> Fill(getVariableValue("mjjCorr"));  
+	       }
+
+	     if( run >= 260426 && run <=260627)// 470.504 pb-1
+	       {		 
+		 h_mjj_HLTpass_L1HTT150_HT450_p4 -> Fill(getVariableValue("mjjCorr"));  
+		 h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p4 -> Fill(getVariableValue("mjjCorr"));  
+	       }
+
 	   }
+
        }     
 
      /*
@@ -204,18 +294,40 @@ void analysisClass::Loop()
    //////////write histos 
 
    f_mjjCorr -> Write();
+   h2_f_mjjCorr_vs_mjj -> Write();
 
    h_mjj_NoTrigger -> Write();
    h_mjj_HLTpass_ZeroBias -> Write();
    h_mjj_HLTpass_ZeroBias_L1HTT150 -> Write();
    h_mjj_HLTpass_L1HTT150 -> Write();
    h_mjj_HLTpass_L1HTT150_HT450 -> Write();
+   h_mjj_HLTpass_L1HTT150_p1 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_p1 -> Write();
+   h_mjj_HLTpass_L1HTT150_p2 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_p2 -> Write();
+   h_mjj_HLTpass_L1HTT150_p3 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_p3 -> Write();
+   h_mjj_HLTpass_L1HTT150_p4 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_p4 -> Write();
 
    h_mjj_NoTrigger_1GeVbin -> Write();
    h_mjj_HLTpass_ZeroBias_1GeVbin -> Write();
    h_mjj_HLTpass_ZeroBias_L1HTT150_1GeVbin -> Write();
    h_mjj_HLTpass_L1HTT150_1GeVbin -> Write();
    h_mjj_HLTpass_L1HTT150_HT450_1GeVbin -> Write();
+   h_mjj_HLTpass_L1HTT150_1GeVbin_p1 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p1 -> Write();
+   h_mjj_HLTpass_L1HTT150_1GeVbin_p2 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p2 -> Write();
+   h_mjj_HLTpass_L1HTT150_1GeVbin_p3 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p3 -> Write();
+   h_mjj_HLTpass_L1HTT150_1GeVbin_p4 -> Write();
+   h_mjj_HLTpass_L1HTT150_HT450_1GeVbin_p4 -> Write();
+
+   h_mjj_HLTpass_CaloJet40 -> Write();
+   h_mjj_HLTpass_CaloJet40_1GeVbin -> Write();
+   h_mjj_HLTpass_CaloJet40_L1HTT150 -> Write();
+   h_mjj_HLTpass_CaloJet40_L1HTT150_1GeVbin -> Write();
 
    //h_mjj_fullSel_varBin->Write();
    //h_mjj_fullSel_fixBin->Write();

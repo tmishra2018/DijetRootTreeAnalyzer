@@ -94,6 +94,16 @@ lumisum_runD_files_4_5_6_7_8_9_10_SilverJSON.json =>  2444.707 /pb
 (CERN EOS) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/data/Run2015D/DCSonly_2697fb-1_flag_Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_2445_fb-1/
 =======
 
+=== Run2015D full re-produced with JEC 25nsV7 (from old big tuples) ===
+
+(CERN EOS) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/legacy/Run2015D/Run2015D_reprod_JEC_V7_silverJSON_v1_reduced_skim.root
+
+lumisum_runD_files_4_5_6_7_8_9_10_SilverJSON.json =>  2564.393 /pb
+(apparently brilcalc has changed this much, as json is identical to previous)
+(with the new brilcalc the Scouting dataset gets 1866.005 /pb)
+
+======= 
+
 
 ====== Monte Carlo =====
 Spring15                                      xsec 
