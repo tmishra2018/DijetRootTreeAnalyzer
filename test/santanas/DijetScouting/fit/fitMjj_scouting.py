@@ -6,18 +6,17 @@ import math
 from ROOT import *
 import CMS_lumi, setTDRStyle
 
-# configuration
-readExistingHisto=1
-inputHistoFileName="rawhistV7_Run2015D_scoutingPFHT_UNBLINDED_649_838_JEC_HLTplusV7_Mjj_cor_smooth.root"
-inputEfficiencyFileName="triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7Corr_output.root"
+# Global variables
+readExistingHisto = 1
+inputHistoFileName = "rawhistV7_Run2015D_scoutingPFHT_UNBLINDED_649_838_JEC_HLTplusV7_Mjj_cor_smooth.root"
+inputEfficiencyFileName = "triggerEfficiency_L1HTT150seed_HT450_DetaJJLess1p3_HLTv7Corr_output.root"
 inputDataFileName = "/t3/users/santanas/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFHT__15_01_2016_20160115_192039/merged/rootfile_ScoutingPFHT__Run2015D-v1__RAW_ScoutingPFHT__15_01_2016_20160115_192039_reduced_skim.root"
 treeName = "rootTupleTree/tree"
 outputLabel = "output"
 var = "mjj"
-sqrtS = 13000.
-lumiValue = 1866 #[pb]
+sqrtS = 13000.0
+lumiValue = 1866.0 #[pb]
 showCrossSection = 1 #1=cross section [pb] , 0=number of events/GeV
-#drawSignalShapeAlsoAlone = 1
 fixedRange = 1 #1=YES , 0=NO  (the option works only if showCrossSection=1; otherwise=0)
 minY = 0.00000003
 maxY = 20
@@ -27,8 +26,9 @@ else:
     lumi = 1
 massMin = 565
 massMax = 2037
-efficiency_massMin = 450
-efficiency_massMax = 900
+#massMax = 6328
+efficiency_massMin = 453
+efficiency_massMax = 890
 blindRegionMassMin = 0
 #blindRegionMassMin = 649
 blindRegionMassMax = 0
@@ -42,10 +42,10 @@ if showCrossSection==1:
     yaxisTitle_main = "d#sigma / dm_{jj}   [pb / GeV]"
 else:
     yaxisTitle_main = "Number of events / GeV"
+yaxisTitle_efficiency = "Trigger Efficiency"
 yaxisTitle_secondary = "#frac{(Data-Fit)}{#sigma_{Data}}   "
-#range_residual = 2.5
 range_residual = 3.5
-eff_range_residual = 4.5
+eff_range_residual = 3.5
 MinNumEvents = 10.
 nParFit = 4
 massBins_list = [1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000]
@@ -56,7 +56,6 @@ lastBin = -1
 index_bin_boundary=-1
 for bin_boundary in massBins_list:
     index_bin_boundary = index_bin_boundary+1
-    #print bin_boundary, massMin, massMax
     if (bin_boundary>=massMin and firstBin==-1 ):
         massMin = bin_boundary
         firstBin=1
@@ -100,11 +99,10 @@ sel = "((mjj>"+str(massMin)+" && mjj<"+str(blindRegionMassMin)+") || (mjj>"+str(
 
 #set tdr style
 setTDRStyle.setTDRStyle()
-#tdrStyle.SetNdivisions(505, "XYZ")
 
 #change the CMS_lumi variables (see CMS_lumi.py)
-CMS_lumi.lumi_7TeV = "%1.f fb^{-1}" % lumiValue
-CMS_lumi.lumi_8TeV = "%1.f fb^{-1}" % lumiValue
+CMS_lumi.lumi_7TeV = "%.1f fb^{-1}" % (lumiValue/1000.0)
+CMS_lumi.lumi_8TeV = "%.1f fb^{-1}" % (lumiValue/1000.0)
 CMS_lumi.lumi_13TeV = "%.1f fb^{-1}" % (lumiValue/1000.0)
 CMS_lumi.writeExtraText = 1
 CMS_lumi.extraText = "Preliminary"
@@ -112,7 +110,8 @@ CMS_lumi.lumi_sqrtS = "13 TeV" # used with iPeriod = 0, e.g. for simulation-only
 CMS_lumi.cmsTextSize = 1.0
 
 iPos = 11
-if( iPos==0 ): CMS_lumi.relPosX = 0.12
+if iPos==0:
+    CMS_lumi.relPosX = 0.12
 iPeriod = 4
 
 W = 600
@@ -133,7 +132,7 @@ def main():
     #from ROOT import RooRealVar, RooDataHist, RooArgList, RooArgSet, RooAddPdf, RooFit, RooGenericPdf, RooWorkspace, RooMsgService, RooHistPdf, RooExtendPdf
 
     # input data
-    if (readExistingHisto==1):
+    if readExistingHisto==1:
         inputDataFile = TFile(inputHistoFileName)
     else:
         inputDataFile = TFile(inputDataFileName)
@@ -154,12 +153,13 @@ def main():
     if (readExistingHisto==1):
         h_data = (inputDataFile.Get("mjj_mjjcor_gev")).Clone("h_data")
         if doBlind:
-            dataInt = h_data.Integral(massMin + 1, blindRegionMassMin) + h_data.Integral(blindRegionMassMax + 1, massMax)
+            dataInt = h_data.Integral(massMin + 1, blindRegionMassMin) \
+                      + h_data.Integral(blindRegionMassMax + 1, massMax)
         else:
             dataInt = h_data.Integral(massMin + 1, massMax)
     else:
-        h_data = TH1F("h_data","",13000,0,13000);
-        treeData.Project("h_data",var,sel);
+        h_data = TH1F("h_data", "", 13000, 0.0, 13000.0);
+        treeData.Project("h_data", var, sel);
         dataInt = h_data.GetEntries()
     print "number of events in the fit range:", int(dataInt)
     efficiency = inputEfficiencyFile.Get("efficiency")
@@ -188,12 +188,12 @@ def main():
                 trigger_data.add(RooArgSet(mjj, cut))
     trigger_data.Print("v")
 
-    # trigger efficiency model
-    m_eff = RooRealVar('m_eff','m_eff',495.7,450.,550.)
-    sigma_eff = RooRealVar('sigma_eff','sigma_eff',96.0,80.,120.)
-    effFunc = RooFormulaVar("effFunc", "0.5*(1.0 + TMath::Erf((mjj - m_eff)/sigma_eff))", RooArgList(mjj, m_eff, sigma_eff))
-#    efficiency = RooGenericPdf('efficiency','(1/2)* ( 1 + TMath::Erf((@0-@1)/@2))',RooArgList(mjj,m_eff,sigma_eff))
-#    efficiency.Print()
+    # Trigger efficiency model
+    m_eff = RooRealVar('m_eff', 'm_eff', 494.404950525, 450.0, 550.0)
+    sigma_eff = RooRealVar('sigma_eff', 'sigma_eff', 96.2722550919, 80.0, 120.0)
+    effFunc = RooFormulaVar("effFunc",
+                            "0.5*(1.0 + TMath::Erf((mjj - m_eff)/sigma_eff))",
+                            RooArgList(mjj, m_eff, sigma_eff))
     effPdf = RooEfficiency("effPdf", "effPdf", effFunc, cut, "pass")
     if not doSimultaneousFit:
         effPdf.fitTo(trigger_data)
@@ -201,88 +201,62 @@ def main():
         m_eff.setConstant(kTRUE)
         sigma_eff.setConstant(kTRUE)
 
-    #old
-    # background model
+    # Background model
     norm = RooRealVar('norm', 'norm', dataInt, 0.0, 1.0e9)
-    p1 = RooRealVar('p1', 'p1', 3.2, 0.0, 100.0)
-    p2 = RooRealVar('p2', 'p2', 7.59828, 0.0, 100.0)
-    p3 = RooRealVar('p3', 'p3', 0.425406, -10.0, 10.0)
-    background = RooGenericPdf('background','(pow(1-@0/%.1f,@1)/pow(@0/%.1f,@2+@3*log(@0/%.1f)))*(0.5*(1.0 + TMath::Erf((@0 - @4)/@5)))'%(sqrtS,sqrtS,sqrtS),RooArgList(mjj, p1, p2, p3, m_eff, sigma_eff))
+    p1 = RooRealVar('p1', 'p1', 5.57031294347, 0.0, 100.0)
+    p2 = RooRealVar('p2', 'p2', 7.21504246896, 0.0, 100.0)
+    p3 = RooRealVar('p3', 'p3', 0.370141801135, -10.0, 10.0)
+    background = RooGenericPdf('background',
+                               '(pow(1-@0/%.1f,@1)/pow(@0/%.1f,@2+@3*log(@0/%.1f)))*(0.5*(1.0 + TMath::Erf((@0 - @4)/@5)))'%(sqrtS,sqrtS,sqrtS),
+                               RooArgList(mjj, p1, p2, p3, m_eff, sigma_eff))
     background.Print()
-    background_ext = RooExtendPdf("background_ext","",background,norm)
-
-    #new
-    # background model
-    #norm = RooRealVar('norm','norm',dataInt,0.,1e+09)
-    #p1 = RooRealVar('p1','p1',10,0.,100.)
-    #p2 = RooRealVar('p2','p2',5,0.,60.)
-    #p3 = RooRealVar('p3','p3',0,-10.,10.)
-    #background = RooGenericPdf('background','(1/2)*( 1 + TMath::Erf((@0-507.1)/94.2))*(pow(1-@0/%.1f,@1)/pow(@0/%.1f,@2+@3*log(@0/%.1f)))'%(sqrtS,sqrtS,sqrtS),RooArgList(mjj,p1,p2,p3))
-    #background.Print()
+    background_ext = RooExtendPdf("background_ext", "", background, norm)
 
     # fit
     num_regions = 1.0
     if doBlind:
         num_regions = 2.0
-    # res_b = background_ext.fitTo(h_data_roo, RooFit.Range("RangeLow , RangeHigh"),
-    #                              RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
-    #                              RooFit.Strategy(1))
     if doBlind:
-        # res_b = background_ext.fitTo(h_data_roo, RooFit.Range("RangeLow,RangeHigh"),
-        #                              RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
-        #                              RooFit.Strategy(1))
-        nll_mass = background_ext.createNLL(h_data_roo, RooFit.Range("RangeLow,RangeHigh"),
-                                         RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
-                                         RooFit.Strategy(1))
+        nll_mass = background_ext.createNLL(h_data_roo,
+                                            RooFit.Range("RangeLow,RangeHigh"),
+                                            RooFit.Extended(kTRUE),
+                                            RooFit.Save(kTRUE),
+                                            RooFit.Strategy(1))
     else:
-        # res_b = background_ext.fitTo(h_data_roo, RooFit.Range("MassFit"),
-        #                              RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
-        #                              RooFit.Strategy(1))
         nll_mass = background_ext.createNLL(h_data_roo, RooFit.Range("MassFit"),
-                                            RooFit.Extended(kTRUE), RooFit.Save(kTRUE),
+                                            RooFit.Extended(kTRUE),
+                                            RooFit.Save(kTRUE),
                                             RooFit.Strategy(1))
 
     if doSimultaneousFit:
-        nll_efficiency = effPdf.createNLL(trigger_data)
+        nll_efficiency = effPdf.createNLL(trigger_data,
+                                          RooFit.Range("EfficiencyFit"),
+                                          RooFit.Save(kTRUE), RooFit.Strategy(1))
         nll_simultaneous = RooAddition("nll_simultaneous", "simultaneous nll",
                                        RooArgList(nll_mass, nll_efficiency))
         res_b = RooMinuit(nll_simultaneous)
         res_b.migrad()
-        res_b.minos()
+        res_b.simplex()
     else:
         res_b = RooMinuit(nll_mass)
         res_b.migrad()
-        res_b.minos()
+        res_b.simplex()
     res_b.Print()
 
-    # Try roosimultaneous fit
-
-    # fit by hand
-    #nll = background_ext.createNLL(h_data_roo,RooFit.Range(" RangeLow , RangeHigh "))
-    #m = RooMinuit(nll)
-    #m.setVerbose(kTRUE)
-    #m.migrad()
-    #m.hesse()
-    #res_b = m.save()
-    #res_b.Print()
-
     # fit results
-    norm_b = norm#res_b.floatParsFinal().find("norm") #normalization in extended LL
-    #norm_b = RooRealVar('norm_b','norm_b',dataInt,0.,1e+09) #normalization without extended LL
-    # p1_b = res_b.floatParsFinal().find("p1")
-    # p2_b = res_b.floatParsFinal().find("p2")
-    # p3_b = res_b.floatParsFinal().find("p3")
+    norm_b = norm
     p1_b = p1
     p2_b = p2
     p3_b = p3
 
-    background_noNorm = TF1("background_noNorm","( TMath::Power(1-x/%.1f,[0]) ) / ( TMath::Power(x/%.1f,[1]+[2]*log(x/%.1f)) )*(0.5*(1.0 + TMath::Erf((x - [3])/[4])))"%(sqrtS,sqrtS,sqrtS),float(massMin),float(massMax))
-    background_noNorm.SetParameter(0,p1_b.getVal())
-    background_noNorm.SetParameter(1,p2_b.getVal())
-    background_noNorm.SetParameter(2,p3_b.getVal())
-    background_noNorm.SetParameter(3,m_eff.getVal())
-    background_noNorm.SetParameter(4,sigma_eff.getVal())
-    #int_b = background_noNorm.Integral(float(massMin),float(massMax))
+    background_noNorm = TF1("background_noNorm",
+                            "(TMath::Power(1-x/%.1f,[0]))/(TMath::Power(x/%.1f,[1]+[2]*log(x/%.1f)))*(0.5*(1.0 + TMath::Erf((x - [3])/[4])))"%(sqrtS,sqrtS,sqrtS),
+                            float(massMin), float(massMax))
+    background_noNorm.SetParameter(0, p1_b.getVal())
+    background_noNorm.SetParameter(1, p2_b.getVal())
+    background_noNorm.SetParameter(2, p3_b.getVal())
+    background_noNorm.SetParameter(3, m_eff.getVal())
+    background_noNorm.SetParameter(4, sigma_eff.getVal())
     int_b = 1.0
     if doBlind:
         int_b = background_noNorm.Integral(float(massMin), float(blindRegionMassMin)) \
@@ -291,64 +265,81 @@ def main():
         int_b = background_noNorm.Integral(float(massMin), float(massMax))
     print "rescale for background function:", float(int_b)
     p0_b = norm_b.getVal() / (int_b*lumi) * num_regions
-    #print "p0_b = " , norm_b.getVal()/int_b , " +" , norm_b.getErrorHi()/int_b , " -" , norm_b.getErrorLo()/int_b
-    print "p0_b = " , p0_b , " +" , norm_b.getErrorHi()/int_b*math.sqrt(num_regions) , " -" , norm_b.getErrorLo()/int_b*math.sqrt(num_regions)
-    print "p1_b = " , p1_b.getVal() , " +" , p1_b.getErrorHi() , " " , p1_b.getErrorLo()
-    print "p2_b = " , p2_b.getVal() , " +" , p2_b.getErrorHi() , " " , p2_b.getErrorLo()
-    print "p3_b = " , p3_b.getVal() , " +" , p3_b.getErrorHi() , " " , p3_b.getErrorLo()
-    print "m_eff =", m_eff.getVal()
-    print "sigma_eff =", sigma_eff.getVal()
+    print "p0_b = {0} + {1} - {2}".format(p0_b,
+                                          norm_b.getErrorHi()/int_b*math.sqrt(num_regions),
+                                          norm_b.getErrorLo()/int_b*math.sqrt(num_regions))
+    print "p1_b = {0} + {1} - {2}".format(p1_b.getVal(), p1_b.getErrorHi(),
+                                          p1_b.getErrorLo())
+    print "p2_b = {0} + {1} - {2}".format(p2_b.getVal(), p2_b.getErrorHi(),
+                                          p2_b.getErrorLo())
+    print "p3_b = {0} + {1} - {2}".format(p3_b.getVal(), p3_b.getErrorHi(),
+                                          p3_b.getErrorLo())
+    print "m_eff = {0} + {1} - {2}".format(m_eff.getVal(), m_eff.getErrorHi(),
+                                           m_eff.getErrorLo())
+    print "sigma_eff = {0} + {1} - {2}".format(sigma_eff.getVal(),
+                                               sigma_eff.getErrorHi(),
+                                               sigma_eff.getErrorLo())
 
-    background = TF1("background","( [0]*TMath::Power(1-x/%.1f,[1]) ) / ( TMath::Power(x/%.1f,[2]+[3]*log(x/%.1f)) )*(0.5*(1.0 + TMath::Erf((x - [4])/[5])))"%(sqrtS,sqrtS,sqrtS),float(massMin),float(massMax))
-    background.SetParameter(0,p0_b)
-    background.SetParameter(1,p1_b.getVal())
-    background.SetParameter(2,p2_b.getVal())
-    background.SetParameter(3,p3_b.getVal())
-    background.SetParameter(4,m_eff.getVal())
-    background.SetParameter(5,sigma_eff.getVal())
+    background = TF1("background",
+                     "([0]*TMath::Power(1-x/%.1f,[1]))/(TMath::Power(x/%.1f,[2]+[3]*log(x/%.1f)))*(0.5*(1.0 + TMath::Erf((x - [4])/[5])))"%(sqrtS,sqrtS,sqrtS),
+                     float(massMin), float(massMax))
+    background.SetParameter(0, p0_b)
+    background.SetParameter(1, p1_b.getVal())
+    background.SetParameter(2, p2_b.getVal())
+    background.SetParameter(3, p3_b.getVal())
+    background.SetParameter(4, m_eff.getVal())
+    background.SetParameter(5, sigma_eff.getVal())
 
     eff_fit = TF1("eff_fit", "0.5*(1.0 + TMath::Erf((x - [0])/[1]))",
                   float(efficiency_massMin), float(efficiency_massMax))
     eff_fit.SetParameter(0, m_eff.getVal())
     eff_fit.SetParameter(1, sigma_eff.getVal())
 
-    # plot test
-    #canvas_test = TCanvas("canvas")
-    #h_data.Draw("p e")
-    #background.Draw("same l")
+    f_passed = TF1("f_passed",
+                   "([0]*TMath::Power(1-x/%.1f,[1]))/(TMath::Power(x/%.1f,[2]+[3]*log(x/%.1f)))*(0.5*(1.0 + TMath::Erf((x - [4])/[5])))"%(sqrtS,sqrtS,sqrtS),
+                   float(efficiency_massMin), float(efficiency_massMax))
+    f_passed.SetParameter(0, p0_b)
+    f_passed.SetParameter(1, p1_b.getVal())
+    f_passed.SetParameter(2, p2_b.getVal())
+    f_passed.SetParameter(3, p3_b.getVal())
+    f_passed.SetParameter(4, m_eff.getVal())
+    f_passed.SetParameter(5, sigma_eff.getVal())
+
+    f_total = TF1("f_total",
+                  "([0]*TMath::Power(1-x/%.1f,[1]))/(TMath::Power(x/%.1f,[2]+[3]*log(x/%.1f)))"%(sqrtS,sqrtS,sqrtS),
+                  float(efficiency_massMin), float(efficiency_massMax))
+    f_total.SetParameter(0, p0_b)
+    f_total.SetParameter(1, p1_b.getVal())
+    f_total.SetParameter(2, p2_b.getVal())
+    f_total.SetParameter(3, p3_b.getVal())
 
     # data graph
     h_data.Rebin(N_massBins, "h_data_varBin", massBins)
     g_data = TGraphAsymmErrors(h_data_varBin)
-    #g_data_events = TGraphAsymmErrors(h_data_varBin)
 
     alpha = 1-0.6827
-    for i in range(0,g_data.GetN()):
+    for i in range(0, g_data.GetN()):
         N = g_data.GetY()[i]
         binWidth = g_data.GetEXlow()[i] + g_data.GetEXhigh()[i]
-        #print str(g_data.GetX()[i])+" "+
-        print str(g_data.GetX()[i]-g_data.GetEXlow()[i])+" "+str(g_data.GetX()[i]+g_data.GetEXhigh()[i])+" "+str(N) 
+        #print str(g_data.GetX()[i]-g_data.GetEXlow()[i])+" "+str(g_data.GetX()[i]+g_data.GetEXhigh()[i])+" "+str(N) 
 
         L = 0
-        if N!=0:
-            L = ROOT.Math.gamma_quantile(alpha/2,N,1.)
-        U = ROOT.Math.gamma_quantile_c(alpha/2,N+1,1)
+        if N != 0:
+            L = ROOT.Math.gamma_quantile(alpha/2, N, 1.0)
+        U = ROOT.Math.gamma_quantile_c(alpha/2, N+1, 1)
 
-        #g_data_events.SetPointEYlow(i, (N-L));
-        #g_data_events.SetPointEYhigh(i, (U-N));
-        #g_data_events.SetPoint(i, data_obs_TGraph.GetX()[i], N)
+        g_data.SetPointEYlow(i, (N-L)/(binWidth*lumi));
+        g_data.SetPointEYhigh(i, (U-N)/(binWidth*lumi));
+        g_data.SetPoint(i, g_data.GetX()[i], N/(binWidth*lumi))
 
-        g_data.SetPointEYlow(i, (N-L)/(binWidth * lumi));
-        g_data.SetPointEYhigh(i, (U-N)/(binWidth * lumi));
-        g_data.SetPoint(i, g_data.GetX()[i], N/(binWidth * lumi))
-
-        if (g_data.GetX()[i]>blindRegionMassMin and g_data.GetX()[i]<blindRegionMassMax):
+        if (g_data.GetX()[i]>blindRegionMassMin
+            and g_data.GetX()[i]<blindRegionMassMax):
             g_data.SetPointEYlow(i, 0);
             g_data.SetPointEYhigh(i, 0);
             g_data.SetPoint(i, g_data.GetX()[i], 0)
 
     # output
-    output = TFile(outputLabel+".root","RECREATE");
+    output = TFile("{0}.root".format(outputLabel), "RECREATE");
     h_data.Write()
 
     list_parameter = [p0_b, p1_b.getVal(), p2_b.getVal(), p3_b.getVal(),
@@ -356,33 +347,42 @@ def main():
                       (norm_b.getErrorHi() - norm_b.getErrorLo())/(2.0*int_b)*math.sqrt(num_regions),
                       (p1_b.getErrorHi() - p1_b.getErrorLo())/2.0,
                       (p2_b.getErrorHi() - p2_b.getErrorLo())/2.0,
-                      (p3_b.getErrorHi() - p3_b.getErrorLo())/2.0]
+                      (p3_b.getErrorHi() - p3_b.getErrorLo())/2.0,
+                      (m_eff.getErrorHi() - m_eff.getErrorLo())/2.0,
+                      (sigma_eff.getErrorHi() - sigma_eff.getErrorLo())/2.0]
 
+    mass_1GeV_list = []
+    for bin in range(efficiency_massMin, efficiency_massMax+1):
+        mass_1GeV_list.append(bin)
+    eff_1GeV_massBins = array("d", mass_1GeV_list)
     # plot
     h_background = convertFunctionToHisto(background,"h_background",N_massBins,massBins)
     h_efficiency = convertEffFunctionToHisto(eff_fit, "h_efficiency",
-                                             N_eff_massBins, eff_massBins)
-    print h_efficiency.GetXaxis().GetNbins()
+                                             len(eff_1GeV_massBins)-1, eff_1GeV_massBins)
+    g_efficiency_binned = convertEfficiencyToGraph(h_total, h_passed, "g_efficiency_binned",
+                                                   N_eff_massBins, eff_massBins)
     g_efficiency = convertEfficiencyToGraph(h_total, h_passed, "g_efficiency",
-                                            N_eff_massBins, eff_massBins)
+                                            len(eff_1GeV_massBins)-1, eff_1GeV_massBins)
     h_fit_residual_vs_mass = TH1D("h_fit_residual_vs_mass","h_fit_residual_vs_mass",N_massBins,massBins)
     h_efficiency_residual_vs_mass = TH1D("h_efficiency_residual_vs_mass",
                                          "h_efficiency_residual_vs_mass",
-                                         N_eff_massBins, eff_massBins)
-    list_chi2AndNdf_background = calculateChi2AndFillResiduals(g_data, h_background, h_fit_residual_vs_mass, nParFit, 0)
-    list_chi2AndNdf_efficiency = calculateChi2AndFillResiduals(g_efficiency, h_efficiency, h_efficiency_residual_vs_mass, 2, 1)
-    drawAndSavePlot_background(g_data,h_background,h_fit_residual_vs_mass,outputLabel, list_chi2AndNdf_background, list_parameter, g_efficiency, eff_fit, h_efficiency_residual_vs_mass, list_chi2AndNdf_efficiency)
+                                         efficiency_massMax - efficiency_massMin,
+                                         efficiency_massMin, efficiency_massMax)
+    list_chi2AndNdf_background = calculateChi2AndFillResiduals(g_data, h_background, h_fit_residual_vs_mass, 6, 0)
+    list_chi2AndNdf_efficiency = calculateChi2AndFillResiduals(g_efficiency, h_efficiency, h_efficiency_residual_vs_mass, 2, 0)
+    h_efficiency_residual_vs_mass_binned = TH1D("h_efficiency_residual_vs_mass_binned",
+                                                "h_efficiency_residual_vs_mass_binned",
+                                                N_eff_massBins, eff_massBins)
+    h_efficiency_binned = TH1D("h_efficiency_binned", "h_efficiency_binned",
+                               N_eff_massBins, eff_massBins)
+    list_chi2AndNdf_efficiency_binned = bin_efficiency(g_efficiency, h_efficiency_residual_vs_mass, eff_fit, h_efficiency_residual_vs_mass_binned, h_efficiency_binned, g_efficiency_binned, f_passed, f_total)
+    list_likelihood = [nll_simultaneous.getVal(), nll_mass.getVal(),
+                       nll_efficiency.getVal()]
+    drawAndSavePlot_background(g_data,h_background,h_fit_residual_vs_mass,outputLabel, list_chi2AndNdf_background, list_parameter, g_efficiency, eff_fit, h_efficiency_residual_vs_mass, list_chi2AndNdf_efficiency_binned, h_efficiency_residual_vs_mass_binned, g_efficiency_binned, list_likelihood)
 
-    # h_fit_residual_vs_mass_unbinned = TH1D("h_fit_residual_vs_mass_unbinned",
-    #                                        "h_fit_residual_vs_mass_unbinned",
-    #                                        massMax - massMin, massMin, massMax)
-    # calculateChi2AndFillResiduals(g_data, h_background,
-    #                               h_fit_residual_vs_mass_unbinned, 0)
-
-    # close output
     output.Close()
 
-    #raw_input("Press Enter to exit...")
+    return
 
 
 #==============================================================================
@@ -397,9 +397,9 @@ def convertFunctionToHisto(background_,name_,N_massBins_,massBins_):
         xbinHigh = massBins_[bin+1]
         binWidth_current = xbinHigh - xbinLow
         value = background_.Integral(xbinLow , xbinHigh) / binWidth_current
-        print "{0}: {1} {2} {3} {4}".format(massBins_[bin], xbinLow, xbinHigh,
-                                            background_.Integral(xbinLow, xbinHigh),
-                                            value)
+        # print "{0}: {1} {2} {3} {4}".format(massBins_[bin], xbinLow, xbinHigh,
+        #                                     background_.Integral(xbinLow, xbinHigh),
+        #                                     value)
         background_hist_.SetBinContent(bin+1,value)
 
     return background_hist_
@@ -417,7 +417,6 @@ def convertEffFunctionToHisto(efficiency_, name_, N_massBins_, massBins_):
 
     return efficiency_hist_
 
-
 def convertEfficiencyToGraph(h_total_, h_passed_, name_, N_massBins_, massBins_):
     h_total_rebinned = h_total_.Rebin(N_massBins_, "h_total_rebinned", massBins_)
     h_passed_rebinned = h_passed_.Rebin(N_massBins_, "h_passed_rebinned", massBins_)
@@ -426,7 +425,6 @@ def convertEfficiencyToGraph(h_total_, h_passed_, name_, N_massBins_, massBins_)
 
 
 def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_residual_vsMass_, params_, prinToScreen_=0):
-    
     print "-- "+str(background_hist_.GetName())
 
     N_massBins_ = data_obs_TGraph_.GetN()
@@ -434,41 +432,40 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     chi2_FullRangeAll = 0
     chi2_PlotRangeAll = 0
     chi2_PlotRangeNonZero = 0
-    chi2_PlotRangeMinNumEvents = 0 
+    chi2_PlotRangeMinNumEvents = 0
 
     N_FullRangeAll = 0
     N_PlotRangeAll = 0
     N_PlotRangeNonZero = 0
-    N_PlotRangeMinNumEvents = 0 
+    N_PlotRangeMinNumEvents = 0
 
     if(prinToScreen_):
         print ""
         print ""
-        print "======== Number of events / GeV (data, errors, fit, residuals) ========"            
+        print "======== Number of events / GeV (data, errors, fit, residuals) ========"
         print ""
 
-    for bin in range (0,N_massBins_):
+    for bin in range (0, N_massBins_):
 
         ## Values and errors
 
         value_data = data_obs_TGraph_.GetY()[bin]
         err_low_data = data_obs_TGraph_.GetEYlow()[bin]
         err_high_data = data_obs_TGraph_.GetEYhigh()[bin]
-        xbinCenter = data_obs_TGraph_.GetX()[bin] 
-        xbinLow = data_obs_TGraph_.GetX()[bin]-data_obs_TGraph_.GetEXlow()[bin] 
+        xbinCenter = data_obs_TGraph_.GetX()[bin]
+        xbinLow = data_obs_TGraph_.GetX()[bin]-data_obs_TGraph_.GetEXlow()[bin]
         xbinHigh = data_obs_TGraph_.GetX()[bin]+data_obs_TGraph_.GetEXhigh()[bin]
         binWidth_current = xbinHigh - xbinLow
-        #value_fit = background_.Integral(xbinLow , xbinHigh) / binWidth_current
         value_fit = background_hist_.GetBinContent(bin+1)
-        
+
         ## Fit residuals
 
         err_tot_data = 0
         if (value_fit >= value_data):
-            err_tot_data = err_high_data  
+            err_tot_data = err_high_data
         else:
-            err_tot_data = err_low_data  
-        if (xbinCenter<blindRegionMassMin or xbinCenter>blindRegionMassMax):   
+            err_tot_data = err_low_data
+        if (xbinCenter<blindRegionMassMin or xbinCenter>blindRegionMassMax):
             fit_residual = (value_data - value_fit) / err_tot_data
             err_fit_residual = 1
         else:
@@ -493,7 +490,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
                 if(value_data * binWidth_current * lumi > MinNumEvents):
                     chi2_PlotRangeMinNumEvents += pow(fit_residual,2)
                     N_PlotRangeMinNumEvents += 1
-    
+
         if(prinToScreen_):
             print str(xbinLow)+" "+str(xbinHigh)+" "+str(binWidth_current)+" : "+str(value_data)+" "+str(value_data * binWidth_current * lumi)+" - "+str(err_low_data)+" + "+str(err_high_data)+" fit: "+str(value_fit)+" fit residual: "+str(fit_residual) 
 
@@ -520,7 +517,55 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     return [chi2_FullRangeAll, ndf_FullRangeAll, chi2_PlotRangeAll, ndf_PlotRangeAll, chi2_PlotRangeNonZero, ndf_PlotRangeNonZero, chi2_PlotRangeMinNumEvents, ndf_PlotRangeMinNumEvents]
 
 
-def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residual_vsMass_,outputLabel_, list_chi2AndNdf_, list_parameter_, g_efficiency_, eff_fit_, hist_eff_residual_vsMass_, list_chi2AndNdf_eff_):
+def bin_efficiency(g_efficiency_, h_efficiency_residual_vs_mass_, eff_fit_,
+                   h_efficiency_residual_vs_mass_binned_, h_efficiency_binned_,
+                   g_efficiency_binned_, f_passed_, f_total_):
+    chi2 = 0
+    ndf = 0
+
+    bin = 0
+    for i in range(0, N_eff_massBins):
+        sum_value = 0.0
+        sum_residual = 0.0
+        sum_error2 = 0.0
+        for j in range(int(eff_massBins[i]), int(eff_massBins[i+1])):
+            bin += 1
+            sum_value += g_efficiency_.GetY()[bin]
+            sum_residual += h_efficiency_residual_vs_mass_.GetBinContent(bin)
+            if g_efficiency_.GetEYhigh()[bin] > 0:
+                sum_error2 += g_efficiency_.GetEYlow()[bin]*g_efficiency_.GetEYhigh()[bin]
+            else:
+                sum_error2 += g_efficiency_.GetEYlow()[bin]*g_efficiency_.GetEYlow()[bin]
+            if bin == 437:
+                sum_value += 1.0
+        h_efficiency_binned_.SetBinContent(i+1, sum_value/(eff_massBins[i+1] - eff_massBins[i]))
+        # p = sum_value/(eff_massBins[i+1] - eff_massBins[i])
+        # err = math.sqrt(sum_error2)/(eff_massBins[i+1] - eff_massBins[i])
+        # if err == 0:
+        #     err = 0.00001
+        # fit_residual = (p - eff_fit_.Eval((eff_massBins[i] + eff_massBins[i+1])/2.0))/err
+        fit_residual = 0.0
+        difference = g_efficiency_binned_.GetY()[i] - f_passed_.Integral(int(eff_massBins[i]), int(eff_massBins[i+1]))/f_total_.Integral(int(eff_massBins[i]), int(eff_massBins[i+1]))
+        if difference > 0:
+            err = g_efficiency_binned_.GetEYlow()[i]
+            if err != 0:
+                fit_residual = difference/err
+        else:
+            err = g_efficiency_binned_.GetEYhigh()[i]
+            if err != 0:
+                fit_residual = difference/err
+        h_efficiency_residual_vs_mass_binned_.SetBinContent(i+1, fit_residual)
+
+        chi2 += pow(fit_residual, 2)
+        ndf += 1
+
+    ndf -= 2
+
+    return [chi2, ndf]
+
+
+#def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residual_vsMass_,outputLabel_, list_chi2AndNdf_, list_parameter_, g_efficiency_, eff_fit_, hist_eff_residual_vsMass_, list_chi2AndNdf_eff_):
+def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residual_vsMass_,outputLabel_, list_chi2AndNdf_, list_parameter_, g_efficiency_, eff_fit_, hist_eff_residual_vsMass_, list_chi2AndNdf_eff_, h_efficiency_residual_vs_mass_binned_, h_efficiency_binned_, list_likelihood_):
 
     global minY, maxY
 
@@ -540,32 +585,37 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     eff_pad_1.SetFrameFillStyle(0)
     eff_pad_1.SetFrameBorderMode(0)
 
-    effFrame = eff_pad_1.DrawFrame(450.0, 0.0, 900.0, 1.04)
+    effFrame = eff_pad_1.DrawFrame(efficiency_massMin, 0.0, efficiency_massMax, 1.04)
     effFrame.SetTitle("")
     effFrame.GetXaxis().SetTitleSize(0.06)
     effFrame.GetXaxis().SetTitleOffset(0.95)
     effFrame.GetXaxis().SetLabelSize(0.05)
+    effFrame.GetXaxis().SetTitle(xaxisTitle)
     effFrame.GetYaxis().SetTitleSize(0.06)
     effFrame.GetYaxis().SetLabelSize(0.05)
+    effFrame.GetYaxis().SetTitle(yaxisTitle_efficiency)
 
     gStyle.SetErrorX(1)
 
     eff_fit_.SetLineColor(2)
 
     g_efficiency_.SetMarkerStyle(20)
-    g_efficiency_.SetMarkerColor(1)
+    g_efficiency_.SetMarkerColor(17)
+    g_efficiency_.SetMarkerSize(0.5)
+    g_efficiency_.SetLineColor(17)
+    g_efficiency_.SetFillColor(18)
     g_efficiency_.SetTitle("")
     g_efficiency_.GetXaxis().SetTitle(xaxisTitle)
     g_efficiency_.GetXaxis().SetTitle("Trigger Efficiency")
     g_efficiency_.GetXaxis().SetLimits(efficiency_massMin, efficiency_massMax)
 
+    h_efficiency_binned_.SetLineColor(1)
+    h_efficiency_binned_.SetMarkerStyle(20)
+
     #draw objects
-    eff_fit_.Draw("C")
-    eff_fit_.GetHistogram().SetTitle("")
-    eff_fit_.GetHistogram().GetXaxis().SetTitle(xaxisTitle)
-    eff_fit_.GetHistogram().GetYaxis().SetTitle("Trigger Efficiency")
-    eff_fit_.GetHistogram().GetXaxis().SetLimits(efficiency_massMin, efficiency_massMax)
-    g_efficiency_.Draw("P same")
+    g_efficiency_.Draw("P E2")
+    eff_fit_.Draw("C same")
+    h_efficiency_binned_.Draw("P E1 same")
 
     #draw text
     eff_pave_chi2 = TPaveText(0.469489, 0.3, 0.79, 0.35, "NDC")
@@ -573,7 +623,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     eff_pave_chi2.SetBorderSize(0)
     eff_pave_chi2.SetFillStyle(0)
     eff_pave_chi2.AddText(0.5, 0.0,
-                          "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                          "#chi^{{2}} / ndf = {0:.2f} / {1:d} = {2:.2f}".format(
                           list_chi2AndNdf_eff_[0], list_chi2AndNdf_eff_[1],
                           list_chi2AndNdf_eff_[0]/list_chi2AndNdf_eff_[1]))
     eff_pave_chi2.Draw()
@@ -586,8 +636,8 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     eff_pave_fit.AddText(0.5, 0.6, "p1 = {0:.3f} #pm {1:.3f}".format(list_parameter_[1], list_parameter_[7]))
     eff_pave_fit.AddText(0.5, 0.4, "p2 = {0:.3f} #pm {1:.3f}".format(list_parameter_[2], list_parameter_[8]))
     eff_pave_fit.AddText(0.5, 0.2, "p3 = {0:.3f} #pm {1:.3f}".format(list_parameter_[3], list_parameter_[9]))
-    eff_pave_fit.AddText(0.5, 0.05, "m_{{eff}} = {0:.1f}".format(list_parameter_[4]))
-    eff_pave_fit.AddText(0.5, 0.0, "#sigma_{{eff}} = {0:.1f}".format(list_parameter_[5]))
+    eff_pave_fit.AddText(0.5, 0.05, "m_{{eff}} = {0:.1f} #pm {1:.1f}".format(list_parameter_[4], list_parameter_[10]))
+    eff_pave_fit.AddText(0.5, 0.0, "#sigma_{{eff}} = {0:.2f} #pm {1:.2f}".format(list_parameter_[5], list_parameter_[11]))
     eff_pave_fit.Draw()
 
     #draw legend
@@ -599,7 +649,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     eff_leg.SetFillColor(0)
     eff_leg.SetFillStyle(0)
     eff_leg.SetMargin(0.35)
-    eff_leg.AddEntry(g_efficiency_,"Data" ,"EPL")
+    eff_leg.AddEntry(h_efficiency_binned_,"Data" ,"EPL")
     eff_leg.AddEntry(eff_fit_,"Fit","L")
     eff_leg.Draw("SAME")
 
@@ -631,16 +681,35 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     effFrame2.GetXaxis().SetTitleSize(0.15)
     effFrame2.GetXaxis().SetTitleOffset(0.90)
     effFrame2.GetXaxis().SetLabelSize(0.12)
+    effFrame2.GetXaxis().SetTitle(xaxisTitle)
+    effFrame2.GetYaxis().SetTitle(yaxisTitle_secondary)
 
     #style residuals
+    h_efficiency_residual_vs_mass_binned_.GetXaxis().SetRangeUser(efficiency_massMin,efficiency_massMax)
+    h_efficiency_residual_vs_mass_binned_.GetYaxis().SetRangeUser(-eff_range_residual,+eff_range_residual)
+    h_efficiency_residual_vs_mass_binned_.GetYaxis().SetNdivisions(206,kFALSE)
+    h_efficiency_residual_vs_mass_binned_.SetLineWidth(0)
+    h_efficiency_residual_vs_mass_binned_.SetFillColor(2)
+    h_efficiency_residual_vs_mass_binned_.SetLineColor(1)
+    h_efficiency_residual_vs_mass_binned_.GetXaxis().SetTitle(xaxisTitle)
+    h_efficiency_residual_vs_mass_binned_.GetYaxis().SetTitle(yaxisTitle_secondary)
+    h_efficiency_residual_vs_mass_binned_.GetYaxis().SetTitleSize(0.12)
+    h_efficiency_residual_vs_mass_binned_.GetYaxis().SetTitleOffset(0.60)
+    h_efficiency_residual_vs_mass_binned_.GetXaxis().SetTitleSize(0.15)
+    h_efficiency_residual_vs_mass_binned_.GetXaxis().SetTitleOffset(0.90)
+    h_efficiency_residual_vs_mass_binned_.GetYaxis().SetLabelSize(0.09)
+    h_efficiency_residual_vs_mass_binned_.GetXaxis().SetLabelSize(0.12)
+    h_efficiency_residual_vs_mass_binned_.Draw("HIST")
     hist_eff_residual_vsMass_.GetYaxis().SetRangeUser(-eff_range_residual,
                                                        +eff_range_residual)
-    hist_eff_residual_vsMass_.GetYaxis().SetRangeUser(-5.5, 5.5)
     hist_eff_residual_vsMass_.GetYaxis().SetNdivisions(206, kFALSE)
     hist_eff_residual_vsMass_.SetLineWidth(0)
     hist_eff_residual_vsMass_.SetFillColor(2)
-    hist_eff_residual_vsMass_.SetLineColor(1)
-    hist_eff_residual_vsMass_.Draw("SAME HIST")
+    hist_eff_residual_vsMass_.SetLineColor(0)
+    hist_eff_residual_vsMass_.SetMarkerStyle(20)
+    hist_eff_residual_vsMass_.SetMarkerColor(17)
+    hist_eff_residual_vsMass_.SetMarkerSize(0.5)
+    hist_eff_residual_vsMass_.Draw("P HIST same")
 
     eff_line = TLine(efficiency_massMin, 0.0, efficiency_massMax, 0.0)
     eff_line.Draw("")
@@ -650,6 +719,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
 
     eff_canvas.SaveAs(outputLabel_+"_eff"+".root")
     eff_canvas.SaveAs(outputLabel_+"_eff"+".png")
+    #eff_canvas.SaveAs(outputLabel_+"_eff"+".pdf")
 
     ######################
     ######################
@@ -679,9 +749,9 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
         #minY = 0.0001/lumi
         minY = 10.0/lumi
         maxY = data_obs_TGraph_.GetY()[0]*10
-        
+
     #vFrame = pad_1.DrawFrame(minX_mass_plot,0.0001/lumi,maxX_mass_plot,data_obs_TGraph_.GetY()[0]*10)
-    vFrame = pad_1.DrawFrame(massMin,minY,massMax,maxY)
+    vFrame = pad_1.DrawFrame(massMin, minY, massMax, maxY)
     vFrame.SetTitle("")
     #vFrame.SetXTitle(xaxisTitle)
     #vFrame.SetYTitle(yaxisTitle_main)
@@ -692,7 +762,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     #vFrame.GetYaxis().SetTitleOffset(1.0)
     vFrame.GetYaxis().SetLabelSize(0.05)
 
-    #style data spectrum    
+    #style data spectrum
     gStyle.SetErrorX(1)
 
     data_obs_TGraph_.SetMarkerStyle(20)
@@ -735,7 +805,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     pave_chi2.SetBorderSize(0)
     pave_chi2.SetFillStyle(0)
     pave_chi2.AddText(0.5, 0.0,
-                      "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                      "#chi^{{2}} / ndf = {0:.2f} / {1:d} = {2:.2f}".format(
                           list_chi2AndNdf_[4], list_chi2AndNdf_[5],
                           list_chi2AndNdf_[4]/list_chi2AndNdf_[5]))
     pave_chi2.Draw("SAME")
@@ -747,11 +817,24 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     pave_simultaneous_chi2.SetTextColor(4)
     pave_simultaneous_chi2.AddText(0.5, 0.5, "Combined")
     pave_simultaneous_chi2.AddText(0.5, 0.0,
-                                   "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                                   "#chi^{{2}} / ndf = {0:.2f} / {1:d} = {2:.2f}".format(
                                    list_chi2AndNdf_[4] + list_chi2AndNdf_eff_[0],
-                                   list_chi2AndNdf_[5] + list_chi2AndNdf_eff_[1],
-                                   (list_chi2AndNdf_[4] + list_chi2AndNdf_eff_[0])/(list_chi2AndNdf_[5] + list_chi2AndNdf_eff_[1])))
+                                   list_chi2AndNdf_[5] + list_chi2AndNdf_eff_[1] + 2,
+                                   (list_chi2AndNdf_[4] + list_chi2AndNdf_eff_[0])/(list_chi2AndNdf_[5] + list_chi2AndNdf_eff_[1] + 2.0)))
     pave_simultaneous_chi2.Draw()
+
+    pave_simultaneous_nll = TPaveText(0.65, 0.373, 0.925, 0.48, "NDC")
+    pave_simultaneous_nll.SetFillColor(0)
+    pave_simultaneous_nll.SetBorderSize(0)
+    pave_simultaneous_nll.SetFillStyle(0)
+    pave_simultaneous_nll.SetTextColor(4)
+    pave_simultaneous_nll.AddText(0.5, 0.67,
+                                  "NLL_{{eff}} = {0}".format(list_likelihood_[2]))
+    pave_simultaneous_nll.AddText(0.5, 0.33,
+                                  "NLL_{{mjj}} = {0}".format(list_likelihood_[1]))
+    pave_simultaneous_nll.AddText(0.5, 0.0,
+                                  "NLL_{{tot}} = {0}".format(list_likelihood_[0]))
+    pave_simultaneous_nll.Draw()
 
     pave_fit = TPaveText(0.47,0.082,0.8,0.25,"NDC")
     pave_fit.SetFillColor(0)
@@ -761,8 +844,8 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     pave_fit.AddText(0.5, 0.6, "p1 = {0:.3f} #pm {1:.3f}".format(list_parameter_[1], list_parameter_[7]))
     pave_fit.AddText(0.5, 0.4, "p2 = {0:.3f} #pm {1:.3f}".format(list_parameter_[2], list_parameter_[8]))
     pave_fit.AddText(0.5, 0.2, "p3 = {0:.3f} #pm {1:.3f}".format(list_parameter_[3], list_parameter_[9]))
-    pave_fit.AddText(0.5, 0.05, "m_{{eff}} = {0:.1f}".format(list_parameter_[4]))
-    pave_fit.AddText(0.5, 0.0, "#sigma_{{eff}} = {0:.1f}".format(list_parameter_[5]))
+    pave_fit.AddText(0.5, 0.05, "m_{{eff}} = {0:.1f} #pm {1:.1f}".format(list_parameter_[4], list_parameter_[10]))
+    pave_fit.AddText(0.5, 0.0, "#sigma_{{eff}} = {0:.2f} #pm {1:.2f}".format(list_parameter_[5], list_parameter_[11]))
     pave_fit.Draw("SAME")
 
     # pave_toy = TPaveText(0.6,0.4,0.9,0.6,"NDC")
@@ -816,9 +899,10 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     vFrame2.GetXaxis().SetLabelSize(0.12)
 
     #style residuals
-    hist_fit_residual_vsMass_.GetXaxis().SetRangeUser(massMin,massMax)
-    hist_fit_residual_vsMass_.GetYaxis().SetRangeUser(-range_residual,+range_residual)
-    hist_fit_residual_vsMass_.GetYaxis().SetNdivisions(206,kFALSE)
+    hist_fit_residual_vsMass_.GetXaxis().SetRangeUser(massMin, massMax)
+    hist_fit_residual_vsMass_.GetYaxis().SetRangeUser(-range_residual,
+                                                      +range_residual)
+    hist_fit_residual_vsMass_.GetYaxis().SetNdivisions(206, kFALSE)
     hist_fit_residual_vsMass_.SetLineWidth(0)
     hist_fit_residual_vsMass_.SetFillColor(2)
     hist_fit_residual_vsMass_.SetLineColor(1)
@@ -835,6 +919,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     #write canvas
     canvas.SaveAs(outputLabel_+"_B"+".root")
     canvas.SaveAs(outputLabel_+"_B"+".png")
+    #canvas.SaveAs(outputLabel_+"_B"+".pdf")
 
     raw_input("Press Enter to exit...")
 
