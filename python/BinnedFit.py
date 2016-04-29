@@ -301,17 +301,14 @@ if __name__ == '__main__':
     boxLabel = "%s %s Fit" % (box,fitRegion)
     plotLabel = "%s Projection" % (plotRegion)
 
+
     
-    background = rt.TF1("background","( [0]*TMath::Power(1-x/[4],[1]) ) / ( TMath::Power(x/[4],[2]+[3]*log(x/[4])) )",w.var('mjj').getMin(),w.var('mjj').getMax())
-    background.SetParameter(0,1)
-    background.SetParameter(1,w.var('p1').getVal())
-    background.SetParameter(2,w.var('p2').getVal())
-    background.SetParameter(3,w.var('p3').getVal())
-    background.SetParameter(4,w.var('sqrts').getVal())
-    int_b = background.Integral(w.var('mjj').getMin(),w.var('mjj').getMax())    
+    background_pdf = w.pdf('%s_bkg_unbin'%box)
+    background= background_pdf.asTF(rt.RooArgList(w.var('mjj')),rt.RooArgList(w.var('p0')))
+    int_b = background.Integral(w.var('mjj').getMin(),w.var('mjj').getMax())
     p0_b = w.var('Ntot_bkg').getVal() / (int_b * lumi)
     background.SetParameter(0,p0_b)
-   
+    
     g_data = rt.TGraphAsymmErrors(myRebinnedTH1)
     
     alpha = 1-0.6827
@@ -388,8 +385,8 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.SetLineColor(rt.kWhite)
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
     myRebinnedDensityTH1.SetLineWidth(0)
-    myRebinnedDensityTH1.SetMaximum(1e2)
-    myRebinnedDensityTH1.SetMinimum(5e-4)
+    myRebinnedDensityTH1.SetMaximum(1e3)
+    myRebinnedDensityTH1.SetMinimum(1e-4)
     myRebinnedDensityTH1.Draw("pe")    
     g_data_clone.Draw("pezsame")
     background.Draw("csame")
@@ -422,20 +419,21 @@ if __name__ == '__main__':
     pave_sel.SetFillStyle(0)
     pave_sel.SetTextFont(42)
     pave_sel.SetTextAlign(11)
-    pave_sel.AddText(0., 0.8,
+    pave_sel.AddText(0., 0.9,
                       "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
                           list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
                           list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
-    pave_sel.AddText(0.,0.6,"Wide Jets")
-    pave_sel.AddText(0.,0.4,"m_{jj} > 325 GeV")
-    pave_sel.AddText(0.,0.2,"|#eta| < 2.5, |#Delta#eta| < 1.3")
+    pave_sel.AddText(0.,0.7,"Wide Jets")
+    pave_sel.AddText(0.,0.5,"m_{jj} > %i GeV"%w.var('mjj').getMin())
+    pave_sel.AddText(0.,0.3,"|#eta| < 2.5, |#Delta#eta| < 1.3")
     pave_sel.Draw("SAME")
     
-    list_parameter = [p0_b, w.var('p1').getVal(), w.var('p2').getVal(), w.var('p3').getVal(),
-                      p0_b*(w.var('Ntot_bkg').getErrorHi() - w.var('Ntot_bkg').getErrorLo())/(2.0*w.var('Ntot_bkg').getVal()),
-                      (w.var('p1').getErrorHi() - w.var('p1').getErrorLo())/2.0,
-                      (w.var('p2').getErrorHi() - w.var('p2').getErrorLo())/2.0,
-                      (w.var('p3').getErrorHi() - w.var('p3').getErrorLo())/2.0]
+    list_parameter = [p0_b, p0_b*(w.var('Ntot_bkg').getErrorHi() - w.var('Ntot_bkg').getErrorLo())/(2.0*w.var('Ntot_bkg').getVal()),                      
+                      w.var('p1').getVal(), (w.var('p1').getErrorHi() - w.var('p1').getErrorLo())/2.0,
+                      w.var('p2').getVal(), (w.var('p2').getErrorHi() - w.var('p2').getErrorLo())/2.0,
+                      w.var('p3').getVal(), (w.var('p3').getErrorHi() - w.var('p3').getErrorLo())/2.0,
+                      w.var('meff').getVal(), (w.var('meff').getErrorHi() - w.var('meff').getErrorLo())/2.0,
+                      w.var('seff').getVal(), (w.var('seff').getErrorHi() - w.var('seff').getErrorLo())/2.0]
 
     pave_fit = rt.TPaveText(0.45,0.05,0.7,0.25,"NDC")
     pave_fit.SetTextFont(42)
@@ -443,10 +441,13 @@ if __name__ == '__main__':
     pave_fit.SetBorderSize(0)
     pave_fit.SetFillStyle(0)
     pave_fit.SetTextAlign(11)
-    pave_fit.AddText(0., 0.8, "p_{0}"+" = {0:.2g} #pm {1:.2g}".format(list_parameter[0], list_parameter[4]))
-    pave_fit.AddText(0., 0.6, "p_{1}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[1], list_parameter[5]))
-    pave_fit.AddText(0., 0.4, "p_{2}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[2], list_parameter[6]))
-    pave_fit.AddText(0., 0.2, "p_{3}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[3], list_parameter[7]))
+    pave_fit.AddText(0., 0.9, "p_{0}"+" = {0:.2g} #pm {1:.2g}".format(list_parameter[0], list_parameter[1]))
+    pave_fit.AddText(0., 0.7, "p_{1}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[2], list_parameter[3]))
+    pave_fit.AddText(0., 0.5, "p_{2}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[4], list_parameter[5]))
+    pave_fit.AddText(0., 0.3, "p_{3}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[6], list_parameter[7]))
+    if w.var('meff').getVal()>0 and w.var('seff').getVal()>0:
+        pave_fit.AddText(0., 0.1, "m_{eff}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[8], list_parameter[9]))
+        pave_fit.AddText(0., 0.0, "#sigma_{eff}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[10], list_parameter[11]))
     pave_fit.Draw("SAME")    
     
     pad_1.Update()
