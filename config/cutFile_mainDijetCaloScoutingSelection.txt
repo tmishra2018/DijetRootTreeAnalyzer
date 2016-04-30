@@ -23,10 +23,12 @@ pt1Cut				30		-		-		-		-1
 ptCut				30		-		-		-		-1
 DeltaR				1.1		-		-		-		-1
 DetaJJforTrig                   1.3             -               -               -               -1
+hadFraction                    0.95             -               -               -               -1
+emFraction                     0.95             -               -               -               -1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
-useJECs				1               -               -               -               -1
+useJECs				0               -               -               -               -1
 # turn on/off the removal of JEC 
-noJECs                          0               -               -               -               -1
+noJECs                          1               -               -               -               -1
 # turn on/off shift JECs (value1 0: off, 1: on, value2: sign of the shifting. The value is taken from a txt file with JEC uncertainties) 
 shiftJECs                       0               -1               -               -               -1		
 # turn on/off FastJet clustering of wide jets (0: off, 1: on)
@@ -63,6 +65,12 @@ deltaETAjj           -inf           +inf               	-               -       
 mjj            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
 mjj_shiftJEC         -inf           +inf                -               -               1       10000 0 10000      SAVE
 # no cut on these variables, just want to save histograms and variables
+passHLT_CaloJet40_CaloScouting_PFScouting -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1HTT_CaloScouting_PFScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_CaloScoutingHT250                 -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT125                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT150                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT175                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 isData		     -inf	    +inf		-		-		1	2  0 2.	  	  SAVE
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
@@ -94,3 +102,9 @@ jetCSVAK4_j2         -inf           +inf                -               -       
 CosThetaStarWJ	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE	
 CosThetaStarAK4	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 Dijet_MassAK4  	     -inf           +inf                -               -               1       1000 0 10000      SAVE	
+IdTight_j1           0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
+IdTight_j2           0.5           1.5                 -               -               1       2  0 2.	  	  SAVE
+HadEnFrac_j1         -inf           +inf                -               -               1       100 0 1           SAVE
+EmEnFrac_j1         -inf           +inf                -               -               1       100 0 1           SAVE
+HadEnFrac_j2         -inf           +inf                -               -               1       100 0 1           SAVE
+EmEnFrac_j2         -inf           +inf                -               -               1       100 0 1           SAVE
