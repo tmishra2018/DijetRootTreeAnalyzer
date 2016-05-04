@@ -29,7 +29,7 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
             continue
         w.factory(parameter)
         paramName = parameter.split('[')[0]
-        if paramName != 'sqrts':
+        if paramName not in ['sqrts','meff','seff','p0']:
             paramNames.append(paramName)
             w.var(paramName).setConstant(False)
             
@@ -41,9 +41,11 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
         fixPars(w,"In")
         fixPars(w,"Mean")
         fixPars(w,"Sigma")
-        
-        # fix center of mass energy
-        fixPars(w,"sqrts")
+
+        # fix center of mass energy, trigger turn-on, and p0                                                                                   
+        for myvar in ['sqrts','meff','seff','p0']:
+            fixPars(w,myvar)
+
         
         
     if emptyHist1D==None:
@@ -191,6 +193,8 @@ if __name__ == '__main__':
                   help="jer uncertainty, default = 0.2")
     parser.add_option('-b','--box',dest="box", default="CaloDijet",type="string",
                   help="box name")
+    parser.add_option('--asimov',dest="asimov",default=False,action='store_true',
+                  help="replace real data with asimov dataset from input fit result")
     parser.add_option('--penalty',dest="penalty",default=False,action='store_true',
                   help="penalty terms on background shape + norm parameters from input fit result")
     parser.add_option('--fixed',dest="fixed",default=False,action='store_true',
@@ -249,8 +253,6 @@ if __name__ == '__main__':
 
     myRealTH1 = convertToTh1xHist(myRebinnedTH1)
     
-    dataHist = rt.RooDataHist("data_obs", "data_obs", rt.RooArgList(th1x), rt.RooFit.Import(myRealTH1))
-    rootTools.Utils.importToWS(w,dataHist)
 
     if options.inputFitFile is not None:
         inputRootFile = rt.TFile.Open(options.inputFitFile,"r")
@@ -274,7 +276,17 @@ if __name__ == '__main__':
                 normNameList.append("norm")
                 normName = "_".join(normNameList)
                 #w.var(normName).setError(w.var(p.GetName()).getError()/w.var(p.GetName()).getVal())
-            
+                
+    if options.asimov:
+        asimov = w.pdf('extDijetPdf').generateBinned(rt.RooArgSet(th1x),rt.RooFit.Asimov())
+        asimov.SetName('data_obs')
+        asimov.SetTitle('data_obs')
+        dataHist = asimov
+    else:
+        dataHist = rt.RooDataHist("data_obs", "data_obs", rt.RooArgList(th1x), rt.RooFit.Import(myRealTH1))
+        
+    rootTools.Utils.importToWS(w,dataHist)
+    
     signalHistos = []
     signalFile = rt.TFile.Open(signalFileName)
     names = [k.GetName() for k in signalFile.GetListOfKeys()]
