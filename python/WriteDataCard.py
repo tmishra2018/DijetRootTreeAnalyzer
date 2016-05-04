@@ -88,9 +88,6 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
     return paramNames, bkgs
 
 
-
-
-
 def writeDataCard(box,model,txtfileName,bkgs,paramNames,w,penalty,fixed,shapes=[]):
         obsRate = w.data("data_obs").sumEntries()
         nBkgd = len(bkgs)
@@ -188,6 +185,10 @@ if __name__ == '__main__':
                   help="Output directory to store cards")
     parser.add_option('-l','--lumi',dest="lumi", default=1.,type="float",
                   help="integrated luminosity in pb^-1")
+    parser.add_option('--jes',dest="jesUnc", default=0.05,type="float",
+                  help="jes uncertainty, default = 0.05")
+    parser.add_option('--jer',dest="jerUnc", default=0.2,type="float",
+                  help="jer uncertainty, default = 0.2")
     parser.add_option('-b','--box',dest="box", default="CaloDijet",type="string",
                   help="box name")
     parser.add_option('--penalty',dest="penalty",default=False,action='store_true',
@@ -198,8 +199,10 @@ if __name__ == '__main__':
                   help="input fit file")
     parser.add_option('-m','--model',dest="model", default="gg",type="string",
                   help="signal model name")
-    parser.add_option('--mass',dest="mass", default=-1,type="float",
+    parser.add_option('--mass',dest="mass", default=750,type="float",
                   help="mass of resonance")
+    parser.add_option('--xsec',dest="xsec", default=1,type="float",
+                  help="xsec of resonance")
     parser.add_option('--no-signal-sys',dest="noSignalSys",default=False,action='store_true',
                   help="no signal shape systematic uncertainties")
 
@@ -210,13 +213,14 @@ if __name__ == '__main__':
     box = options.box
     lumi = options.lumi
     
-    signalXsec = 15.0
+    signalXsec = options.xsec
+
     signalFileName = ''
     model = options.model
     massPoint = options.mass
 
-    jesUnc = 0.05
-    jerUnc = 0.1
+    jesUnc = options.jesUnc
+    jerUnc = options.jerUnc
 
     myTH1 = None
     for f in args:
@@ -225,7 +229,7 @@ if __name__ == '__main__':
                 signalFileName = f
             else:
                 rootFile = rt.TFile(f)
-                myTH1 = rootFile.Get('h_mjj_NoTrigger_1GeVbin')
+                myTH1 = rootFile.Get('h_mjj_HLTpass_HT250_1GeVbin')
 
     w = rt.RooWorkspace("w"+box)
     
@@ -271,7 +275,6 @@ if __name__ == '__main__':
                 normName = "_".join(normNameList)
                 #w.var(normName).setError(w.var(p.GetName()).getError()/w.var(p.GetName()).getVal())
             
-    
     signalHistos = []
     signalFile = rt.TFile.Open(signalFileName)
     names = [k.GetName() for k in signalFile.GetListOfKeys()]

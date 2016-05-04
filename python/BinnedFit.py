@@ -98,6 +98,8 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     N_massBins_ = data_obs_TGraph_.GetN()
     MinNumEvents = 10
     nParFit = 4
+    if workspace_.var('meff')>0 and workspace_.var('seff')>0 :
+        nParFit = 6
 
     chi2_FullRangeAll = 0
     chi2_PlotRangeAll = 0
@@ -145,6 +147,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
         chi2_FullRangeAll += pow(fit_residual,2)
         N_FullRangeAll += 1
         if plotRegion=='Full' or (plotRegion=='Low,High' and (xbinLow >= workspace_.var('mjj').getMin() and xbinHigh<=workspace_.var('mjj').getMax())):
+            #print '%i: obs %.0f, exp %.2f, chi2 %.2f'%(bin, value_data* binWidth_current * lumi, value_fit* binWidth_current * lumi, pow(fit_residual,2))
             chi2_PlotRangeAll += pow(fit_residual,2)
             N_PlotRangeAll += 1
             if (value_data > 0):
@@ -208,7 +211,7 @@ if __name__ == '__main__':
     for f in args:
         if f.lower().endswith('.root'):
             rootFile = rt.TFile(f)
-            myTH1 = rootFile.Get('h_mjj_NoTrigger_1GeVbin')
+            myTH1 = rootFile.Get('h_mjj_HLTpass_HT250_1GeVbin')
     if myTH1 is None:
         print "give a root file as input"
   
@@ -386,7 +389,8 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
     myRebinnedDensityTH1.SetLineWidth(0)
     myRebinnedDensityTH1.SetMaximum(1e3)
-    myRebinnedDensityTH1.SetMinimum(1e-4)
+    #myRebinnedDensityTH1.SetMinimum(5e-4)
+    myRebinnedDensityTH1.SetMinimum(2e-10)
     myRebinnedDensityTH1.Draw("pe")    
     g_data_clone.Draw("pezsame")
     background.Draw("csame")
@@ -413,19 +417,19 @@ if __name__ == '__main__':
     leg.AddEntry(background,"Fit","l")
     leg.Draw()
     
-    pave_sel = rt.TPaveText(0.2,0.05,0.45,0.25,"NDC")
+    pave_sel = rt.TPaveText(0.2,0.03,0.5,0.25,"NDC")
     pave_sel.SetFillColor(0)
     pave_sel.SetBorderSize(0)
     pave_sel.SetFillStyle(0)
     pave_sel.SetTextFont(42)
+    pave_sel.SetTextSize(0.045)
     pave_sel.SetTextAlign(11)
-    pave_sel.AddText(0., 0.9,
-                      "#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+    pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
                           list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
                           list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
-    pave_sel.AddText(0.,0.7,"Wide Jets")
-    pave_sel.AddText(0.,0.5,"m_{jj} > %i GeV"%w.var('mjj').getMin())
-    pave_sel.AddText(0.,0.3,"|#eta| < 2.5, |#Delta#eta| < 1.3")
+    pave_sel.AddText("Wide Jets")
+    pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin(),w.var('mjj').getMax()))
+    pave_sel.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
     pave_sel.Draw("SAME")
     
     list_parameter = [p0_b, p0_b*(w.var('Ntot_bkg').getErrorHi() - w.var('Ntot_bkg').getErrorLo())/(2.0*w.var('Ntot_bkg').getVal()),                      
@@ -435,28 +439,30 @@ if __name__ == '__main__':
                       w.var('meff').getVal(), (w.var('meff').getErrorHi() - w.var('meff').getErrorLo())/2.0,
                       w.var('seff').getVal(), (w.var('seff').getErrorHi() - w.var('seff').getErrorLo())/2.0]
 
-    pave_fit = rt.TPaveText(0.45,0.05,0.7,0.25,"NDC")
-    pave_fit.SetTextFont(42)
-    pave_fit.SetFillColor(0)
-    pave_fit.SetBorderSize(0)
-    pave_fit.SetFillStyle(0)
-    pave_fit.SetTextAlign(11)
-    pave_fit.AddText(0., 0.9, "p_{0}"+" = {0:.2g} #pm {1:.2g}".format(list_parameter[0], list_parameter[1]))
-    pave_fit.AddText(0., 0.7, "p_{1}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[2], list_parameter[3]))
-    pave_fit.AddText(0., 0.5, "p_{2}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[4], list_parameter[5]))
-    pave_fit.AddText(0., 0.3, "p_{3}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[6], list_parameter[7]))
+
+    pave_param = rt.TPaveText(0.55,0.03,0.9,0.25,"NDC")
+    pave_param.SetTextFont(42)
+    pave_param.SetFillColor(0)
+    pave_param.SetBorderSize(0)
+    pave_param.SetFillStyle(0)
+    pave_param.SetTextAlign(11)
+    pave_param.SetTextSize(0.045)
+    pave_param.AddText("p_{0}"+" = {0:.2g} #pm {1:.2g}".format(list_parameter[0], list_parameter[1]))
+    pave_param.AddText("p_{1}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[2], list_parameter[3]))
+    pave_param.AddText("p_{2}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[4], list_parameter[5]))
+    pave_param.AddText("p_{3}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[6], list_parameter[7]))
     if w.var('meff').getVal()>0 and w.var('seff').getVal()>0:
-        pave_fit.AddText(0., 0.1, "m_{eff}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[8], list_parameter[9]))
-        pave_fit.AddText(0., 0.0, "#sigma_{eff}"+" = {0:.1f} #pm {1:.1f}".format(list_parameter[10], list_parameter[11]))
-    pave_fit.Draw("SAME")    
+        pave_param.AddText("m_{eff}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[8], list_parameter[9]))
+        pave_param.AddText("#sigma_{eff}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[10], list_parameter[11]))
+    pave_param.Draw("SAME")    
     
     pad_1.Update()
 
     pad_2.cd()
     
     h_fit_residual_vs_mass.GetXaxis().SetRangeUser(w.var('mjj').getMin(),w.var('mjj').getMax())
-    h_fit_residual_vs_mass.GetYaxis().SetRangeUser(-3.5,+3.5)
-    h_fit_residual_vs_mass.GetYaxis().SetNdivisions(207,True)
+    h_fit_residual_vs_mass.GetYaxis().SetRangeUser(-3.5,3.5)
+    h_fit_residual_vs_mass.GetYaxis().SetNdivisions(210,True)
     h_fit_residual_vs_mass.SetLineWidth(1)
     h_fit_residual_vs_mass.SetFillColor(rt.kRed)
     h_fit_residual_vs_mass.SetLineColor(rt.kBlack)
