@@ -73,7 +73,7 @@ if __name__ == '__main__':
         massIterable = list(eval(options.mass))
     for massPoint in massIterable:
         
-        exec_me('python python/WriteDataCard.py -i %s -l %f -c %s -b %s -d %s %s %s %s %s %s'%(options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName,penaltyString,signalSys,xsecString),options.dryRun)
+        exec_me('python python/WriteDataCard.py -m %s --mass %s -i %s -l %f -c %s -b %s -d %s %s %s %s %s %s'%(model, massPoint, options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName,penaltyString,signalSys,xsecString),options.dryRun)
 
         
         if signif:
