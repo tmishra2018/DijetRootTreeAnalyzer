@@ -286,7 +286,9 @@ if __name__ == '__main__':
         dataHist = rt.RooDataHist("data_obs", "data_obs", rt.RooArgList(th1x), rt.RooFit.Import(myRealTH1))
         
     rootTools.Utils.importToWS(w,dataHist)
-    
+
+    signalHistosOriginal = []
+    signalHistosRebin = []
     signalHistos = []
     signalFile = rt.TFile.Open(signalFileName)
     names = [k.GetName() for k in signalFile.GetListOfKeys()]
@@ -299,6 +301,9 @@ if __name__ == '__main__':
                 d.Rebin(len(x)-1,name+'_rebin',x)
                 d_rebin = rt.gDirectory.Get(name+'_rebin')
                 d_rebin.SetDirectory(0)
+
+                signalHistosOriginal.append(d)
+                signalHistosRebin.append(d_rebin)
 
                 d_th1x = convertToTh1xHist(d_rebin)
                 signalHistos.append(d_th1x)
@@ -313,15 +318,16 @@ if __name__ == '__main__':
 
 
     # JES and JER uncertainties
-    hSig = signalHistos[0]
+    hSig = signalHistosOriginal[0]
+    hSigTh1x = signalHistos[0]
     sigCDF = rt.TGraph(hSig.GetNbinsX()+1)
 
     sigCDF.SetPoint(0,0.,0.)
     integral = 0.
     for i in range(1, hSig.GetNbinsX()+1):
-        x = hSig.GetXaxis().GetBinLowEdge(i+1)
+        xCen = hSig.GetXaxis().GetBinLowEdge(i+1)
         integral = integral + hSig.GetBinContent(i)
-        sigCDF.SetPoint(i,x,integral)
+        sigCDF.SetPoint(i,xCen,integral)
         
     for shape in shapes:
         hUp = hSig.Clone(hSig.GetName()+'_'+shape+'Up')
@@ -337,8 +343,8 @@ if __name__ == '__main__':
                 xUpPrime = jes*xUp
             elif shape=='jer':      
                 jer = 1. - jerUnc              
-                xLowPrime = jer*(xLow-float(massPoint)+float(massPoint))
-                xUpPrime = jer*(xUp-float(massPoint)+float(massPoint))
+                xLowPrime = jer*(xLow-float(massPoint))+float(massPoint)
+                xUpPrime = jer*(xUp-float(massPoint))+float(massPoint)
             hUp.SetBinContent(i, sigCDF.Eval(xUpPrime) - sigCDF.Eval(xLowPrime))
             if shape=='jes':
                 jes = 1. + jesUnc
@@ -346,12 +352,25 @@ if __name__ == '__main__':
                 xUpPrime = jes*xUp
             elif shape=='jer':                    
                 jer = 1. + jerUnc
-                xLowPrime = jer*(xLow-float(massPoint)+float(massPoint))
-                xUpPrime = jer*(xUp-float(massPoint)+float(massPoint))
+                xLowPrime = jer*(xLow-float(massPoint))+float(massPoint)
+                xUpPrime = jer*(xUp-float(massPoint))+float(massPoint)
             hDown.SetBinContent(i, sigCDF.Eval(xUpPrime) - sigCDF.Eval(xLowPrime))
-                
-        hUp_DataHist = rt.RooDataHist('%s_%s_%sUp'%(box,model,shape),'%s_%s_%sUp'%(box,model,shape),rt.RooArgList(th1x),hUp)
-        hDown_DataHist = rt.RooDataHist('%s_%s_%sDown'%(box,model,shape),'%s_%s_%sDown'%(box,model,shape),rt.RooArgList(th1x),hDown)
+
+        
+        hUp.Rebin(len(x)-1,hUp.GetName()+'_rebin',x)
+        hUpRebin = rt.gDirectory.Get(hUp.GetName()+'_rebin')
+        hUpRebin.SetDirectory(0)        
+        hUpTh1x = convertToTh1xHist(hUpRebin)        
+        hUpTh1x.Scale(hSigTh1x.Integral()/hUpTh1x.Integral())
+        
+        hDown.Rebin(len(x)-1,hDown.GetName()+'_rebin',x)
+        hDownRebin = rt.gDirectory.Get(hDown.GetName()+'_rebin')
+        hDownRebin.SetDirectory(0)        
+        hDownTh1x = convertToTh1xHist(hDownRebin)
+        hDownTh1x.Scale(hSigTh1x.Integral()/hDownTh1x.Integral())
+        
+        hUp_DataHist = rt.RooDataHist('%s_%s_%sUp'%(box,model,shape),'%s_%s_%sUp'%(box,model,shape),rt.RooArgList(th1x),hUpTh1x)
+        hDown_DataHist = rt.RooDataHist('%s_%s_%sDown'%(box,model,shape),'%s_%s_%sDown'%(box,model,shape),rt.RooArgList(th1x),hDownTh1x)
         
         rootTools.Utils.importToWS(w,hUp_DataHist)
         rootTools.Utils.importToWS(w,hDown_DataHist)            
