@@ -26,9 +26,9 @@ DetaJJforTrig                   1.3             -               -               
 hadFraction                    0.95             -               -               -               -1
 emFraction                     0.95             -               -               -               -1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
-useJECs				0               -               -               -               -1
+useJECs				1               -               -               -               -1
 # turn on/off the removal of JEC 
-noJECs                          1               -               -               -               -1
+noJECs                          0               -               -               -               -1
 # turn on/off shift JECs (value1 0: off, 1: on, value2: sign of the shifting. The value is taken from a txt file with JEC uncertainties) 
 shiftJECs                       0               -1               -               -               -1		
 # turn on/off FastJet clustering of wide jets (0: off, 1: on)
@@ -55,7 +55,6 @@ jetAlgo				AntiKt 		-		-		-		-1
 #VariableName	      minValue1(<) maxValue1(>=)	minValue2(<)	maxValue2(>=)	level	histoNbinsMinMax  OptionalFlag
 #------------	      ------------ -------------	------------	-------------	-----	----------------  ------------
 PassJSON              -1            1                   -               -               0       2 -0.5 1.5        SAVE  
-nVtx                  0             +inf                -               -               1       50  0 50	  SAVE
 nJet	      	      1     	    +inf		-		-		1	31 -0.5 30.5      SAVE
 pTWJ_j1	      	      60	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j1             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
