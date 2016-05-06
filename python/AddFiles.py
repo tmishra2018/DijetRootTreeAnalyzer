@@ -20,6 +20,7 @@ if __name__ == '__main__':
     tchain.SetBranchStatus('*',0)
     tchain.SetBranchStatus('mjj',1)
     tchain.SetBranchStatus('passHLT_CaloScoutingHT250',1)
+    tchain.SetBranchStatus('PassJSON',1)
     tchain.SetBranchStatus('deltaETAjj',1)
     tchain.SetBranchStatus('deltaPHIjj',1)
     tchain.SetBranchStatus('phiWJ_j1',1)
@@ -54,8 +55,7 @@ if __name__ == '__main__':
     h_pTAK4_j1 = rt.TH1D('h_pTAK4_j1_HLTpass_HT250','h_pTAK4_j1_HLTpass_HT250',10000,0,10000)
     h_pTAK4_j2 = rt.TH1D('h_pTAK4_j2_HLTpass_HT250','h_pTAK4_j2_HLTpass_HT250',10000,0,10000)
     
-    cut = 'passHLT_CaloScoutingHT250&&abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30'
-    #cut = 'passHLT_CaloScoutingHT250'
+    cut = 'passHLT_CaloScoutingHT250&&abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30&&PassJSON'
     
     histoExpr = { h_mjj_1GeVbin: 'mjj', 
                   h_deltaETAjj: 'deltaETAjj',
@@ -88,17 +88,6 @@ if __name__ == '__main__':
     for hist,var in histoExpr.iteritems():
         #if var!='mjj': continue
         project(tchain, hist, var, cut)
-
-    #tchain.Draw('>>elist',cut,'entrylist')
-    #elist = rt.gDirectory.Get('elist')
-    #entry = -1
-    #while True:
-    #    entry = elist.Next()
-    #    if entry == -1: break
-    #    tchain.GetEntry(entry)
-    #    if entry%10000==0: print 'processing entry %i'%entry
-    #    for hist,var in histoExpr.iteritems():
-    #        hist.Fill(eval('tchain.%s'%var))
 
     output = rt.TFile(options.outDir+"/output.root",'recreate')
     output.cd()
