@@ -195,6 +195,14 @@ if __name__ == '__main__':
                   help="input fit file")
     parser.add_option('-w','--weight',dest="useWeight",default=False,action='store_true',
                   help="use weight")
+    parser.add_option('-s','--signal',dest="signalFileName", default=None,type="string",
+                  help="input dataset file for signal pdf")
+    parser.add_option('-m','--model',dest="model", default="gg",type="string",
+                  help="signal model")
+    parser.add_option('--mass',dest="mass", default=750,type="float",
+                  help="mgluino")
+    parser.add_option('--xsec',dest="xsec", default=1,type="float",
+                  help="cross section in pb")
 
 
     (options,args) = parser.parse_args()
@@ -237,13 +245,35 @@ if __name__ == '__main__':
         for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
             w.var(p.GetName()).setVal(p.getVal())
             w.var(p.GetName()).setError(p.getError())
-            
+
     
     x = array('d', cfg.getBinning(box)[0]) # mjj binning
     
     th1x = w.var('th1x')
     nBins = (len(x)-1)
     th1x.setBins(nBins)
+
+    # get signal histo if any
+    signalHistos = []
+    signalHistosOriginal = []
+    signalHistosRebin = []
+    if options.signalFileName is not None:
+        signalFile = rt.TFile.Open(options.signalFileName)
+        names = [k.GetName() for k in signalFile.GetListOfKeys()]
+        for name in names:
+            d = signalFile.Get(name)
+            if isinstance(d, rt.TH1):
+                if name=='h_%s_%i'%(options.model,options.mass):
+                    d.Scale(options.xsec*lumi/d.Integral())
+                    d.Rebin(len(x)-1,name+'_rebin',x)
+                    d_rebin = rt.gDirectory.Get(name+'_rebin')
+                    d_rebin.SetDirectory(0)
+    
+                    signalHistosOriginal.append(d)
+                    signalHistosRebin.append(d_rebin)
+    
+                    d_th1x = convertToTh1xHist(d_rebin)
+                    signalHistos.append(d_th1x)
     
     sideband = convertSideband(fitRegion,w,x)
     plotband = convertSideband(plotRegion,w,x)
@@ -389,12 +419,38 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
     myRebinnedDensityTH1.SetLineWidth(0)
     myRebinnedDensityTH1.SetMaximum(1e3)
-    #myRebinnedDensityTH1.SetMinimum(5e-4)
-    myRebinnedDensityTH1.SetMinimum(2e-10)
+    myRebinnedDensityTH1.SetMinimum(2e-5)
+    #myRebinnedDensityTH1.SetMinimum(2e-10)
     myRebinnedDensityTH1.Draw("pe")    
     g_data_clone.Draw("pezsame")
     background.Draw("csame")
     g_data.Draw("pezsame")
+
+    if options.signalFileName is not None:
+        sigHist = signalHistosRebin[0]
+        
+        g_signal = rt.TGraphAsymmErrors(sigHist)
+        g_signal.SetLineColor(rt.kBlue)
+        g_signal.SetLineWidth(3)
+        g_signal.SetLineStyle(2)
+
+        lastX = 0
+        lastY = 0
+        for i in range(0,g_signal.GetN()):
+            N = g_signal.GetY()[i]
+            binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]
+            g_signal.SetPoint(i, g_signal.GetX()[i], N/(binWidth * lumi))
+            g_signal.SetPointEYlow(i, 0)
+            g_signal.SetPointEYhigh(i, 0)
+            if g_signal.GetX()[i]>options.mass*1.5:
+                g_signal.SetPoint(i,lastX,lastY)
+            else:                
+                lastX = g_signal.GetX()[i]
+                lastY = g_signal.GetY()[i]
+        #sys.exit()
+        g_signal.Draw("lxsame")
+
+    
     rt.gPad.SetLogy()
     
     l = rt.TLatex()
@@ -409,12 +465,20 @@ if __name__ == '__main__':
     l.SetTextFont(52)
     l.SetTextSize(0.05)
     l.DrawLatex(0.3,0.96,"Preliminary")
-    leg = rt.TLegend(0.7,0.7,0.89,0.88)
+    if options.signalFileName!=None:
+        leg = rt.TLegend(0.6,0.52,0.89,0.88)
+    else:        
+        leg = rt.TLegend(0.7,0.7,0.89,0.88)
     leg.SetTextFont(42)
     leg.SetFillColor(rt.kWhite)
+    leg.SetFillStyle(0)
+    leg.SetLineWidth(0)
     leg.SetLineColor(rt.kWhite)
     leg.AddEntry(g_data,"Data","pe")
     leg.AddEntry(background,"Fit","l")
+    if options.signalFileName!=None:
+        leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")
+        leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
     leg.Draw()
     
     pave_sel = rt.TPaveText(0.2,0.03,0.5,0.25,"NDC")
@@ -478,6 +542,28 @@ if __name__ == '__main__':
     
     
     h_fit_residual_vs_mass.Draw("histsame")
+    
+        
+    if options.signalFileName is not None:
+        sigHistResidual = sigHist.Clone(sigHist.GetName()+"_residual")
+        sigHistResidual.SetLineColor(rt.kBlue)
+        sigHistResidual.SetLineWidth(2)
+        sigHistResidual.SetLineStyle(2)
+        for bin in range (0,g_data.GetN()):
+            value_data = g_data.GetY()[bin]
+            err_tot_data = g_data.GetEYhigh()[bin]
+            binWidth = g_data.GetEXlow()[i] + g_data.GetEXhigh()[i]
+            value_signal = sigHist.GetBinContent(bin+1)/(binWidth*lumi)
+        
+            ## Signal residuals
+            if err_tot_data>0:                
+                sig_residual = (value_signal) / err_tot_data
+            else:
+                sig_residual = 0                                
+    
+            ## Fill histo with residuals
+            sigHistResidual.SetBinContent(bin+1,sig_residual)
+        sigHistResidual.Draw("histsame")
 
     
     c.Print(options.outDir+"/fit_mjj_%s_%s.pdf"%(fitRegion.replace(',','_'),box))
