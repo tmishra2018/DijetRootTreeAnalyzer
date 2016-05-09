@@ -38,7 +38,11 @@ if __name__ == '__main__':
     parser.add_option('-i','--input-fit-file',dest="inputFitFile", default='FitResults/BinnedFitResults.root',type="string",
                   help="input fit file")
     parser.add_option('--no-signal-sys',dest="noSignalSys",default=False,action='store_true',
-                  help="no signal shape systematic uncertainties")
+                  help="do not create signal shape systematic histograms / uncertainties")
+    parser.add_option('--no-sys',dest="noSys",default=False,action='store_true',
+                  help="no systematic uncertainties when running combine")
+    parser.add_option('--blind',dest="blind",default=False,action='store_true',
+                  help="run only blinded expected limits")
     parser.add_option('--rMax',dest="rMax",default=-1,type="float",
                   help="maximum r value (for better precision)")
     parser.add_option('--xsec',dest="xsec",default=1,type="float",
@@ -65,7 +69,15 @@ if __name__ == '__main__':
     xsecString = '--xsec %f'%(options.xsec)    
 
     signalDsName = 'inputs/ResonanceShapes_%s_13TeV_Scouting_Spring15.root'%model
-    backgroundDsName = 'output/output_JEC.root'
+    backgroundDsName = 'inputs/data_CaloScoutingHT_Run2015D_%s.root'%box
+
+    blindString = ''
+    if options.blind:
+        blindString = '--noFitAsimov --run expected'
+
+    sysString = ''
+    if options.noSys:
+        sysString = '-S 0 --freezeNuisances=shapeBkg_%s_bkg_%s__norm,p1,p2,p3,jes,jer'%(box,box)
 
     if len(options.mass.split(','))==1:
         massIterable = [options.mass]
@@ -81,7 +93,7 @@ if __name__ == '__main__':
             exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.ProfileLikelihood.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)
         else:
             if options.rMax>-1:
-                exec_me('combine -M Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i --setPhysicsModelParameterRanges r=0,%f --saveWorkspace --noFitAsimov --run expected'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.min_tol,options.min_strat,options.rMax),options.dryRun)
+                exec_me('combine -M Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i --setPhysicsModelParameterRanges r=0,%f --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.min_tol,options.min_strat,options.rMax,blindString,sysString),options.dryRun)
             else:
-                exec_me('combine -M Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i --saveWorkspace --noFitAsimov --run expected'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.min_tol,options.min_strat),options.dryRun)
+                exec_me('combine -M Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.min_tol,options.min_strat,blindString,sysString),options.dryRun)
             exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.Asymptotic.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
