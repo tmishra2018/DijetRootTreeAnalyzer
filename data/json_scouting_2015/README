@@ -52,6 +52,24 @@ lumiSummary_ScoutingPFCommissioning__15_01_2016_20160115_143148__SILVER.json  =>
 (CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/ScoutingPFCommissioning__09_03_2016/ScoutingPFCommissioning__09_03_2016_20160309_225640/merged/rootfile_ScoutingPFCommissioning__Run2015D-v1__RAW_ScoutingPFCommissioning__09_03_2016_20160309_225640_reduced_skim.root
 
 
+ScoutingCaloHT
+============
+
+1)
+/ScoutingCaloHT/Run2015D-v1/RAW
+Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
+JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
+(CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/JEC_CaloL1L2L3_PFL2L3Residual_20160503_171912/
+
+ScoutingCaloCommissioning
+============
+
+1)
+/ScoutingCaloCommissioning/Run2015D-v1/RAW
+Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
+JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
+(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/JEC_CaloL1L2L3_PFL2L3Residual_20160505_201702/
+
 ParkingScoutingMonitor
 ======================
 (at the moment only on CERN eos)
