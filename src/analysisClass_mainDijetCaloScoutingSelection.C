@@ -125,13 +125,10 @@ void analysisClass::Loop()
    //No trigger selection applied (full offline selection applied)
    TH1F* h_mjj_NoTrigger_1GeVbin = new TH1F("h_mjj_NoTrigger_1GeVbin","",14000,0,14000);
    TH1F* h_mjj_NoTrigger = new TH1F("h_mjj_NoTrigger","",103,massBoundaries);
-   //L1
-   TH1F* h_mjj_HLTpass_ZeroBias = new TH1F("h_mjj_HLTpass_ZeroBias","",103,massBoundaries);
-   TH1F* h_mjj_HLTpass_ZeroBias_L1HTT150 = new TH1F("h_mjj_HLTpass_ZeroBias_L1HTT150","",103,massBoundaries);  
    //HLT
-   TH1F* h_mjj_HLTpass_L1HTT150 = new TH1F("h_mjj_HLTpass_L1HTT150","",103,massBoundaries);
-   TH1F* h_mjj_HLTpass_L1HTT150_HT450 = new TH1F("h_mjj_HLTpass_L1HTT150_HT450","",103,massBoundaries);
-
+   TH1F* h_mjj_HLTpass_CaloJet40_CaloScouting_PFScouting = new TH1F("h_mjj_HLTpass_CaloJet40_CaloScouting_PFScouting","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_L1HTT_CaloScouting_PFScouting = new TH1F("h_mjj_HLTpass_L1HTT_CaloScouting_PFScouting","",103,massBoundaries);
+   TH1F* h_mjj_HLTpass_CaloScoutingHT250 = new TH1F("h_mjj_HLTpass_CaloScoutingHT250","",103,massBoundaries);
 
    /////////initialize variables
 
@@ -617,9 +614,8 @@ void analysisClass::Loop()
      // optional call to fill a skim with the full content of the input roottuple
      //if( passedCut("nJetFinal") ) fillSkimTree();
      if( passedCut("PassJSON")
-	 // && passedCut("nVtx") 
-	 // && passedCut("IdTight_j1")
-	 // && passedCut("IdTight_j2")
+	 && passedCut("IdTight_j1")
+	 && passedCut("IdTight_j2")
 	 && passedCut("nJet")
 	 && passedCut("pTWJ_j1")
 	 && passedCut("etaWJ_j1")
@@ -630,20 +626,16 @@ void analysisClass::Loop()
        h_mjj_NoTrigger_1GeVbin -> Fill(MJJWide); 
        h_mjj_NoTrigger -> Fill(MJJWide); 
        
-       // if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) )
-       // 	 h_mjj_HLTpass_ZeroBias -> Fill(MJJWide);  
-
-       // if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) 
-       // 	   && (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
-       // 	 h_mjj_HLTpass_ZeroBias_L1HTT150 -> Fill(MJJWide);  
 
        // if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
        // 	 h_mjj_HLTpass_L1HTT150 -> Fill(MJJWide);  
-
-       // if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) 
-       // 	   && (getVariableValue("passHLT_HT450_BtagSeq")||getVariableValue("passHLT_HT450")) )
-       // 	 h_mjj_HLTpass_L1HTT150_HT450 -> Fill(MJJWide);  
        
+       if( getVariableValue("passHLT_CaloJet40_CaloScouting_PFScouting") )
+	 h_mjj_HLTpass_CaloJet40_CaloScouting_PFScouting -> Fill(MJJWide);  
+       if( getVariableValue("passHLT_L1HTT_CaloScouting_PFScouting") )
+	 h_mjj_HLTpass_L1HTT_CaloScouting_PFScouting -> Fill(MJJWide);  
+       if( getVariableValue("passHLT_CaloScoutingHT250") )
+	 h_mjj_HLTpass_CaloScoutingHT250 -> Fill(MJJWide);		   
      }
 
      // optional call to fill a skim with a subset of the variables defined in the cutFile (use flag SAVE)
@@ -655,7 +647,7 @@ void analysisClass::Loop()
 	 // //Example on how to investigate quickly the data
 	 // if(getVariableValue("mjj")>4000)
 	 //   {
-	 //     //fast creation and filling of histograms
+	 //     //xbfast creation and filling of histograms
 	 //     CreateAndFillUserTH1D("h_dphijj_mjjgt4000", 100, 0, 3.15, getVariableValue("deltaPHIjj"));
 	 //     CreateAndFillUserTH1D("h_htak4_mjjgt4000", 1000, 0, 10000, getVariableValue("HTAK4"));
 	 //     CreateAndFillUserTH1D("h_nvtx_mjjgt4000", 31, -0.5, 30.5, getVariableValue("nVtx"));
@@ -701,10 +693,9 @@ void analysisClass::Loop()
 
    h_mjj_NoTrigger_1GeVbin -> Write();
    h_mjj_NoTrigger -> Write();
-   h_mjj_HLTpass_ZeroBias -> Write();
-   h_mjj_HLTpass_ZeroBias_L1HTT150 -> Write();
-   h_mjj_HLTpass_L1HTT150 -> Write();
-   h_mjj_HLTpass_L1HTT150_HT450 -> Write();
+   h_mjj_HLTpass_CaloJet40_CaloScouting_PFScouting -> Write();
+   h_mjj_HLTpass_L1HTT_CaloScouting_PFScouting -> Write();
+   h_mjj_HLTpass_CaloScoutingHT250 -> Write();
 
    // h_nVtx->Write();
    // h_trueVtx->Write();
