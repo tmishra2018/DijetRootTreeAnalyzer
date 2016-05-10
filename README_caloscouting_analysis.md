@@ -8,7 +8,7 @@ Instructions to run Calo Scouting Dijet Resonance Search from start to finish.
     $ cmsrel CMSSW_7_4_14
     $ cd CMSSW_7_4_14/src
     $ cmsenv
-    $ git clone https://github.com/RazorCMS/DijetRootTreeAnalyzer CMSDIJET/DijetRootTreeAnalyzer
+    $ git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer CMSDIJET/DijetRootTreeAnalyzer
     $ git clone -b dijetpdf_74X https://github.com/RazorCMS/HiggsAnalysis-CombinedLimit HiggsAnalysis/CombinedLimit
     $ cd HiggsAnalysis/CombinedLimit
     $ scram b -j 4
