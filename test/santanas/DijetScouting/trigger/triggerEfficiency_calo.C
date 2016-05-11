@@ -43,15 +43,15 @@ double threshold = 119;
 
 //
 int doFit = 1;
-double xminFit = 156;
+double xminFit = 250;
 //double xmaxFit = 2037;
 double xmaxFit = 890;
 //double xmaxFit = 1455;
 
 
 //high-mass
-TString myinputFile =  "rootfile_CaloScoutingCommissioning_JEC_CaloL1L2L3_PFL2L3Residual_20160505_183413_59_reduced_skim.root";
-
+// TString myinputFile =  "rootfile_CaloScoutingCommissioning_JEC_CaloL1L2L3_PFL2L3Residual_20160505_183413_59_reduced_skim.root";
+TString myinputFile =  "eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/JEC_CaloL1L2L3_PFL2L3Residual_20160505_201702/CaloScoutingCommissioning_JEC_CaloL1L2L3_PFL2L3Residual_reduced_skim.root";
 TString mybaselinehisto = "h_mjj_NoTrigger_1GeVbin"; // needed to define the x-axis range 
 
 TString mynumerator = "h_mjj_HLTpass_CaloScoutingHT250"; // only used if histoFromFile = 1
@@ -194,7 +194,7 @@ void triggerEfficiency_calo()
       cout << "filling denominator" << endl;
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1"); //signal region
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region //paper      
-      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_L1HTT_CaloScouting_PFScouting||passHLT_CaloJet40_CaloScouting_PFScouting)"); //signal region //scouting HT450
+      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_CaloJet40_CaloScouting_PFScouting||passHLT_L1HTT_CaloScouting_PFScouting)"); //signal region //scouting HT450
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1"); //signal region //scouting L1HTT
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
       cout << "filled denominator" << endl;
@@ -203,7 +203,7 @@ void triggerEfficiency_calo()
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");//paper
-      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_CaloScoutingHT250==1) ");//scouting HT450
+      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && PassJSON==1 && passHLT_CaloScoutingHT250 && (passHLT_CaloJet40_CaloScouting_PFScouting||passHLT_L1HTT_CaloScouting_PFScouting) ");//scouting HT450
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1 && passHLT_L1HTT==1");//scouting L1HTT
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1 || passHLT_PFHT650MJJ950==1 || passHLT_PFHT650MJJ900==1 || passHLT_AK8DiPFJet280200TrimMass30Btag==1 || passHLT_AK8PFHT600TriMass50Btag==1 || passHLT_AK8PFHT700TriMass50==1 || passHLT_AK8PFJet360TrimMass50==1 || passHLT_CaloJet500NoJetID==1 || passHLT_DiPFJetAve300HFJEC==1 || passHLT_DiPFJetAve500==1 || passHLT_PFHT400SixJet30Btag==1 || passHLT_PFHT450SixJet40Btag==1 || passHLT_PFHT750FourJetPt50==1 || passHLT_QuadPFJetVBF==1 || passHLT_PFHT650==1 || passHLT_PFHT475==1 || passHLT_PFHT200==1 || passHLT_PFJET450==1)");
@@ -211,6 +211,7 @@ void triggerEfficiency_calo()
       //-- option placeholder 
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1","",10000);
       //--  
+      
     }
 
   //==========================
@@ -237,12 +238,12 @@ void triggerEfficiency_calo()
   TFitResultPtr fitResult;
   if(doFit==1)
     {
-      f1->SetParameters(1,500,95);
+      f1->SetParameters(1,300,95);
       //f1->SetParLimits(0,0.99,1);//unconstrained
       //f1->SetParLimits(0,0.999999,1);//constrained
       f1->FixParameter(0,1);//fixed
-      f1->SetParLimits(1,200,550);
-      f1->SetParLimits(2,40,120);
+      f1->SetParLimits(1,200,600);
+      f1->SetParLimits(2,30,120);
       //fitResult = h_efficiency->Fit(f1,"S V R I");
       fitResult = graph_efficiency->Fit(f1,"VLRS");      
     }
