@@ -19,17 +19,18 @@ Instructions to run Calo Scouting Dijet Resonance Search from start to finish.
 1. Add files from EOS together
     
     ```sh
-    $ python python/AddFiles.py -l lists/CaloScoutingHT_JEC_CaloL1L2L3_PFL2L3Residual_20160503_171912_reduced_skim.txt -o inputs/data_CaloScoutingHT_Run2015D_CaloDijet.root
-    
+    $ python python/AddFiles.py -l lists/CaloScoutingHT_JEC_CaloL1L2L3_PFL2L3Residual_20160503_171912_reduced_skim.txt -o inputs/data_CaloScoutingHT_Run2015D_CaloDijet.root    
     ```
 
 ### Fitting
-1. Copy signal resonance files
+1. Copy gg CaloScouting signal resonance files
     
     ```sh
-    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/68e8514f4da8849b99b7dfcf1a7834fa55aeefa6/ResonanceShapes_gg_13TeV_Scouting_Spring15.root -P inputs/
-    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/68e8514f4da8849b99b7dfcf1a7834fa55aeefa6/ResonanceShapes_qg_13TeV_Scouting_Spring15.root -P inputs/
-    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/68e8514f4da8849b99b7dfcf1a7834fa55aeefa6/ResonanceShapes_qq_13TeV_Scouting_Spring15.root -P inputs/
+    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_gg_13TeV_CaloScouting_Spring15.root -P inputs/
+    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_gg_13TeV_CaloScouting_Spring15_JERUP.root -P inputs/
+    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_gg_13TeV_CaloScouting_Spring15_JERDOWN.root -P inputs/
+    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_gg_13TeV_CaloScouting_Spring15_JESUP.root -P inputs/
+    $ wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_gg_13TeV_CaloScouting_Spring15_JESDOWN.root -P inputs/
     ```
 
 1. Perform a binned, blinded, background-only, sideband fit (with signal shape plotted)
@@ -37,7 +38,7 @@ Instructions to run Calo Scouting Dijet Resonance Search from start to finish.
     ```sh
     $ mkdir fits_2016_05_07/
     $ mkdir fits_2016_05_07/CaloDijet_Sideband/
-    $ python python/BinnedFit.py -c config/dijet.config -b CaloDijet inputs/data_CaloScoutingHT_Run2015D_CaloDijet.root --lumi 1918 --fit-region Low,High --plot-region Low,High -d fits_2016_05_07/CaloDijet_Sideband/ -s inputs/ResonanceShapes_gg_13TeV_Scouting_Spring15.root -m gg --mass 750 --xsec 15
+    $ python python/BinnedFit.py -c config/dijet.config -b CaloDijet inputs/data_CaloScoutingHT_Run2015D_CaloDijet.root --lumi 1918 --fit-region Low,High --plot-region Low,High -d fits_2016_05_07/CaloDijet_Sideband/ -s inputs/ResonanceShapes_gg_13TeV_CaloScouting_Spring15.root -m gg --mass 750 --xsec 15
     
     ```
 1. Run and fit 1000 toys and plot GOF
