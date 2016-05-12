@@ -7,6 +7,7 @@
 #include <TLorentzVector.h>
 #include <TVector2.h>
 #include <TVector3.h>
+#include <TRandom3.h>
 
 analysisClass::analysisClass(string *inputList, string *cutFile,
                              string *treeName, string *outputFileName,
@@ -50,15 +51,51 @@ void analysisClass::Loop()
 
     TH1F* h_mjj_fullSel_varBin = new TH1F("h_mjj_fullSel_varBin", "",
                                           103, massBoundaries);
+    TH1F* h_mjj_nom_fullSel_varBin = new TH1F("h_mjj_nom_fullSel_varBin", "",
+                                          103, massBoundaries);
+    TH1F* h_mjj_jesUp_fullSel_varBin = new TH1F("h_mjj_jesUp_fullSel_varBin", "",
+                                          103, massBoundaries);
+    TH1F* h_mjj_jesDown_fullSel_varBin = new TH1F("h_mjj_jesDown_fullSel_varBin", "",
+                                          103, massBoundaries);
+    TH1F* h_mjj_jerUp_fullSel_varBin = new TH1F("h_mjj_jerUp_fullSel_varBin", "",
+                                          103, massBoundaries);
+    TH1F* h_mjj_jerDown_fullSel_varBin = new TH1F("h_mjj_jerDown_fullSel_varBin", "",
+                                          103, massBoundaries);
     TH1F* h_mjj_fullSel_fixBin = new TH1F("h_mjj_fullSel_fixBin", "",
                                           getHistoNBins("mjj"),
                                           getHistoMin("mjj"), getHistoMax("mjj"));
+    TH1F* h_mjj_nom_fullSel_fixBin = new TH1F("h_mjj_nom_fullSel_fixBin", "",
+                                          getHistoNBins("mjj"),
+                                          getHistoMin("mjj"), getHistoMax("mjj"));
+    TH1F* h_mjj_jesUp_fullSel_fixBin = new TH1F("h_mjj_jesUp_fullSel_fixBin", "",
+                                          getHistoNBins("mjj"),
+                                          getHistoMin("mjj"), getHistoMax("mjj"));
+    TH1F* h_mjj_jesDown_fullSel_fixBin = new TH1F("h_mjj_jesDown_fullSel_fixBin", "",
+                                          getHistoNBins("mjj"),
+                                          getHistoMin("mjj"), getHistoMax("mjj"));
+    TH1F* h_mjj_jerUp_fullSel_fixBin = new TH1F("h_mjj_jerUp_fullSel_fixBin", "",
+                                          getHistoNBins("mjj"),
+                                          getHistoMin("mjj"), getHistoMax("mjj"));
+    TH1F* h_mjj_jerDown_fullSel_fixBin = new TH1F("h_mjj_jerDown_fullSel_fixBin", "",
+                                          getHistoNBins("mjj"),
+					  getHistoMin("mjj"), getHistoMax("mjj"));
 
     TH1F* h_mjj_ratio = new TH1F("h_mjj_ratio", "", getHistoNBins("mjj_ratio"),
                                  getHistoMin("mjj_ratio"), getHistoMax("mjj_ratio"));
+    TH1F* h_mjj_ratio_nom = new TH1F("h_mjj_ratio_nom", "", getHistoNBins("mjj_ratio"),
+                                 getHistoMin("mjj_ratio"), getHistoMax("mjj_ratio"));
+    TH1F* h_mjj_ratio_jerUp = new TH1F("h_mjj_ratio_jerUp", "", getHistoNBins("mjj_ratio"),
+                                 getHistoMin("mjj_ratio"), getHistoMax("mjj_ratio"));
+    TH1F* h_mjj_ratio_jerDown = new TH1F("h_mjj_ratio_jerDown", "", getHistoNBins("mjj_ratio"),
+                                 getHistoMin("mjj_ratio"), getHistoMax("mjj_ratio"));    
+    TH1F* h_mjj_ratio_jesUp = new TH1F("h_mjj_ratio_jesUp", "", getHistoNBins("mjj_ratio"),
+                                 getHistoMin("mjj_ratio"), getHistoMax("mjj_ratio"));
+    TH1F* h_mjj_ratio_jesDown = new TH1F("h_mjj_ratio_jesDown", "", getHistoNBins("mjj_ratio"),
+                                 getHistoMin("mjj_ratio"), getHistoMax("mjj_ratio"));    
+
 
     /////////initialize variables
-
+    TRandom3 r(1988);
     Long64_t nentries = fChain->GetEntriesFast();
     std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;
 
@@ -80,20 +117,66 @@ void analysisClass::Loop()
 
         resetCuts();
 
+	double x1 = r.Gaus();
+	double x2 = r.Gaus();
+	double x3 = r.Gaus();
+	
+	double mjj_nom = mjj*(1.+getPreCutValue1("jes"))*(1.+getPreCutValue1("jer")*x1);
+	
+	double mjj_jerUp = mjj*(1.+getPreCutValue1("jes"))*(1.+getPreCutValue1("jerUp")*x2);
+	double mjj_jerDown = mjj*(1.+getPreCutValue1("jes"))*(1.+getPreCutValue1("jerDown")*x3);
+
+	double mjj_jesUp = mjj*(1.+getPreCutValue1("jesUp"))*(1.+getPreCutValue1("jer")*x1);
+	double mjj_jesDown = mjj*(1.+getPreCutValue1("jesDown"))*(1.+getPreCutValue1("jer")*x1);
+	
         double mjj_ratio = mjj/getPreCutValue1("resonanceMass");
+	
+	double mjj_ratio_nom = mjj_nom/getPreCutValue1("resonanceMass");
+	
+	double mjj_ratio_jerUp = mjj_jerUp/getPreCutValue1("resonanceMass");	
+	double mjj_ratio_jerDown = mjj_jerDown/getPreCutValue1("resonanceMass");
+	
+	double mjj_ratio_jesUp = mjj_jesUp/getPreCutValue1("resonanceMass");
+	double mjj_ratio_jesDown = mjj_jesDown/getPreCutValue1("resonanceMass");
 
         //== Fill Variables ==
         fillVariableWithValue("deltaETAjj", deltaETAjj);
         fillVariableWithValue("mjj", mjj);
+        fillVariableWithValue("mjj_nom", mjj_nom);
+        fillVariableWithValue("mjj_jesUp", mjj_jesUp);
+        fillVariableWithValue("mjj_jesDown", mjj_jesDown);
+        fillVariableWithValue("mjj_jerUp", mjj_jerUp);
+        fillVariableWithValue("mjj_jerDown", mjj_jerDown);
         fillVariableWithValue("mjj_ratio", mjj_ratio);
+        fillVariableWithValue("mjj_ratio_nom", mjj_ratio_nom);
+        fillVariableWithValue("mjj_ratio_jerUp", mjj_ratio_jerUp);
+        fillVariableWithValue("mjj_ratio_jerDown", mjj_ratio_jerDown);
+        fillVariableWithValue("mjj_ratio_jesUp", mjj_ratio_jesUp);
+        fillVariableWithValue("mjj_ratio_jesDown", mjj_ratio_jesDown);
 
         // Evaluate cuts (but do not apply them)
         evaluateCuts();
 
         if (passedCut("all")) {
             h_mjj_fullSel_varBin->Fill(getVariableValue("mjj"));
+            h_mjj_nom_fullSel_varBin->Fill(getVariableValue("mjj_nom"));
+            h_mjj_jerUp_fullSel_varBin->Fill(getVariableValue("mjj_jerUp"));
+            h_mjj_jerDown_fullSel_varBin->Fill(getVariableValue("mjj_jerDown"));
+            h_mjj_jesUp_fullSel_varBin->Fill(getVariableValue("mjj_jesUp"));
+            h_mjj_jesDown_fullSel_varBin->Fill(getVariableValue("mjj_jesDown"));
             h_mjj_fullSel_fixBin->Fill(getVariableValue("mjj"));
+            h_mjj_nom_fullSel_fixBin->Fill(getVariableValue("mjj_nom"));
+            h_mjj_jerUp_fullSel_fixBin->Fill(getVariableValue("mjj_jerUp"));
+            h_mjj_jerDown_fullSel_fixBin->Fill(getVariableValue("mjj_jerDown"));
+            h_mjj_jesUp_fullSel_fixBin->Fill(getVariableValue("mjj_jesUp"));
+            h_mjj_jesDown_fullSel_fixBin->Fill(getVariableValue("mjj_jesDown"));
+	    
             h_mjj_ratio->Fill(getVariableValue("mjj_ratio"));
+            h_mjj_ratio_nom->Fill(getVariableValue("mjj_ratio_nom"));
+            h_mjj_ratio_jerUp->Fill(getVariableValue("mjj_ratio_jerUp"));
+            h_mjj_ratio_jerDown->Fill(getVariableValue("mjj_ratio_jerDown"));
+            h_mjj_ratio_jesUp->Fill(getVariableValue("mjj_ratio_jesUp"));
+            h_mjj_ratio_jesDown->Fill(getVariableValue("mjj_ratio_jesDown"));
         }
 
         ////////////////////// User's code ends here ///////////////////////
@@ -103,8 +186,23 @@ void analysisClass::Loop()
     //////////write histos
 
     h_mjj_fullSel_varBin->Write();
+    h_mjj_nom_fullSel_varBin->Write();
+    h_mjj_jerUp_fullSel_varBin->Write();
+    h_mjj_jerDown_fullSel_varBin->Write();
+    h_mjj_jesUp_fullSel_varBin->Write();
+    h_mjj_jesDown_fullSel_varBin->Write();
     h_mjj_fullSel_fixBin->Write();
+    h_mjj_nom_fullSel_fixBin->Write();
+    h_mjj_jerUp_fullSel_fixBin->Write();
+    h_mjj_jerDown_fullSel_fixBin->Write();
+    h_mjj_jesUp_fullSel_fixBin->Write();
+    h_mjj_jesDown_fullSel_fixBin->Write();
     h_mjj_ratio->Write();
+    h_mjj_ratio_nom->Write();
+    h_mjj_ratio_jerUp->Write();
+    h_mjj_ratio_jerDown->Write();
+    h_mjj_ratio_jesUp->Write();
+    h_mjj_ratio_jesDown->Write();
 
     std::cout << "analysisClass::Loop() ends" << std::endl;
 }
