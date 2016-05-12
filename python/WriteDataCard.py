@@ -187,10 +187,14 @@ if __name__ == '__main__':
                   help="Output directory to store cards")
     parser.add_option('-l','--lumi',dest="lumi", default=1.,type="float",
                   help="integrated luminosity in pb^-1")
-    parser.add_option('--jes',dest="jesUnc", default=0.05,type="float",
-                  help="jes uncertainty, default = 0.05")
-    parser.add_option('--jer',dest="jerUnc", default=0.2,type="float",
-                  help="jer uncertainty, default = 0.2")
+    parser.add_option('--jesUp',dest="jesUpFile", default=None,type="string",
+                  help="jes Up file")
+    parser.add_option('--jerUp',dest="jerUpFile", default=None,type="string",
+                  help="jer Up file")
+    parser.add_option('--jesDown',dest="jesDownFile", default=None,type="string",
+                  help="jes Down file")
+    parser.add_option('--jerDown',dest="jerDownFile", default=None,type="string",
+                  help="jer Down file")
     parser.add_option('-b','--box',dest="box", default="CaloDijet",type="string",
                   help="box name")
     parser.add_option('--asimov',dest="asimov",default=False,action='store_true',
@@ -222,9 +226,6 @@ if __name__ == '__main__':
     signalFileName = ''
     model = options.model
     massPoint = options.mass
-
-    jesUnc = options.jesUnc
-    jerUnc = options.jerUnc
 
     myTH1 = None
     for f in args:
@@ -313,49 +314,27 @@ if __name__ == '__main__':
 
     if options.noSignalSys:
         shapes = []
+        shapeFiles = {}
     else:
         shapes = ['jes','jer']
+        shapeFiles = {}
+        shapeFiles['jesUp'] = options.jesUpFile
+        shapeFiles['jerUp'] = options.jerUpFile
+        shapeFiles['jesDown'] = options.jesDownFile
+        shapeFiles['jerDown'] = options.jerDownFile
 
 
     # JES and JER uncertainties
-    hSig = signalHistosOriginal[0]
     hSigTh1x = signalHistos[0]
-    sigCDF = rt.TGraph(hSig.GetNbinsX()+1)
-
-    sigCDF.SetPoint(0,0.,0.)
-    integral = 0.
-    for i in range(1, hSig.GetNbinsX()+1):
-        xCen = hSig.GetXaxis().GetBinLowEdge(i+1)
-        integral = integral + hSig.GetBinContent(i)
-        sigCDF.SetPoint(i,xCen,integral)
-        
     for shape in shapes:
-        hUp = hSig.Clone(hSig.GetName()+'_'+shape+'Up')
-        hDown = hSig.Clone(hSig.GetName()+'_'+shape+'Down')
-
-        # produce JES/JER signal shapes
-        for i in range(1, hSig.GetNbinsX()+1):
-            xLow = hSig.GetXaxis().GetBinLowEdge(i)
-            xUp = hSig.GetXaxis().GetBinLowEdge(i+1)
-            if shape=='jes':
-                jes = 1. - jesUnc
-                xLowPrime = jes*xLow
-                xUpPrime = jes*xUp
-            elif shape=='jer':      
-                jer = 1. - jerUnc              
-                xLowPrime = jer*(xLow-float(massPoint))+float(massPoint)
-                xUpPrime = jer*(xUp-float(massPoint))+float(massPoint)
-            hUp.SetBinContent(i, sigCDF.Eval(xUpPrime) - sigCDF.Eval(xLowPrime))
-            if shape=='jes':
-                jes = 1. + jesUnc
-                xLowPrime = jes*xLow
-                xUpPrime = jes*xUp
-            elif shape=='jer':                    
-                jer = 1. + jerUnc
-                xLowPrime = jer*(xLow-float(massPoint))+float(massPoint)
-                xUpPrime = jer*(xUp-float(massPoint))+float(massPoint)
-            hDown.SetBinContent(i, sigCDF.Eval(xUpPrime) - sigCDF.Eval(xLowPrime))
-
+        fUp = rt.TFile.Open(shapeFiles[shape+'Up'])
+        hUp = fUp.Get('h_%s_%i'%(model,massPoint))
+        hUp.SetName('h_%s_%i_%sUp'%(model,massPoint,shape))
+        hUp.SetDirectory(0)
+        fDown = rt.TFile.Open(shapeFiles[shape+'Down'])
+        hDown = fDown.Get('h_%s_%i'%(model,massPoint))
+        hDown.SetName('h_%s_%i_%sDown'%(model,massPoint,shape))
+        hDown.SetDirectory(0)
         
         hUp.Rebin(len(x)-1,hUp.GetName()+'_rebin',x)
         hUpRebin = rt.gDirectory.Get(hUp.GetName()+'_rebin')

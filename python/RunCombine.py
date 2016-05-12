@@ -62,13 +62,16 @@ if __name__ == '__main__':
     signalSys = ''
     if options.noSignalSys:
         signalSys = '--no-signal-sys'
+    else:
+        signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESDOWN.root'%(model,model)
+        signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERUP.root --jerDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERDOWN.root'%(model,model)
     
     penaltyString = ''
     if options.penalty: penaltyString = '--penalty'
 
     xsecString = '--xsec %f'%(options.xsec)    
 
-    signalDsName = 'inputs/ResonanceShapes_%s_13TeV_Scouting_Spring15.root'%model
+    signalDsName = 'inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root'%model
     backgroundDsName = 'inputs/data_CaloScoutingHT_Run2015D_%s.root'%box
 
     blindString = ''
