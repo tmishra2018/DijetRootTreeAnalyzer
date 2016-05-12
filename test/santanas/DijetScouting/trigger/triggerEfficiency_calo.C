@@ -27,7 +27,7 @@ double ymax = 1.3;
 //double xmaxZoom = 1530;
 //scouting HT450
 double xminZoom = 156;
-double xmaxZoom = 890;
+double xmaxZoom = 490;
 //double xmaxZoom = 1455;
 //scouting L1HTT
 //double xminZoom = 88;
@@ -236,6 +236,7 @@ void triggerEfficiency_calo()
   //TF1* f1 = new TF1("f1","(1/2)* ( 1 + TMath::Erf((x-[0])/[1]))",xminFit,xmaxFit);      
   TGraphAsymmErrors* graph_efficiency = h_efficiency->CreateGraph();
   TFitResultPtr fitResult;
+  f1->SetLineWidth(2);
   if(doFit==1)
     {
       f1->SetParameters(1,300,95);
@@ -245,9 +246,11 @@ void triggerEfficiency_calo()
       f1->SetParLimits(1,200,600);
       f1->SetParLimits(2,30,120);
       //fitResult = h_efficiency->Fit(f1,"S V R I");
-      fitResult = graph_efficiency->Fit(f1,"VLRS");      
+      fitResult = graph_efficiency->Fit(f1,"VLRS");            
     }
+
   //fitResult->Print("V");
+
 
   //int numberOfParameters = f1->GetNumberFreeParameters();  
   int numberOfParameters = fitResult->NFreeParameters();  
@@ -264,7 +267,8 @@ void triggerEfficiency_calo()
   //cout << covMatrix[2][1] << endl;
   //cout << covMatrix[2][2] << endl;
 
-  graph_efficiency->Draw();
+  graph_efficiency->Draw("AP");
+  // gStyle->SetOptFit(0);
   gPad->Update();
   graph_efficiency->GetXaxis()->SetRangeUser(xmin,xmax);
   graph_efficiency->GetXaxis()->SetNdivisions(505);
