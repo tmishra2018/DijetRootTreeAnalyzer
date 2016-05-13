@@ -48,10 +48,11 @@ double xminFit = 250;
 double xmaxFit = 890;
 //double xmaxFit = 1455;
 
+double  massBins_list[] = {1, 3, 6, 10, 16, 23, 31, 40, 50, 61, 74, 88, 103, 119, 137, 156, 176, 197, 220, 244, 270, 296, 325, 354, 386, 419, 453, 489, 526, 565, 606, 649, 693, 740, 788, 838, 890, 944, 1000, 1058, 1118, 1181, 1246, 1313, 1383, 1455, 1530, 1607, 1687, 1770, 1856, 1945, 2037, 2132, 2231, 2332, 2438, 2546, 2659, 2775, 2895, 3019, 3147, 3279, 3416, 3558, 3704, 3854, 4010, 4171, 4337, 4509, 4686, 4869, 5058, 5253, 5455, 5663, 5877, 6099, 6328, 6564, 6808, 7060, 7320, 7589, 7866, 8152, 8447, 8752, 9067, 9391, 9726, 10072, 10430, 10798, 11179, 11571, 11977, 12395, 12827, 13272, 13732, 14000};
 
 //high-mass
-// TString myinputFile =  "rootfile_CaloScoutingCommissioning_JEC_CaloL1L2L3_PFL2L3Residual_20160505_183413_59_reduced_skim.root";
-TString myinputFile =  "eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/JEC_CaloL1L2L3_PFL2L3Residual_20160505_201702/CaloScoutingCommissioning_JEC_CaloL1L2L3_PFL2L3Residual_reduced_skim.root";
+TString myinputFile =  "rootfile_CaloScoutingCommissioning_JEC_CaloL1L2L3_PFL2L3Residual_20160505_183413_59_reduced_skim.root";
+// TString myinputFile =  "eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/JEC_CaloL1L2L3_PFL2L3Residual_20160505_201702/CaloScoutingCommissioning_JEC_CaloL1L2L3_PFL2L3Residual_reduced_skim.root";
 TString mybaselinehisto = "h_mjj_NoTrigger_1GeVbin"; // needed to define the x-axis range 
 
 TString mynumerator = "h_mjj_HLTpass_CaloScoutingHT250"; // only used if histoFromFile = 1
@@ -80,7 +81,7 @@ TString myoutputfilename = "triggerEfficiency";//scouting HT450
 //#####################
 
 
-void triggerEfficiency_calo()
+void triggerEfficiency_calo_varBins()
 {
   //=== General CMS Style ===
 
@@ -182,7 +183,8 @@ void triggerEfficiency_calo()
       TTree *thistree = (TTree*)fileInput->Get("rootTupleTree/tree");
       //thistree->Print();
       //TH1F *h_denominator_tmp = (TH1F*)fileInput->Get(mybaselinehisto);
-      TH1F *h_denominator_tmp = new TH1F("h_denominator_tmp","h_denominator_tmp",10000,0,10000) ;
+      TH1F *h_denominator_tmp = new TH1F("h_denominator_tmp","h_denominator_tmp",sizeof(massBins_list)/sizeof(double)-1, massBins_list) ;
+       // TH1F *h_denominator_tmp = new TH1F("h_denominator_tmp","h_denominator_tmp",10000,0,10000) ;
       h_denominator = (TH1F*)h_denominator_tmp->Clone();
       h_numerator = (TH1F*)h_denominator_tmp->Clone();
       h_denominator->Reset();
@@ -232,19 +234,22 @@ void triggerEfficiency_calo()
   h_efficiency->SetTitle(mytitle);
   
   // //fit efficiency
-  TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);      
+  //  TF1* f1 = new TF1("f1","([0]/2)* ( 1 + TMath::Erf((x-[1])/[2]))",xminFit,xmaxFit);      
   //TF1* f1 = new TF1("f1","(1/2)* ( 1 + TMath::Erf((x-[0])/[1]))",xminFit,xmaxFit);      
+  TF1 *f1 = new TF1("f1","1./(1.+exp(-2.4*(x-[0])/[1]))",386,1000);
+
+
   TGraphAsymmErrors* graph_efficiency = h_efficiency->CreateGraph();
   TFitResultPtr fitResult;
   f1->SetLineWidth(2);
   if(doFit==1)
     {
-      f1->SetParameters(1,300,95);
+      f1->SetParameters(283.499, 49.3006);
+      // f1->SetParameters(1,300,95);
       //f1->SetParLimits(0,0.99,1);//unconstrained
       //f1->SetParLimits(0,0.999999,1);//constrained
-      f1->FixParameter(0,1);//fixed
-      f1->SetParLimits(1,200,600);
-      f1->SetParLimits(2,30,120);
+      f1->SetParLimits(0,200,400);
+      f1->SetParLimits(1,30,120);
       //fitResult = h_efficiency->Fit(f1,"S V R I");
       fitResult = graph_efficiency->Fit(f1,"VLRS");            
     }
@@ -531,9 +536,9 @@ void triggerEfficiency_calo()
   char par1text[100]; 
   sprintf (par1text, "p1 = %.1f #pm %.1f", f1->GetParameter(1), f1->GetParError(1));
   fit_stat->AddText(par1text);
-  char par2text[100]; 
-  sprintf (par2text, "p2 = %.1f #pm %.1f", f1->GetParameter(2), f1->GetParError(2));
-  fit_stat->AddText(par2text);
+  // char par2text[100]; 
+  // sprintf (par2text, "p2 = %.1f #pm %.1f", f1->GetParameter(2), f1->GetParError(2));
+  // fit_stat->AddText(par2text);
 
   fit_stat->SetFillColor(0);
   fit_stat->SetLineColor(1);
