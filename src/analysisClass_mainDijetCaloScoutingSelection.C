@@ -514,7 +514,7 @@ void analysisClass::Loop()
      fillVariableWithValue("run",runNo);     
      fillVariableWithValue("event",evtNo);     
      fillVariableWithValue("lumi",lumi);     
-     // fillVariableWithValue("nVtx",nvtx);     
+     fillVariableWithValue("nVtx",nvtx);     
      fillVariableWithValue("nJet",widejets.size());
      fillVariableWithValue("Nak4",Nak4);
      fillVariableWithValue ( "PassJSON", passJSON (runNo, lumi, isData));
