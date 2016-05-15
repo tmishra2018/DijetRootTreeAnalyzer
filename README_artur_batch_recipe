@@ -26,3 +26,7 @@ vim config/cutFile_mainDijetCaloScoutingSelection.txt
 [juska@lxplus0022 DijetRootTreeAnalyzer]$ mkdir batch
 lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$python scripts/submit_batch_EOS_split_scouting.py -i lists/ScoutingData/Commissioning -m 2016 -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims -q 1nh --tag Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual --split 1 --cut config/cutFile_mainDijetCaloScoutingSelection.txt
 
+## update the location of file lists here:
+lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$vim data/json_scouting_2016/README
+
+
