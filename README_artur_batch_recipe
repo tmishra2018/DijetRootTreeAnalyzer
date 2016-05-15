@@ -1,0 +1,24 @@
+## (These instructions are almost entirely a copy from Juskas recipe)
+
+## in a directory setup for Analyzer, create a list of files to be run over.
+
+# With this cryptic command I write a sorted lists of absolute file paths
+lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$ls -1 eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_big/2016/CaloScouting/DiJetNtupleV3.0/v1/sixie/ScoutingCaloCommissioning/DiJetNtuplerV3p0_ToCERN_Data_2016_CaloScouting_Run2016B-v1_v1_v1/160512_134847/0000/*root >> lists/ScoutingData/CaloScoutingCommissioning2016.txt
+
+# The above lists would work just fine with a single analysis job if EOS
+# is mounted, but in batch processing the paths have to start with
+# 'root://eoscms//eos/cms/store/', so lets search and replace:
+# (I don't know if there's a script for this)
+sed -i 's/eos\/cms\/store/root:\/\/eoscms\/\/eos\/cms\/store/g' lists/ScoutingData/CaloScoutingCommissioning2016.txt
+
+## Download fresh cert JSON and change the path accordingly in cutfile
+
+lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$wget https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/DCSOnly/json_DCSONLY.txt
+
+# Replace the beginning of the cutfile with path to new JSON. Use your favourite editor.
+vim config/cutFile_mainDijetCaloScoutingSelection.txt 
+
+## Create necessary directories and start batch analysis (I have symbolic link in 'dijet_eos')
+[juska@lxplus0022 DijetRootTreeAnalyzer]$ mkdir batch
+lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$python scripts/submit_batch_EOS_split_scouting.py -i lists/ScoutingData/Commissioning -m 2016 -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims -q cmscaf1nd --tag Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual --split 1 --cut config/cutFile_mainDijetCaloScoutingSelection.txt
+
