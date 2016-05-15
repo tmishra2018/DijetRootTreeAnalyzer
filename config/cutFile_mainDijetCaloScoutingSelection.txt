@@ -1,4 +1,4 @@
-JSON /afs/cern.ch/work/a/apresyan/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
+JSON /afs/cern.ch/work/a/apresyan/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2016/data/json_scouting_2016/json_DCSONLY_272007_272010.txt
 #
 #############################     Example of file with list of cuts
 #
