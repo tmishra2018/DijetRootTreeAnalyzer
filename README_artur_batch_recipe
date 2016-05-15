@@ -1,5 +1,9 @@
 ## (These instructions are almost entirely a copy from Juskas recipe)
 
+lxplus066:...a/apresyan$cmsrel CMSSW_7_4_14
+lxplus066:...a/apresyan$cd CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/
+lxplus066:...a/apresyan$git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
+
 ## in a directory setup for Analyzer, create a list of files to be run over.
 
 # With this cryptic command I write a sorted lists of absolute file paths
@@ -18,7 +22,7 @@ lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$wget https://cms-service-dqm.web.cer
 # Replace the beginning of the cutfile with path to new JSON. Use your favourite editor.
 vim config/cutFile_mainDijetCaloScoutingSelection.txt 
 
-## Create necessary directories and start batch analysis (I have symbolic link in 'dijet_eos')
+## Create necessary directories and start batch analysis. Pay attention to the -m flag and the -o output directory
 [juska@lxplus0022 DijetRootTreeAnalyzer]$ mkdir batch
-lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$python scripts/submit_batch_EOS_split_scouting.py -i lists/ScoutingData/Commissioning -m 2016 -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims -q cmscaf1nd --tag Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual --split 1 --cut config/cutFile_mainDijetCaloScoutingSelection.txt
+lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$python scripts/submit_batch_EOS_split_scouting.py -i lists/ScoutingData/Commissioning -m 2016 -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims -q 1nh --tag Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual --split 1 --cut config/cutFile_mainDijetCaloScoutingSelection.txt
 
