@@ -1,4 +1,4 @@
-JSON /afs/cern.ch/work/a/apresyan/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
+JSON /afs/cern.ch/work/a/apresyan/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2016/data/json_scouting_2016/json_DCSONLY_272007_272010.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -55,6 +55,7 @@ jetAlgo				AntiKt 		-		-		-		-1
 #VariableName	      minValue1(<) maxValue1(>=)	minValue2(<)	maxValue2(>=)	level	histoNbinsMinMax  OptionalFlag
 #------------	      ------------ -------------	------------	-------------	-----	----------------  ------------
 PassJSON              -1            1                   -               -               0       2 -0.5 1.5        SAVE  
+nVtx               -inf             +inf                -               -               1      -2  0 50	          SAVE
 nJet	      	      1     	    +inf		-		-		1	31 -0.5 30.5      SAVE
 pTWJ_j1	      	      60	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j1             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
