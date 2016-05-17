@@ -168,6 +168,8 @@ def writeDataCard(box,model,txtfileName,bkgs,paramNames,w,penalty,fixed,shapes=[
             else:
                 if "Ntot" in paramName:
                     continue
+                elif paramName in ["meff","seff"]:
+                    datacard += "%s\tparam\t%e\t%e\n"%(paramName,w.var(paramName+"_Mean").getVal(),w.var(paramName+"_Sigma").getVal())
                 else:
                     datacard += "%s\tflatParam\n"%(paramName)
             
@@ -306,6 +308,9 @@ if __name__ == '__main__':
                 normNameList.append("norm")
                 normName = "_".join(normNameList)
                 #w.var(normName).setError(w.var(p.GetName()).getError()/w.var(p.GetName()).getVal())
+        for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
+            w.var(p.GetName()).setVal(p.getVal())
+            w.var(p.GetName()).setError(p.getError())
                 
     if options.asimov:
         asimov = w.pdf('extDijetPdf').generateBinned(rt.RooArgSet(th1x),rt.RooFit.Asimov())
@@ -359,6 +364,7 @@ if __name__ == '__main__':
             shapes.append('jer')
             shapeFiles['jerUp'] = options.jerUpFile
             shapeFiles['jerDown'] = options.jerDownFile
+            
 
 
     # JES and JER uncertainties
