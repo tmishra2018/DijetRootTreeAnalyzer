@@ -5,7 +5,7 @@ from framework import Config
 from array import *
 from itertools import *
 from operator import *
-from WriteDataCard import initializeWorkspace,convertToTh1xHist
+from WriteDataCard import initializeWorkspace,convertToTh1xHist,applyTurnon
 import os
 import random
 import sys
@@ -308,28 +308,6 @@ if __name__ == '__main__':
             triggerData = triggerFile.Get("triggerData")        
         rootTools.Utils.importToWS(w,triggerData)
 
-            
-    # get signal histo if any
-    signalHistos = []
-    signalHistosOriginal = []
-    signalHistosRebin = []
-    if options.signalFileName is not None:
-        signalFile = rt.TFile.Open(options.signalFileName)
-        names = [k.GetName() for k in signalFile.GetListOfKeys()]
-        for name in names:
-            d = signalFile.Get(name)
-            if isinstance(d, rt.TH1):
-                if name=='h_%s_%i'%(options.model,options.mass):
-                    d.Scale(options.xsec*lumi/d.Integral())
-                    d.Rebin(len(x)-1,name+'_rebin',x)
-                    d_rebin = rt.gDirectory.Get(name+'_rebin')
-                    d_rebin.SetDirectory(0)
-    
-                    signalHistosOriginal.append(d)
-                    signalHistosRebin.append(d_rebin)
-    
-                    d_th1x = convertToTh1xHist(d_rebin)
-                    signalHistos.append(d_th1x)
     
     sideband = convertSideband(fitRegion,w,x)
     plotband = convertSideband(plotRegion,w,x)
@@ -407,6 +385,33 @@ if __name__ == '__main__':
         total = extDijetPdf.expectedEvents(rt.RooArgSet(th1x))
             
         rootTools.Utils.importToWS(w,fr)
+
+    
+    # get signal histo if any
+    signalHistos = []
+    signalHistosOriginal = []
+    signalHistosRebin = []
+    if options.signalFileName is not None:
+        signalFile = rt.TFile.Open(options.signalFileName)
+        names = [k.GetName() for k in signalFile.GetListOfKeys()]
+        for name in names:
+            d = signalFile.Get(name)
+            if isinstance(d, rt.TH1):
+                if name=='h_%s_%i'%(options.model,options.mass):
+                    d.Scale(options.xsec*lumi/d.Integral())
+                    if options.triggerDataFile is not None:
+                        d_turnon = applyTurnon(d,effFr,w)
+                        name+='_turnon'
+                        d = d_turnon
+                    d.Rebin(len(x)-1,name+'_rebin',x)
+                    d_rebin = rt.gDirectory.Get(name+'_rebin')
+                    d_rebin.SetDirectory(0)
+    
+                    signalHistosOriginal.append(d)
+                    signalHistosRebin.append(d_rebin)
+    
+                    d_th1x = convertToTh1xHist(d_rebin)
+                    signalHistos.append(d_th1x)
         
 
     asimov = extDijetPdf.generateBinned(rt.RooArgSet(th1x),rt.RooFit.Name('central'),rt.RooFit.Asimov())
