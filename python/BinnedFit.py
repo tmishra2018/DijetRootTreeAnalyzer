@@ -20,10 +20,9 @@ def binnedFit(pdf, data, fitRange='Full',useWeight=False):
         migrad_status = fr.status()
         hesse_status = -1        
     else:
-        nll = pdf.createNLL(data,rt.RooFit.Range(fitRange),rt.RooFit.Extended(True),rt.RooFit.Offset(False))
+        nll = pdf.createNLL(data,rt.RooFit.Range(fitRange),rt.RooFit.Extended(True),rt.RooFit.Offset(True))
         m2 = rt.RooMinimizer(nll)
         m2.setStrategy(2)
-        #m2.setEps(1e-5)
         m2.setMaxFunctionCalls(100000)
         m2.setMaxIterations(100000)
         migrad_status = m2.minimize('Minuit2','migrad')
@@ -31,24 +30,43 @@ def binnedFit(pdf, data, fitRange='Full',useWeight=False):
         hesse_status = m2.minimize('Minuit2','hesse')
         minos_status = m2.minos()
         fr = m2.save()
-
-    if fr.covQual() != 3:
-        print ""
-        print "CAUTION: COVARIANCE QUALITY < 3"
-        print ""
-        
-    if migrad_status != 0:
-        print ""
-        print "CAUTION: MIGRAD STATUS ! = 0"
-        print ""
-
-    if hesse_status != 0:
-        print ""
-        print "CAUTION: HESSE STATUS ! = 0"
-        print ""
         
     return fr
 
+def effFit(pdf, data, conditionalObs):    
+    nll = pdf.createNLL(data,rt.RooFit.Range('Eff'),rt.RooFit.Offset(True),rt.RooFit.ConditionalObservables(conditionalObs))
+    m2 = rt.RooMinimizer(nll)
+    m2.setStrategy(2)
+    m2.setMaxFunctionCalls(100000)
+    m2.setMaxIterations(100000)
+    migrad_status = m2.minimize('Minuit2','migrad')
+    improve_status = m2.minimize('Minuit2','improve')
+    hesse_status = m2.minimize('Minuit2','hesse')
+    minos_status = m2.minos()
+    fr = m2.save()
+    return fr
+
+
+
+def simFit(pdf, data, fitRange, effPdf, effData, conditionalObs):
+    
+    effNll = effPdf.createNLL(effData,rt.RooFit.Range('Eff'),rt.RooFit.Offset(True),rt.RooFit.ConditionalObservables(conditionalObs))
+
+    fitNll = pdf.createNLL(data,rt.RooFit.Range(fitRange),rt.RooFit.Extended(True),rt.RooFit.Offset(True))
+
+    simNll = rt.RooAddition("simNll", "simNll", rt.RooArgList(fitNll, effNll))
+        
+    m2 = rt.RooMinimizer(simNll)
+    m2.setStrategy(2)
+    m2.setMaxFunctionCalls(100000)
+    m2.setMaxIterations(100000)
+    migrad_status = m2.minimize('Minuit2','migrad')
+    improve_status = m2.minimize('Minuit2','improve')
+    hesse_status = m2.minimize('Minuit2','hesse')
+    minos_status = m2.minos()
+    fr = m2.save()
+
+    return fr
 
 def convertSideband(name,w,x):
     if name=="Full":
@@ -98,7 +116,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     N_massBins_ = data_obs_TGraph_.GetN()
     MinNumEvents = 10
     nParFit = 4
-    if workspace_.var('meff')>0 and workspace_.var('seff')>0 :
+    if workspace_.var('meff').getVal()>0 and workspace_.var('seff').getVal()>0 :
         nParFit = 6
 
     chi2_FullRangeAll = 0
@@ -129,8 +147,10 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
         if (value_fit >= value_data):
             err_tot_data = err_high_data  
         else:
-            err_tot_data = err_low_data  
-        if plotRegion=='Full' or (plotRegion=='Low,High' and (xbinCenter<workspace_.var('mjj').getMin('Blind') or xbinCenter>workspace_.var('mjj').getMax('Blind') )):   
+            err_tot_data = err_low_data
+        plotRegions = plotRegion.split(',')
+        checkInRegions = [xbinCenter>workspace_.var('mjj').getMin(reg) and xbinCenter<workspace_.var('mjj').getMax(reg) for reg in plotRegions]
+        if any(checkInRegions):
             fit_residual = (value_data - value_fit) / err_tot_data
             err_fit_residual = 1
         else:
@@ -145,8 +165,10 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
         ## Chi2
 
         chi2_FullRangeAll += pow(fit_residual,2)
-        N_FullRangeAll += 1
-        if plotRegion=='Full' or (plotRegion=='Low,High' and (xbinLow >= workspace_.var('mjj').getMin() and xbinHigh<=workspace_.var('mjj').getMax())):
+        N_FullRangeAll += 1        
+        plotRegions = plotRegion.split(',')
+        checkInRegions = [xbinCenter>workspace_.var('mjj').getMin(reg) and xbinCenter<workspace_.var('mjj').getMax(reg) for reg in plotRegions]
+        if any(checkInRegions):
             #print '%i: obs %.0f, exp %.2f, chi2 %.2f'%(bin, value_data* binWidth_current * lumi, value_fit* binWidth_current * lumi, pow(fit_residual,2))
             chi2_PlotRangeAll += pow(fit_residual,2)
             N_PlotRangeAll += 1
@@ -203,6 +225,10 @@ if __name__ == '__main__':
                   help="mgluino")
     parser.add_option('--xsec',dest="xsec", default=1,type="float",
                   help="cross section in pb")
+    parser.add_option('-t','--trigger',dest="triggerDataFile", default=None,type="string",
+                  help="trigger data file")
+    parser.add_option('--sim',dest="doSimultaneousFit", default=False,action='store_true',
+                  help="do simultaneous trigger fit")
 
 
     (options,args) = parser.parse_args()
@@ -222,7 +248,7 @@ if __name__ == '__main__':
             myTH1 = rootFile.Get('h_mjj_HLTpass_HT250_1GeVbin')
     if myTH1 is None:
         print "give a root file as input"
-  
+
     w = rt.RooWorkspace("w"+box)
 
     paramNames, bkgs = initializeWorkspace(w,cfg,box)
@@ -253,6 +279,36 @@ if __name__ == '__main__':
     nBins = (len(x)-1)
     th1x.setBins(nBins)
 
+    # get trigger dataset    
+    triggerData = None
+    if options.triggerDataFile is not None:
+        triggerFile = rt.TFile.Open(options.triggerDataFile)
+        names = [k.GetName() for k in triggerFile.GetListOfKeys()]
+        if 'triggerData' not in names:
+            tree = triggerFile.Get("rootTupleTree/tree")      
+            triggerData = rt.RooDataSet("triggerData","triggerData",rt.RooArgSet(w.var("mjj"),w.cat("cut")))        
+            cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30&&PassJSON&&(passHLT_CaloJet40_CaloScouting_PFScouting||passHLT_L1HTT_CaloScouting_PFScouting)&&mjj>=%i&&mjj<%i'%(w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))
+            #set the RooArgSet and save       
+            tree.Draw('>>elist',cutString,'entrylist')        
+            elist = rt.gDirectory.Get('elist')    
+            entry = -1
+            while True:
+                entry = elist.Next()
+                if entry == -1: break
+                tree.GetEntry(entry)          
+                a = rt.RooArgSet(w.var('mjj'),w.cat('cut'))   
+                a.setRealValue('mjj',tree.mjj)                    
+                a.setCatIndex('cut',int(tree.passHLT_CaloScoutingHT250))
+                triggerData.add(a)            
+            triggerOutFile = rt.TFile.Open(options.outDir+"/triggerData.root","recreate")
+            triggerOutFile.cd()
+            triggerData.Write()
+            triggerOutFile.Close()
+        else:            
+            triggerData = triggerFile.Get("triggerData")        
+        rootTools.Utils.importToWS(w,triggerData)
+
+            
     # get signal histo if any
     signalHistos = []
     signalHistosOriginal = []
@@ -298,11 +354,58 @@ if __name__ == '__main__':
         rootTools.Utils.importToWS(w,fr)
     elif noFit:
         fr = rt.RooFitResult()
-    else:
-        fr = binnedFit(extDijetPdf,dataHist,sideband,options.useWeight)
+        effFr = rt.RooFitResult()
+    else:        
+        if not options.doSimultaneousFit:
+            if options.triggerDataFile is not None:
+                effFr = effFit(w.pdf('effPdf'),w.data('triggerData'),rt.RooArgSet(w.var('mjj')))
+                #hessePdf = effFr.createHessePdf(rt.RooArgSet(w.var('meff'),w.var('seff')))
+                #rootTools.Utils.importToWS(w,effFr)
+                #rootTools.Utils.importToWS(w,hessePdf)                
+                #w.factory('PROD::extDijetPdfHesse(extDijetPdf,%s)'%(hessePdf.GetName()))
+                #extDijetPdf = w.pdf('extDijetPdfHesse')
+                w.var('meff_Mean').setVal(w.var('meff').getVal())
+                w.var('seff_Mean').setVal(w.var('seff').getVal())
+                w.var('meff_Sigma').setVal(w.var('meff').getError())
+                w.var('seff_Sigma').setVal(w.var('seff').getError())
+                                
+            fr = binnedFit(extDijetPdf,dataHist,sideband,options.useWeight)
+            if options.triggerDataFile is not None:
+                effFr.Print('v')
+                effFr.covarianceMatrix().Print('v')
+                effFr.correlationMatrix().Print('v')
+                corrHistEff = effFr.correlationHist('correlation_matrix_eff')                
+                rootTools.Utils.importToWS(w,effFr)
+            fr.Print('v')
+            fr.covarianceMatrix().Print('v')
+            fr.correlationMatrix().Print('v')
+            corrHist = fr.correlationHist('correlation_matrix')
+            rt.gStyle.SetOptStat(0)
+            corrCanvas = rt.TCanvas('c','c',500,500)
+            corrCanvas.SetRightMargin(0.15)
+            corrHist.Draw('colztext')
+            corrCanvas.Print(options.outDir+'/corrHist.pdf')
+            corrCanvas.Print(options.outDir+'/corrHist.C')
+            if options.triggerDataFile is not None:
+                corrHistEff.Draw('colztext')
+                corrCanvas.Print(options.outDir+'/corrHistEff.pdf')
+                corrCanvas.Print(options.outDir+'/corrHistEff.C')
+        else:            
+            fr = simFit(extDijetPdf,dataHist,sideband,w.pdf('effPdf'),w.data('triggerData'),rt.RooArgSet(w.var('mjj')))
+            fr.Print('v')    
+            fr.Print('v')
+            fr.covarianceMatrix().Print('v')
+            fr.correlationMatrix().Print('v')
+            corrHist = fr.correlationHist('correlation_matrix')
+            rt.gStyle.SetOptStat(0)
+            corrCanvas = rt.TCanvas('c','c',500,500)
+            corrCanvas.SetRightMargin(0.15)
+            corrHist.Draw('colztext')
+            corrCanvas.Print(options.outDir+'/corrHistSim.pdf')
+            corrCanvas.Print(options.outDir+'/corrHistSim.C')
+        
         total = extDijetPdf.expectedEvents(rt.RooArgSet(th1x))
             
-        fr.Print('v')    
         rootTools.Utils.importToWS(w,fr)
         
 
@@ -314,6 +417,14 @@ if __name__ == '__main__':
     for iOpt in range(1,len(opt)):
         asimov_reduce.add(asimov.reduce(opt[iOpt]))
         dataHist_reduce.add(dataHist.reduce(opt[iOpt]))
+
+        
+    for i in range(0,len(x)-1):
+        th1x.setVal(i+0.5)
+        predYield = asimov.weight(rt.RooArgSet(th1x))
+        dataYield = dataHist_reduce.weight(rt.RooArgSet(th1x))
+        print "%i <= mjj < %i; prediction: %.2f; data %i"  % (x[i],x[i+1],predYield,dataYield)
+        
     rt.TH1D.SetDefaultSumw2()
     
     # start writing output
@@ -334,6 +445,85 @@ if __name__ == '__main__':
     boxLabel = "%s %s Fit" % (box,fitRegion)
     plotLabel = "%s Projection" % (plotRegion)
 
+    if options.triggerDataFile is not None:
+        
+        d = rt.TCanvas('d','d',500,400)
+        #binning = rt.RooBinning(int(w.var('mjj').getMax('Eff')-w.var('mjj').getMin('Eff')),w.var('mjj').getMin('Eff'),w.var('mjj').getMax('Eff'))
+        binning = rt.RooBinning(w.var('mjj').getMin('Eff'),w.var('mjj').getMax('Eff'))
+        xEff = array('d',[w.var('mjj').getMin('Eff')])
+        for iBin in x[1:-1]:
+        #for iBin in range(int(x[0])+1,int(x[-1]),1):
+            if iBin<w.var('mjj').getMax('Eff'):
+                binning.addBoundary(iBin)
+                xEff.append(iBin)
+        xEff.append(w.var('mjj').getMax('Eff'))
+        h_numerator = rt.TH1D('numerator','numerator',len(xEff)-1,xEff)
+        h_denominator = rt.TH1D('denominator','denominator',len(xEff)-1,xEff)
+        
+        w.data('triggerData').fillHistogram(h_numerator,rt.RooArgList(w.var('mjj')),'cut==1')
+        w.data('triggerData').fillHistogram(h_denominator,rt.RooArgList(w.var('mjj')))
+        effGraph = rt.TGraphAsymmErrors(h_numerator,h_denominator)
+        histo = effGraph.GetHistogram()
+        histo.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),w.var('mjj').getMax('Eff'))
+        histo.SetMinimum(0.)
+        histo.SetMaximum(1.1)        
+        #frame = w.var('mjj').frame(rt.RooFit.Title(""))
+        #w.data('triggerData').plotOn(frame,rt.RooFit.Efficiency(w.cat('cut')),rt.RooFit.Binning(binning),rt.RooFit.DrawOption("pe0"))
+        #w.function('effFunc').plotOn(frame,rt.RooFit.LineColor(rt.kRed))
+        #frame.SetMaximum(1.1)        
+        #frame.SetMinimum(0.)        
+        #frame.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),w.var('mjj').getMax('Eff'))
+        #frame.Draw()
+        histo.Draw()
+        effGraph.SetMarkerStyle(20)
+        effGraph.SetMarkerColor(rt.kBlack)
+        effGraph.SetLineColor(rt.kBlack)
+        effGraph.Draw('apezsame')
+        effTF1 = w.function('effFunc').asTF(rt.RooArgList(w.var('mjj')))
+        effTF1.Draw("lsame")
+        
+
+        histo.GetYaxis().SetTitle('Efficiency')
+        histo.GetXaxis().SetTitle('m_{jj} [GeV]')
+        histo.GetXaxis().SetTitleSize(0.045)
+        histo.GetYaxis().SetTitleSize(0.045)
+        l = rt.TLatex()
+        l.SetTextAlign(11)
+        l.SetTextSize(0.04)
+        l.SetTextFont(42)
+        l.SetNDC()
+        l.DrawLatex(0.65,0.92,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+        l.SetTextFont(62)
+        l.SetTextSize(0.05)
+        l.DrawLatex(0.1,0.92,"CMS")
+        l.SetTextFont(52)
+        l.SetTextSize(0.04)
+        l.DrawLatex(0.2,0.92,"Preliminary")
+        leg = rt.TLegend(0.6,0.4,0.79,0.58)
+        leg.SetTextFont(42)
+        leg.SetFillColor(rt.kWhite)
+        leg.SetFillStyle(0)
+        leg.SetLineWidth(0)
+        leg.SetLineColor(rt.kWhite)
+        leg.AddEntry(effGraph,"Data","pe")
+        leg.AddEntry(effTF1,"Fit","l")
+        leg.Draw()
+        
+        pave_param = rt.TPaveText(0.45,0.15,0.9,0.25,"NDC")
+        pave_param.SetTextFont(42)
+        pave_param.SetFillColor(0)
+        pave_param.SetBorderSize(0)
+        pave_param.SetFillStyle(0)
+        pave_param.SetTextAlign(11)
+        pave_param.SetTextSize(0.045)
+        if w.var('meff').getVal()>0 and w.var('seff').getVal()>0:
+            pave_param.AddText("m_{eff}"+" = {0:.2f} #pm {1:.2f}".format(w.var('meff').getVal(), (w.var('meff').getErrorHi() - w.var('meff').getErrorLo())/2.0,))
+            pave_param.AddText("#sigma_{eff}"+" = {0:.2f} #pm {1:.2f}".format(w.var('seff').getVal(), (w.var('seff').getErrorHi() - w.var('seff').getErrorLo())/2.0))
+        pave_param.Draw("SAME")        
+        d.Print(options.outDir+"/eff_mjj_%s_%s.pdf"%(fitRegion.replace(',','_'),box))
+        d.Print(options.outDir+"/eff_mjj_%s_%s.C"%(fitRegion.replace(',','_'),box))
+        tdirectory.cd()
+        d.Write()
 
     
     background_pdf = w.pdf('%s_bkg_unbin'%box)
@@ -359,8 +549,11 @@ if __name__ == '__main__':
         g_data.SetPointEYlow(i, (N-L)/(binWidth * lumi))
         g_data.SetPointEYhigh(i, (U-N)/(binWidth * lumi))
         g_data.SetPoint(i, g_data.GetX()[i], N/(binWidth * lumi))
-        
-        if plotRegion=='Low,High' and (g_data.GetX()[i]>w.var('mjj').getMin('Blind') and g_data.GetX()[i]<w.var('mjj').getMax('Blind')):
+       
+
+        plotRegions = plotRegion.split(',')
+        checkInRegions = [g_data.GetX()[i]>w.var('mjj').getMin(reg) and g_data.GetX()[i]<w.var('mjj').getMax(reg) for reg in plotRegions]
+        if not any(checkInRegions):
             g_data.SetPointEYlow(i, 0)
             g_data.SetPointEYhigh(i, 0)
             g_data.SetPoint(i, g_data.GetX()[i], 0)
@@ -405,8 +598,11 @@ if __name__ == '__main__':
     myRebinnedDensityTH1 = myRebinnedTH1.Clone('data_obs_density')
     for i in range(1,nBins+1):
         myRebinnedDensityTH1.SetBinContent(i, myRebinnedTH1.GetBinContent(i)/ myRebinnedTH1.GetBinWidth(i))
-        myRebinnedDensityTH1.SetBinError(i, myRebinnedTH1.GetBinError(i)/ myRebinnedTH1.GetBinWidth(i))        
-        if plotRegion=='Low,High' and (myRebinnedDensityTH1.GetXaxis().GetBinCenter(i)>w.var('mjj').getMin('Blind') and myRebinnedDensityTH1.GetXaxis().GetBinCenter(i)<w.var('mjj').getMax('Blind')):
+        myRebinnedDensityTH1.SetBinError(i, myRebinnedTH1.GetBinError(i)/ myRebinnedTH1.GetBinWidth(i))
+        
+        plotRegions = plotRegion.split(',')
+        checkInRegions = [myRebinnedDensityTH1.GetXaxis().GetBinCenter(i)>w.var('mjj').getMin(reg) and myRebinnedDensityTH1.GetXaxis().GetBinCenter(i)<w.var('mjj').getMax(reg) for reg in plotRegions]      
+        if not any(checkInRegions):
             myRebinnedDensityTH1.SetBinContent(i,0)
             myRebinnedDensityTH1.SetBinError(i,0)
     myRebinnedDensityTH1.GetXaxis().SetRangeUser(w.var('mjj').getMin(),w.var('mjj').getMax())
@@ -418,7 +614,8 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.SetLineColor(rt.kWhite)
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
     myRebinnedDensityTH1.SetLineWidth(0)
-    myRebinnedDensityTH1.SetMaximum(1e3)
+    #myRebinnedDensityTH1.SetMaximum(1e3)
+    myRebinnedDensityTH1.SetMaximum(2e3)
     myRebinnedDensityTH1.SetMinimum(2e-5)
     #myRebinnedDensityTH1.SetMinimum(2e-10)
     myRebinnedDensityTH1.Draw("pe")    

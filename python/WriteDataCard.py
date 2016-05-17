@@ -28,8 +28,14 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
         if penalty and '_norm' in parameter:
             continue
         w.factory(parameter)
+        
+    constPars = ['sqrts','p0']
+    if w.var('meff').getVal()<0 and w.var('seff').getVal()<0:
+        constPars.extend(['meff','seff'])
+        
+    for parameter in parameters:
         paramName = parameter.split('[')[0]
-        if paramName not in ['sqrts','meff','seff','p0']:
+        if paramName not in constPars:
             paramNames.append(paramName)
             w.var(paramName).setConstant(False)
             
@@ -43,7 +49,7 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
         fixPars(w,"Sigma")
 
         # fix center of mass energy, trigger turn-on, and p0                                                                                   
-        for myvar in ['sqrts','meff','seff','p0']:
+        for myvar in constPars:
             fixPars(w,myvar)
 
         
@@ -61,7 +67,7 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
     bkgs = []
     for command in commands:
         lower = command.lower()
-        if lower.find('sum::')!=-1 or lower.find('prod::')!=-1 or lower.find('expr::')!=-1 or lower.find('roogaussian::')!=-1:
+        if lower.find('sum::')!=-1 or lower.find('prod::')!=-1 or lower.find('expr::')!=-1 or lower.find('roogaussian::')!=-1 or lower.find('rooefficiency:')!=-1:
             w.factory(command)
         else:
             myclass = command.split('::')[0]
@@ -178,6 +184,23 @@ def convertToTh1xHist(hist):
 
     return hist_th1x
 
+def applyTurnon(hist,effFr,w):
+
+    hist_turnon = hist.Clone(hist.GetName()+"_turnon")
+    for p in rootTools.RootIterator.RootIterator(effFr.floatParsFinal()):
+        w.var(p.GetName()).setVal(p.getVal())
+        w.var(p.GetName()).setError(p.getError())
+
+    for i in range(1,hist.GetNbinsX()+1):
+        w.var('mjj').setVal(hist.GetXaxis().GetBinCenter(i))
+        #print 'mjj = %f, eff = %f'%(hist.GetXaxis().GetBinCenter(i), w.function('effFunc').getVal(rt.RooArgSet(w.var('mjj'))))
+        hist_turnon.SetBinContent(i,hist.GetBinContent(i)*w.function('effFunc').getVal(rt.RooArgSet(w.var('mjj'))))
+        
+    return hist_turnon
+        
+    
+    
+
 
 if __name__ == '__main__':
     parser = OptionParser()
@@ -213,6 +236,8 @@ if __name__ == '__main__':
                   help="xsec of resonance")
     parser.add_option('--no-signal-sys',dest="noSignalSys",default=False,action='store_true',
                   help="no signal shape systematic uncertainties")
+    parser.add_option('--trigger',dest="trigger",default=False,action='store_true',
+                  help="apply trigger turn on systematics to signal")
 
     (options,args) = parser.parse_args()
     
@@ -266,7 +291,11 @@ if __name__ == '__main__':
             fr = wIn.obj("fitresult_extDijetPdf_data_obs_with_constr")
         elif wIn.obj("nll_extDijetPdf_data_obs_with_constr") != None:
             frIn = wIn.obj("nll_extDijetPdf_data_obs_with_constr")
+        elif wIn.obj("simNll") != None:
+            frIn = wIn.obj("simNll")
         print "restoring parameters from fit"
+        if options.trigger:
+            effFrIn = wIn.obj("nll_effPdf_triggerData")
         frIn.Print("V")
         for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
             w.var(p.GetName()).setVal(p.getVal())
@@ -299,6 +328,10 @@ if __name__ == '__main__':
             #d.SetDirectory(rt.gROOT)
             if name=='h_%s_%i'%(model,massPoint):
                 d.Scale(signalXsec*lumi/d.Integral())
+                if options.trigger:
+                    d_turnon = applyTurnon(d,effFrIn,w)
+                    name+='_turnon'
+                    d = d_turnon
                 d.Rebin(len(x)-1,name+'_rebin',x)
                 d_rebin = rt.gDirectory.Get(name+'_rebin')
                 d_rebin.SetDirectory(0)
@@ -316,23 +349,33 @@ if __name__ == '__main__':
         shapes = []
         shapeFiles = {}
     else:
-        shapes = ['jes','jer']
+        shapes = []
         shapeFiles = {}
-        shapeFiles['jesUp'] = options.jesUpFile
-        shapeFiles['jerUp'] = options.jerUpFile
-        shapeFiles['jesDown'] = options.jesDownFile
-        shapeFiles['jerDown'] = options.jerDownFile
+        if options.jesUpFile is not None and options.jesDownFile is not None:
+            shapes.append('jes')
+            shapeFiles['jesUp'] = options.jesUpFile
+            shapeFiles['jesDown'] = options.jesDownFile
+        if options.jerUpFile is not None and options.jerDownFile is not None:
+            shapes.append('jer')
+            shapeFiles['jerUp'] = options.jerUpFile
+            shapeFiles['jerDown'] = options.jerDownFile
 
 
     # JES and JER uncertainties
     hSigTh1x = signalHistos[0]
     for shape in shapes:
         fUp = rt.TFile.Open(shapeFiles[shape+'Up'])
-        hUp = fUp.Get('h_%s_%i'%(model,massPoint))
+        if options.trigger:
+            hUp = applyTurnon(fUp.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
+        else:
+            hUp = fUp.Get('h_%s_%i'%(model,massPoint))
         hUp.SetName('h_%s_%i_%sUp'%(model,massPoint,shape))
         hUp.SetDirectory(0)
         fDown = rt.TFile.Open(shapeFiles[shape+'Down'])
-        hDown = fDown.Get('h_%s_%i'%(model,massPoint))
+        if options.trigger:
+            hDown = applyTurnon(fDown.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
+        else:
+            hDown = fDown.Get('h_%s_%i'%(model,massPoint))
         hDown.SetName('h_%s_%i_%sDown'%(model,massPoint,shape))
         hDown.SetDirectory(0)
         
