@@ -85,7 +85,8 @@ class Config(object):
         varNames = [v.split('[')[0] for v in vars]
         result = []
         for v in varNames:
-            result.append(eval(self.get(box, 'signal_%s' %  v)) )
+            if self.has_option(box, 'signal_%s' % v):
+                result.append(eval(self.get(box, 'signal_%s' %  v)) )
         return result        
         
     def getPdfs(self, box, lineTag, workspace):
