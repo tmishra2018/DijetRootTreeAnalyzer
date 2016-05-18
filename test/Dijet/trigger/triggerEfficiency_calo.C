@@ -1,5 +1,5 @@
-#include "../style/tdrstyle.C"
-#include "../style/CMS_lumi.C"
+#include "test/santanas/DijetScouting/style/tdrstyle.C"
+#include "test/santanas/DijetScouting/style/CMS_lumi.C"
 #include "TH1.h"
 #include "TH1F.h"
 
@@ -194,7 +194,7 @@ void triggerEfficiency_calo()
       cout << "filling denominator" << endl;
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1"); //signal region
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1"); //signal region //paper      
-      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_CaloJet40_CaloScouting_PFScouting||passHLT_L1HTT_CaloScouting_PFScouting)"); //signal region //scouting HT450
+      thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && PassJSON==1 && (passHLT_L1HTT_CaloScouting_PFScouting)"); //signal region //scouting HT450
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1"); //signal region //scouting L1HTT
       //thistree->Draw("mjj >> h_denominator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1"); //control region
       cout << "filled denominator" << endl;
@@ -203,7 +203,7 @@ void triggerEfficiency_calo()
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_PFHT475==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && passHLT_PFHT800==1");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");//paper
-      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && PassJSON==1 && passHLT_CaloScoutingHT250 && (passHLT_CaloJet40_CaloScouting_PFScouting||passHLT_L1HTT_CaloScouting_PFScouting) ");//scouting HT450
+      thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && PassJSON==1 && passHLT_CaloScoutingHT250 && (passHLT_L1HTT_CaloScouting_PFScouting) ");//scouting HT450
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)<1.3 && passHLT_ZeroBias==1 && passHLT_L1HTT==1");//scouting L1HTT
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1)");
       //thistree->Draw("mjj >> h_numerator","fabs(deltaETAjj)>1.3 && fabs(deltaETAjj)<2.6 && passHLT_Mu45==1 && (passHLT_PFHT800==1 || passHLT_PFJET500==1 || passHLT_PFHT650MJJ950==1 || passHLT_PFHT650MJJ900==1 || passHLT_AK8DiPFJet280200TrimMass30Btag==1 || passHLT_AK8PFHT600TriMass50Btag==1 || passHLT_AK8PFHT700TriMass50==1 || passHLT_AK8PFJet360TrimMass50==1 || passHLT_CaloJet500NoJetID==1 || passHLT_DiPFJetAve300HFJEC==1 || passHLT_DiPFJetAve500==1 || passHLT_PFHT400SixJet30Btag==1 || passHLT_PFHT450SixJet40Btag==1 || passHLT_PFHT750FourJetPt50==1 || passHLT_QuadPFJetVBF==1 || passHLT_PFHT650==1 || passHLT_PFHT475==1 || passHLT_PFHT200==1 || passHLT_PFJET450==1)");

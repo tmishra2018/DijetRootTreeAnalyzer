@@ -1,4 +1,4 @@
-JSON /afs/cern.ch/work/a/apresyan/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2016/data/json_scouting_2016/json_DCSONLY_272007_272010.txt
+JSON /afs/cern.ch/work/a/apresyan/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2016/json_DCSONLY_272007_273537.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -68,9 +68,9 @@ mjj_shiftJEC         -inf           +inf                -               -       
 passHLT_CaloJet40_CaloScouting_PFScouting -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_L1HTT_CaloScouting_PFScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_CaloScoutingHT250                 -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passL1T_HTT125                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passL1T_HTT150                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passL1T_HTT175                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT120                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT170                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT200                            -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 isData		     -inf	    +inf		-		-		1	2  0 2.	  	  SAVE
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE

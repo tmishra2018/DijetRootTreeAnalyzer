@@ -600,9 +600,9 @@ void analysisClass::Loop()
 	 fillVariableWithValue("passHLT_L1HTT_CaloScouting_PFScouting",triggerResult->at(1));// L1HTT_CaloScouting_PFScouting
 	 fillVariableWithValue("passHLT_CaloScoutingHT250",triggerResult->at(2));// CaloScoutingHT250
 
-	 fillVariableWithValue("passL1T_HTT125",l1Result->at(0));// 
-	 fillVariableWithValue("passL1T_HTT150",l1Result->at(1));// 
-	 fillVariableWithValue("passL1T_HTT175",l1Result->at(2));// 
+	 fillVariableWithValue("passL1T_HTT120",l1Result->at(0));// 
+	 fillVariableWithValue("passL1T_HTT170",l1Result->at(1));// 
+	 fillVariableWithValue("passL1T_HTT200",l1Result->at(2));// 
 	 // fillVariableWithValue("passL1T_ZeroBias",l1Result->at(3));// 
 	 // fillVariableWithValue("passL1T_DoubleMu_10_3p5",l1Result->at(4));// 
 	 // fillVariableWithValue("passL1T_DoubleMu_12_5",l1Result->at(5));// 

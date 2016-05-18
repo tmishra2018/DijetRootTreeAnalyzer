@@ -13,7 +13,7 @@ ScoutingCaloHT
 /ScoutingCaloHT/Run2016B-v1/RAW
 Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
 JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
-(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/CaloScoutingHT_2016_JEC_CaloL1L2L3_PFL2L3Residual_20160513_174522/
+(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloHT_2016_JEC_CaloL1L2L3_PFL2L3Residual_20160517_195250/*reduced*root
 
 ScoutingCaloCommissioning
 ============
@@ -22,5 +22,5 @@ ScoutingCaloCommissioning
 /ScoutingCaloCommissioning/Run2015B-v1/RAW
 Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
 JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
-(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/CaloScoutingCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_20160513_181405/
+(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_20160518_211309/*reduced*root
 
