@@ -81,7 +81,38 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
                 if w.var(myvar)!=None:
                     arglist.append(w.var(myvar))
                 elif w.function(myvar)!=None:
-                    arglist.append(w.function(myvar))
+                    arglist.append(w.function(myvar))                    
+                elif 'eff_' in myvar:
+                        parlist = rt.RooArgList(myvar)
+                        listdef = ''
+                        prodlist = rt.RooArgList('g')
+                        for iBinX in range(0,maxBins):
+                            if w.function('eff_bin%02d'%(iBinX))!=None:
+                                parlist.add(w.function('eff_bin%02d'%(iBinX)))
+                            elif w.var('eff_bin%02d'%(iBinX))!=None:
+                                parlist.add(w.var('eff_bin%02d'%(iBinX)))
+                            else:
+                                w.factory("eff_bin%02d[1]"%(iBinX))
+                                w.factory("eff_bin%02d_Mean[1]"%(iBinX))
+                                w.factory("eff_bin%02d_SigmaL[1e-5]"%(iBinX))
+                                w.factory("eff_bin%02d_SigmaR[1e-5]"%(iBinX))
+                                w.var("eff_bin%02d_Mean"%(iBinX)).setConstant(True)
+                                w.var("eff_bin%02d_SigmaL"%(iBinX)).setConstant(True)
+                                w.var("eff_bin%02d_SigmaR"%(iBinX)).setConstant(True)
+                                if iBinX<7:
+                                    w.var("eff_bin%02d"%(iBinX)).setConstant(False)
+                                    w.factory("RooBifurGauss::g_eff_bin%02d(eff_bin%02d,eff_bin%02d_Mean,eff_bin%02d_SigmaL,eff_bin%02d_SigmaR)"%((iBinX,iBinX,iBinX,iBinX,iBinX)))
+                                    prodlist.add(w.pdf('g_eff_bin%02d'%iBinX))
+                                else:
+                                    w.var("eff_bin%02d"%(iBinX)).setConstant(True)
+                                parlist.add(w.var('eff_bin%02d'%(iBinX)))
+                        rootTools.Utils.importToWS(w,parlist)
+                        rootTools.Utils.importToWS(w,prodlist)
+                        prod = rt.RooProdPdf('g_eff','g_eff',prodlist)
+                        rootTools.Utils.importToWS(w,prod)
+                        
+                        
+                        arglist.append(parlist)
                         
             args = tuple(arglist)
             pdf = getattr(rt,myclass)(*args)
@@ -91,7 +122,8 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
             bkg = name.split("_")
             if box in bkg: bkg.remove(box)
             bkgs.append("_".join(bkg))
-            
+
+    
     w.Print('v')
     return paramNames, bkgs
 
@@ -186,7 +218,16 @@ def convertToTh1xHist(hist):
 
     return hist_th1x
 
-def applyTurnon(hist,effFr,w):
+def convertToMjjHist(hist_th1x,x):
+    
+    hist = rt.TH1D(hist_th1x.GetName()+'_mjj',hist_th1x.GetName()+'_mjj',len(x)-1,x)
+    for i in range(1,hist_th1x.GetNbinsX()+1):
+        hist.SetBinContent(i,hist_th1x.GetBinContent(i)/(x[i]-x[i-1]))
+        hist.SetBinError(i,hist_th1x.GetBinError(i)/(x[i]-x[i-1]))
+
+    return hist
+
+def applyTurnonFunc(hist,effFr,w):
 
     hist_turnon = hist.Clone(hist.GetName()+"_turnon")
     for p in rootTools.RootIterator.RootIterator(effFr.floatParsFinal()):
@@ -197,6 +238,18 @@ def applyTurnon(hist,effFr,w):
         w.var('mjj').setVal(hist.GetXaxis().GetBinCenter(i))
         #print 'mjj = %f, eff = %f'%(hist.GetXaxis().GetBinCenter(i), w.function('effFunc').getVal(rt.RooArgSet(w.var('mjj'))))
         hist_turnon.SetBinContent(i,hist.GetBinContent(i)*w.function('effFunc').getVal(rt.RooArgSet(w.var('mjj'))))
+        
+    return hist_turnon
+
+def applyTurnonGraph(hist,effGraph):
+
+    hist_turnon = hist.Clone(hist.GetName()+"_turnon")
+
+    for i in range(1,hist.GetNbinsX()+1):
+        eff = effGraph.GetY()[i-1]
+        effUp = effGraph.GetEYhigh()[i-1]
+        effDown = effGraph.GetEYlow()[i-1]
+        hist_turnon.SetBinContent(i,hist.GetBinContent(i)*eff)
         
     return hist_turnon
         
@@ -334,7 +387,7 @@ if __name__ == '__main__':
             if name=='h_%s_%i'%(model,massPoint):
                 d.Scale(signalXsec*lumi/d.Integral())
                 if options.trigger:
-                    d_turnon = applyTurnon(d,effFrIn,w)
+                    d_turnon = applyTurnonFunc(d,effFrIn,w)
                     name+='_turnon'
                     d = d_turnon
                 d.Rebin(len(x)-1,name+'_rebin',x)
@@ -372,14 +425,14 @@ if __name__ == '__main__':
     for shape in shapes:
         fUp = rt.TFile.Open(shapeFiles[shape+'Up'])
         if options.trigger:
-            hUp = applyTurnon(fUp.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
+            hUp = applyTurnonFunc(fUp.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
         else:
             hUp = fUp.Get('h_%s_%i'%(model,massPoint))
         hUp.SetName('h_%s_%i_%sUp'%(model,massPoint,shape))
         hUp.SetDirectory(0)
         fDown = rt.TFile.Open(shapeFiles[shape+'Down'])
         if options.trigger:
-            hDown = applyTurnon(fDown.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
+            hDown = applyTurnonFunc(fDown.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
         else:
             hDown = fDown.Get('h_%s_%i'%(model,massPoint))
         hDown.SetName('h_%s_%i_%sDown'%(model,massPoint,shape))
