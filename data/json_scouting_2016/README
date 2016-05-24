@@ -8,7 +8,7 @@ Reduced root trees
 
 ScoutingCaloHT
 ============
-DCS USED BELOW WAS data/json_scouting_2016/json_DCSONLY_272007_273537.txt
+JSON USED BELOW WAS data/json_scouting_2016/json_DCSONLY_272007_273537.txt
 
 1)
 /ScoutingCaloHT/Run2016B-v1/RAW
@@ -25,3 +25,26 @@ Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut), corrected for
 JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
 (CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_050011/*reduced*root
 
+===============================
+Certified data
+
+ScoutingCaloHT
+============
+JSON USED BELOW WAS /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt
+
+1)
+/ScoutingCaloHT/Run2016B-v1/RAW
+Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut), corrected for JES bias 
+JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
+(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloHT_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_182757/*reduced*root
+
+ScoutingCaloCommissioning
+============
+
+1)
+/ScoutingCaloCommissioning/Run2015B-v1/RAW
+Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut), corrected for JES bias 
+JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
+(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_174717/*reduced*root
+
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_174717/*reduced*root
