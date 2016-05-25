@@ -38,12 +38,7 @@ Instructions to run Calo Scouting Dijet Resonance Search from start to finish.
     ```sh
     $ mkdir -p fits_2016_05_23/
     $ mkdir -p fits_2016_05_23/CaloDijet_Sideband/
-    $ python python/BinnedFit.py -c config/dijet.config -b CaloDijet
-    inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet.root
-    --lumi 1918 --fit-region Low,High --plot-region Low,High -d
-    fits_2016_05_23/CaloDijet_Sideband/ -s
-    inputs/ResonanceShapes_gg_13TeV_CaloScouting_Spring15.root -m gg
-    --mass 750 --xsec 15 --fit-spectrum
+    $ python python/BinnedFit.py -c config/dijet.config -b CaloDijet inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet.root --lumi 1918 --fit-region Low,High --plot-region Low,High -d fits_2016_05_23/CaloDijet_Sideband/ -s inputs/ResonanceShapes_gg_13TeV_CaloScouting_Spring15.root -m gg --mass 750 --xsec 15 --fit-spectrum
     ```
 	
 1. Run and fit 1000 toys and plot GOF for blinded fit
@@ -57,19 +52,14 @@ Instructions to run Calo Scouting Dijet Resonance Search from start to finish.
     
     ```sh
     $ mkdir -p fits_2016_05_23/CaloDijet_Full/
-    $ python python/BinnedFit.py -c config/dijet.config -b CaloDijet
-    inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet.root
-    --lumi 1918 --fit-region Full --plot-region Full -d
-    fits_2016_05_23/CaloDijet_Sideband/ -s
-    inputs/ResonanceShapes_gg_13TeV_CaloScouting_Spring15.root -m gg
-    --mass 750 --xsec 15 --fit-spectrum
+    $ python python/BinnedFit.py -c config/dijet.config -b CaloDijet inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet.root --lumi 1918 --fit-region Full --plot-region Full -d fits_2016_05_23/CaloDijet_Full/ -s inputs/ResonanceShapes_gg_13TeV_CaloScouting_Spring15.root -m gg --mass 750 --xsec 15 --fit-spectrum
     ```
 	
 1. Run and fit 1000 toys and plot GOF for unblinded fit
     
     ```sh
-    $ python python/RunToys.py -b CaloDijet --freq -c config/dijet.config --lumi 1918 --fit-region Full  -d fits_2016_05_23/CaloDijet_Full/ -i fits_2016_05_23/CaloDijet_Sideband/DijetFitResults_CaloDijet.root  -t 1000 -s 0
-    $ python python/PlotGOF.py -b CaloDijet -c config/dijet.config -d fits_2016_05_23/CaloDijet_Sideband/ -t fits_2016_05_23/CaloDijet_Full/toys_Freq_s0_CaloDijet.root -l 1918 --data
+    $ python python/RunToys.py -b CaloDijet --freq -c config/dijet.config --lumi 1918 --fit-region Full  -d fits_2016_05_23/CaloDijet_Full/ -i fits_2016_05_23/CaloDijet_Full/DijetFitResults_CaloDijet.root  -t 1000 -s 0
+    $ python python/PlotGOF.py -b CaloDijet -c config/dijet.config -d fits_2016_05_23/CaloDijet_Full/ -t fits_2016_05_23/CaloDijet_Full/toys_Freq_s0_CaloDijet.root -l 1918 --data
     ```
 	
 ### Setting limits
