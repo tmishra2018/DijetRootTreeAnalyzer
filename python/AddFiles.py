@@ -8,8 +8,8 @@ import sys
 
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option('-d','--dir',dest="outDir",default="./",type="string",
-                  help="Output directory to store output")
+    parser.add_option('-o','--output',dest="output",default="./",type="string",
+                  help="Output ROOT file to store output histograms")
     parser.add_option('-l','--list',dest="list", default="lists/testlist.txt",type="string",
                   help="test list")
     
@@ -20,6 +20,9 @@ if __name__ == '__main__':
     tchain.SetBranchStatus('*',0)
     tchain.SetBranchStatus('mjj',1)
     tchain.SetBranchStatus('passHLT_CaloScoutingHT250',1)
+    tchain.SetBranchStatus('event',1)
+    tchain.SetBranchStatus('lumi',1)
+    tchain.SetBranchStatus('run',1)
     tchain.SetBranchStatus('PassJSON',1)
     tchain.SetBranchStatus('deltaETAjj',1)
     tchain.SetBranchStatus('deltaPHIjj',1)
@@ -77,7 +80,8 @@ if __name__ == '__main__':
                 }
     
     f = open(options.list)
-    for line in f:
+    for i, line in enumerate(f):
+        #if i>1: continue
         print line.replace('\n','')
         tchain.Add(line.replace('\n',''))
 
@@ -86,10 +90,22 @@ if __name__ == '__main__':
         tree.Project(h.GetName(),var,cut)
 
     for hist,var in histoExpr.iteritems():
-        #if var!='mjj': continue
+        if var!='mjj': continue
         project(tchain, hist, var, cut)
+    
+    #tchain.Draw('>>elist',cut+"&&mjj>1000",'entrylist')
+        
+    #elist = rt.gDirectory.Get('elist')    
+    #entry = -1
+    #print "run lumi event mjj pT1 pT2 file" 
+    #while True:
+    #    entry = elist.Next()
+    #    if entry == -1: break
+    #    tchain.GetEntry(entry)
+    #    curFile = tchain.GetCurrentFile()
+    #    print tchain.run, tchain.lumi, tchain.event, tchain.mjj, tchain.pTWJ_j1, tchain.pTWJ_j2, curFile.GetName()
 
-    output = rt.TFile(options.outDir+"/output.root",'recreate')
+    output = rt.TFile(options.output,'recreate')
     output.cd()
     for h in histoExpr:
         h.Write()
