@@ -63,7 +63,7 @@ def simFit(pdf, data, fitRange, effPdf, effData, conditionalObs):
     migrad_status = m2.minimize('Minuit2','migrad')
     improve_status = m2.minimize('Minuit2','improve')
     hesse_status = m2.minimize('Minuit2','hesse')
-    minos_status = m2.minos()
+    #minos_status = m2.minos()
     fr = m2.save()
 
     return fr
@@ -272,6 +272,8 @@ if __name__ == '__main__':
             frIn = wIn.obj("fitresult_extDijetPdf_data_obs_with_constr")
         elif wIn.obj("nll_extDijetPdf_data_obs_with_constr") != None:
             frIn = wIn.obj("nll_extDijetPdf_data_obs_with_constr")
+        elif wIn.obj("simNll") != None:
+            frIn = wIn.obj("simNll")
                         
         print "restoring parameters from fit"
         frIn.Print("V")
@@ -390,18 +392,29 @@ if __name__ == '__main__':
                 corrHistEff = effFr.correlationHist('correlation_matrix_eff')
                 
                 if options.doSpectrumFit:
-                    # setup two-step fit with  hesse pdf
+                    # setup two-step fit with  hesse pdf:
                     hessePdf = effFr.createHessePdf(rt.RooArgSet(w.var('meff'),w.var('seff')))
+                    # or create the hesse pdf manually:
+                    #covMatrix = effFr.covarianceMatrix()
+                    #params = rt.RooArgList()
+                    #params.add(w.var('meff'))
+                    #params.add(w.var('seff'))
+                    #w.factory('meff_centralvalue[%f]'%w.var('meff').getVal())
+                    #w.factory('seff_centralvalue[%f]'%w.var('seff').getVal())
+                    #mu = rt.RooArgList()
+                    #mu.add(w.var('meff_centralvalue'))
+                    #mu.add(w.var('seff_centralvalue'))
+                    #hessePdf = rt.RooMultiVarGaussian('hessePdf','hessePdf',params,mu,covMatrix)
                     rootTools.Utils.importToWS(w,effFr)
                     rootTools.Utils.importToWS(w,hessePdf)                
                     w.factory('PROD::extDijetPdfHesse(extDijetPdf,%s)'%(hessePdf.GetName()))
-                    #extDijetPdf = w.pdf('extDijetPdfHesse')
+                    extDijetPdf = w.pdf('extDijetPdfHesse')
                     # set up two-step fit with 1D gauss pdfs
-                    w.var('meff_Mean').setVal(w.var('meff').getVal())
-                    w.var('seff_Mean').setVal(w.var('seff').getVal())
-                    w.var('meff_Sigma').setVal(w.var('meff').getError())
-                    w.var('seff_Sigma').setVal(w.var('seff').getError())
-                    extDijetPdf = w.pdf('extDijetPdfGaus')
+                    #w.var('meff_Mean').setVal(w.var('meff').getVal())
+                    #w.var('seff_Mean').setVal(w.var('seff').getVal())
+                    #w.var('meff_Sigma').setVal(w.var('meff').getError())
+                    #w.var('seff_Sigma').setVal(w.var('seff').getError())
+                    #extDijetPdf = w.pdf('extDijetPdfGaus')
                 
             if options.doSpectrumFit:
                 fr = binnedFit(extDijetPdf,dataHist,sideband,options.useWeight)       
@@ -753,12 +766,26 @@ if __name__ == '__main__':
 
         lastX = 0
         lastY = 0
+        firstX = 0
+        firstY = 0
+        notSet = True
+        for i in range(0,g_signal.GetN()): 
+            N = g_signal.GetY()[i]
+            binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]      
+            if g_signal.GetX()[i]>options.mass*0.5 and notSet:                
+                firstX = g_signal.GetX()[i]
+                firstY = N/(binWidth * lumi)
+                notSet = False
+            
         for i in range(0,g_signal.GetN()):
             N = g_signal.GetY()[i]
-            binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]
-            g_signal.SetPoint(i, g_signal.GetX()[i], N/(binWidth * lumi))
+            binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]            
+            if g_signal.GetX()[i]<=options.mass*0.5:
+                g_signal.SetPoint(i,firstX,firstY)
+            else:
+                g_signal.SetPoint(i, g_signal.GetX()[i], N/(binWidth * lumi))
             g_signal.SetPointEYlow(i, 0)
-            g_signal.SetPointEYhigh(i, 0)
+            g_signal.SetPointEYhigh(i, 0)            
             if g_signal.GetX()[i]>options.mass*1.5:
                 g_signal.SetPoint(i,lastX,lastY)
             else:                
@@ -796,8 +823,9 @@ if __name__ == '__main__':
     if options.signalFileName!=None:
         leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")
         leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
+        #leg.AddEntry(None,"%.2f pb"%(options.xsec),"")
     leg.Draw()
-    
+
     pave_sel = rt.TPaveText(0.2,0.03,0.5,0.25,"NDC")
     pave_sel.SetFillColor(0)
     pave_sel.SetBorderSize(0)
