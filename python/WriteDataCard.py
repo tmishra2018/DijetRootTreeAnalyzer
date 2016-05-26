@@ -378,9 +378,12 @@ if __name__ == '__main__':
                 pdf_deco = deco.diagonalize(w.pdf('%s_%s'%(box,bkg)))
                 rootTools.Utils.importToWS(w,pdf_deco,rt.RooFit.RecycleConflictNodes())
                 bkgs_deco.append(bkg+'_deco')
+                w.var('deco_eig0').setConstant(True)
                 if '%s_%s_norm'%(box,bkg) in paramNames:
                     loc = paramNames.index('%s_%s_norm'%(box,bkg))
                     paramNames[loc] = '%s_%s_deco_norm'%(box,bkg)
+                    w.factory('%s_%s_deco_norm[1]'%(box,bkg))
+                    w.var('%s_%s_deco_norm'%(box,bkg)).setConstant(False)
                 if 'p1' in paramNames:
                     loc = paramNames.index('p1')
                     paramNames[loc] = 'deco_eig1'
