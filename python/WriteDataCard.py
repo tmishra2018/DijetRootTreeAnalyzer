@@ -293,6 +293,8 @@ if __name__ == '__main__':
                   help="no signal shape systematic uncertainties")
     parser.add_option('--trigger',dest="trigger",default=False,action='store_true',
                   help="apply trigger turn on systematics to signal")
+    parser.add_option('--deco',dest="deco",default=False,action='store_true',
+                  help="decorrelate parameters")
 
     (options,args) = parser.parse_args()
     
@@ -334,6 +336,18 @@ if __name__ == '__main__':
 
     myRealTH1 = convertToTh1xHist(myRebinnedTH1)
     
+                
+    if options.asimov:
+        asimov = w.pdf('extDijetPdf').generateBinned(rt.RooArgSet(th1x),rt.RooFit.Asimov())
+        asimov.SetName('data_obs')
+        asimov.SetTitle('data_obs')
+        dataHist = asimov
+    else:
+        dataHist = rt.RooDataHist("data_obs", "data_obs", rt.RooArgList(th1x), rt.RooFit.Import(myRealTH1))
+        #triggerData = wIn.data("triggerData")
+        #rootTools.Utils.importToWS(w,triggerData)
+        
+    rootTools.Utils.importToWS(w,dataHist)
 
     if options.inputFitFile is not None:
         inputRootFile = rt.TFile.Open(options.inputFitFile,"r")
@@ -351,29 +365,45 @@ if __name__ == '__main__':
         print "restoring parameters from fit"
         if options.trigger:
             effFrIn = wIn.obj("nll_effPdf_triggerData")
+            
         frIn.Print("V")
+        
+        if options.deco:
+            #bkg = bkgs[0]
+            #frForDeco = w.pdf('%s_%s'%(box,bkg)).fitTo(w.data('data_obs'),rt.RooFit.Save())
+            #frForDeco.Print('v')
+            deco = rt.PdfDiagonalizer("deco",w,frIn)
+            bkgs_deco = []
+            for bkg in bkgs:
+                pdf_deco = deco.diagonalize(w.pdf('%s_%s'%(box,bkg)))
+                rootTools.Utils.importToWS(w,pdf_deco,rt.RooFit.RecycleConflictNodes())
+                bkgs_deco.append(bkg+'_deco')
+                if '%s_%s_norm'%(box,bkg) in paramNames:
+                    loc = paramNames.index('%s_%s_norm'%(box,bkg))
+                    paramNames[loc] = '%s_%s_deco_norm'%(box,bkg)
+                if 'p1' in paramNames:
+                    loc = paramNames.index('p1')
+                    paramNames[loc] = 'deco_eig1'
+                if 'p2' in paramNames:
+                    loc = paramNames.index('p2')
+                    paramNames[loc] = 'deco_eig2'
+                if 'p3' in paramNames:
+                    loc = paramNames.index('p3')
+                    paramNames[loc] = 'deco_eig3'
+                    
+            bkgs = bkgs_deco
+                
         for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
             w.var(p.GetName()).setVal(p.getVal())
             w.var(p.GetName()).setError(p.getError())
             if "Ntot" in p.GetName():
-                normNameList = p.GetName().replace("Ntot_","").split("_")
-                normNameList.reverse()
-                normNameList.append("norm")
-                normName = "_".join(normNameList)
-                #w.var(normName).setError(w.var(p.GetName()).getError()/w.var(p.GetName()).getVal())
+                if options.deco:
+                    w.factory('Ntot_%s_deco[%f]'%(p.GetName().replace("Ntot_",""),p.getVal()))
+                    w.var('Ntot_%s_deco'%(p.GetName().replace("Ntot_",""))).setError(p.getError())
         for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
             w.var(p.GetName()).setVal(p.getVal())
             w.var(p.GetName()).setError(p.getError())
-                
-    if options.asimov:
-        asimov = w.pdf('extDijetPdf').generateBinned(rt.RooArgSet(th1x),rt.RooFit.Asimov())
-        asimov.SetName('data_obs')
-        asimov.SetTitle('data_obs')
-        dataHist = asimov
-    else:
-        dataHist = rt.RooDataHist("data_obs", "data_obs", rt.RooArgList(th1x), rt.RooFit.Import(myRealTH1))
-        
-    rootTools.Utils.importToWS(w,dataHist)
+            
 
     signalHistosOriginal = []
     signalHistosRebin = []
@@ -401,8 +431,13 @@ if __name__ == '__main__':
                 signalHistos.append(d_th1x)
                 
                 sigDataHist = rt.RooDataHist('%s_%s'%(box,model),'%s_%s'%(box,model), rt.RooArgList(th1x), rt.RooFit.Import(d_th1x))
+                sigDataHist_mjj = rt.RooDataHist('%s_%s_mjj'%(box,model),'%s_%s_mjj'%(box,model), rt.RooArgList(w.var('mjj')), rt.RooFit.Import(d))
+                sigPdf_mjj = rt.RooHistPdf('pdf_%s_%s_mjj'%(box,model),'pdf_%s_%s_mjj'%(box,model), rt.RooArgSet(w.var('mjj')), sigDataHist_mjj)
+                #sigEffPdf_mjj = rt.RooEffProd('effPdf_%s_%s_mjj'%(box,model),'effPdf_%s_%s_mjj'%(box,model), sigPdf_mjj,w.function('effFunc'))
                 rootTools.Utils.importToWS(w,sigDataHist)
-
+                rootTools.Utils.importToWS(w,sigDataHist_mjj)
+                #rootTools.Utils.importToWS(w,sigEffPdf_mjj)
+                
     if options.noSignalSys:
         shapes = []
         shapeFiles = {}
@@ -462,4 +497,5 @@ if __name__ == '__main__':
     outputFile = rt.TFile.Open(options.outDir+"/"+outFile,"recreate")
     writeDataCard(box,model,options.outDir+"/"+outFile.replace(".root",".txt"),bkgs,paramNames,w,options.penalty,options.fixed,shapes=shapes)
     w.Write()
+    w.Print('v')
     os.system("cat %s"%options.outDir+"/"+outFile.replace(".root",".txt"))
