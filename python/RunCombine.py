@@ -21,7 +21,7 @@ def exec_me(command,dryRun=True):
     print command
     if not dryRun: os.system(command)
         
-def writeBashScript(options,massPoint):
+def writeBashScript(options,massPoint,iJob=0):
     lumi = float(options.lumi)
     submitDir = options.outDir
     massPoint = str(massPoint)
@@ -51,9 +51,9 @@ def writeBashScript(options,massPoint):
         
         
     # prepare the script to run
-    outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumi)+options.box+".src"
+    outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumi)+options.box+"_%i"%(iJob)+".src"
         
-    ffDir = submitDir+"/logs_"+options.model+"_"+massPoint+"_"+options.box
+    ffDir = submitDir+"/logs_"+options.model+"_"+massPoint+"_"+options.box+"_%i"%(iJob)
     user = os.environ['USER']
     pwd = os.environ['PWD']
         
@@ -111,14 +111,15 @@ def submit_jobs(options,args):
      
     for massPoint in massIterable(options.mass):
 
-        outputname,ffDir = writeBashScript(options,massPoint)
-                    
-        pwd = os.environ['PWD']
-        os.system("mkdir -p "+pwd+"/"+ffDir)
-        os.system("echo bsub -q "+options.queue+" -o "+pwd+"/"+ffDir+"/log.log source "+pwd+"/"+outputname)      
-        if not options.dryRun:
-            time.sleep(3)
-            os.system("bsub -q "+options.queue+" -o "+pwd+"/"+ffDir+"/log.log source "+pwd+"/"+outputname)
+        for iJob in range(0,options.jobs):
+            outputname,ffDir = writeBashScript(options,massPoint,iJob)
+
+            pwd = os.environ['PWD']
+            os.system("mkdir -p "+pwd+"/"+ffDir)
+            os.system("echo bsub -q "+options.queue+" -o "+pwd+"/"+ffDir+"/log.log source "+pwd+"/"+outputname)      
+            if not options.dryRun:
+                time.sleep(3)
+                os.system("bsub -q "+options.queue+" -o "+pwd+"/"+ffDir+"/log.log source "+pwd+"/"+outputname)
     
 def main(options,args):    
     box = options.box
@@ -195,7 +196,7 @@ def main(options,args):
                 rRangeString += ':r=0,%f'%(options.rMax)
             toyString = ''
             if options.toys>-1:
-                toyString = '-t %i'%options.toys
+                toyString = '-t %i -s -1'%options.toys
             exec_me('combine -M MarkovChainMC %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 20 --proposal ortho --burnInSteps 100 --iteration 20000 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
             exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
         else:
@@ -247,8 +248,8 @@ if __name__ == '__main__':
                   help="maximum r value (for better precision)")
     parser.add_option('--xsec',dest="xsec",default=1,type="float",
                   help="xsec for signal in pb (r = 1)")
-    parser.add_option('--jobs',dest="jobs",default=False,action='store_true',
-                  help="submit jobs")
+    parser.add_option('-j','--jobs',dest="jobs",default=0,type="int",
+                  help="number of jobs to submit when running toys for each mass point (just set to 1 for observed limits)")
     parser.add_option('--bayes',dest="bayes",default=False,action='store_true',
                   help="bayesian limits")
     parser.add_option('--deco',dest="deco",default=False,action='store_true',
@@ -258,7 +259,7 @@ if __name__ == '__main__':
     parser.add_option('-q','--queue',dest="queue",default="1nh",type="string",
                   help="queue: 1nh, 8nh, 1nd, etc.")
     parser.add_option('-t','--toys',dest="toys",default=-1,type="int",
-                  help="number of toys (for bayesian expected limits)")
+                  help="number of toys per job(for bayesian expected limits)")
 
 
     (options,args) = parser.parse_args()
