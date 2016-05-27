@@ -75,9 +75,9 @@ def writeBashScript(options,massPoint):
     script += 'cd DijetRootTreeAnalyzer\n'
     script += 'git checkout -b Limits %s\n'%(options.tag)
     script += 'mkdir -p %s\n'%submitDir
-    script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/'%(options.model)
+    script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/\n'%(options.model)
     for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
-        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/'%(options.model,sys)
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/\n'%(options.model,sys)
     script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s\n'%(options.inputFitFile,options.model,massPoint,options.config,lumi,submitDir,options.box,penaltyString,signalSys,options.min_tol,options.min_strat,options.rMax,decoString,bayesString,toyString)
     script += 'cp %s/higgsCombine* %s/\n'%(submitDir,combineDir)
     script += 'cd ../..\n'
