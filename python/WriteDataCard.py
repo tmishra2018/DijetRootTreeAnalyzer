@@ -336,7 +336,7 @@ if __name__ == '__main__':
 
     myRealTH1 = convertToTh1xHist(myRebinnedTH1)
     
-                
+    dataHist = None
     if options.asimov:
         asimov = w.pdf('extDijetPdf').generateBinned(rt.RooArgSet(th1x),rt.RooFit.Asimov())
         asimov.SetName('data_obs')
@@ -349,6 +349,39 @@ if __name__ == '__main__':
         
     rootTools.Utils.importToWS(w,dataHist)
 
+    # import signal pdfs
+    signalHistosOriginal = []
+    signalHistosRebin = []
+    signalHistos = []
+    signalFile = rt.TFile.Open(signalFileName)
+    names = [k.GetName() for k in signalFile.GetListOfKeys()]
+    for name in names:
+        d = signalFile.Get(name)
+        if isinstance(d, rt.TH1):
+            #d.SetDirectory(rt.gROOT)
+            if name=='h_%s_%i'%(model,massPoint):
+                d.Scale(signalXsec*lumi/d.Integral())
+                if options.trigger:
+                    d_turnon = applyTurnonFunc(d,effFrIn,w)
+                    name+='_turnon'
+                    d = d_turnon
+                d.Rebin(len(x)-1,name+'_rebin',x)
+                d_rebin = rt.gDirectory.Get(name+'_rebin')
+                d_rebin.SetDirectory(0)
+
+                signalHistosOriginal.append(d)
+                signalHistosRebin.append(d_rebin)
+
+                d_th1x = convertToTh1xHist(d_rebin)
+                signalHistos.append(d_th1x)
+                
+                sigDataHist = rt.RooDataHist('%s_%s'%(box,model),'%s_%s'%(box,model), rt.RooArgList(th1x), rt.RooFit.Import(d_th1x))
+                sigDataHist_mjj = rt.RooDataHist('%s_%s_mjj'%(box,model),'%s_%s_mjj'%(box,model), rt.RooArgList(w.var('mjj')), rt.RooFit.Import(d))
+                sigPdf_mjj = rt.RooHistPdf('pdf_%s_%s_mjj'%(box,model),'pdf_%s_%s_mjj'%(box,model), rt.RooArgSet(w.var('mjj')), sigDataHist_mjj)
+                rootTools.Utils.importToWS(w,sigDataHist)
+                rootTools.Utils.importToWS(w,sigDataHist_mjj)
+
+    # initialize fit parameters (b-only fit)
     if options.inputFitFile is not None:
         inputRootFile = rt.TFile.Open(options.inputFitFile,"r")
         wIn = inputRootFile.Get("w"+box).Clone("wIn"+box)            
@@ -369,10 +402,22 @@ if __name__ == '__main__':
         frIn.Print("V")
         
         if options.deco:
-            #bkg = bkgs[0]
-            #frForDeco = w.pdf('%s_%s'%(box,bkg)).fitTo(w.data('data_obs'),rt.RooFit.Save())
-            #frForDeco.Print('v')
-            deco = rt.PdfDiagonalizer("deco",w,frIn)
+            sigDataHist = w.data('%s_%s'%(box,model))
+            sigPdf = rt.RooHistPdf('%s_sig'%box,'%s_sig'%box,rt.RooArgSet(th1x), sigDataHist)
+            rootTools.Utils.importToWS(w,sigPdf)
+            w.factory('mu[1]')
+            w.var('mu').setConstant(False)
+            w.factory('Ntot_sig_In[%f]'%(sigDataHist.sumEntries()))
+            w.factory('expr::Ntot_sig("mu*Ntot_sig_In",mu,Ntot_sig_In)')
+            w.factory('SUM::extSpBPdf(Ntot_sig*%s_sig,Ntot_bkg*%s_bkg)'%(box,box))
+            w.factory('SUM::extSigPdf(Ntot_sig*%s_sig)'%(box))
+            frSpB = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))           
+            w.var('mu').setConstant(True)
+            frSpB_muFixed = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))
+            frIn.Print("V")
+            frSpB.Print('v')
+            frSpB_muFixed.Print('v')
+            deco = rt.PdfDiagonalizer("deco",w,frSpB_muFixed)
             bkgs_deco = []
             for bkg in bkgs:
                 pdf_deco = deco.diagonalize(w.pdf('%s_%s'%(box,bkg)))
@@ -408,38 +453,8 @@ if __name__ == '__main__':
             w.var(p.GetName()).setError(p.getError())
             
 
-    signalHistosOriginal = []
-    signalHistosRebin = []
-    signalHistos = []
-    signalFile = rt.TFile.Open(signalFileName)
-    names = [k.GetName() for k in signalFile.GetListOfKeys()]
-    for name in names:
-        d = signalFile.Get(name)
-        if isinstance(d, rt.TH1):
-            #d.SetDirectory(rt.gROOT)
-            if name=='h_%s_%i'%(model,massPoint):
-                d.Scale(signalXsec*lumi/d.Integral())
-                if options.trigger:
-                    d_turnon = applyTurnonFunc(d,effFrIn,w)
-                    name+='_turnon'
-                    d = d_turnon
-                d.Rebin(len(x)-1,name+'_rebin',x)
-                d_rebin = rt.gDirectory.Get(name+'_rebin')
-                d_rebin.SetDirectory(0)
 
-                signalHistosOriginal.append(d)
-                signalHistosRebin.append(d_rebin)
-
-                d_th1x = convertToTh1xHist(d_rebin)
-                signalHistos.append(d_th1x)
-                
-                sigDataHist = rt.RooDataHist('%s_%s'%(box,model),'%s_%s'%(box,model), rt.RooArgList(th1x), rt.RooFit.Import(d_th1x))
-                sigDataHist_mjj = rt.RooDataHist('%s_%s_mjj'%(box,model),'%s_%s_mjj'%(box,model), rt.RooArgList(w.var('mjj')), rt.RooFit.Import(d))
-                sigPdf_mjj = rt.RooHistPdf('pdf_%s_%s_mjj'%(box,model),'pdf_%s_%s_mjj'%(box,model), rt.RooArgSet(w.var('mjj')), sigDataHist_mjj)
-                #sigEffPdf_mjj = rt.RooEffProd('effPdf_%s_%s_mjj'%(box,model),'effPdf_%s_%s_mjj'%(box,model), sigPdf_mjj,w.function('effFunc'))
-                rootTools.Utils.importToWS(w,sigDataHist)
-                rootTools.Utils.importToWS(w,sigDataHist_mjj)
-                #rootTools.Utils.importToWS(w,sigEffPdf_mjj)
+    
                 
     if options.noSignalSys:
         shapes = []
