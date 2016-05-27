@@ -1,13 +1,5 @@
-#JSON data/json/Cert_246908-255031_13TeV_PromptReco_Collisions15_50ns_JSON_v2.txt
-#JSON data/json/Cert_246908-257599_13TeV_PromptReco_Collisions15_25ns_JSON.txt
-#JSON data/json/Cert_246908-258159_13TeV_PromptReco_Collisions15_25ns_JSON_v3.txt
-#JSON data/json/Cert_246908-258714_13TeV_PromptReco_Collisions15_25ns_JSON.txt
-#JSON  data/json/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
-JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
-
-#JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
-# Above added by Juska 8.4.2016 for RECO V7 re-prod, but not in use as it could
-# mess up lumi calculation, and possible extra ls's are not in big tuples anyway
+#JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
+JSON data/json/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt
 
 #
 #############################     Example of file with list of cuts

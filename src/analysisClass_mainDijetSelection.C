@@ -27,60 +27,20 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   if( int(getPreCutValue1("useJECs"))==1 )
   {
     std::cout << "Reapplying JECs on the fly" << std::endl;
-    //std::string L1Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L1FastJet_AK4PFchs.txt";
-    //std::string L2Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L2Relative_AK4PFchs.txt"; 
-    //std::string L3Path = "/cmshome/gdimperi/Dijet/CMSDIJETrepo/CMSSW_7_4_6_patch6/src/CMSDIJET/DijetRootTreeMaker/data/Summer15_V5/Summer15_V5_MC_L3Absolute_AK4PFchs.txt";
-    //std::string L1Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
-    //std::string L2Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
-    //std::string L3Path = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
-    //std::string L1DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L1FastJet_AK4PFchs.txt";
-    //std::string L2DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L2Relative_AK4PFchs.txt"; 
-    //std::string L3DATAPath = "data/Summer15_50nsV2/Summer15_50nsV2_MC_L3Absolute_AK4PFchs.txt";
-    //
-    //std::string L1Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L1FastJet_AK4PFchs.txt";
-    //std::string L2Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L2Relative_AK4PFchs.txt"; 
-    //std::string L3Path = "data/Summer15_50nsV4/Summer15_50nsV4_MC_L3Absolute_AK4PFchs.txt";
-    //std::string L1DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L1FastJet_AK4PFchs.txt";
-    //std::string L2DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2Relative_AK4PFchs.txt"; 
-    //std::string L3DATAPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L3Absolute_AK4PFchs.txt";
-    //std::string L2L3ResidualPath = "data/Summer15_50nsV4/Summer15_50nsV4_DATA_L2L3Residual_AK4PFchs.txt" ;
-    //
-    //std::string L1Path = "data/Summer15_25nsV3_MC/Summer15_25nsV3_MC_L1FastJet_AK4PFchs.txt";
-    //std::string L2Path = "data/Summer15_25nsV3_MC/Summer15_25nsV3_MC_L2Relative_AK4PFchs.txt"; 
-    //std::string L3Path = "data/Summer15_25nsV3_MC/Summer15_25nsV3_MC_L3Absolute_AK4PFchs.txt";
-    //std::string L1DATAPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L1FastJet_AK4PFchs.txt";
-    //std::string L2DATAPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L2Relative_AK4PFchs.txt"; 
-    //std::string L3DATAPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L3Absolute_AK4PFchs.txt";
-    //std::string L2L3ResidualPath = "data/Summer15_25nsV3_DATA/Summer15_25nsV3_DATA_L2L3Residual_AK4PFchs.txt" ;
-    //
-    //std::string L1Path = "data/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L1FastJet_AK4PFchs.txt";
-    //std::string L2Path = "data/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L2Relative_AK4PFchs.txt"; 
-    //std::string L3Path = "data/Summer15_25nsV5_MC/Summer15_25nsV5_MC_L3Absolute_AK4PFchs.txt";
-    //std::string L1DATAPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L1FastJet_AK4PFchs.txt";
-    //std::string L2DATAPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2Relative_AK4PFchs.txt"; 
-    //std::string L3DATAPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L3Absolute_AK4PFchs.txt";
-    //std::string L2L3ResidualPath = "data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_L2L3Residual_AK4PFchs.txt" ;
-    //
-    /*
-    std::string L1Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L2Relative_AK4PFchs.txt"; 
-    std::string L3Path = "data/Summer15_25nsV6_MC/Summer15_25nsV6_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L1FastJet_AK4PFchs.txt";
-    std::string L2DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2Relative_AK4PFchs.txt"; 
-    std::string L3DATAPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_L2L3Residual_AK4PFchs.txt" ;
-    */
-    // New production with V7 JEC for comparing RECO and HLT datasets for dijet scouting
-    std::string L1Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L2Relative_AK4PFchs.txt"; 
-    std::string L3Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L1FastJet_AK4PFchs.txt";
-    std::string L2DATAPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2Relative_AK4PFchs.txt"; 
-    std::string L3DATAPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt" ;
+
+    // First DATA+MC JEC for 2016 analysis. Note that L2L3Res is not ready yet, so
+    // instead of L2L3Residual file I have L2Residual. This is the JetMET
+    // recommendation as of 26 May 16. Juska.
+    std::string L1Path = "data/Spring16_25nsV2_MC/Spring16_25nsV2_MC_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "data/Spring16_25nsV2_MC/Spring16_25nsV2_MC_L2Relative_AK4PFchs.txt"; 
+    std::string L3Path = "data/Spring16_25nsV2_MC/Spring16_25nsV2_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1DATAPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L1FastJet_AK4PFchs.txt";
+    std::string L2DATAPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L2Relative_AK4PFchs.txt"; 
+    std::string L3DATAPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L2Residual_AK4PFchs.txt";
+                                    // "foo_dummy_Spring16_25nsV2_DATA_L2L3Residual_AK4PFchs.txt";
     
 
-    
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
     L3Par = new JetCorrectorParameters(L3Path);
@@ -88,6 +48,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     L2DATAPar = new JetCorrectorParameters(L2DATAPath);
     L3DATAPar = new JetCorrectorParameters(L3DATAPath);
     L2L3Residual = new JetCorrectorParameters(L2L3ResidualPath);
+
 
     std::vector<JetCorrectorParameters> vPar;
     std::vector<JetCorrectorParameters> vPar_data;
@@ -101,13 +62,11 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vPar_data.push_back(*L3DATAPar);
     vPar_data.push_back(*L2L3Residual);
 
-    JetCorrector = new FactorizedJetCorrector(vPar);
-    JetCorrector_data = new FactorizedJetCorrector(vPar_data);
+    JetCorrector = new FactorizedJetCorrector(vPar); assert(JetCorrector);
+    JetCorrector_data = new FactorizedJetCorrector(vPar_data); assert(JetCorrector_data);
 
     //uncertainty
-    //unc = new JetCorrectionUncertainty("data/Summer15_50nsV5_DATA/Summer15_50nsV5_DATA_Uncertainty_AK4PFchs.txt");
-    //unc = new JetCorrectionUncertainty("data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_Uncertainty_AK4PFchs.txt");
-    unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
   }
   
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;
@@ -537,7 +496,9 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_j1", AK4jets[0].Pt());
        fillVariableWithValue( "etaAK4_j1", AK4jets[0].Eta());
        fillVariableWithValue( "phiAK4_j1", AK4jets[0].Phi());
-       fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(sortedJetIdx[0]));
+       
+       //fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(sortedJetIdx[0]));
+       
        fillVariableWithValue( "jetJecAK4_j1", jecFactors[sortedJetIdx[0]] );
        fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
        //jetID
@@ -558,7 +519,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_j2", AK4jets[1].Pt() );
        fillVariableWithValue( "etaAK4_j2", AK4jets[1].Eta());
        fillVariableWithValue( "phiAK4_j2", AK4jets[1].Phi());
-       fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
+       //fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
        fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[1]]); 
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[1]] );
        //jetID
