@@ -179,6 +179,7 @@ def main(options,args):
             if options.toys>-1:
                 toyString = '-t %i'%options.toys
             exec_me('combine -M MarkovChainMC %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 20 --proposal ortho --burnInSteps 100 --iteration 20000 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
+            exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
         else:
             if signif:
                 exec_me('combine -M ProfileLikelihood --signif --expectSignal=1 -t -1 %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box),options.dryRun)
@@ -188,6 +189,7 @@ def main(options,args):
                 if options.rMax>-1:                
                     rRangeString =  '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
                 exec_me('combine -M Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i %s --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.min_tol,options.min_strat,rRangeString,blindString,sysString),options.dryRun)
+                exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.Asymptotic.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
 
     
 if __name__ == '__main__':
