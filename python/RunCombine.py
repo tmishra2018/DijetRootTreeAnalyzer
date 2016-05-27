@@ -175,6 +175,7 @@ def main(options,args):
                 rRangeString += ':p3=%f,%f'%(paramDict['p3'][0]-NSIGMA*paramDict['p3'][1],paramDict['p3'][0]+NSIGMA*paramDict['p3'][1])            
             if options.rMax>-1:
                 rRangeString += ':r=0,%f'%(options.rMax)
+            toyString = ''
             if options.toys>-1:
                 toyString = '-t %i'%options.toys
             exec_me('combine -M MarkovChainMC %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 20 --proposal ortho --burnInSteps 100 --iteration 20000 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
