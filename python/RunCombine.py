@@ -24,6 +24,7 @@ def exec_me(command,dryRun=True):
 def writeBashScript(options,massPoint):
     lumi = float(options.lumi)
     submitDir = options.outDir
+    massPoint = str(massPoint)
 
     
     signalSys = ''
@@ -63,7 +64,7 @@ def writeBashScript(options,massPoint):
     script += 'mkdir -p %s\n'%combineDir        
     script += 'echo $SHELL\n'
     script += 'pwd\n'
-    script += 'cd %s/src/DijetRootTreeAnalyzer \n'%(cmsswBase)
+    script += 'cd %s/src/CMSDIJET/DijetRootTreeAnalyzer \n'%(cmsswBase)
     script += 'pwd\n'
     script += "export SCRAM_ARCH=slc6_amd64_gcc491\n"
     script += "export CMSSW_BASE=%s\n"%(cmsswBase)
@@ -73,8 +74,8 @@ def writeBashScript(options,massPoint):
     script += "mkdir -p $TWD\n"
     script += "cd $TWD\n"
     script += 'pwd\n'
-    script += 'git clone git@github.com:CMSDIJET/DijetRootTreeAnalyzer\n'
-    script += 'cd DijetRootTreeAnalyzer\n'
+    script += 'git clone git@github.com:CMSDIJET/DijetRootTreeAnalyzer CMSDIJET/DijetRootTreeAnalyzer\n'
+    script += 'cd CMSDIJET/DijetRootTreeAnalyzer\n'
     script += 'git checkout -b Limits %s\n'%(options.tag)
     script += 'mkdir -p %s\n'%submitDir
     script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/\n'%(options.model)
