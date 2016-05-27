@@ -6,6 +6,7 @@ from framework import Config
 import sys
 import glob
 import rootTools
+import time
 
 NSIGMA = 3.0
 
@@ -41,6 +42,10 @@ def writeBashScript(options,massPoint):
     if options.bayes:
         bayesString  ='--bayes'
         
+    toyString = ''
+    if options.toys>-1:
+        toyString  ='--toys %i'%options.toys
+        
         
     # prepare the script to run
     outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumi)+options.box+".src"
@@ -56,7 +61,7 @@ def writeBashScript(options,massPoint):
     script += 'mkdir -p %s\n'%combineDir        
     script += 'echo $SHELL\n'
     script += 'pwd\n'
-    script += 'cd %s/src/RazorAnalyzer \n'%(cmsswBase)
+    script += 'cd %s/src/DijetRootTreeAnalyzer \n'%(cmsswBase)
     script += 'pwd\n'
     script += "export SCRAM_ARCH=slc6_amd64_gcc491\n"
     script += "export CMSSW_BASE=%s\n"%(cmsswBase)
@@ -66,14 +71,14 @@ def writeBashScript(options,massPoint):
     script += "mkdir -p $TWD\n"
     script += "cd $TWD\n"
     script += 'pwd\n'
-    script += 'git clone git@github.com:RazorCMS/RazorAnalyzer\n'
-    script += 'cd RazorAnalyzer\n'
+    script += 'git clone git@github.com:CMSDIJET/DijetRootTreeAnalyzer\n'
+    script += 'cd DijetRootTreeAnalyzer\n'
     script += 'git checkout -b Limits %s\n'%(options.tag)
-    script += 'source setup.sh\n'
-    script += 'make\n'
-    script += 'mkdir -p Datasets\n'
     script += 'mkdir -p %s\n'%submitDir
-    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s\n'%(options.inputFitFile,options.model,massPoint,options.config,lumi,submitDir,options.box,penaltyString,signalSys,options.min_tol,options.min_strat,options.rMax,decoString,bayesString)
+    script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/'%(options.model)
+    for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/'%(options.model,sys)
+    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s\n'%(options.inputFitFile,options.model,massPoint,options.config,lumi,submitDir,options.box,penaltyString,signalSys,options.min_tol,options.min_strat,options.rMax,decoString,bayesString,toyString)
     script += 'cp %s/higgsCombine* %s/\n'%(submitDir,combineDir)
     script += 'cd ../..\n'
     script += 'rm -rf $TWD\n'
@@ -159,18 +164,20 @@ def main(options,args):
         if options.bayes:
             rRangeString =  '--setPhysicsModelParameterRanges '
             if options.deco:
-                rRangeString += 'shapeBkg_%s_bkg_deco_%s__norm=%f,%f'%(box,box,paramDict['Ntot_bkg'][0]-NSIGMA*paramDict['Ntot_bkg'][1],paramDict['Ntot_bkg'][0]+NSIGMA*paramDict['Ntot_bkg'][1])
+                rRangeString += 'shapeBkg_%s_bkg_deco_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0],1+NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0])
                 rRangeString += ':deco_eig1=%f,%f'%(-1.0*NSIGMA,NSIGMA)
                 rRangeString += ':deco_eig1=%f,%f'%(-1.0*NSIGMA,NSIGMA)
                 rRangeString += ':deco_eig1=%f,%f'%(-1.0*NSIGMA,NSIGMA)
             else:
-                rRangeString += 'shapeBkg_%s_bkg_%s__norm=%f,%f'%(box,box,paramDict['Ntot_bkg'][0]-NSIGMA*paramDict['Ntot_bkg'][1],paramDict['Ntot_bkg'][0]+NSIGMA*paramDict['Ntot_bkg'][1])
+                rRangeString += 'shapeBkg_%s_bkg_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0],1+NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0])
                 rRangeString += ':p1=%f,%f'%(paramDict['p1'][0]-NSIGMA*paramDict['p1'][1],paramDict['p1'][0]+NSIGMA*paramDict['p1'][1])
                 rRangeString += ':p2=%f,%f'%(paramDict['p2'][0]-NSIGMA*paramDict['p2'][1],paramDict['p2'][0]+NSIGMA*paramDict['p2'][1])
                 rRangeString += ':p3=%f,%f'%(paramDict['p3'][0]-NSIGMA*paramDict['p3'][1],paramDict['p3'][0]+NSIGMA*paramDict['p3'][1])            
             if options.rMax>-1:
                 rRangeString += ':r=0,%f'%(options.rMax)
-            exec_me('combine -M MarkovChainMC %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 10 --proposal ortho --burnInSteps 10 --saveWorkspace %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString),options.dryRun)
+            if options.toys>-1:
+                toyString = '-t %i'%options.toys
+            exec_me('combine -M MarkovChainMC %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 20 --proposal ortho --burnInSteps 100 --iteration 20000 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
         else:
             if signif:
                 exec_me('combine -M ProfileLikelihood --signif --expectSignal=1 -t -1 %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box),options.dryRun)
@@ -229,6 +236,8 @@ if __name__ == '__main__':
                   help="tag for repository")
     parser.add_option('-q','--queue',dest="queue",default="1nh",type="string",
                   help="queue: 1nh, 8nh, 1nd, etc.")
+    parser.add_option('-t','--toys',dest="toys",default=-1,type="int",
+                  help="number of toys (for bayesian expected limits)")
 
 
     (options,args) = parser.parse_args()
