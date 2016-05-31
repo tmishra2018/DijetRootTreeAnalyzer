@@ -1,5 +1,0 @@
-root://eoscms//eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_big/JetHT/crab_JetHT__Run2016B-PromptReco-v1__MINIAOD/160525_130309/0000/JetHT__Run2016B-PromptReco-v1__MINIAOD_262.root
-root://eoscms//eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_big/JetHT/crab_JetHT__Run2016B-PromptReco-v1__MINIAOD/160525_130309/0000/JetHT__Run2016B-PromptReco-v1__MINIAOD_263.root
-root://eoscms//eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_big/JetHT/crab_JetHT__Run2016B-PromptReco-v1__MINIAOD/160525_130309/0000/JetHT__Run2016B-PromptReco-v1__MINIAOD_264.root
-root://eoscms//eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_big/JetHT/crab_JetHT__Run2016B-PromptReco-v1__MINIAOD/160525_130309/0000/JetHT__Run2016B-PromptReco-v1__MINIAOD_265.root
-root://eoscms//eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_big/JetHT/crab_JetHT__Run2016B-PromptReco-v1__MINIAOD/160525_130309/0000/JetHT__Run2016B-PromptReco-v1__MINIAOD_266.root
