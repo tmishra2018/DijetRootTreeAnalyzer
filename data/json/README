@@ -1,14 +1,14 @@
 *****
-This README has been updated after the reprocessing of all data from DCSonly json file. 
-The previous data paths and infos are still accessible here: https://github.com/CMSDIJET/DijetRootTreeAnalyzer/blob/3b2e7091e606691b7276386a12b3c0607f0491aa/data/json/README
+2016 Processing. 2015 stuff moved to a subdirectory.
 *****
 
 ===============
 Reduced ntuples
 ===============
 Path of reduced ntuples.
-For data lumiSummary and corresponding luminosity calculated with brilcalc (http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and the lates recipee (https://hypernews.cern.ch/HyperNews/CMS/get/luminosity/507.html)  
-
+For data lumiSummary and corresponding luminosity calculated with brilcalc
+(http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and the latest
+known normtag (see hypernews of follow latest rumours).
 ====== DATA =====
 
 Full 2016 dataset so far: 1)
