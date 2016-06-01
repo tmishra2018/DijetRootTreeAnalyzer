@@ -64,3 +64,10 @@ JEC Summer15_25nsV3 (for MC are same as V5)
 (Rome T2) /pnfs/roma1.infn.it/data/cms/store/user/roma-group1/Dijet/reducedTrees/mc/Spring15_25ns_JEC-Summer15_25nsV5_20151007_163727/merged/ 
 (CERN eos) /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring15_JEC_Summer15_25nsV5_nodEta_cut/
 
+
+QCD MC with CMSSW_80X
+=====================
+Reduced trees in /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/eirini/QCD_Spring16_80X
+Lowest pt hat bin = 50 GeV
+JEC used: Spring16_25nsV2_MC 
+
