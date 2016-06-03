@@ -169,7 +169,9 @@ def main(options,args):
         blindString = '--noFitAsimov --run expected'
 
     sysString = ''
-    if options.noSys:
+    if options.noSys and options.deco:
+        sysString = '-S 0 --freezeNuisances=shapeBkg_%s_bkg_%s__norm,deco_eig1,deco_eig2,deco_eig3,jes,jer'%(box,box)
+    elif options.noSys:
         sysString = '-S 0 --freezeNuisances=shapeBkg_%s_bkg_%s__norm,p1,p2,p3,jes,jer'%(box,box)
     
     decoString = ''
@@ -185,8 +187,8 @@ def main(options,args):
             if options.deco:
                 rRangeString += 'shapeBkg_%s_bkg_deco_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0],1+NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0])
                 rRangeString += ':deco_eig1=%f,%f'%(-1.0*NSIGMA,NSIGMA)
-                rRangeString += ':deco_eig1=%f,%f'%(-1.0*NSIGMA,NSIGMA)
-                rRangeString += ':deco_eig1=%f,%f'%(-1.0*NSIGMA,NSIGMA)
+                rRangeString += ':deco_eig2=%f,%f'%(-1.0*NSIGMA,NSIGMA)
+                rRangeString += ':deco_eig3=%f,%f'%(-1.0*NSIGMA,NSIGMA)
             else:
                 rRangeString += 'shapeBkg_%s_bkg_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0],1+NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0])
                 rRangeString += ':p1=%f,%f'%(paramDict['p1'][0]-NSIGMA*paramDict['p1'][1],paramDict['p1'][0]+NSIGMA*paramDict['p1'][1])
@@ -197,7 +199,7 @@ def main(options,args):
             toyString = ''
             if options.toys>-1:
                 toyString = '-t %i -s -1'%options.toys
-            exec_me('combine -M MarkovChainMC %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 20 --proposal ortho --burnInSteps 100 --iteration 20000 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
+            exec_me('combine -M MarkovChainMC %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 20 --proposal ortho --burnInSteps 200 --iteration 30000 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
             exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
         else:
             if signif:
