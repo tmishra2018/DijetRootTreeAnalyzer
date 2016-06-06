@@ -30,10 +30,18 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L1FastJet_AK4PFchs.txt";
     std::string L2Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L2Relative_AK4PFchs.txt";
     std::string L3Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L1FastJet_AK4CaloHLT.txt";
-    std::string L2DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L2Relative_AK4CaloHLT.txt"; 
-    std::string L3DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L3Absolute_AK4CaloHLT.txt";
-    std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PF.txt" ;
+    // procedure for 2015 CaloScouting data:
+    //std::string L1DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L1FastJet_AK4CaloHLT.txt";
+    //std::string L2DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L2Relative_AK4CaloHLT.txt"; 
+    //std::string L3DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L3Absolute_AK4CaloHLT.txt";
+    //std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PF.txt" ;
+    // procedure for 2016 CaloScouting data:
+    std::string L1DATAPath = "data/80X_dataRun2_HLT_frozen_v12/80X_dataRun2_HLT_frozen_v12_L1FastJet_AK4CaloHLT.txt";
+    std::string L2DATAPath = "data/80X_dataRun2_HLT_frozen_v12/80X_dataRun2_HLT_frozen_v12_L2Relative_AK4CaloHLT.txt";
+    std::string L3DATAPath = "data/80X_dataRun2_HLT_frozen_v12/80X_dataRun2_HLT_frozen_v12_L3Absolute_AK4CaloHLT.txt";
+    // should put L2L3Residual from AK4PF for 2016 data when available... for now apply 76X 2015 data residual
+    //std::string L2L3ResidualPath = "data/Spring16_25nsV2_DATA/foo_dummy_Spring16_25nsV2_DATA_L2L3Residual_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Fall15_25nsV2_DATA/Fall15_25nsV2_DATA_L2L3Residual_AK4PF.txt" ;
     
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
@@ -62,7 +70,10 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //unc = new JetCorrectionUncertainty("data/Summer15_50nsV5_DATA/Summer15_50nsV5_DATA_Uncertainty_AK4PFchs.txt");
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_Uncertainty_AK4PFchs.txt");
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
+    // for 2015 CaloScouting
     unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
+    // for 2016 CaloScouting... to be updated...
+    unc = new JetCorrectionUncertainty("data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
 
   }
   
