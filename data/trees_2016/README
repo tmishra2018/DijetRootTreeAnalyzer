@@ -11,26 +11,45 @@ For data lumiSummary and corresponding luminosity calculated with brilcalc (http
 
 ====== DATA =====
 
-Full 2016 dataset so far: 1)
+For full 2016 dataset so far with latest JEC, please uses dataset(s): 2)
 =========================
+(Most recent production first)
 
-1) Run2016B processing 1
+2) Run2016B processing round 2
+
+/JetHT/Run2016B-PromptReco-v1/MINIAOD
+/JetHT/Run2016B-PromptReco-v2/MINIAOD
+Standard selection without DeltaEta cut
+JEC Spring16 25nsV2 L1,L2,L3 + L2Residual
+DCSOnly: 708.255 /pb
+processed_jsons/promt_v1_or_v2_1jun16.json
+
+Golden: 589.333 /pb (PassJSON==1)
+processed_jsons/promt_v1_v2_and_golden_1jun16.json
+
+(brilcalc with normtag_DATACERT.json)
+
+(CERN eos)
+
+1) Run2016B processing round 1
+(obsolete after full re-process at round 2)
 
 /JetHT/Run2016B-PromptReco-v1/MINIAOD
 /JetHT/Run2016B-PromptReco-v2/MINIAOD
 Standard selection without DeltaEta cut
 JEC Spring16 25nsV2 L1,L2,L3 + L2Residual
 DCSOnly: 707.911 /pb
-27may16_promt_v1_v2_or.json
+processed_jsons/27may16_promt_v1_v2_or.json
 
 Golden: 216.023 /pb (PassJSON==1)
-27may16_crabreports_or_golden_NoL1T.json
+processed_jsons/27may16_crabreports_or_golden_NoL1T.json
 
 (brilcalc with normtag_DATACERT.json)
 
 (CERN eos)
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_red/Run2016B_part1_Spring16_V2_L2Res_1nh_s2_20160527_112820/*skim.root
 (1 file out of 146 not processed in v1 dataset. Will be restored at next round.)
+
 
  
 
