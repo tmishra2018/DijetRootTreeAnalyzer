@@ -20,7 +20,7 @@ ScoutingCaloCommissioning
 ============
 
 1)
-/ScoutingCaloCommissioning/Run2015B-v1/RAW
+/ScoutingCaloCommissioning/Run2016B-v1/RAW
 Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut), corrected for JES bias 
 JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
 (CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_050011/*reduced*root
@@ -42,9 +42,29 @@ ScoutingCaloCommissioning
 ============
 
 1)
-/ScoutingCaloCommissioning/Run2015B-v1/RAW
+/ScoutingCaloCommissioning/Run2016B-v1/RAW
 Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut), corrected for JES bias 
 JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
 (CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_174717/*reduced*root
 
-eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_174717/*reduced*root
+===============================
+More Certified data (w/ updated JEC)
+
+ScoutingCaloHT
+============
+JSON USED BELOW WAS /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt 
+
+1)
+/ScoutingCaloHT/Run2016B-v2/RAW
+Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
+JEC 80X_dataRun2_HLT_frozen_v12_LXXX_AK4CaloHLT.txt from Javier, and dummy L2L3Residual from Spring16_25nsV2_DATA
+(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloHT2016_JEC_CaloL1L2L3_20160602_072810/*reduced*root
+
+ScoutingCaloCommissioning
+============
+
+1)
+/ScoutingCaloCommissioning/Run2016B-v2/RAW
+Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
+JEC 80X_dataRun2_HLT_frozen_v12_LXXX_AK4CaloHLT.txt from Javier, and dummy L2L3Residual from Spring16_25nsV2_DATA
+(CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_20160602_064207/*reduced*root
