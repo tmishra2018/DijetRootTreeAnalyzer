@@ -28,16 +28,18 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   {
     std::cout << "Reapplying JECs on the fly" << std::endl;
 
-    // First DATA+MC JEC for 2016 analysis. Note that L2L3Res is not ready yet, so
-    // instead of L2L3Residual file I have L2Residual. This is the JetMET
-    // recommendation as of 26 May 16. Juska.
     std::string L1Path = "data/Spring16_25nsV2_MC/Spring16_25nsV2_MC_L1FastJet_AK4PFchs.txt";
     std::string L2Path = "data/Spring16_25nsV2_MC/Spring16_25nsV2_MC_L2Relative_AK4PFchs.txt"; 
     std::string L3Path = "data/Spring16_25nsV2_MC/Spring16_25nsV2_MC_L3Absolute_AK4PFchs.txt";
     std::string L1DATAPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L1FastJet_AK4PFchs.txt";
     std::string L2DATAPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L2Relative_AK4PFchs.txt"; 
     std::string L3DATAPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L2Residual_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/experimental/Spring16_25nsV3M1_DATA_L2L3Residual_AK4PFchs.txt"; // Mikko's first 2016 residuals
+      // "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt"; // Run with 2016 L1L2L3 + 2015 'final' L2L3Res
+      
+    
+                                    //"data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt"; // Run with 2016 L1L2L3 + 2015 'final' L2L3Res
+                                    //"data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_L2Residual_AK4PFchs.txt";
                                     // "foo_dummy_Spring16_25nsV2_DATA_L2L3Residual_AK4PFchs.txt";
     
 
