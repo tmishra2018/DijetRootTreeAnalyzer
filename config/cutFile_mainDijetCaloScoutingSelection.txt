@@ -1,4 +1,4 @@
-JSON /afs/cern.ch/work/a/apresyan/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2016/json_DCSONLY_272007_273537.txt
+JSON /afs/cern.ch/work/w/woodson/DIJET/CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/data/json_scouting_2016/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON_DCSONLY_273731.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -62,7 +62,7 @@ etaWJ_j1             -2.5           2.5                 -               -       
 pTWJ_j2	      	      30	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j2             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 deltaETAjj           -inf           +inf               	-               -               1       100 0. 3.         SAVE
-mjj            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
+mjj            	     270           +inf                -               -               1       10000 0 10000      SAVE
 mjj_shiftJEC         -inf           +inf                -               -               1       10000 0 10000      SAVE
 # no cut on these variables, just want to save histograms and variables
 passHLT_CaloJet40_CaloScouting_PFScouting -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
