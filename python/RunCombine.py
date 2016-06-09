@@ -203,7 +203,10 @@ def main(options,args):
             exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
         else:
             if signif:
-                exec_me('combine -M ProfileLikelihood --signif --expectSignal=1 -t -1 %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box),options.dryRun)
+                rRangeString = ''               
+                if options.rMax>-1:
+                    rRangeString = '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
+                exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString),options.dryRun)
                 exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.ProfileLikelihood.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)
             else:
                 rRangeString = ''
