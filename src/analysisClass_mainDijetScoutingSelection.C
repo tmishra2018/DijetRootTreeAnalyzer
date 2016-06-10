@@ -30,13 +30,13 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L1FastJet_AK4PFchs.txt";
     std::string L2Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L2Relative_AK4PFchs.txt";
     std::string L3Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L1FastJet_AK4PFchs.txt";
-    std::string L2DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L2Relative_AK4PFchs.txt"; 
-    std::string L3DATAPath = "data/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_MC/74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt" ;
+    std::string L1DATAPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L1FastJet_AK4PFHLT.txt";
+    std::string L2DATAPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L2Relative_AK4PFHLT.txt";
+    std::string L3DATAPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L3Absolute_AK4PFHLT.txt";
+    // std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt" ;
+    std::string L2L3ResidualPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L2L3Residual_AK4PFHLT.txt";
 
 
-    
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
     L3Par = new JetCorrectorParameters(L3Path);
@@ -50,7 +50,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vPar.push_back(*L1Par);
     vPar.push_back(*L2Par);
     vPar.push_back(*L3Par);
-   
+
     //residuals are applied only to data
     vPar_data.push_back(*L1DATAPar);
     vPar_data.push_back(*L2DATAPar);
@@ -67,7 +67,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
 
   }
-  
+
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;
 }
 
@@ -80,18 +80,18 @@ analysisClass::~analysisClass()
 
 void analysisClass::Loop()
 {
-   std::cout << "analysisClass::Loop() begins" <<std::endl;   
-    
+   std::cout << "analysisClass::Loop() begins" <<std::endl;
+
    if (fChain == 0) return;
-   
+
    //////////book histos here
 
    // TH1F *h_nJetFinal = new TH1F ("h_nJetFinal","",10,0,10);
-   // h_nJetFinal->Sumw2();      
+   // h_nJetFinal->Sumw2();
    // TH1F *h_nVtx = new TH1F ("h_nVtx","",30,0,30);
-   // h_nVtx->Sumw2(); 
+   // h_nVtx->Sumw2();
    // TH1F *h_trueVtx = new TH1F ("h_trueVtx","",40,0,40);
-   // h_trueVtx->Sumw2();  
+   // h_trueVtx->Sumw2();
    // TH1F *h_pT1stJet = new TH1F ("h_pT1stJet","",100,0,3000);
    // h_pT1stJet->Sumw2();
    // TH1F *h_pT2ndJet = new TH1F ("h_pT2ndJet","",100,0,3000);
@@ -118,7 +118,7 @@ void analysisClass::Loop()
    //                      "Mu45Eta2p1", "PFHT800AndMu45Eta2p1"};
    // TH1F* h_mjj_HLTpass[8];
    // char name_histoHLT[50];
-   // for (int i=0; i<8; i++){  
+   // for (int i=0; i<8; i++){
    //   sprintf(name_histoHLT,"h_mjj_HLTpass_%s",HLTname[i]);
    //   h_mjj_HLTpass[i]= new TH1F(name_histoHLT,"",103,massBoundaries);
    // }
@@ -138,11 +138,11 @@ void analysisClass::Loop()
    /////////initialize variables
 
    Long64_t nentries = fChain->GetEntriesFast();
-   std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;   
+   std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;
 
    ////// The following ~7 lines have been taken from rootNtupleClass->Loop() /////
    ////// If the root version is updated and rootNtupleClass regenerated,     /////
-   ////// these lines may need to be updated.                                 /////    
+   ////// these lines may need to be updated.                                 /////
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
    //for (Long64_t jentry=0; jentry<2000;jentry++) {
@@ -159,11 +159,11 @@ void analysisClass::Loop()
      size_t no_jets_ak4=jetPtAK4->size();
 
      vector<TLorentzVector> widejets;
-     TLorentzVector wj1, wj2, wdijet; 
-     TLorentzVector wj1_shift, wj2_shift, wdijet_shift; 
+     TLorentzVector wj1, wj2, wdijet;
+     TLorentzVector wj1_shift, wj2_shift, wdijet_shift;
 
      vector<TLorentzVector> AK4jets;
-     TLorentzVector ak4j1, ak4j2, ak4dijet;      
+     TLorentzVector ak4j1, ak4j2, ak4dijet;
 
      resetCuts();
 
@@ -171,11 +171,11 @@ void analysisClass::Loop()
      // int idx_InTimeBX=-1;
      // for(size_t j=0; j<PileupOriginBX->size(); ++j)
      //   {
-     // 	 //cout << PileupOriginBX->at(j) << endl;	 
+     // 	 //cout << PileupOriginBX->at(j) << endl;
      // 	 if(PileupOriginBX->at(j)==0)
      // 	   {
      // 	     idx_InTimeBX = j;
-     // 	     //cout << "idx_InTimeBX: " << idx_InTimeBX << endl; 
+     // 	     //cout << "idx_InTimeBX: " << idx_InTimeBX << endl;
      // 	   }
      //   }
 
@@ -214,7 +214,7 @@ void analysisClass::Loop()
 	     unc->setJetEta(jetEtaAK4->at(j));
 	     unc->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
 	     double uncertainty = unc->getUncertainty(true);
-	     jecUncertainty.push_back(uncertainty); 
+	     jecUncertainty.push_back(uncertainty);
 
 	     // std::cout << "run:" << runNo << "    lumi:" << lumi << "   event:" << evtNo << "   jet pt:" << jetPtAK4->at(j)/jetJecAK4->at(j)*correction << "   correction:" << correction <<   "   uncertainty:" <<  uncertainty  << "  nominal correction:" << nominal_correction  << " old correction: " << old_correction << std::endl;
 	     //use "shifted" JECs for study of systematic uncertainties 
@@ -235,7 +235,7 @@ void analysisClass::Loop()
      // get jet indices in decreasing pT order
      for(std::multimap<double, unsigned>::const_reverse_iterator it = sortedJets.rbegin(); it != sortedJets.rend(); ++it)
 	 sortedJetIdx.push_back(it->second);
-     
+
      }
      else if( int(getPreCutValue1("noJECs"))==1  )
        {
@@ -243,10 +243,10 @@ void analysisClass::Loop()
 	 std::multimap<double, unsigned> sortedJets;
 	 for(size_t j=0; j<no_jets_ak4; ++j) //same ordering of original root trees
 	   {
-	     jecUncertainty.push_back(0.); 
+	     jecUncertainty.push_back(0.);
 	     jecFactors.push_back(1.);
 	     sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j)), j)); //raw
-	   }       
+	   }
 	 // get jet indices in decreasing pT order
 	 for(std::multimap<double, unsigned>::const_reverse_iterator it = sortedJets.rbegin(); it != sortedJets.rend(); ++it)
 	   sortedJetIdx.push_back(it->second);
@@ -256,7 +256,7 @@ void analysisClass::Loop()
 	 for(size_t j=0; j<no_jets_ak4; ++j) //same ordering of original root trees
 	   {
 	     jecFactors.push_back(jetJecAK4->at(j));
-	     jecUncertainty.push_back(0.); 
+	     jecUncertainty.push_back(0.);
 	     sortedJetIdx.push_back(j);
 	   }
        }
@@ -280,8 +280,8 @@ void analysisClass::Loop()
      double HTak4 = 0;
 
      for(size_t ijet=0; ijet<no_jets_ak4; ++ijet)
-       {	 
-	 //cout << "evtNo: " << evtNo << endl;	 
+       {
+	 //cout << "evtNo: " << evtNo << endl;
 	 // cout << "ijet=" << ijet << " , sortedJetIdx[ijet]=" << sortedJetIdx[ijet] 
 	 //      << " , raw pT=" << jetPtAK4->at(sortedJetIdx[ijet])/jetJecAK4->at(sortedJetIdx[ijet]) 
 	 //      << " , final corrected pT - old =" << jetPtAK4->at(sortedJetIdx[ijet] ) 
@@ -365,11 +365,11 @@ void analysisClass::Loop()
 		   jet2_shift.SetPtEtaPhiM( (1+jecUncertainty[sortedJetIdx[1]])* (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) *jetPtAK4->at(sortedJetIdx[1])
 				      ,jetEtaAK4->at(sortedJetIdx[1]),jetPhiAK4->at(sortedJetIdx[1])
 				      , (1+jecUncertainty[sortedJetIdx[0]])*(jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) * jetMassAK4->at(sortedJetIdx[1]));
-		   
+
 		   for(Long64_t ijet=0; ijet<no_jets_ak4; ijet++)
 		     { //jet loop for ak4
 		       TLorentzVector currentJet;
-		       
+
 		       if(fabs(jetEtaAK4->at(sortedJetIdx[ijet])) < getPreCutValue1("jetFidRegion") 
 			  && idTAK4->at(sortedJetIdx[ijet]) == getPreCutValue1("tightJetID") 
 			  && (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) > getPreCutValue1("ptCut"))
@@ -381,10 +381,10 @@ void analysisClass::Loop()
 			   currentJet_shift.SetPtEtaPhiM( (1+jecUncertainty[sortedJetIdx[ijet]])*(jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet])) *jetPtAK4->at(sortedJetIdx[ijet])
 						    ,jetEtaAK4->at(sortedJetIdx[ijet]),jetPhiAK4->at(sortedJetIdx[ijet])
 						    , (1+jecUncertainty[sortedJetIdx[ijet]])*(jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet])) *jetMassAK4->at(sortedJetIdx[ijet]));   
-			   
+
 			   double DeltaR1 = currentJet.DeltaR(jet1);
 			   double DeltaR2 = currentJet.DeltaR(jet2);
-			   
+
 			   if(DeltaR1 < DeltaR2 && DeltaR1 < wideJetDeltaR_)
 			     {
 			       wj1_tmp += currentJet;
@@ -394,17 +394,17 @@ void analysisClass::Loop()
 			     {
 			       wj2_tmp += currentJet;
 			       wj2_shift_tmp += currentJet_shift;
-			     }			 
+			     }
 			 } // if AK4 jet passes fid and jetid.
-		     } //end of ak4 jet loop		     
+		     } //end of ak4 jet loop
 
-		   // if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0) 
-		   // std::cout << " wj1_tmp.Pt() IN  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " <<  wj2_tmp.Pt()  << std::endl;		     
+		   // if(wj1_tmp.Pt()==0 && wj2_tmp.Pt() ==0)
+		   // std::cout << " wj1_tmp.Pt() IN  " <<wj1_tmp.Pt()  << " wj2_tmp.Pt() " <<  wj2_tmp.Pt()  << std::endl;
 
 		 } //fid, jet id, pt cut
 	     } //fid, jet id, pt cut
 	 } // end of two jets.
-	 
+
        // Re-order the wide jets in pt
        if( wj1_tmp.Pt() > wj2_tmp.Pt())
 	 {
@@ -423,10 +423,10 @@ void analysisClass::Loop()
      }
 
 
-     double MJJWide = 0; 
+     double MJJWide = 0;
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
-     double MJJWide_shift = 0; 
+     double MJJWide_shift = 0;
      if( wj1.Pt()>0 && wj2.Pt()>0 )
      {
        // Create dijet system
@@ -434,7 +434,7 @@ void analysisClass::Loop()
        MJJWide = wdijet.M();
        DeltaEtaJJWide = fabs(wj1.Eta()-wj2.Eta());
        DeltaPhiJJWide = fabs(wj1.DeltaPhi(wj2));
-       
+
        wdijet_shift = wj1_shift + wj2_shift;
        MJJWide_shift = wdijet_shift.M();
 
@@ -466,12 +466,12 @@ void analysisClass::Loop()
 				     , (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) *jetMassAK4->at(sortedJetIdx[1]));
 	       }
 	   }
-       }   
+       }
 
-     double MJJAK4 = 0; 
+     double MJJAK4 = 0;
      double DeltaEtaJJAK4 = 0;
      double DeltaPhiJJAK4 = 0;
-     
+
      //std::cout << "ak4j1.Pt()=" << ak4j1.Pt() << "   ak4j2.Pt()=" << ak4j2.Pt() << std::endl;
      if( ak4j1.Pt()>0 && ak4j2.Pt()>0 )
      {
@@ -485,13 +485,13 @@ void analysisClass::Loop()
        AK4jets.push_back( ak4j1 );
        AK4jets.push_back( ak4j2 );
      }
-    
+
      //== Fill Variables ==
-     fillVariableWithValue("isData",isData);     
-     fillVariableWithValue("run",runNo);     
-     fillVariableWithValue("event",evtNo);     
-     fillVariableWithValue("lumi",lumi);     
-     fillVariableWithValue("nVtx",nvtx);     
+     fillVariableWithValue("isData",isData);
+     fillVariableWithValue("run",runNo);
+     fillVariableWithValue("event",evtNo);
+     fillVariableWithValue("lumi",lumi);
+     fillVariableWithValue("nVtx",nvtx);
      fillVariableWithValue("nJet",widejets.size());
      fillVariableWithValue("Nak4",Nak4);
      fillVariableWithValue ( "PassJSON", passJSON (runNo, lumi, isData));
@@ -535,7 +535,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "etaAK4_j2", AK4jets[1].Eta());
        fillVariableWithValue( "phiAK4_j2", AK4jets[1].Phi());
        //fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
-       fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[1]]); 
+       fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[1]]);
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[1]] );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(sortedJetIdx[1]));
@@ -550,7 +550,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "photonMult_j2", phoMultAK4->at(sortedJetIdx[1]));
        fillVariableWithValue( "jetCSVAK4_j2", jetCSVAK4->at(sortedJetIdx[1]) );
        //dijet
-       fillVariableWithValue( "Dijet_MassAK4", MJJAK4) ; 
+       fillVariableWithValue( "Dijet_MassAK4", MJJAK4) ;
        fillVariableWithValue( "CosThetaStarAK4", TMath::TanH( (AK4jets[0].Eta()-AK4jets[1].Eta())/2 )); 
        fillVariableWithValue( "deltaETAjjAK4", DeltaEtaJJAK4 ) ;
        fillVariableWithValue( "deltaPHIjjAK4", DeltaPhiJJAK4 ) ;
@@ -572,11 +572,11 @@ void analysisClass::Loop()
          fillVariableWithValue( "mjj_shiftJEC", MJJWide_shift ) ;
 	 //no cuts on these variables, just to store in output
          fillVariableWithValue( "massWJ_j2", widejets[1].M());
-         fillVariableWithValue( "phiWJ_j2", widejets[1].Phi());	
+         fillVariableWithValue( "phiWJ_j2", widejets[1].Phi());
 	 //dijet
          fillVariableWithValue( "CosThetaStarWJ", TMath::TanH( (widejets[0].Eta()-widejets[1].Eta())/2 )); 
 	 fillVariableWithValue( "deltaPHIjj", DeltaPhiJJWide ) ;
-	 //fillVariableWithValue( "Dijet_MassAK8", mjjAK8 ) ;  
+	 //fillVariableWithValue( "Dijet_MassAK8", mjjAK8 ) ;
 	 //fillVariableWithValue( "Dijet_MassC", mjjCA8 ) ;
 	 // if(wdijet.M()<1){
 	 //    std::cout << " INV MASS IS " << wdijet.M() << std::endl;
@@ -589,42 +589,44 @@ void analysisClass::Loop()
      // if(!isData)
      //   fillVariableWithValue("trueVtx",PileupInteractions->at(idx_InTimeBX));
      // else if(isData)
-     //   fillVariableWithValue("trueVtx",999);     
+     //   fillVariableWithValue("trueVtx",999);
 
      // Trigger
      //int NtriggerBits = triggerResult->size();
      if (isData)
        {
-	 fillVariableWithValue("passHLT_ZeroBias_BtagSeq",triggerResult->at(8));// DST_ZeroBias_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_ZeroBias",triggerResult->at(7));// DST_ZeroBias_PFScouting_v* (run>=259636)
+	 fillVariableWithValue("passHLT_ZeroBias_BtagSeq",triggerResult->at(10));// DST_ZeroBias_BTagScouting_v* (run>=259636)
+	 fillVariableWithValue("passHLT_ZeroBias",triggerResult->at(9));// DST_ZeroBias_PFScouting_v* (run>=259636)
 
-	 fillVariableWithValue("passHLT_L1DoubleMu_BtagSeq",triggerResult->at(9));// DST_L1DoubleMu_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_L1DoubleMu",triggerResult->at(10));// DST_L1DoubleMu_PFScouting_v* (run>=259636)
+	 fillVariableWithValue("passHLT_L1DoubleMu_BtagSeq",triggerResult->at(11));// DST_L1DoubleMu_BTagScouting_v* (run>=259636)
+	 fillVariableWithValue("passHLT_L1DoubleMu",triggerResult->at(12));// DST_L1DoubleMu_PFScouting_v* (run>=259636)
 
-	 fillVariableWithValue("passHLT_CaloJet40_BtagSeq",triggerResult->at(0));//  DST_CaloJet40_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636) 
+	 fillVariableWithValue("passHLT_CaloJet40_BtagSeq",triggerResult->at(1));//  DST_CaloJet40_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636) 
 	                                                                        //  OR DST_CaloJet40_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_CaloJet40",triggerResult->at(1));// DST_CaloJet40_CaloScouting_PFScouting_v*  (run>=259636)
+	 fillVariableWithValue("passHLT_CaloJet40",triggerResult->at(0));// DST_CaloJet40_CaloScouting_PFScouting_v*  (run>=259636)
 
 	 fillVariableWithValue("passHLT_L1HTT150_BtagSeq",triggerResult->at(2));// DST_L1HTT125ORHTT150ORHTT175_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636) 
-	                                                                        // OR DST_L1HTT_BTagScouting_v* (run>=259636)    
+	                                                                        // OR DST_L1HTT_BTagScouting_v* (run>=259636)
 	 fillVariableWithValue("passHLT_L1HTT150",triggerResult->at(3));// DST_L1HTT_CaloScouting_PFScouting_v* (run>=259636)
 
-	 fillVariableWithValue("passHLT_HT450_BtagSeq",triggerResult->at(5));// DST_HT450_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636) 
-	                                                                     // OR DST_HT450_BTagScouting_v* (run>=259636)    
-	 fillVariableWithValue("passHLT_HT450",triggerResult->at(6));// DST_HT450_PFScouting_v* (run>=259636)        
+	 fillVariableWithValue("passHLT_HT410_BtagSeq", triggerResult->at(5));// DST_HT410_BTagScouting_v*
+	 fillVariableWithValue("passHLT_HT410", triggerResult->at(6));// DST_HT410_PFScouting_v*
+	 fillVariableWithValue("passHLT_HT450_BtagSeq",triggerResult->at(7));// DST_HT450_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636)
+	                                                                     // OR DST_HT450_BTagScouting_v* (run>=259636)
+	 fillVariableWithValue("passHLT_HT450",triggerResult->at(8));// DST_HT450_PFScouting_v* (run>=259636)
 
-	 fillVariableWithValue("passHLT_PFHT800",triggerResult->at(13));// HLT_PFHT800_v* (all runs)   
-	 fillVariableWithValue("passHLT_PFHT650MJJ950",triggerResult->at(22));// HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v* (all runs)        
-	 fillVariableWithValue("passHLT_PFHT650MJJ900",triggerResult->at(23));// HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v* (all runs)        
+	 fillVariableWithValue("passHLT_PFHT800",triggerResult->at(16));// HLT_PFHT800_v* (all runs)
+	 fillVariableWithValue("passHLT_PFHT650MJJ950",triggerResult->at(25));// HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v* (all runs)
+	 fillVariableWithValue("passHLT_PFHT650MJJ900",triggerResult->at(26));// HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v* (all runs)
        }
 
      // Evaluate cuts (but do not apply them)
      evaluateCuts();
-     
+
      // optional call to fill a skim with the full content of the input roottuple
      //if( passedCut("nJetFinal") ) fillSkimTree();
      if( passedCut("PassJSON")
-	 && passedCut("nVtx") 
+	 && passedCut("nVtx")
 	 && passedCut("IdTight_j1")
 	 && passedCut("IdTight_j2")
 	 && passedCut("nJet")
@@ -634,27 +636,27 @@ void analysisClass::Loop()
 	 && passedCut("etaWJ_j2")
 	 && getVariableValue("deltaETAjj") <  getPreCutValue1("DetaJJforTrig") ){
 
-       h_mjj_NoTrigger_1GeVbin -> Fill(MJJWide); 
-       h_mjj_NoTrigger -> Fill(MJJWide); 
-       
+       h_mjj_NoTrigger_1GeVbin -> Fill(MJJWide);
+       h_mjj_NoTrigger -> Fill(MJJWide);
+
        if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) )
-	 h_mjj_HLTpass_ZeroBias -> Fill(MJJWide);  
+	 h_mjj_HLTpass_ZeroBias -> Fill(MJJWide);
 
        if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) 
 	   && (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
-	 h_mjj_HLTpass_ZeroBias_L1HTT150 -> Fill(MJJWide);  
+	 h_mjj_HLTpass_ZeroBias_L1HTT150 -> Fill(MJJWide);
 
        if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
-	 h_mjj_HLTpass_L1HTT150 -> Fill(MJJWide);  
+	 h_mjj_HLTpass_L1HTT150 -> Fill(MJJWide);
 
        if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) 
 	   && (getVariableValue("passHLT_HT450_BtagSeq")||getVariableValue("passHLT_HT450")) )
-	 h_mjj_HLTpass_L1HTT150_HT450 -> Fill(MJJWide);  
-       
+	 h_mjj_HLTpass_L1HTT150_HT450 -> Fill(MJJWide);
+
      }
 
      // optional call to fill a skim with a subset of the variables defined in the cutFile (use flag SAVE)
-     if( passedAllPreviousCuts("mjj") && passedCut("mjj") ) 
+     if( passedAllPreviousCuts("mjj") && passedCut("mjj") )
        {
 	 fillReducedSkimTree();
 
@@ -683,7 +685,7 @@ void analysisClass::Loop()
      // reject events that did not pass level 0 cuts
      //if( !passedCut("0") ) continue;
      // ......
-     
+
      // reject events that did not pass level 1 cuts
      //if( !passedCut("1") ) continue;
      // ......
@@ -704,7 +706,7 @@ void analysisClass::Loop()
 
    } // End loop over events
 
-   //////////write histos 
+   //////////write histos
 
    h_mjj_NoTrigger_1GeVbin -> Write();
    h_mjj_NoTrigger -> Write();
@@ -730,5 +732,5 @@ void analysisClass::Loop()
    // h_pTJets->Write();
    // //one could also do:   const TH1F& h = getHisto_noCuts_or_skim// and use h
 
-   std::cout << "analysisClass::Loop() ends" <<std::endl;   
+   std::cout << "analysisClass::Loop() ends" <<std::endl;
    }

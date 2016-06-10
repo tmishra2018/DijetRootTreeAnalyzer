@@ -4,7 +4,8 @@
 #JSON data/json/Cert_246908-258714_13TeV_PromptReco_Collisions15_25ns_JSON.txt
 #JSON  data/json/Cert_246908-259891_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
 #JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
-JSON data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
+#JSON data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
+JSON data/json_scouting_2016/json_DCSONLY_272007_274443.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -31,7 +32,7 @@ DeltaR				1.1		-		-		-		-1
 DetaJJforTrig                   1.3             -               -               -               -1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
 useJECs				1               -               -               -               -1
-# turn on/off the removal of JEC 
+# turn on/off the removal of JEC
 noJECs                          0               -               -               -               -1
 # turn on/off shift JECs (value1 0: off, 1: on, value2: sign of the shifting. The value is taken from a txt file with JEC uncertainties) 
 shiftJECs                       0               -1               -               -               -1		
@@ -75,11 +76,13 @@ passHLT_ZeroBias_BtagSeq     -inf           +inf                -	        -	    
 passHLT_L1DoubleMu_BtagSeq   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_CaloJet40_BtagSeq    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_L1HTT150_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_HT410_BtagSeq        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_HT450_BtagSeq        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_ZeroBias     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_L1DoubleMu   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_CaloJet40    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_L1HTT150     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_HT410        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_HT450        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT800      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT650MJJ950	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
