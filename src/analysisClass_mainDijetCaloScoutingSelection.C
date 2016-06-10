@@ -39,9 +39,10 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1DATAPath = "data/80X_dataRun2_HLT_frozen_v12/80X_dataRun2_HLT_frozen_v12_L1FastJet_AK4CaloHLT.txt";
     std::string L2DATAPath = "data/80X_dataRun2_HLT_frozen_v12/80X_dataRun2_HLT_frozen_v12_L2Relative_AK4CaloHLT.txt";
     std::string L3DATAPath = "data/80X_dataRun2_HLT_frozen_v12/80X_dataRun2_HLT_frozen_v12_L3Absolute_AK4CaloHLT.txt";
-    // should put L2L3Residual from AK4PF for 2016 data when available... for now apply 76X 2015 data residual
-    //std::string L2L3ResidualPath = "data/Spring16_25nsV2_DATA/foo_dummy_Spring16_25nsV2_DATA_L2L3Residual_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Fall15_25nsV2_DATA/Fall15_25nsV2_DATA_L2L3Residual_AK4PF.txt" ;
+    // 76X 2015 data
+    //std::string L2L3ResidualPath = "data/Fall15_25nsV2_DATA/Fall15_25nsV2_DATA_L2L3Residual_AK4PF.txt" ;
+    // 2016 data 
+    std::string L2L3ResidualPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L2L3Residual_AK4PF.txt";
     
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
@@ -608,8 +609,8 @@ void analysisClass::Loop()
      if (isData)
        {
 	 fillVariableWithValue("passHLT_CaloJet40_CaloScouting_PFScouting",triggerResult->at(0));// CaloJet40_CaloScouting_PFScouting
-	 fillVariableWithValue("passHLT_L1HTT_CaloScouting_PFScouting",triggerResult->at(1));// L1HTT_CaloScouting_PFScouting
-	 fillVariableWithValue("passHLT_CaloScoutingHT250",triggerResult->at(2));// CaloScoutingHT250
+	 fillVariableWithValue("passHLT_L1HTT_CaloScouting_PFScouting",triggerResult->at(2));// L1HTT_CaloScouting_PFScouting
+	 fillVariableWithValue("passHLT_CaloScoutingHT250",triggerResult->at(4));// CaloScoutingHT250
 
 	 fillVariableWithValue("passL1T_HTT120",l1Result->at(0));// 
 	 fillVariableWithValue("passL1T_HTT170",l1Result->at(1));// 
