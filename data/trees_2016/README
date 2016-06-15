@@ -29,7 +29,7 @@ Luminosity:
 DCSOnly: 2755.285 /pb
 processed_jsons/lumis_round4_full_promt_v1_or_v2.json
 
-Golden: 2071.443 /pb (PassJSON==1)
+Golden: 2065.505 /pb (PassJSON==1)
 processed_jsons/lumis_round4_full_DCS_promt_v1_v2_and_golden_upto_274421_14Jun16.json
 
 Unprocessed certified lumi:
