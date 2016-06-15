@@ -11,6 +11,30 @@ For data lumiSummary and corresponding luminosity calculated with brilcalc (http
 
 ====== DATA =====
 
+=== CaloScouting ===
+
+/ScoutingCaloHT/Run2016B-v1/RAW
+/ScoutingCaloHT/Run2016B-v2/RAW
+/ScoutingCaloCommissioning/Run2016B-v1/RAW
+/ScoutingCaloCommissioning/Run2016B-v2/RAW
+
+Standard selection without DeltaEta cut
+JEC 80X_dataRun2_HLT_frozen_v12 AK4CALOHLT L1,L2,L3 + Spring16_25nsV3 AK4PF L2L3Residual
+
+Luminosity:
+DCSOnly: 2755.231 /pb
+processed_jsons/processedlumis_CaloHT.json
+processed_jsons/processedlumis_CaloCommissioning.json
+
+Golden: 2064.848 /pb (PassJSON==1)
+processed_jsons/overlap_CaloHT.json
+processed_jsons/overlap_CaloCommissioning.json
+
+File locations (CERN EOS):
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloHT2016_JEC_CaloL1L2L3_PFL2L3Residual_Golden_20160612_204451/*reduced_skim.root
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_Golden_20160613_014014/*reduced_skim.root
+
+=== RECO ===
 For full 2016 dataset so far with latest JEC, please uses dataset(s): 4)
 =========================
 (Most recent production first)
@@ -50,8 +74,6 @@ processed_jsons/golden_sub_crabproc_round4.json
 File location (CERN EOS):
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_red/pub/2016B_round4_fullDCS_Spring16_V3_Fall15_V2_Residuals_8nh_s10_20160614_102928/*skim.root
 
-
-
 3) (round 3 publication omitted due to poorly understood production issues)
 
 2) Run2016B processing round 2
@@ -88,9 +110,6 @@ processed_jsons/27may16_crabreports_or_golden_NoL1T.json
 (CERN eos)
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_red/Run2016B_part1_Spring16_V2_L2Res_1nh_s2_20160527_112820/*skim.root
 (1 file out of 146 not processed in v1 dataset. Will be restored at next round.)
-
-
- 
 
 
 
