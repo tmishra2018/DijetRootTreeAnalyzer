@@ -1,7 +1,7 @@
 #JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
 #JSON data/json/Cert_271036-273450_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt
 #JSON data/json/Cert_271036-273730_13TeV_PromptReco_Collisions16_JSON.txt
-JSON data/json/Cert_271036-274240_13TeV_PromptReco_Collisions16_JSON.txt
+JSON data/json/Cert_271036-274421_13TeV_PromptReco_Collisions16_JSON.txt
 
 #
 #############################     Example of file with list of cuts

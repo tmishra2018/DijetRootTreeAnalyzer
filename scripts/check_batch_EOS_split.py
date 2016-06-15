@@ -7,6 +7,11 @@ import datetime
 import subprocess
 import re
 
+# Warning: as of 14Jun16 this script cannot recognize all the problems with batch running.
+# It does not check if the output file is there, so some exotic lxbatch errors go unnoticed. Juska.
+
+_checklog = False # Disable .log file check as they are not there anymore. Juska 14Jun16.
+
 usage = "usage: To be run from DijetRootTreeAnalyzer/ :  python scripts/check_batch_EOS_split.py -i batchDir -s storageDir"
 
 parser = optparse.OptionParser(usage)
@@ -41,8 +46,9 @@ for srcFile in out:
     numberOfJob = ((srcFile.split(".")[0]).split("_"))[-1]
     print numberOfJob + " " + srcFile
 
-    logfile =  "logfile"+((srcFile.split("submit")[1]).split(".src")[0])+".log"
-    #print logfile
+    if (_checklog):
+       logfile =  "logfile"+((srcFile.split("submit")[1]).split(".src")[0])+".log"
+       #print logfile
 
     crablogfile =  "crablogfile"+((srcFile.split("submit")[1]).split(".src")[0])+".crablog"
     #print crablogfile
@@ -57,13 +63,14 @@ for srcFile in out:
     #print rootfilereduced
 
 
-    #check presence of logfile
-    proclog = subprocess.Popen(["ls %s" % opt.inputDir+"/"+logfile], stdout=subprocess.PIPE, shell=True)
-    (outlog, errlog) = proclog.communicate()
-    #print "len(outlog)="+str(len(outlog))
-    if len(outlog) == 0:
-        resubmit = 1
-        overallresubmit = 1
+    if (_checklog):  
+        #check presence of logfile
+        proclog = subprocess.Popen(["ls %s" % opt.inputDir+"/"+logfile], stdout=subprocess.PIPE, shell=True)
+        (outlog, errlog) = proclog.communicate()
+        #print "len(outlog)="+str(len(outlog))
+        if len(outlog) == 0:
+            resubmit = 1
+            overallresubmit = 1
 
     #check presence of crablogfile
     proccrablog = subprocess.Popen(["ls %s" % opt.inputDir+"/"+crablogfile], stdout=subprocess.PIPE, shell=True)
