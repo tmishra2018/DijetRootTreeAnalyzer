@@ -30,11 +30,10 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L1FastJet_AK4PFchs.txt";
     std::string L2Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L2Relative_AK4PFchs.txt";
     std::string L3Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L1FastJet_AK4PFHLT.txt";
-    std::string L2DATAPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L2Relative_AK4PFHLT.txt";
-    std::string L3DATAPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L3Absolute_AK4PFHLT.txt";
-    // std::string L2L3ResidualPath = "data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_L2L3Residual_AK4PFchs.txt" ;
-    std::string L2L3ResidualPath = "data/80X_dataRun2_HLT_v12/80X_dataRun2_HLT_v12_L2L3Residual_AK4PFHLT.txt";
+    std::string L1DATAPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L1FastJet_AK4PFchs.txt";
+    std::string L2DATAPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L2Relative_AK4PFchs.txt";
+    std::string L3DATAPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L2L3Residual_AK4PFchs.txt";
 
 
     L1Par = new JetCorrectorParameters(L1Path);

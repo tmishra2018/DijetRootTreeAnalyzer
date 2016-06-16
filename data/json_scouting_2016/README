@@ -34,6 +34,12 @@ JSON: data/json_scouting_2016/json_DCSONLY_272007_274443.txt => 2675.81 /pb
 JEC: data/80X_dataRun2_HLT_v12/
 (CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFHT_Jun-09-2016_JEC_80X_dataRun2_HLT_v12_DCSonly_20160610_021618/
 
+2)
+/ScoutingPFHT/Run2016B-v2/RAW
+JSON: data/json_scouting_2016/lumiSummary_ScoutingPFHT_Jun-15-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json => 2067.613 /pb
+JEC: data/Spring16_25nsV3_DATA/
+(CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421_20160616_045349/
+
 
 ===============================
 Certified data
