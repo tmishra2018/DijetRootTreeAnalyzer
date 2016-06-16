@@ -594,29 +594,54 @@ void analysisClass::Loop()
      //int NtriggerBits = triggerResult->size();
      if (isData)
        {
-	 fillVariableWithValue("passHLT_ZeroBias_BtagSeq",triggerResult->at(10));// DST_ZeroBias_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_ZeroBias",triggerResult->at(9));// DST_ZeroBias_PFScouting_v* (run>=259636)
+         fillVariableWithValue("passHLT_CaloJet40_CaloScouting_PFScouting", triggerResult->at(0));
+         fillVariableWithValue("passHLT_CaloJet40_BTagScouting", triggerResult->at(1));
+         fillVariableWithValue("passHLT_L1HTT_CaloScouting_PFScouting", triggerResult->at(2));
+         fillVariableWithValue("passHLT_L1HTT_BTagScouting", triggerResult->at(3));
+         fillVariableWithValue("passHLT_CaloScoutingHT250", triggerResult->at(4));
+         fillVariableWithValue("passHLT_BTagScoutingHT410", triggerResult->at(5));
+         fillVariableWithValue("passHLT_PFScoutingHT410", triggerResult->at(6));
+         fillVariableWithValue("passHLT_BTagScoutingHT450", triggerResult->at(7));
+         fillVariableWithValue("passHLT_PFScoutingHT450", triggerResult->at(8));
+         fillVariableWithValue("passHLT_ZeroBias_PFScouting", triggerResult->at(9));
+         fillVariableWithValue("passHLT_ZeroBias_BTagScouting", triggerResult->at(10));
+         fillVariableWithValue("passHLT_L1DoubleMu_BTagScouting", triggerResult->at(11));
+         fillVariableWithValue("passHLT_L1DoubleMu_PFScouting", triggerResult->at(12));
+         fillVariableWithValue("passHLT_DoubleMu3_Mass10_BTagScouting", triggerResult->at(13));
+         fillVariableWithValue("passHLT_DoubleMu3_Mass10_PFScouting", triggerResult->at(14));
+         fillVariableWithValue("passHLT_PFHT900", triggerResult->at(15));
+         fillVariableWithValue("passHLT_PFHT800", triggerResult->at(16));
+         fillVariableWithValue("passHLT_PFHT650", triggerResult->at(17));
+         fillVariableWithValue("passHLT_PFHT600", triggerResult->at(18));
+         fillVariableWithValue("passHLT_PFHT475", triggerResult->at(19));
+         fillVariableWithValue("passHLT_PFHT400", triggerResult->at(20));
+         fillVariableWithValue("passHLT_PFHT350", triggerResult->at(21));
+         fillVariableWithValue("passHLT_PFHT300", triggerResult->at(22));
+         fillVariableWithValue("passHLT_PFHT250", triggerResult->at(23));
+         fillVariableWithValue("passHLT_PFHT200", triggerResult->at(24));
+         fillVariableWithValue("passHLT_PFHT650MJJ950", triggerResult->at(25));
+         fillVariableWithValue("passHLT_PFHT650MJJ900", triggerResult->at(26));
+         fillVariableWithValue("passHLT_PFJET500", triggerResult->at(27));
+         fillVariableWithValue("passHLT_PFJET450", triggerResult->at(28));
+         fillVariableWithValue("passHLT_PFJET200", triggerResult->at(29));
+         fillVariableWithValue("passHLT_HT2000", triggerResult->at(30));
+         fillVariableWithValue("passHLT_HT2500", triggerResult->at(31));
+         fillVariableWithValue("passHLT_Mu45Eta2p1", triggerResult->at(32));
+         fillVariableWithValue("passHLT_AK8PFHT700TriMass50", triggerResult->at(33));
+         fillVariableWithValue("passHLT_AK8PFJet360TrimMass50", triggerResult->at(34));
+         fillVariableWithValue("passHLT_CaloJet500NoJetID", triggerResult->at(35));
+         fillVariableWithValue("passHLT_DiPFJetAve300HFJEC", triggerResult->at(36));
+         fillVariableWithValue("passHLT_DiPFJetAve500", triggerResult->at(37));
+         fillVariableWithValue("passHLT_PFHT750FourJetPt50", triggerResult->at(38));
+         fillVariableWithValue("passHLT_QuadPFJetVBF", triggerResult->at(39));
 
-	 fillVariableWithValue("passHLT_L1DoubleMu_BtagSeq",triggerResult->at(11));// DST_L1DoubleMu_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_L1DoubleMu",triggerResult->at(12));// DST_L1DoubleMu_PFScouting_v* (run>=259636)
-
-	 fillVariableWithValue("passHLT_CaloJet40_BtagSeq",triggerResult->at(1));//  DST_CaloJet40_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636) 
-	                                                                        //  OR DST_CaloJet40_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_CaloJet40",triggerResult->at(0));// DST_CaloJet40_CaloScouting_PFScouting_v*  (run>=259636)
-
-	 fillVariableWithValue("passHLT_L1HTT150_BtagSeq",triggerResult->at(2));// DST_L1HTT125ORHTT150ORHTT175_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636) 
-	                                                                        // OR DST_L1HTT_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_L1HTT150",triggerResult->at(3));// DST_L1HTT_CaloScouting_PFScouting_v* (run>=259636)
-
-	 fillVariableWithValue("passHLT_HT410_BtagSeq", triggerResult->at(5));// DST_HT410_BTagScouting_v*
-	 fillVariableWithValue("passHLT_HT410", triggerResult->at(6));// DST_HT410_PFScouting_v*
-	 fillVariableWithValue("passHLT_HT450_BtagSeq",triggerResult->at(7));// DST_HT450_PFReco_PFBTagCSVReco_PFScouting_v* (257933<=run<259636)
-	                                                                     // OR DST_HT450_BTagScouting_v* (run>=259636)
-	 fillVariableWithValue("passHLT_HT450",triggerResult->at(8));// DST_HT450_PFScouting_v* (run>=259636)
-
-	 fillVariableWithValue("passHLT_PFHT800",triggerResult->at(16));// HLT_PFHT800_v* (all runs)
-	 fillVariableWithValue("passHLT_PFHT650MJJ950",triggerResult->at(25));// HLT_PFHT650_WideJetMJJ950DEtaJJ1p5_v* (all runs)
-	 fillVariableWithValue("passHLT_PFHT650MJJ900",triggerResult->at(26));// HLT_PFHT650_WideJetMJJ900DEtaJJ1p5_v* (all runs)
+         fillVariableWithValue("passL1T_HTT200", l1Result->at(0));
+         fillVariableWithValue("passL1T_HTT240", l1Result->at(1));
+         fillVariableWithValue("passL1T_HTT270", l1Result->at(2));
+         fillVariableWithValue("passL1T_HTT280", l1Result->at(3));
+         fillVariableWithValue("passL1T_HTT300", l1Result->at(4));
+         fillVariableWithValue("passL1T_HTT320", l1Result->at(5));
+         fillVariableWithValue("passL1T_ZeroBias", l1Result->at(6));
        }
 
      // Evaluate cuts (but do not apply them)
@@ -638,19 +663,19 @@ void analysisClass::Loop()
        h_mjj_NoTrigger_1GeVbin -> Fill(MJJWide);
        h_mjj_NoTrigger -> Fill(MJJWide);
 
-       if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) )
-	 h_mjj_HLTpass_ZeroBias -> Fill(MJJWide);
+       // if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) )
+       //   h_mjj_HLTpass_ZeroBias -> Fill(MJJWide);
 
-       if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) 
-	   && (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
-	 h_mjj_HLTpass_ZeroBias_L1HTT150 -> Fill(MJJWide);
+       // if( (getVariableValue("passHLT_ZeroBias_BtagSeq")||getVariableValue("passHLT_ZeroBias")) 
+       //     && (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
+       //   h_mjj_HLTpass_ZeroBias_L1HTT150 -> Fill(MJJWide);
 
-       if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
-	 h_mjj_HLTpass_L1HTT150 -> Fill(MJJWide);
+       // if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) )
+       //   h_mjj_HLTpass_L1HTT150 -> Fill(MJJWide);
 
-       if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) 
-	   && (getVariableValue("passHLT_HT450_BtagSeq")||getVariableValue("passHLT_HT450")) )
-	 h_mjj_HLTpass_L1HTT150_HT450 -> Fill(MJJWide);
+       // if( (getVariableValue("passHLT_L1HTT150_BtagSeq")||getVariableValue("passHLT_L1HTT150")) 
+       //     && (getVariableValue("passHLT_HT450_BtagSeq")||getVariableValue("passHLT_HT450")) )
+       //   h_mjj_HLTpass_L1HTT150_HT450 -> Fill(MJJWide);
 
      }
 

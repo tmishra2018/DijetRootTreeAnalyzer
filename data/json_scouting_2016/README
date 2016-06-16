@@ -93,3 +93,11 @@ ParkingScoutingMonitor
 Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
 JEC 80X_dataRun2_HLT_frozen_v12_LXXX_AK4CaloHLT.txt from Javier, and 2015 76X L2L3Residual from Fall15_25nsV2_DATA
 (CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloMonitor2016_JEC_CaloL1L2L3_76XPFL2L3Residual_20160606_180046
+
+ScoutingPFCommissioning
+=======================
+
+1) /ScoutingPFCommissioning/Run2016B-v2/RAW
+JSON: data/json_scouting_2016/lumiSummary_ScoutingPFCommissioning_Jun-16-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json => 2067.613 /pb
+JEC: data/Spring16_25nsV3_DATA/
+(CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFCommisioning_Jun-16-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON__20160616_072432/

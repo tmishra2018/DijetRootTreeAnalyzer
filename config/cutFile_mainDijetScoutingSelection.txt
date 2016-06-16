@@ -7,6 +7,7 @@
 #JSON data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
 #JSON data/json_scouting_2016/json_DCSONLY_272007_274443.txt
 JSON data/json_scouting_2016/lumiSummary_ScoutingPFHT_Jun-15-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json
+#JSON data/json_scouting_2016/lumiSummary_crab_ScoutingPFCommissioning__Run2016B-v2__RAW_Cert_271036-274421_13TeV_PromptReco_Collisions16.json
 #
 #############################     Example of file with list of cuts
 #
@@ -73,21 +74,53 @@ deltaETAjj           -inf           +inf               	-               -       
 mjj            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
 mjj_shiftJEC         -inf           +inf                -               -               1       10000 0 10000      SAVE
 # no cut on these variables, just want to save histograms and variables
-passHLT_ZeroBias_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1DoubleMu_BtagSeq   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_CaloJet40_BtagSeq    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1HTT150_BtagSeq     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_HT410_BtagSeq        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_HT450_BtagSeq        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_ZeroBias     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1DoubleMu   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_CaloJet40    -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_L1HTT150     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_HT410        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_HT450        -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_CaloJet40_CaloScouting_PFScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_CaloJet40_BTagScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1HTT_CaloScouting_PFScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1HTT_BTagScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_CaloScoutingHT250     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_BTagScoutingHT410     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFScoutingHT410     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_BTagScoutingHT450     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFScoutingHT450     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_ZeroBias_PFScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_ZeroBias_BTagScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1DoubleMu_BTagScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_L1DoubleMu_PFScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_DoubleMu3_Mass10_BTagScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_DoubleMu3_Mass10_PFScouting     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT900      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 passHLT_PFHT800      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_PFHT650MJJ950	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
-passHLT_PFHT650MJJ900	     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT650      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT600      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT475      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT400      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT350      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT300      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT250      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT200      -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT650MJJ950     -inf           +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT650MJJ900     -inf           +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFJET500     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFJET450     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFJET200     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_HT2000       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_HT2500       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_Mu45Eta2p1   -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passHLT_AK8PFHT700TriMass50    -inf      +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_AK8PFJet360TrimMass50  -inf      +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_CaloJet500NoJetID      -inf      +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_DiPFJetAve300HFJEC     -inf      +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_DiPFJetAve500          -inf      +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_PFHT750FourJetPt50     -inf      +inf           -	        -	        1       2  0 2.	  	  SAVE
+passHLT_QuadPFJetVBF -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT200       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT240       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT270       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT280       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT300       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_HTT320       -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
+passL1T_ZeroBias     -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
 isData		     -inf	    +inf		-		-		1	2  0 2.	  	  SAVE
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
