@@ -19,14 +19,17 @@ ptCut				30		-		-		-		-1
 DeltaR				1.1		-		-		-		-1
 DetaJJforTrig                   1.3             -               -               -               -1
 # Denominator of mjj_ratio histogram
-resonanceMass                   1000            -               -               -               -1
+resonanceMass                   RESONANCEMASS            -               -               -               -1
 # systematics for JER/JES smearing
-jer                   0.05            -               -               -               -1
+hltP0                   2.441            -               -               -               -1 
+hltP1                   0.0            -               -               -               -1
+recoP0                   2.077            -               -               -               -1 
+recoP1                   0.0            -               -               -               -1
 jerUp                   0.10            -               -               -               -1
-jerDown                   0.            -               -               -               -1
+jerDown                   -0.10            -               -               -               -1
 jes                   0.           -               -               -               -1
-jesUp                   0.05            -               -               -               -1
-jesDown                   -0.05            -               -               -               -1
+jesUp                   0.02            -               -               -               -1
+jesDown                   -0.02            -               -               -               -1
 #
 #
 #--------------------------------- Cuts (level 0,1,2,3 ... n) below --------------------------------------------

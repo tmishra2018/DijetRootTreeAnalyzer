@@ -2,6 +2,7 @@
 #include "analysisClass.h"
 #include <TH2.h>
 #include <TH1F.h>
+#include <TF1.h>
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <TLorentzVector.h>
@@ -96,6 +97,19 @@ void analysisClass::Loop()
 
     /////////initialize variables
     TRandom3 r(1988);
+    
+    TF1* hltFunc = new TF1("hltFunc","sqrt([0]*[0]/x+[1]*[1])",0,14000);
+    hltFunc->SetParameter(0,getPreCutValue1("hltP0"));
+    hltFunc->SetParameter(1,getPreCutValue1("hltP1"));
+    TF1* recoFunc = new TF1("recoFunc","sqrt([0]*[0]/x+[1]*[1])",0,14000);
+    recoFunc->SetParameter(0,getPreCutValue1("recoP0"));
+    recoFunc->SetParameter(1,getPreCutValue1("recoP1"));
+    TF1* smearFunc  = new TF1("smearFunc","(recoFunc)*sqrt(hltFunc*hltFunc/recoFunc/recoFunc-1.0)",0,14000);
+    TF1* smearJerUpFunc  = new TF1("smearJerUpFunc","(recoFunc)*sqrt(pow(hltFunc + [0]*recoFunc,2.0)/recoFunc/recoFunc-1.0)",0,14000);
+    smearJerUpFunc->SetParameter(0,getPreCutValue1("jerUp"));
+    TF1* smearJerDownFunc  = new TF1("smearJerDownFunc","(recoFunc)*sqrt(pow(hltFunc + [0]*recoFunc,2.0)/recoFunc/recoFunc-1.0)",0,14000);
+    smearJerDownFunc->SetParameter(0,getPreCutValue1("jerDown"));
+    
     Long64_t nentries = fChain->GetEntriesFast();
     std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;
 
@@ -121,13 +135,13 @@ void analysisClass::Loop()
 	double x2 = r.Gaus();
 	double x3 = r.Gaus();
 	
-	double mjj_nom = mjj*(1.+getPreCutValue1("jes"))*(1.+getPreCutValue1("jer")*x1);
+	double mjj_nom = mjj*(1.+getPreCutValue1("jes"))*(1.+smearFunc->Eval(mjj)*x1);
 	
-	double mjj_jerUp = mjj*(1.+getPreCutValue1("jes"))*(1.+getPreCutValue1("jerUp")*x2);
-	double mjj_jerDown = mjj*(1.+getPreCutValue1("jes"))*(1.+getPreCutValue1("jerDown")*x3);
+	double mjj_jerUp = mjj*(1.+getPreCutValue1("jes"))*(1.+smearJerUpFunc->Eval(mjj)*x2);
+	double mjj_jerDown = mjj*(1.+getPreCutValue1("jes"))*(1.+smearJerDownFunc->Eval(mjj)*x3);
 
-	double mjj_jesUp = mjj*(1.+getPreCutValue1("jesUp"))*(1.+getPreCutValue1("jer")*x1);
-	double mjj_jesDown = mjj*(1.+getPreCutValue1("jesDown"))*(1.+getPreCutValue1("jer")*x1);
+	double mjj_jesUp = mjj*(1.+getPreCutValue1("jesUp"))*(1.+smearFunc->Eval(mjj)*x1);
+	double mjj_jesDown = mjj*(1.+getPreCutValue1("jesDown"))*(1.+smearFunc->Eval(mjj)*x1);
 	
         double mjj_ratio = mjj/getPreCutValue1("resonanceMass");
 	
