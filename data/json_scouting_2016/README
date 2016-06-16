@@ -6,6 +6,10 @@ Reduced root trees
 ====== DATA =====
 =================
 
+==================
+== CaloScouting ==
+==================
+
 ScoutingCaloHT
 ============
 JSON USED BELOW WAS data/json_scouting_2016/json_DCSONLY_272007_273537.txt
@@ -24,22 +28,6 @@ ScoutingCaloCommissioning
 Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut), corrected for JES bias 
 JEC 74X_HLT_mcRun2_asymptotic_fromSpring15DR_v0_LXXX_AK4CaloHLT.txt from Federico, and L2L3Residual from Summer15_25nsV7_DATA
 (CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims/ScoutingCaloCommissioning_2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_20160524_050011/*reduced*root
-
-ScoutingPFHT
-============
-
-1)
-/ScoutingPFHT/Run2016B-v2/RAW
-JSON: data/json_scouting_2016/json_DCSONLY_272007_274443.txt => 2675.81 /pb
-JEC: data/80X_dataRun2_HLT_v12/
-(CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFHT_Jun-09-2016_JEC_80X_dataRun2_HLT_v12_DCSonly_20160610_021618/
-
-2)
-/ScoutingPFHT/Run2016B-v2/RAW
-JSON: data/json_scouting_2016/lumiSummary_ScoutingPFHT_Jun-15-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json => 2067.613 /pb
-JEC: data/Spring16_25nsV3_DATA/
-(CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421_20160616_045349/
-
 
 ===============================
 Certified data
@@ -94,10 +82,30 @@ Standard selection (NO DeltaEta cut, NO mjj cut, NO passJson cut)
 JEC 80X_dataRun2_HLT_frozen_v12_LXXX_AK4CaloHLT.txt from Javier, and 2015 76X L2L3Residual from Fall15_25nsV2_DATA
 (CERN eos) eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloMonitor2016_JEC_CaloL1L2L3_76XPFL2L3Residual_20160606_180046
 
+==================
+=== PFScouting ===
+==================
+
+ScoutingPFHT
+============
+
+1)
+/ScoutingPFHT/Run2016B-v2/RAW
+JSON: data/json_scouting_2016/json_DCSONLY_272007_274443.txt => 2675.81 /pb
+JEC: data/80X_dataRun2_HLT_v12/
+(CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFHT_Jun-09-2016_JEC_80X_dataRun2_HLT_v12_DCSonly_20160610_021618/
+
+2)
+/ScoutingPFHT/Run2016B-v2/RAW
+JSON: data/json_scouting_2016/lumiSummary_ScoutingPFHT_Jun-15-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json => 2067.613 /pb
+JEC: data/Spring16_25nsV3_DATA/
+(CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421_20160616_045349/
+
 ScoutingPFCommissioning
 =======================
 
-1) /ScoutingPFCommissioning/Run2016B-v2/RAW
+1)
+/ScoutingPFCommissioning/Run2016B-v2/RAW
 JSON: data/json_scouting_2016/lumiSummary_ScoutingPFCommissioning_Jun-16-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json => 2067.613 /pb
 JEC: data/Spring16_25nsV3_DATA/
 (CERN EOS) /store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_reduced/2016/ScoutingPFCommisioning_Jun-16-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON_271036-274421/ScoutingPFHT_Jun-15-2016_JEC_Spring16_25nsV3_DATA_GoldenJSON__20160616_072432/
