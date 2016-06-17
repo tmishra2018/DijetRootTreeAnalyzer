@@ -63,7 +63,7 @@ def simFit(pdf, data, fitRange, effPdf, effData, conditionalObs):
     migrad_status = m2.minimize('Minuit2','migrad')
     improve_status = m2.minimize('Minuit2','improve')
     hesse_status = m2.minimize('Minuit2','hesse')
-    #minos_status = m2.minos()
+    minos_status = m2.minos()
     fr = m2.save()
 
     return fr
@@ -111,7 +111,7 @@ def convertFunctionToHisto(background_,name_,N_massBins_,massBins_):
 
     return background_hist_
 
-def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_residual_vsMass_,workspace_,prinToScreen_=0):
+def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_residual_vsMass_,workspace_,prinToScreen_=0,effFit_=False):
     
     N_massBins_ = data_obs_TGraph_.GetN()
     MinNumEvents = 10
@@ -142,14 +142,14 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
         value_fit = background_hist_.GetBinContent(bin+1)
         
         ## Fit residuals
-
         err_tot_data = 0
-        if (value_fit >= value_data):
+        if (value_fit > value_data):
             err_tot_data = err_high_data  
         else:
             err_tot_data = err_low_data
         plotRegions = plotRegion.split(',')
         checkInRegions = [xbinCenter>workspace_.var('mjj').getMin(reg) and xbinCenter<workspace_.var('mjj').getMax(reg) for reg in plotRegions]
+        if effFit_: checkInRegions = [xbinCenter>workspace_.var('mjj').getMin('Eff') and xbinCenter<workspace_.var('mjj').getMax('Eff')]
         if any(checkInRegions):
             fit_residual = (value_data - value_fit) / err_tot_data
             err_fit_residual = 1
@@ -168,6 +168,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
         N_FullRangeAll += 1        
         plotRegions = plotRegion.split(',')
         checkInRegions = [xbinCenter>workspace_.var('mjj').getMin(reg) and xbinCenter<workspace_.var('mjj').getMax(reg) for reg in plotRegions]
+        if effFit_: checkInRegions = [xbinCenter>workspace_.var('mjj').getMin('Eff') and xbinCenter<workspace_.var('mjj').getMax('Eff')]
         if any(checkInRegions):
             #print '%i: obs %.0f, exp %.2f, chi2 %.2f'%(bin, value_data* binWidth_current * lumi, value_fit* binWidth_current * lumi, pow(fit_residual,2))
             chi2_PlotRangeAll += pow(fit_residual,2)
@@ -314,8 +315,8 @@ if __name__ == '__main__':
                 a.setRealValue('mjj',tree.mjj)
                 # l1 efficiency:
                 if options.l1Trigger:
-                    a.setCatIndex('cut',min(int(tree.passL1T_HTT125 + tree.passL1T_HTT150 + tree.passL1T_HTT175),1)) # for 2015
-                    #a.setCatIndex('cut',min(int(tree.passL1T_HTT120 + tree.passL1T_HTT170 + tree.passL1T_HTT200),1)) # for 2016  
+                    #a.setCatIndex('cut',min(int(tree.passL1T_HTT125 + tree.passL1T_HTT150 + tree.passL1T_HTT175),1)) # for 2015
+                    a.setCatIndex('cut',min(int(tree.passL1T_HTT120 + tree.passL1T_HTT170 + tree.passL1T_HTT200),1)) # for 2016  
                 # hlt efficiency:
                 else:
                     a.setCatIndex('cut',int(tree.passHLT_CaloScoutingHT250))
@@ -523,29 +524,30 @@ if __name__ == '__main__':
     plotLabel = "%s Projection" % (plotRegion)
 
     if options.triggerDataFile is not None:        
-        d = rt.TCanvas('d','d',500,400)
+        #d = rt.TCanvas('d','d',500,400)       
+        d = rt.TCanvas('d','d',600,700)
         
-        #d.Divide(1,2,0,0,0)
+        d.Divide(1,2,0,0,0)
     
-        #pad_1 = d.GetPad(1)
-        #pad_1.SetPad(0.01,0.36,0.99,0.98)
-        #pad_1.SetRightMargin(0.05)
-        #pad_1.SetTopMargin(0.05)
-        #pad_1.SetLeftMargin(0.175)
-        #pad_1.SetFillColor(0)
-        #pad_1.SetBorderMode(0)
-        #pad_1.SetFrameFillStyle(0)
-        #pad_1.SetFrameBorderMode(0)
-    
-        #pad_2 = d.GetPad(2)
-        #pad_2.SetLeftMargin(0.175)
-        #pad_2.SetPad(0.01,0.02,0.99,0.37)
-        #pad_2.SetBottomMargin(0.35)
-        #pad_2.SetRightMargin(0.05)
-        #pad_2.SetGridx()
-        #pad_2.SetGridy()
+        pad_1 = d.GetPad(1)
+        pad_1.SetPad(0.01,0.36,0.99,0.98)
+        pad_1.SetRightMargin(0.05)
+        pad_1.SetTopMargin(0.05)
+        pad_1.SetLeftMargin(0.175)
+        pad_1.SetFillColor(0)
+        pad_1.SetBorderMode(0)
+        pad_1.SetFrameFillStyle(0)
+        pad_1.SetFrameBorderMode(0)
 
-        #pad_1.cd()
+        pad_2 = d.GetPad(2)
+        pad_2.SetLeftMargin(0.175)
+        pad_2.SetPad(0.01,0.02,0.99,0.37)
+        pad_2.SetBottomMargin(0.35)
+        pad_2.SetRightMargin(0.05)
+        pad_2.SetGridx()
+        pad_2.SetGridy()
+
+        pad_1.cd()
         
         binning = rt.RooBinning(w.var('mjj').getMin('Eff'),w.var('mjj').getMax('Eff'))
         xEff = array('d',[w.var('mjj').getMin('Eff')])
@@ -559,27 +561,44 @@ if __name__ == '__main__':
                 xEff.append(iBin)
         xEff.append(w.var('mjj').getMax('Eff'))
         h_numerator = rt.TH1D('numerator','numerator',len(xEff)-1,xEff)
-        h_denominator = rt.TH1D('denominator','denominator',len(xEff)-1,xEff)
-        
+        h_denominator = rt.TH1D('denominator','denominator',len(xEff)-1,xEff)        
         w.data('triggerData').fillHistogram(h_numerator,rt.RooArgList(w.var('mjj')),'cut==1')
         w.data('triggerData').fillHistogram(h_denominator,rt.RooArgList(w.var('mjj')))
         effGraph = rt.TGraphAsymmErrors(h_numerator,h_denominator)
+        
+        h_numerator_coarse = rt.TH1D('numerator_coarse','numerator_coarse',len(x)-1,x)
+        h_denominator_coarse = rt.TH1D('denominator_coarse','denominator_coarse',len(x)-1,x)        
+        w.data('triggerData').fillHistogram(h_numerator_coarse,rt.RooArgList(w.var('mjj')),'cut==1')
+        w.data('triggerData').fillHistogram(h_denominator_coarse,rt.RooArgList(w.var('mjj')))
+        effGraph_coarse = rt.TGraphAsymmErrors(h_numerator_coarse,h_denominator_coarse)
+        
         histo = h_numerator.Clone('empty')
         for i in range(1,histo.GetNbinsX()+1):
             histo.SetBinContent(i,0)             
             histo.SetBinError(i,0)                    
         histo.Draw()
         #histo.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),w.var('mjj').getMax('Eff'))
-        histo.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),x[7])
-        #histo.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),x[15])
+        if options.l1Trigger:
+            histo.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),x[15])
+        else:            
+            histo.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),x[7])
         #histo.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),1000)
         histo.SetMinimum(0.)
         histo.SetMaximum(1.1)        
+        histo.GetYaxis().SetTitle('Efficiency')
+        histo.GetYaxis().SetTitleOffset(1)
+        histo.GetYaxis().SetTitleSize(0.07)
+        histo.GetYaxis().SetLabelSize(0.05)    
+        histo.SetLineColor(rt.kWhite)
+        histo.SetMarkerColor(rt.kWhite)
+        histo.SetLineWidth(0)
         effGraph.SetMarkerStyle(20)
         effGraph.SetMarkerSize(0.5)
         effGraph.SetMarkerColor(rt.kBlack)
         effGraph.SetLineColor(rt.kBlack)
         effGraph.Draw('pezsame')
+
+    
         effTF1 = w.function('effFunc').asTF(rt.RooArgList(w.var('mjj')))
         if options.doTriggerFit or options.doSimultaneousFit:
             effTF1.Draw("lsame")
@@ -591,26 +610,23 @@ if __name__ == '__main__':
             h.SetLineWidth(2)
             h.Draw("histsame")
         effGraph.Draw('pezsame')
-                
-        
 
-        histo.GetYaxis().SetTitle('Efficiency')
-        histo.GetXaxis().SetTitle('m_{jj} [GeV]')
-        histo.GetXaxis().SetTitleSize(0.045)
-        histo.GetYaxis().SetTitleSize(0.045)
+        
+    
         l = rt.TLatex()
         l.SetTextAlign(11)
-        l.SetTextSize(0.04)
+        l.SetTextSize(0.05)
         l.SetTextFont(42)
         l.SetNDC()
-        l.DrawLatex(0.65,0.92,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+        l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
         l.SetTextFont(62)
-        l.SetTextSize(0.05)
-        l.DrawLatex(0.1,0.92,"CMS")
+        l.SetTextSize(0.06)
+        l.DrawLatex(0.2,0.96,"CMS")
         l.SetTextFont(52)
-        l.SetTextSize(0.04)
-        l.DrawLatex(0.2,0.92,"Preliminary")
-        leg = rt.TLegend(0.6,0.4,0.79,0.58)
+        l.SetTextSize(0.05)
+        l.DrawLatex(0.3,0.96,"Preliminary")
+        
+        leg = rt.TLegend(0.7,0.6,0.89,0.78)
         leg.SetTextFont(42)
         leg.SetFillColor(rt.kWhite)
         leg.SetFillStyle(0)
@@ -646,7 +662,37 @@ if __name__ == '__main__':
             pave_param.AddText("#epsilon = %s"%valString)
             pave_param.AddText("#delta#epsilon = %s"%errString)
             
-        pave_param.Draw("SAME")        
+        pave_param.Draw("SAME")
+
+
+        pad_2.cd()
+        
+        h_eff = convertFunctionToHisto(effTF1,"h_background",len(x)-1,x)        
+        h_eff_residual_vs_mass = rt.TH1D("h_eff_residual_vs_mass","h_eff_residual_vs_mass",len(x)-1,x)
+        list_chi2AndNdf_background = calculateChi2AndFillResiduals(effGraph_coarse,h_eff,h_eff_residual_vs_mass,w,0,True)
+
+        if options.l1Trigger:
+            h_eff_residual_vs_mass.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),x[15])    
+        else:
+            h_eff_residual_vs_mass.GetXaxis().SetRangeUser(w.var('mjj').getMin('Eff'),x[7])    
+        h_eff_residual_vs_mass.GetYaxis().SetRangeUser(-6.5,6.5)
+        h_eff_residual_vs_mass.GetYaxis().SetNdivisions(210,True)
+        h_eff_residual_vs_mass.SetLineWidth(1)
+        h_eff_residual_vs_mass.SetFillColor(rt.kRed)
+        h_eff_residual_vs_mass.SetLineColor(rt.kBlack)
+        
+        h_eff_residual_vs_mass.GetYaxis().SetTitleSize(2*0.06)
+        h_eff_residual_vs_mass.GetYaxis().SetLabelSize(2*0.05)
+        h_eff_residual_vs_mass.GetYaxis().SetTitleOffset(0.5)
+        h_eff_residual_vs_mass.GetYaxis().SetTitle('#frac{(Data-Fit)}{#sigma_{Data}}')
+        
+        h_eff_residual_vs_mass.GetXaxis().SetTitleSize(2*0.06)
+        h_eff_residual_vs_mass.GetXaxis().SetLabelSize(2*0.05)
+        h_eff_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
+    
+    
+        h_eff_residual_vs_mass.Draw("histsame")
+    
         d.Print(options.outDir+"/eff_mjj_%s_%s.pdf"%(fitRegion.replace(',','_'),box))
         d.Print(options.outDir+"/eff_mjj_%s_%s.C"%(fitRegion.replace(',','_'),box))
         tdirectory.cd()
