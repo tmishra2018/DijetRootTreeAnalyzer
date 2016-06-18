@@ -68,8 +68,12 @@ def getHybridCLsArrays(directory, model, Box):
     
 
     return gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma
+
+
+def getSignificanceArrays(directory, model, Box):
+    tfile = rt.TFile.Open("%s/xsecUL_ProfileLikelihood_%s_%s.root"%(directory,model,Box))
+    xsecTree = tfile.Get("xsecTree")
     
-def getAsymptoticCLsArrays(directory, box):
     gluinoMassArray = array('d')
     gluinoMassArray_er = array('d')
     observedLimit = array('d')
@@ -79,46 +83,50 @@ def getAsymptoticCLsArrays(directory, box):
     expectedLimit_plus1sigma = array('d')
     expectedLimit_minus2sigma = array('d')
     expectedLimit_plus2sigma = array('d')
+
     
-    i=0
-    for filename in sorted(glob.glob(directory+'/Asym*'),key=file_key):
-        massPoint = re.findall("[0-9]+.000000",filename)
-        gluinoMass    = massPoint[0]
-        LSPMass  = massPoint[1]
-        print "LSP mass = %s, gluino mass = %s"%(LSPMass,gluinoMass)
-        
-        if not(float(LSPMass) == float(LSPmassStrip)) :
-            continue
-        if filename.find("_%s_"%box)==-1:
-            continue
+    xsecTree.Draw('>>elist','','entrylist')
+    elist = rt.gDirectory.Get('elist')
+    entry = -1
+    while True:
+        entry = elist.Next()
+        if entry == -1: break
+        xsecTree.GetEntry(entry)
 
-        tfile = rt.TFile(filename)
-        result_sigma = tfile.Get("result_sigma")
-
-        expected_med          = result_sigma.GetExpectedUpperLimit(0)
-        expected_minus1sigma  = result_sigma.GetExpectedUpperLimit(-1)
-        expected_plus1sigma   = result_sigma.GetExpectedUpperLimit(1)
-        expected_minus2sigma  = result_sigma.GetExpectedUpperLimit(-2)
-        expected_plus2sigma   = result_sigma.GetExpectedUpperLimit(2)
-      
-        observed_high    = result_sigma.UpperLimit()
-        observed_high_er = result_sigma.UpperLimitEstimatedError()
-
-        gluinoMassArray.append(float(gluinoMass))
+        gluinoMassArray.append(xsecTree.mass)
         gluinoMassArray_er.append(0.0)
         
-        observedLimit.append(float(observed_high))#*crossSections[i])
-        observedLimit_er.append(float(observed_high_er))#*crossSections[i])
+        exec 'xsecULObs = xsecTree.xsecULObs_%s'%Box
+        exec 'xsecULExp = xsecTree.xsecULExp_%s'%Box
+        exec 'xsecULExpPlus = xsecTree.xsecULExpPlus_%s'%Box
+        exec 'xsecULExpMinus = xsecTree.xsecULExpMinus_%s'%Box
+        exec 'xsecULExpPlus2 = xsecTree.xsecULExpPlus2_%s'%Box
+        exec 'xsecULExpMinus2 = xsecTree.xsecULExpMinus2_%s'%Box
+
+            
+            
+        xsecULObs = xsecULObs
+        xsecULExp = xsecULExp
+        observedLimit.append(xsecULObs)#*crossSections[i])
+        observedLimit_er.append(0.0)#*crossSections[i])
+
+        expectedLimit.append(xsecULExp)#*crossSections[i])
         
-        expectedLimit.append(float(expected_med))#*crossSections[i])
-        expectedLimit_minus1sigma.append(float(expected_med - expected_minus1sigma))#*crossSections[i])
-        expectedLimit_plus1sigma.append(float(expected_plus1sigma - expected_med ))#*crossSections[i])
-        expectedLimit_minus2sigma.append(float( expected_med - expected_minus2sigma))#*crossSections[i])
-        expectedLimit_plus2sigma.append(float(expected_plus2sigma - expected_med ))#*crossSections[i])
-        i+=1
+            
+
+        xsecULExpPlus = max(xsecULExpPlus,xsecULExp)
+        xsecULExpMinus = min(xsecULExpMinus,xsecULExp)
+        xsecULExpPlus2 = max(xsecULExpPlus2,xsecULExpPlus)
+        xsecULExpMinus2 = min(xsecULExpMinus2,xsecULExpMinus)
+
+        expectedLimit_minus1sigma.append(xsecULExp - xsecULExpMinus)#*crossSections[i])
+        expectedLimit_plus1sigma.append(xsecULExpPlus - xsecULExp)#*crossSections[i])
+        expectedLimit_minus2sigma.append(xsecULExp - xsecULExpMinus2)#*crossSections[i])
+        expectedLimit_plus2sigma.append(xsecULExpPlus2 - xsecULExp)#*crossSections[i])
+    
 
     return gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma
-
+    
 def setstyle():
     # For the canvas:
     rt.gStyle.SetCanvasBorderMode(0)
@@ -212,6 +220,10 @@ if __name__ == '__main__':
                   help="signal model name")
     parser.add_option('-d','--dir',dest="outDir",default="./",type="string",
                   help="Input/Output directory to store output")    
+    parser.add_option('-l','--lumi',dest="lumi", default=1.,type="float",
+                  help="integrated luminosity in fb^-1")
+    parser.add_option('--signif',dest="doSignificance",default=False,action='store_true',
+                  help="for significance instead of limit")
     
     (options,args) = parser.parse_args()
     Box = options.box
@@ -258,7 +270,15 @@ if __name__ == '__main__':
 
     setstyle()
     c = rt.TCanvas("c","c",500,400)
-    c.SetLogy()
+    #c = rt.TCanvas("c","c",800,800)    
+    #c.SetBottomMargin(0.14)
+    #c.SetTopMargin(0.06)
+    #c.SetLeftMargin(0.15)
+    #c.SetRightMargin(0.05)
+    if options.doSignificance:
+        c.SetLogy(0)
+    else:        
+        c.SetLogy()
     
     xsec_gr_nom = rt.TGraph(N_g_xsec, X_xsec, Y_xsec)
     xsec_gr_nom.SetMarkerSize(0)
@@ -274,9 +294,16 @@ if __name__ == '__main__':
     xsec_gr.SetFillColor(rt.kBlue-7)
 
     h_limit = rt.TMultiGraph()
-    h_limit.SetTitle(" ;Resonance Mass m_{X} [GeV];95% C.L. upper limit on cross section [pb]")
+
+    if options.doSignificance:
+        h_limit.SetTitle(" ;Resonance Mass m_{X} [GeV];Local Significance n#sigma")
+    else:
+        h_limit.SetTitle(" ;Resonance Mass m_{X} [GeV];95% C.L. upper limit on cross section [pb]")
     
-    gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma = getHybridCLsArrays(directory, model, Box)
+    if options.doSignificance: 
+        gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma = getSignificanceArrays(directory, model, Box)
+    else:        
+        gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma = getHybridCLsArrays(directory, model, Box)
     
     rt.gStyle.SetOptStat(0)
     
@@ -315,16 +342,28 @@ if __name__ == '__main__':
 
         
     h_limit.Draw("a3")
-    h_limit.GetXaxis().SetLimits(500,5000)
-    h_limit.SetMaximum(1000)
-    h_limit.SetMinimum(1e-2)
+    #h_limit.GetXaxis().SetLimits(620,1580)
+    h_limit.GetXaxis().SetLimits(500,1600)
+    if options.doSignificance:
+        h_limit.SetMaximum(3)
+        h_limit.SetMinimum(0)
+    else:
+        h_limit.SetMaximum(1000)
+        h_limit.SetMinimum(1e-1)
 
         
     h_limit.Draw("a3")
     
-    gr_expectedLimit.Draw("c same")
-    #xsec_gr_nom.Draw("c same")
-    gr_observedLimit.Draw("c SAME")
+    if options.doSignificance:
+        gr_observedLimit.SetMarkerStyle(21)
+        gr_observedLimit.SetMarkerSize(0.6)
+        gr_observedLimit.SetLineColor(rt.kRed)
+        gr_observedLimit.SetMarkerColor(rt.kBlue)
+        gr_observedLimit.Draw("lp SAME")
+    else:
+        gr_expectedLimit.Draw("c same")
+        #xsec_gr_nom.Draw("c same")
+        gr_observedLimit.Draw("c SAME")
 
     
     l = rt.TLatex()
@@ -333,10 +372,13 @@ if __name__ == '__main__':
     l.SetNDC()
     l.SetTextFont(62)
     l.DrawLatex(0.17,0.92,"CMS")
+    #l.DrawLatex(0.16,0.95,"CMS")
     l.SetTextFont(52)
-    l.DrawLatex(0.26,0.92,"Preliminary")    
+    l.DrawLatex(0.26,0.92,"Preliminary")
+    #l.DrawLatex(0.27,0.95,"Preliminary")
     l.SetTextFont(42)
-    l.DrawLatex(0.65,0.92,"13 TeV (%.0f pb^{-1})"%(1981))
+    l.DrawLatex(0.65,0.92,"%.0f pb^{-1} (13 TeV)"%(options.lumi*1000))
+    #l.DrawLatex(0.59,0.95,"%.0f pb^{-1} (13 TeV)"%(options.lumi*1000))
 
     if model=="gg":
         l.DrawLatex(0.3,0.8,"gg #rightarrow X #rightarrow jj")
@@ -345,7 +387,10 @@ if __name__ == '__main__':
     elif model=="qq":
         l.DrawLatex(0.3,0.8,"qq #rightarrow X #rightarrow jj")
 
-    leg = rt.TLegend(0.55,0.67,0.92,0.87)
+    if options.doSignificance:
+        leg = rt.TLegend(0.55,0.803,0.92,0.87)
+    else:        
+        leg = rt.TLegend(0.55,0.67,0.92,0.87)
     #leg.AddEntry(xsec_gr, "#sigma_{NLO+NLL} (#tilde{g}#tilde{g}) #pm 1 #sigma (theory)","lf")
 
     demo = gr_expectedLimit1sigma.Clone()
@@ -358,18 +403,26 @@ if __name__ == '__main__':
     leg.SetLineColor(rt.kWhite)
     #leg.AddEntry(gr_observedLimit, "observed 0-lep+1-lep","l")
     #leg.AddEntry(gr_expectedLimit, "expected 0-lep+1-lep","l")
-    leg.AddEntry(gr_observedLimit, "observed","l")
-    leg.AddEntry(demo, "expected #pm1#sigma","lf")
+    
+    if options.doSignificance:
+        leg.AddEntry(gr_observedLimit, "observed","lp")
+    else:
+        leg.AddEntry(gr_observedLimit, "observed","l")
+    if not options.doSignificance:
+        leg.AddEntry(demo, "expected #pm1#sigma","lf")
     gr_expectedLimit2sigma.SetLineStyle(2)
     gr_expectedLimit2sigma.SetLineWidth(3)
     gr_expectedLimit2sigma.SetLineColor(rt.kBlack)
     
-    leg.AddEntry(gr_expectedLimit2sigma, "expected #pm2#sigma","lf")
+    if not options.doSignificance:
+        leg.AddEntry(gr_expectedLimit2sigma, "expected #pm2#sigma","lf")
 
-
-        
     leg.Draw("SAME")
 
-    c.SaveAs(directory+"/limits_"+model+"_"+box+".pdf")
-    c.SaveAs(directory+"/limits_"+model+"_"+box+".C")
+    if options.doSignificance:
+        c.SaveAs(directory+"/signif_"+model+"_"+box+".pdf")
+        c.SaveAs(directory+"/signif_"+model+"_"+box+".C")
+    else:
+        c.SaveAs(directory+"/limits_"+model+"_"+box+".pdf")
+        c.SaveAs(directory+"/limits_"+model+"_"+box+".C")
 

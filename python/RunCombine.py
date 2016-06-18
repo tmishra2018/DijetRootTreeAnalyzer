@@ -57,7 +57,10 @@ def writeBashScript(options,massPoint,iJob=0):
     user = os.environ['USER']
     pwd = os.environ['PWD']
         
-    combineDir = "/afs/cern.ch/work/%s/%s/DIJET/Limits/%s/"%(user[0],user,options.model) # directory where combine output files will be copied
+    if options.noSys:
+        combineDir = "/afs/cern.ch/work/%s/%s/DIJET/Limits/%s_nosys/"%(user[0],user,options.model) # directory where combine output files will be copied
+    else:        
+        combineDir = "/afs/cern.ch/work/%s/%s/DIJET/Limits/%s/"%(user[0],user,options.model) # directory where combine output files will be copied
     cmsswBase = "/afs/cern.ch/work/%s/%s/DIJET/CMSSW_7_4_14"%(user[0],user) # directory where 'cmsenv' will be run (needs to have combine setup)
     
     script =  '#!/usr/bin/env bash -x\n'
@@ -162,7 +165,10 @@ def main(options,args):
     xsecString = '--xsec %f'%(options.xsec)    
 
     signalDsName = 'inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root'%model
-    backgroundDsName = 'inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_%s.root'%box
+    backgroundDsName = {'CaloDijet2015':'inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet2015.root',
+                        'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016B_GoldenUpdate_CaloDijet2016.root',
+                        'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root'
+                        }
 
     blindString = ''
     if options.blind:
@@ -180,7 +186,7 @@ def main(options,args):
 
     for massPoint in massIterable(options.mass):
                 
-        exec_me('python python/WriteDataCard.py -m %s --mass %s -i %s -l %f -c %s -b %s -d %s %s %s %s %s %s %s'%(model, massPoint, options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName,penaltyString,signalSys,xsecString,decoString),options.dryRun)
+        exec_me('python python/WriteDataCard.py -m %s --mass %s -i %s -l %f -c %s -b %s -d %s %s %s %s %s %s %s'%(model, massPoint, options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName[box],penaltyString,signalSys,xsecString,decoString),options.dryRun)
 
         if options.bayes:
             rRangeString =  '--setPhysicsModelParameterRanges '
@@ -206,7 +212,7 @@ def main(options,args):
                 rRangeString = ''               
                 if options.rMax>-1:
                     rRangeString = '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
-                exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString),options.dryRun)
+                exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,sysString),options.dryRun)
                 exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.ProfileLikelihood.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)
             else:
                 rRangeString = ''

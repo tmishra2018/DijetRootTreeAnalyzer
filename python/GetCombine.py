@@ -7,10 +7,11 @@ from math import *
 from framework import Config
 import os
 from array import *
+import numpy as np
 
-def getFileName(hybridLimit, massPoint, box, model, lumi,  directory, method,t):
-    if hybridLimit == "higgsCombineToys":
-        fileName = "%s/%s%s_%s_lumi-%.3f_%s_%i.%s.mH120.root"%(directory,hybridLimit,model,massPoint,lumi,box,t,method)
+def getFileName(hybridLimit, massPoint, box, model, lumi,  directory, method, t):
+    if hybridLimit == "higgsCombineToys" or t>0:
+        fileName = "%s/%s%s_%s_lumi-%.3f_%s.%s.mH120.%s.root"%(directory,hybridLimit,model,massPoint,lumi,box,method,t)
     else:
         fileName = "%s/%s%s_%s_lumi-%.3f_%s.%s.mH120.root"%(directory,hybridLimit,model,massPoint,lumi,box,method)
     return fileName
@@ -81,6 +82,8 @@ if __name__ == '__main__':
                   help="Input/Output directory to store output")
     parser.add_option('--signif',dest="doSignificance",default=False,action='store_true',
                   help="for significance instead of limit")
+    parser.add_option('--bayes',dest="bayes",default=False,action='store_true',
+                  help="for bayesian limits")
     parser.add_option('--toys',dest="doHybridNew",default=False,action='store_true',
                   help="for toys instead of asymptotic")
     parser.add_option('--xsec',dest="xsec",default=1,type="float",
@@ -94,6 +97,7 @@ if __name__ == '__main__':
     directory = options.outDir
     doHybridNew = options.doHybridNew
     doSignificance = options.doSignificance
+    bayes = options.bayes
     refXsec = options.xsec
     
 
@@ -122,6 +126,10 @@ if __name__ == '__main__':
             if not glob.glob(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"ProfileLikelihood",0)): continue
             print "INFO: opening %s"%(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"ProfileLikelihood",0))
             tFile = rt.TFile.Open(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"ProfileLikelihood",0))
+        elif bayes:
+            if not glob.glob(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",0)): continue
+            print "INFO: opening %s"%(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",0))
+            tFile = rt.TFile.Open(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",0))
         else:
             if not glob.glob(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"Asymptotic",0)): continue
             print "INFO: opening %s"%(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"Asymptotic",0))
@@ -143,11 +151,11 @@ if __name__ == '__main__':
             tFile.cd()
             tFile.Close()
             continue
-        if doSignificance and limit.GetEntries() < 1: 
+        if (doSignificance or bayes) and limit.GetEntries() < 1: 
             tFile.cd()
             tFile.Close()
             continue
-        if (not doSignificance) and limit.GetEntries() < 5: 
+        if not (doSignificance or bayes) and limit.GetEntries() < 5: 
             tFile.cd()
             tFile.Close()
             continue
@@ -162,6 +170,8 @@ if __name__ == '__main__':
                 
             if doSignificance:
                 limits.append(max(0.0,limit.limit))
+            elif bayes:
+                limits.append(refXsec*limit.limit)
             else:                    
                 limits.append(refXsec*limit.limit)
             entry = elist.Next()
@@ -171,6 +181,45 @@ if __name__ == '__main__':
         # no observed limit
         if len(limits)==5:
             limits.append(0)
+
+        # no expected limits
+        if len(limits)==1 and bayes:
+            if glob.glob(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC","*")):
+                os.system("rm -rf %s"%(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",123456)))
+                os.system("hadd -f %s %s"%(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",123456),getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC","*")))              
+            if not glob.glob(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",123456)):
+                print "expected limit file not found"
+                limits.reverse()
+                limits.extend([0,0,0,0,0])
+                limits.reverse()
+            else:
+                quants = [0.975, 0.84, 0.5, 0.16, 0.025]
+                print "INFO: opening %s"%(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",123456))
+                tFileExp = rt.TFile.Open(getFileName("higgsCombine",massPoint,boxInput,model,lumi,directory,"MarkovChainMC",123456))
+                explimit = tFileExp.Get("limit")         
+                explimit.Draw('>>elist','','entrylist')
+                elist = rt.gDirectory.Get('elist')
+                entry = elist.Next()
+                explimit.GetEntry(entry)
+                explimits = []                
+                while True:
+                    if entry == -1: break
+                    explimit.GetEntry(entry)
+                    #if explimit.limitErr/explimit.limit<0.5:              
+                    #    explimits.append(refXsec*explimit.limit)      
+                    explimits.append(refXsec*explimit.limit)
+                    entry = elist.Next()
+                print explimits
+                tFileExp.cd()
+                tFileExp.Close()
+                limits.reverse()
+                limits.extend([np.percentile(explimits,100*q) for q in quants])
+                limits.reverse()
+        
+        elif len(limits)==1 and doSignificance:
+            limits.reverse()
+            limits.extend([0,0,0,0,0])
+            limits.reverse()
             
         limits.reverse()
         print massPoint
@@ -180,10 +229,9 @@ if __name__ == '__main__':
         haddOutputs.append(haddOutput)
 
 
-    #if doSignificance:
-    #    c = plotSignificance(boxInput,model,sigHist,doHybridNew)
-    #else:
     if doHybridNew:
-        os.system("hadd -f %s/xsecUL_HybridNew_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs)))
+        os.system("hadd -f %s/xsecUL_HybridNew_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs))) 
+    elif doSignificance:
+        os.system("hadd -f %s/xsecUL_ProfileLikelihood_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs)))
     else:
         os.system("hadd -f %s/xsecUL_Asymptotic_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs)))
