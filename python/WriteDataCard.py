@@ -5,6 +5,7 @@ from framework import Config
 from array import *
 import os
 import sys
+import BinnedFit
 
 def fixPars(w, label, doFix=True, setVal=None):
     parSet = w.allVars()
@@ -407,14 +408,17 @@ if __name__ == '__main__':
             rootTools.Utils.importToWS(w,sigPdf)
             w.factory('mu[1]')
             w.var('mu').setConstant(False)
+            w.var('mu').setMin(0)
             w.factory('Ntot_sig_In[%f]'%(sigDataHist.sumEntries()))
             w.factory('expr::Ntot_sig("mu*Ntot_sig_In",mu,Ntot_sig_In)')
             w.factory('SUM::extSpBPdf(Ntot_sig*%s_sig,Ntot_bkg*%s_bkg)'%(box,box))
             w.factory('SUM::extSigPdf(Ntot_sig*%s_sig)'%(box))
-            frSpB = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))           
+            #frSpB = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))
+            frSpB = BinnedFit.binnedFit(w.pdf('extSpBPdf'), w.data('data_obs'))
             w.var('mu').setConstant(True)
-            frSpB_muFixed = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))
-            frIn.Print("V")
+            #frSpB_muFixed = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))
+            frSpB_muFixed = BinnedFit.binnedFit(w.pdf('extSpBPdf'), w.data('data_obs'))
+            frIn.Print('V')
             frSpB.Print('v')
             frSpB_muFixed.Print('v')
             deco = rt.PdfDiagonalizer("deco",w,frSpB_muFixed)
@@ -451,10 +455,6 @@ if __name__ == '__main__':
         for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
             w.var(p.GetName()).setVal(p.getVal())
             w.var(p.GetName()).setError(p.getError())
-            
-
-
-    
                 
     if options.noSignalSys:
         shapes = []
@@ -470,8 +470,6 @@ if __name__ == '__main__':
             shapes.append('jer')
             shapeFiles['jerUp'] = options.jerUpFile
             shapeFiles['jerDown'] = options.jerDownFile
-            
-
 
     # JES and JER uncertainties
     hSigTh1x = signalHistos[0]
