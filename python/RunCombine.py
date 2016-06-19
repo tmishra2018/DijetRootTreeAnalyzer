@@ -28,14 +28,14 @@ def writeBashScript(options,massPoint,iJob=0):
 
     
     signalSys = ''
-    if options.noSignalSys or options.noSys:
+    if options.noSignalSys:
         signalSys = '--no-signal-sys'
+    elif options.noSys:
+        signalSys = '--no-sys'
         
     penaltyString = ''
     if options.penalty:
         penaltyString = '--penalty'
-    elif options.fixed:
-        penaltyString = '--fixed'
 
     decoString = ''
     if options.deco:
