@@ -28,12 +28,14 @@ def writeBashScript(options,massPoint,iJob=0):
 
     
     signalSys = ''
-    if options.noSignalSys:
+    if options.noSignalSys or options.noSys:
         signalSys = '--no-signal-sys'
         
     penaltyString = ''
     if options.penalty:
         penaltyString = '--penalty'
+    elif options.fixed:
+        penaltyString = '--fixed'
 
     decoString = ''
     if options.deco:
@@ -153,14 +155,17 @@ def main(options,args):
         print "grabbing parameter ranges +-%gsigma for bayesian"%NSIGMA
 
     signalSys = ''
-    if options.noSignalSys:
+    if options.noSignalSys or options.noSys:
         signalSys = '--no-signal-sys'
     else:
         signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESDOWN.root'%(model,model)
         signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERUP.root --jerDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERDOWN.root'%(model,model)
     
     penaltyString = ''
-    if options.penalty: penaltyString = '--penalty'
+    if options.penalty:
+        penaltyString = '--penalty'
+    elif options.noSys:
+        penaltyString = '--fixed'
 
     xsecString = '--xsec %f'%(options.xsec)    
 

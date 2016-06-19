@@ -12,8 +12,11 @@ def file_key(filename):
     LSPMass  = massPoint[1]
     return float(gluinoMass)
     
-def getHybridCLsArrays(directory, model, Box):
-    tfile = rt.TFile.Open("%s/xsecUL_Asymptotic_%s_%s.root"%(directory,model,Box))
+def getHybridCLsArrays(directory, model, Box, bayes):
+    if bayes:
+        tfile = rt.TFile.Open("%s/xsecUL_MarkovChainMC_%s_%s.root"%(directory,model,Box))
+    else:
+        tfile = rt.TFile.Open("%s/xsecUL_Asymptotic_%s_%s.root"%(directory,model,Box))
     xsecTree = tfile.Get("xsecTree")
     
     gluinoMassArray = array('d')
@@ -224,6 +227,10 @@ if __name__ == '__main__':
                   help="integrated luminosity in fb^-1")
     parser.add_option('--signif',dest="doSignificance",default=False,action='store_true',
                   help="for significance instead of limit")
+    parser.add_option('--bayes',dest="bayes",default=False,action='store_true',
+                  help="for bayesian limits")
+    parser.add_option('--no-sys',dest="noSys",default=False,action='store_true',
+                  help="for no systematics limits")
     
     (options,args) = parser.parse_args()
     Box = options.box
@@ -303,7 +310,7 @@ if __name__ == '__main__':
     if options.doSignificance: 
         gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma = getSignificanceArrays(directory, model, Box)
     else:        
-        gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma = getHybridCLsArrays(directory, model, Box)
+        gluinoMassArray, gluinoMassArray_er, observedLimit, observedLimit_er, expectedLimit, expectedLimit_minus1sigma, expectedLimit_plus1sigma, expectedLimit_minus2sigma, expectedLimit_plus2sigma = getHybridCLsArrays(directory, model, Box, options.bayes)
     
     rt.gStyle.SetOptStat(0)
     
@@ -389,6 +396,17 @@ if __name__ == '__main__':
     elif model=="gaus":
         l.DrawLatex(0.3,0.8,"Gaussian")
 
+    if options.bayes:
+        if options.noSys:        
+            l.DrawLatex(0.2,0.85,"Bayesian, no syst.")
+        else:
+            l.DrawLatex(0.2,0.85,"Bayesian, with syst.")
+    else:        
+        if options.noSys:        
+            l.DrawLatex(0.2,0.85,"Frequentist, no syst.")
+        else:
+            l.DrawLatex(0.2,0.85,"Frequentist, with syst.")
+
     if options.doSignificance:
         leg = rt.TLegend(0.55,0.803,0.92,0.87)
     else:        
@@ -425,6 +443,18 @@ if __name__ == '__main__':
         c.SaveAs(directory+"/signif_"+model+"_"+box+".pdf")
         c.SaveAs(directory+"/signif_"+model+"_"+box+".C")
     else:
-        c.SaveAs(directory+"/limits_"+model+"_"+box+".pdf")
-        c.SaveAs(directory+"/limits_"+model+"_"+box+".C")
+        if options.bayes:
+            if options.noSys:
+                c.SaveAs(directory+"/limits_bayes_nosys_"+model+"_"+box+".pdf")
+                c.SaveAs(directory+"/limits_bayes_nosys_"+model+"_"+box+".C")
+            else:
+                c.SaveAs(directory+"/limits_bayes_"+model+"_"+box+".pdf")
+                c.SaveAs(directory+"/limits_bayes_"+model+"_"+box+".C")
+        else:
+            if options.noSys:
+                c.SaveAs(directory+"/limits_freq_nosys_"+model+"_"+box+".pdf")
+                c.SaveAs(directory+"/limits_freq_nosys_"+model+"_"+box+".C")
+            else:
+                c.SaveAs(directory+"/limits_freq_"+model+"_"+box+".pdf")
+                c.SaveAs(directory+"/limits_freq_"+model+"_"+box+".C")
 

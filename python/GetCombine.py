@@ -209,7 +209,7 @@ if __name__ == '__main__':
                     #    explimits.append(refXsec*explimit.limit)      
                     explimits.append(refXsec*explimit.limit)
                     entry = elist.Next()
-                print explimits
+                #print explimits
                 tFileExp.cd()
                 tFileExp.Close()
                 limits.reverse()
@@ -234,4 +234,7 @@ if __name__ == '__main__':
     elif doSignificance:
         os.system("hadd -f %s/xsecUL_ProfileLikelihood_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs)))
     else:
-        os.system("hadd -f %s/xsecUL_Asymptotic_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs)))
+        if bayes:
+            os.system("hadd -f %s/xsecUL_MarkovChainMC_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs)))
+        else:
+            os.system("hadd -f %s/xsecUL_Asymptotic_%s_%s.root %s"%(directory,model,boxInput," ".join(haddOutputs)))
