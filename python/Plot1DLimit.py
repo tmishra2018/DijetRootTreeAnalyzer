@@ -386,6 +386,8 @@ if __name__ == '__main__':
         l.DrawLatex(0.3,0.8,"gq #rightarrow X #rightarrow jj")
     elif model=="qq":
         l.DrawLatex(0.3,0.8,"qq #rightarrow X #rightarrow jj")
+    elif model=="gaus":
+        l.DrawLatex(0.3,0.8,"Gaussian")
 
     if options.doSignificance:
         leg = rt.TLegend(0.55,0.803,0.92,0.87)

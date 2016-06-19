@@ -409,6 +409,7 @@ if __name__ == '__main__':
             w.factory('mu[1]')
             w.var('mu').setConstant(False)
             w.var('mu').setMin(0)
+            w.var('mu').setVal(0.2) # value close to zero
             w.factory('Ntot_sig_In[%f]'%(sigDataHist.sumEntries()))
             w.factory('expr::Ntot_sig("mu*Ntot_sig_In",mu,Ntot_sig_In)')
             w.factory('SUM::extSpBPdf(Ntot_sig*%s_sig,Ntot_bkg*%s_bkg)'%(box,box))
