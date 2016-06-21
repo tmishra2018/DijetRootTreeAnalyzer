@@ -425,6 +425,7 @@ if __name__ == '__main__':
             bkgs_deco = []
             for bkg in bkgs:
                 pdf_deco = deco.diagonalize(w.pdf('%s_%s'%(box,bkg)))
+                pdf_deco.SetName('%s_%s_deco'%(box,bkg))
                 rootTools.Utils.importToWS(w,pdf_deco,rt.RooFit.RecycleConflictNodes())
                 bkgs_deco.append(bkg+'_deco')
                 w.var('deco_%s_eig0'%box).setConstant(True)
