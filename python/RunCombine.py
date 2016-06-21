@@ -201,9 +201,9 @@ def main(options,args):
                 rRangeString =  '--setPhysicsModelParameterRanges '
                 if options.deco:
                     rRangeString += 'shapeBkg_%s_bkg_deco_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0],1+NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0])
-                    rRangeString += ':deco_eig1_%s=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
-                    rRangeString += ':deco_eig2_%s=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
-                    rRangeString += ':deco_eig3_%s=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
+                    rRangeString += ':deco_%s_eig1=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
+                    rRangeString += ':deco_%s_eig2=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
+                    rRangeString += ':deco_%s_eig3=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
                 else:
                     rRangeString += 'shapeBkg_%s_bkg_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0],1+NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0])
                     rRangeString += ':p1_%s=%f,%f'%(box,paramDict['p1_%s'%box][0]-NSIGMA*paramDict['p1_%s'%box][1],paramDict['p1_%s'][0]+NSIGMA*paramDict['p1_%s'%box][1])
