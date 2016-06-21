@@ -46,7 +46,7 @@ def effFit(pdf, data, conditionalObs):
     fr = m2.save()
     return fr
 
-
+0
 
 def simFit(pdf, data, fitRange, effPdf, effData, conditionalObs):
     
@@ -116,7 +116,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     N_massBins_ = data_obs_TGraph_.GetN()
     MinNumEvents = 10
     nParFit = 4
-    if workspace_.var('meff').getVal()>0 and workspace_.var('seff').getVal()>0 :
+    if workspace_.var('meff_%s'%box).getVal()>0 and workspace_.var('seff_%s'%box).getVal()>0 :
         nParFit = 6
 
     chi2_FullRangeAll = 0
@@ -394,14 +394,14 @@ if __name__ == '__main__':
                 
                 if options.doSpectrumFit:
                     # setup two-step fit with  hesse pdf:
-                    hessePdf = effFr.createHessePdf(rt.RooArgSet(w.var('meff'),w.var('seff')))
+                    hessePdf = effFr.createHessePdf(rt.RooArgSet(w.var('meff_%s'%box),w.var('seff_%s'%box)))
                     # or create the hesse pdf manually:
                     #covMatrix = effFr.covarianceMatrix()
                     #params = rt.RooArgList()
-                    #params.add(w.var('meff'))
-                    #params.add(w.var('seff'))
-                    #w.factory('meff_centralvalue[%f]'%w.var('meff').getVal())
-                    #w.factory('seff_centralvalue[%f]'%w.var('seff').getVal())
+                    #params.add(w.var('meff_%s'%box))
+                    #params.add(w.var('seff_%s'%box))
+                    #w.factory('meff_centralvalue[%f]'%w.var('meff_%s'%box).getVal())
+                    #w.factory('seff_centralvalue[%f]'%w.var('seff_%s'%box).getVal())
                     #mu = rt.RooArgList()
                     #mu.add(w.var('meff_centralvalue'))
                     #mu.add(w.var('seff_centralvalue'))
@@ -411,10 +411,10 @@ if __name__ == '__main__':
                     w.factory('PROD::extDijetPdfHesse(extDijetPdf,%s)'%(hessePdf.GetName()))
                     extDijetPdf = w.pdf('extDijetPdfHesse')
                     # set up two-step fit with 1D gauss pdfs
-                    #w.var('meff_Mean').setVal(w.var('meff').getVal())
-                    #w.var('seff_Mean').setVal(w.var('seff').getVal())
-                    #w.var('meff_Sigma').setVal(w.var('meff').getError())
-                    #w.var('seff_Sigma').setVal(w.var('seff').getError())
+                    #w.var('meff_Mean').setVal(w.var('meff_%s'%box).getVal())
+                    #w.var('seff_Mean').setVal(w.var('seff_%s'%box).getVal())
+                    #w.var('meff_Sigma').setVal(w.var('meff_%s'%box).getError())
+                    #w.var('seff_Sigma').setVal(w.var('seff_%s'%box).getError())
                     #extDijetPdf = w.pdf('extDijetPdfGaus')
                 
             if options.doSpectrumFit:
@@ -643,9 +643,9 @@ if __name__ == '__main__':
         pave_param.SetFillStyle(0)
         pave_param.SetTextAlign(11)
         pave_param.SetTextSize(0.045)
-        if w.var('meff').getVal()>0 and w.var('seff').getVal()>0 and (options.doTriggerFit or options.doSimultaneousFit):
-            pave_param.AddText("m_{eff}"+" = {0:.2f} #pm {1:.2f}".format(w.var('meff').getVal(), (w.var('meff').getErrorHi() - w.var('meff').getErrorLo())/2.0))
-            pave_param.AddText("#sigma_{eff}"+" = {0:.2f} #pm {1:.2f}".format(w.var('seff').getVal(), (w.var('seff').getErrorHi() - w.var('seff').getErrorLo())/2.0))
+        if w.var('meff_%s'%box).getVal()>0 and w.var('seff_%s'%box).getVal()>0 and (options.doTriggerFit or options.doSimultaneousFit):
+            pave_param.AddText("m_{eff}"+" = {0:.2f} #pm {1:.2f}".format(w.var('meff_%s'%box).getVal(), (w.var('meff_%s'%box).getErrorHi() - w.var('meff_%s'%box).getErrorLo())/2.0))
+            pave_param.AddText("#sigma_{eff}"+" = {0:.2f} #pm {1:.2f}".format(w.var('seff_%s'%box).getVal(), (w.var('seff_%s'%box).getErrorHi() - w.var('seff_%s'%box).getErrorLo())/2.0))
         elif w.var('eff_bin%02d'%(0)) != None:         
             effValList = []
             effErrHiList = []
@@ -700,9 +700,9 @@ if __name__ == '__main__':
 
     
     background_pdf = w.pdf('%s_bkg_unbin'%box)
-    background= background_pdf.asTF(rt.RooArgList(w.var('mjj')),rt.RooArgList(w.var('p0')))
+    background= background_pdf.asTF(rt.RooArgList(w.var('mjj')),rt.RooArgList(w.var('p0_%s'%box)))
     int_b = background.Integral(w.var('mjj').getMin(),w.var('mjj').getMax())
-    p0_b = w.var('Ntot_bkg').getVal() / (int_b * lumi)
+    p0_b = w.var('Ntot_bkg_%s'%box).getVal() / (int_b * lumi)
     background.SetParameter(0,p0_b)
     
     g_data = rt.TGraphAsymmErrors(myRebinnedTH1)
@@ -887,12 +887,12 @@ if __name__ == '__main__':
     pave_sel.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
     pave_sel.Draw("SAME")
     
-    list_parameter = [p0_b, p0_b*(w.var('Ntot_bkg').getErrorHi() - w.var('Ntot_bkg').getErrorLo())/(2.0*w.var('Ntot_bkg').getVal()),                      
-                      w.var('p1').getVal(), (w.var('p1').getErrorHi() - w.var('p1').getErrorLo())/2.0,
-                      w.var('p2').getVal(), (w.var('p2').getErrorHi() - w.var('p2').getErrorLo())/2.0,
-                      w.var('p3').getVal(), (w.var('p3').getErrorHi() - w.var('p3').getErrorLo())/2.0,
-                      w.var('meff').getVal(), (w.var('meff').getErrorHi() - w.var('meff').getErrorLo())/2.0,
-                      w.var('seff').getVal(), (w.var('seff').getErrorHi() - w.var('seff').getErrorLo())/2.0]
+    list_parameter = [p0_b, p0_b*(w.var('Ntot_bkg_%s'%box).getErrorHi() - w.var('Ntot_bkg_%s'%box).getErrorLo())/(2.0*w.var('Ntot_bkg_%s'%box).getVal()),                      
+                      w.var('p1_%s'%box).getVal(), (w.var('p1_%s'%box).getErrorHi() - w.var('p1_%s'%box).getErrorLo())/2.0,
+                      w.var('p2_%s'%box).getVal(), (w.var('p2_%s'%box).getErrorHi() - w.var('p2_%s'%box).getErrorLo())/2.0,
+                      w.var('p3_%s'%box).getVal(), (w.var('p3_%s'%box).getErrorHi() - w.var('p3_%s'%box).getErrorLo())/2.0,
+                      w.var('meff_%s'%box).getVal(), (w.var('meff_%s'%box).getErrorHi() - w.var('meff_%s'%box).getErrorLo())/2.0,
+                      w.var('seff_%s'%box).getVal(), (w.var('seff_%s'%box).getErrorHi() - w.var('seff_%s'%box).getErrorLo())/2.0]
 
 
     pave_param = rt.TPaveText(0.55,0.03,0.9,0.25,"NDC")
@@ -906,7 +906,7 @@ if __name__ == '__main__':
     pave_param.AddText("p_{1}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[2], list_parameter[3]))
     pave_param.AddText("p_{2}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[4], list_parameter[5]))
     pave_param.AddText("p_{3}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[6], list_parameter[7]))
-    if w.var('meff').getVal()>0 and w.var('seff').getVal()>0 and (options.doTriggerFit or options.doSimultaneousFit):
+    if w.var('meff_%s'%box).getVal()>0 and w.var('seff_%s'%box).getVal()>0 and (options.doTriggerFit or options.doSimultaneousFit):
         pave_param.AddText("m_{eff}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[8], list_parameter[9]))
         pave_param.AddText("#sigma_{eff}"+" = {0:.2f} #pm {1:.2f}".format(list_parameter[10], list_parameter[11]))
     elif w.var('eff_bin%02d'%(0)) != None:

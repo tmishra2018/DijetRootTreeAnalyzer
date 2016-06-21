@@ -220,8 +220,8 @@ def runToys(w,options,cfg,seed):
             w.var(p.GetName()).setError(p.getError())
 
         badPars = []
-        if w.var('p0')!=None:                
-            badPars.append(w.var('p0').getVal() <= 0)
+        if w.var('p0_%s'%options.box)!=None:                
+            badPars.append(w.var('p0_%s'%options.box).getVal() <= 0)
         if any(badPars):
             nBadPars+=1
             #print "bad pars toy=%i"%iToy
@@ -413,6 +413,8 @@ if __name__ == '__main__':
                   help="input fit file")
     parser.add_option('--fit-region',dest="fitRegion",default="Full",type="string",
                   help="Fit region")
+    parser.add_option('--sim',dest="doSimultaneousFit", default=False,action='store_true',
+                  help="do simultaneous trigger fit")
     
     (options,args) = parser.parse_args()
     

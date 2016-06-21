@@ -5,7 +5,6 @@ from framework import Config
 from array import *
 import os
 import sys
-import BinnedFit
 
 def fixPars(w, label, doFix=True, setVal=None):
     parSet = w.allVars()
@@ -30,9 +29,9 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
             continue
         w.factory(parameter)
         
-    constPars = ['sqrts','p0']
-    if w.var('meff').getVal()<0 and w.var('seff').getVal()<0:
-        constPars.extend(['meff','seff'])
+    constPars = ['sqrts','p0_%s'%box]
+    if w.var('meff_%s'%box).getVal()<0 and w.var('seff_%s'%box).getVal()<0:
+        constPars.extend(['meff_%s'%box,'seff_%s'%box])
         
     for parameter in parameters:
         paramName = parameter.split('[')[0]
@@ -142,7 +141,8 @@ def writeDataCard(box,model,txtfileName,bkgs,paramNames,w,penalty,fixed,shapes=[
                 rates = [w.data("%s_%s"%(box,model)).sumEntries()]
                 processes = ["%s_%s"%(box,model)]
                 lumiErrs = [1.027]
-        rates.extend([w.var('Ntot_%s'%(bkg)).getVal() for bkg in bkgs])
+            
+        rates.extend([w.var('Ntot_%s_%s'%(bkg,box)).getVal() for bkg in bkgs])
         processes.extend(["%s_%s"%(box,bkg) for bkg in bkgs])
         lumiErrs.extend([1.00 for bkg in bkgs])
         divider = "------------------------------------------------------------\n"
@@ -259,6 +259,7 @@ def applyTurnonGraph(hist,effGraph):
 
 
 if __name__ == '__main__':
+    import BinnedFit
     parser = OptionParser()
     parser.add_option('-c','--config',dest="config",type="string",default="config/run2.config",
                   help="Name of the config file to use")
@@ -409,40 +410,38 @@ if __name__ == '__main__':
             w.factory('mu[1]')
             w.var('mu').setConstant(False)
             w.var('mu').setMin(0)
-            w.var('mu').setVal(0.2) # value close to zero
-            w.factory('Ntot_sig_In[%f]'%(sigDataHist.sumEntries()))
-            w.factory('expr::Ntot_sig("mu*Ntot_sig_In",mu,Ntot_sig_In)')
-            w.factory('SUM::extSpBPdf(Ntot_sig*%s_sig,Ntot_bkg*%s_bkg)'%(box,box))
-            w.factory('SUM::extSigPdf(Ntot_sig*%s_sig)'%(box))
-            #frSpB = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))
+            w.var('mu').setVal(0.2) # initial value close to zero
+            w.factory('Ntot_sig_%s_In[%f]'%(box,sigDataHist.sumEntries()))
+            w.factory('expr::Ntot_sig_%s("mu*Ntot_sig_%s_In",mu,Ntot_sig_%s_In)'%(box,box,box))
+            w.factory('SUM::extSpBPdf(Ntot_sig_%s*%s_sig,Ntot_bkg_%s*%s_bkg)'%(box,box,box,box))
+            w.factory('SUM::extSigPdf(Ntot_sig_%s*%s_sig)'%(box,box))
             frSpB = BinnedFit.binnedFit(w.pdf('extSpBPdf'), w.data('data_obs'))
             w.var('mu').setConstant(True)
-            #frSpB_muFixed = w.pdf('extSpBPdf').fitTo(w.data('data_obs'),rt.RooFit.Extended(True),rt.RooFit.Save(),rt.RooFit.Minimizer('Minuit2','migrad'),rt.RooFit.Hesse(True),rt.RooFit.Strategy(2))
             frSpB_muFixed = BinnedFit.binnedFit(w.pdf('extSpBPdf'), w.data('data_obs'))
             frIn.Print('V')
             frSpB.Print('v')
             frSpB_muFixed.Print('v')
-            deco = rt.PdfDiagonalizer("deco",w,frSpB_muFixed)
+            deco = rt.PdfDiagonalizer("deco_%s"%box,w,frSpB_muFixed)
             bkgs_deco = []
             for bkg in bkgs:
                 pdf_deco = deco.diagonalize(w.pdf('%s_%s'%(box,bkg)))
                 rootTools.Utils.importToWS(w,pdf_deco,rt.RooFit.RecycleConflictNodes())
                 bkgs_deco.append(bkg+'_deco')
-                w.var('deco_eig0').setConstant(True)
+                w.var('deco_%s_eig0'%box).setConstant(True)
                 if '%s_%s_norm'%(box,bkg) in paramNames:
                     loc = paramNames.index('%s_%s_norm'%(box,bkg))
                     paramNames[loc] = '%s_%s_deco_norm'%(box,bkg)
                     w.factory('%s_%s_deco_norm[1]'%(box,bkg))
                     w.var('%s_%s_deco_norm'%(box,bkg)).setConstant(False)
-                if 'p1' in paramNames:
-                    loc = paramNames.index('p1')
-                    paramNames[loc] = 'deco_eig1'
-                if 'p2' in paramNames:
-                    loc = paramNames.index('p2')
-                    paramNames[loc] = 'deco_eig2'
-                if 'p3' in paramNames:
-                    loc = paramNames.index('p3')
-                    paramNames[loc] = 'deco_eig3'
+                if 'p1_%s'%box in paramNames:
+                    loc = paramNames.index('p1_%s'%box)
+                    paramNames[loc] = 'deco_%s_eig1'%box
+                if 'p2_%s'%box in paramNames:
+                    loc = paramNames.index('p2_%s'%box)
+                    paramNames[loc] = 'deco_%s_eig2'%box
+                if 'p3_%s'%box in paramNames:
+                    loc = paramNames.index('p3_%s'%box)
+                    paramNames[loc] = 'deco_%s_eig3'%box
                     
             bkgs = bkgs_deco
                 
@@ -451,8 +450,8 @@ if __name__ == '__main__':
             w.var(p.GetName()).setError(p.getError())
             if "Ntot" in p.GetName():
                 if options.deco:
-                    w.factory('Ntot_%s_deco[%f]'%(p.GetName().replace("Ntot_",""),p.getVal()))
-                    w.var('Ntot_%s_deco'%(p.GetName().replace("Ntot_",""))).setError(p.getError())
+                    w.factory('Ntot_bkg_deco_%s[%f]'%(box,p.getVal()))
+                    w.var('Ntot_bkg_deco_%s'%(box)).setError(p.getError())
         for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
             w.var(p.GetName()).setVal(p.getVal())
             w.var(p.GetName()).setError(p.getError())

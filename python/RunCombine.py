@@ -8,7 +8,7 @@ import glob
 import rootTools
 import time
 
-NSIGMA = 3.0
+NSIGMA = 10.0
 
 def massIterable(massList):    
     if len(massList.split(','))==1:
@@ -126,106 +126,155 @@ def submit_jobs(options,args):
                 time.sleep(3)
                 os.system("bsub -q "+options.queue+" -o "+pwd+"/"+ffDir+"/log.log source "+pwd+"/"+outputname)
     
-def main(options,args):    
-    box = options.box
+def main(options,args):
+    
+    boxes = options.box.split('_')
 
     signif = options.signif
     
-    lumi = float(options.lumi)
-    
     model = options.model
 
-    paramDict = {}
-    if options.inputFitFile is not None and options.bayes:
-        inputRootFile = rt.TFile.Open(options.inputFitFile,"r")
-        wIn = inputRootFile.Get("w"+box).Clone("wIn"+box)            
-        if wIn.obj("fitresult_extDijetPdf_data_obs") != None:
-            frIn = wIn.obj("fitresult_extDijetPdf_data_obs")
-        elif wIn.obj("nll_extDijetPdf_data_obs") != None:
-            frIn = wIn.obj("nll_extDijetPdf_data_obs")
-        elif wIn.obj("fitresult_extDijetPdf_data_obs_with_constr") != None:
-            fr = wIn.obj("fitresult_extDijetPdf_data_obs_with_constr")
-        elif wIn.obj("nll_extDijetPdf_data_obs_with_constr") != None:
-            frIn = wIn.obj("nll_extDijetPdf_data_obs_with_constr")
-        elif wIn.obj("simNll") != None:
-            frIn = wIn.obj("simNll")
+    lumiFloat = [float(lumiStr) for lumiStr in options.lumi.split('_')]
+
+    rRangeStringList = []
+    sysStringList = []
+    for box,lumi in zip(boxes,lumiFloat):
+
         paramDict = {}
-        for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
-            paramDict[p.GetName()] = [p.getVal(), p.getError()]
-        print "grabbing parameter ranges +-%gsigma for bayesian"%NSIGMA
-
-    signalSys = ''
-    if options.noSignalSys or options.noSys:
-        signalSys = '--no-signal-sys'
-    else:
-        signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESDOWN.root'%(model,model)
-        signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERUP.root --jerDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERDOWN.root'%(model,model)
+        if options.inputFitFile is not None and options.bayes:
+            inputRootFile = rt.TFile.Open(options.inputFitFile,"r")
+            wIn = inputRootFile.Get("w"+box).Clone("wIn"+box)            
+            if wIn.obj("fitresult_extDijetPdf_data_obs") != None:
+                frIn = wIn.obj("fitresult_extDijetPdf_data_obs")
+            elif wIn.obj("nll_extDijetPdf_data_obs") != None:
+                frIn = wIn.obj("nll_extDijetPdf_data_obs")
+            elif wIn.obj("fitresult_extDijetPdf_data_obs_with_constr") != None:
+                fr = wIn.obj("fitresult_extDijetPdf_data_obs_with_constr")
+            elif wIn.obj("nll_extDijetPdf_data_obs_with_constr") != None:
+                frIn = wIn.obj("nll_extDijetPdf_data_obs_with_constr")
+            elif wIn.obj("simNll") != None:
+                frIn = wIn.obj("simNll")
+            paramDict = {}
+            for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
+                paramDict[p.GetName()] = [p.getVal(), p.getError()]
+            print "grabbing parameter ranges +-%gsigma for bayesian"%NSIGMA
     
-    penaltyString = ''
-    if options.penalty:
-        penaltyString = '--penalty'
-    elif options.noSys:
-        penaltyString = '--fixed'
-
-    xsecString = '--xsec %f'%(options.xsec)    
-
-    signalDsName = 'inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root'%model
-    backgroundDsName = {'CaloDijet2015':'inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet2015.root',
-                        'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016B_GoldenUpdate_CaloDijet2016.root',
-                        'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root'
-                        }
-
-    blindString = ''
-    if options.blind:
-        blindString = '--noFitAsimov --run expected'
-
-    sysString = ''
-    if options.noSys and options.deco:
-        sysString = '-S 0 --freezeNuisances=shapeBkg_%s_bkg_deco_%s__norm,deco_eig1,deco_eig2,deco_eig3,jes,jer,lumi'%(box,box)
-    elif options.noSys:
-        sysString = '-S 0 --freezeNuisances=shapeBkg_%s_bkg_%s__norm,p1,p2,p3,jes,jer,lumi'%(box,box)
+        signalSys = ''
+        if options.noSignalSys or options.noSys:
+            signalSys = '--no-signal-sys'
+        else:
+            signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESDOWN.root'%(model,model)
+            signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERUP.root --jerDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERDOWN.root'%(model,model)
+        
+        penaltyString = ''
+        if options.penalty:
+            penaltyString = '--penalty'
+        elif options.noSys:
+            penaltyString = '--fixed'
     
-    decoString = ''
-    if options.deco:
-        decoString  ='--deco'
+        xsecString = '--xsec %f'%(options.xsec)    
+    
+        signalDsName = 'inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root'%model
+        backgroundDsName = {'CaloDijet2015':'inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet2015.root',
+                            'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016B_GoldenUpdate_CaloDijet2016.root',
+                            'CaloDijet20152016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root'
+                            }
 
-    for massPoint in massIterable(options.mass):
-                
-        exec_me('python python/WriteDataCard.py -m %s --mass %s -i %s -l %f -c %s -b %s -d %s %s %s %s %s %s %s'%(model, massPoint, options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName[box],penaltyString,signalSys,xsecString,decoString),options.dryRun)
+        blindString = ''
+        if options.blind:
+            blindString = '--noFitAsimov --run expected'
 
-        if options.bayes:
-            rRangeString =  '--setPhysicsModelParameterRanges '
-            if options.deco:
-                rRangeString += 'shapeBkg_%s_bkg_deco_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0],1+NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0])
-                rRangeString += ':deco_eig1=%f,%f'%(-1.0*NSIGMA,NSIGMA)
-                rRangeString += ':deco_eig2=%f,%f'%(-1.0*NSIGMA,NSIGMA)
-                rRangeString += ':deco_eig3=%f,%f'%(-1.0*NSIGMA,NSIGMA)
+        sysString = ''
+        if options.noSys and options.deco:
+            sysString = '-S 0 --freezeNuisances=shapeBkg_%s_bkg_deco_%s__norm,deco_%s_eig1,deco_%s_eig2,deco_%s_eig3,jes,jer,lumi'%(box,box,box,box,box)
+        elif options.noSys:
+            sysString = '-S 0 --freezeNuisances=shapeBkg_%s_bkg_%s__norm,p1_%s,p2_%s,p3_%s,jes,jer,lumi'%(box,box,box,box,box)
+        sysStringList.append(sysString)
+
+        decoString = ''
+        if options.deco:
+            decoString  ='--deco'
+
+        for massPoint in massIterable(options.mass):
+            exec_me('python python/WriteDataCard.py -m %s --mass %s -i %s -l %f -c %s -b %s -d %s %s %s %s %s %s %s'%(model, massPoint, options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName[box],penaltyString,signalSys,xsecString,decoString),options.dryRun)    
+            if options.bayes:
+                rRangeString =  '--setPhysicsModelParameterRanges '
+                if options.deco:
+                    rRangeString += 'shapeBkg_%s_bkg_deco_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0],1+NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0])
+                    rRangeString += ':deco_eig1_%s=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
+                    rRangeString += ':deco_eig2_%s=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
+                    rRangeString += ':deco_eig3_%s=%f,%f'%(box,-1.0*NSIGMA,NSIGMA)
+                else:
+                    rRangeString += 'shapeBkg_%s_bkg_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0],1+NSIGMA*paramDict['Ntot_bkg_%s'%box][1]/paramDict['Ntot_bkg_%s'%box][0])
+                    rRangeString += ':p1_%s=%f,%f'%(box,paramDict['p1_%s'%box][0]-NSIGMA*paramDict['p1_%s'%box][1],paramDict['p1_%s'][0]+NSIGMA*paramDict['p1_%s'%box][1])
+                    rRangeString += ':p2_%s=%f,%f'%(box,paramDict['p2_%s'%box][0]-NSIGMA*paramDict['p2_%s'%box][1],paramDict['p2_%s'][0]+NSIGMA*paramDict['p2_%s'%box][1])
+                    rRangeString += ':p3_%s=%f,%f'%(box,paramDict['p3_%s'%box][0]-NSIGMA*paramDict['p3_%s'%box][1],paramDict['p3_%s'][0]+NSIGMA*paramDict['p3_%s'%box][1])            
+                if options.rMax>-1:
+                    rRangeString += ':r=0,%f'%(options.rMax)
+                rRangeStringList.append(rRangeString)
+                toyString = ''
+                if options.toys>-1:
+                    toyString = '-t %i -s -1'%options.toys
+                if len(boxes)==1:
+                    exec_me('combine -M MarkovChainMC -H Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 30 --proposal ortho --burnInSteps 1000 --iteration 40000 --propHelperWidthRangeDivisor 10 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
+                    exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
             else:
-                rRangeString += 'shapeBkg_%s_bkg_%s__norm=%f,%f'%(box,box,1-NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0],1+NSIGMA*paramDict['Ntot_bkg'][1]/paramDict['Ntot_bkg'][0])
-                rRangeString += ':p1=%f,%f'%(paramDict['p1'][0]-NSIGMA*paramDict['p1'][1],paramDict['p1'][0]+NSIGMA*paramDict['p1'][1])
-                rRangeString += ':p2=%f,%f'%(paramDict['p2'][0]-NSIGMA*paramDict['p2'][1],paramDict['p2'][0]+NSIGMA*paramDict['p2'][1])
-                rRangeString += ':p3=%f,%f'%(paramDict['p3'][0]-NSIGMA*paramDict['p3'][1],paramDict['p3'][0]+NSIGMA*paramDict['p3'][1])            
-            if options.rMax>-1:
-                rRangeString += ':r=0,%f'%(options.rMax)
-            toyString = ''
-            if options.toys>-1:
-                toyString = '-t %i -s -1'%options.toys
-            exec_me('combine -M MarkovChainMC -H Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 20 --proposal ortho --burnInSteps 200 --iteration 30000 --propHelperWidthRangeDivisor 10 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,blindString,sysString,toyString),options.dryRun)
-            exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
+                if signif:
+                    rRangeString = ''               
+                    if options.rMax>-1:
+                        rRangeString = '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
+                        rRangeStringList.append(rRangeString)
+                    if len(boxes)==1:
+                        exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,sysString),options.dryRun)
+                        exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.ProfileLikelihood.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)
+                else:
+                    rRangeString = ''
+                    if options.rMax>-1:                
+                        rRangeString =  '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)                        
+                        rRangeStringList.append(rRangeString)
+                    if len(boxes)==1:
+                        exec_me('combine -M Asymptotic -H ProfileLikelihood %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i %s --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.min_tol,options.min_strat,rRangeString,blindString,sysString),options.dryRun)
+                        exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.Asymptotic.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)
+    if len(boxes)>1:
+        lumiTotal = sum(lumiFloat)
+        for box,lumi in zip(boxes,lumiFloat): exec_me('cp %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt .'%(options.outDir,model,massPoint,lumi,box),options.dryRun)        
+        cmds = ['%s=dijet_combine_%s_%s_lumi-%.3f_%s.txt'%(box,model,massPoint,lumi,box) for box,lumi in zip(boxes,lumiFloat)]
+        exec_me('combineCards.py %s > %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt'%(' '.join(cmds),options.outDir,model,massPoint,lumiTotal,options.box),options.dryRun)
+        exec_me('cat %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt'%(options.outDir,model,massPoint,lumiTotal,options.box),options.dryRun)
+        if options.bayes:
+            rRangeStringListMod = [rRangeString.replace('--setPhysicsModelParameterRanges ','') for rRangeString in rRangeStringList ]
+            paramRangeList = []
+            for listMod in rRangeStringListMod:
+                paramRangeList.extend(listMod.split(':'))
+            paramRangeList = list(set(paramRangeList))
+            rRangeStringTotal = ''
+            if options.deco or rMax>=-1:
+                rRangeStringTotal = '--setPhysicsModelParameterRanges ' + ','.join(paramRangeList)
+                
+            sysStringListMod = [sysString.replace('-S 0 --freezeNuisances=','') for sysString in sysStringList ]
+            paramFreezeList = []
+            for listMod in sysStringListMod:
+                paramFreezeList.extend(listMod.split(','))
+            paramFreezeList = list(set(paramFreezeList))
+            sysStringTotal = ''
+            if options.noSys:
+                sysStringTotal = '-S 0 --freezeNuisances=' + ','.join(paramFreezeList)
+            exec_me('combine -M MarkovChainMC -H Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 30 --proposal ortho --burnInSteps 1000 --iteration 40000 --propHelperWidthRangeDivisor 10 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumiTotal,box,rRangeStringTotal,blindString,sysStringTotal,toyString),options.dryRun)
+            exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumiTotal,options.box,options.outDir),options.dryRun)             
         else:
             if signif:
                 rRangeString = ''               
                 if options.rMax>-1:
                     rRangeString = '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
-                exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,rRangeString,sysString),options.dryRun)
-                exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.ProfileLikelihood.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)
+                exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s %s'%(options.outDir,model,massPoint,lumiTotal,options.box,model,massPoint,lumi,box,rRangeString,sysString),options.dryRun)
+                exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.ProfileLikelihood.mH120.root %s/'%(model,massPoint,lumiTotal,options.box,options.outDir),options.dryRun)
             else:
                 rRangeString = ''
                 if options.rMax>-1:                
                     rRangeString =  '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
-                exec_me('combine -M Asymptotic -H ProfileLikelihood %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i %s --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.min_tol,options.min_strat,rRangeString,blindString,sysString),options.dryRun)
-                exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.Asymptotic.mH120.root %s/'%(model,massPoint,lumi,box,options.outDir),options.dryRun)  
-
+                exec_me('combine -M Asymptotic -H ProfileLikelihood %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i %s --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumiTotal,options.box,options.min_tol,options.min_strat,rRangeString,blindString,sysString),options.dryRun)
+                exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.Asymptotic.mH120.root %s/'%(model,massPoint,lumiTotal,options.box,options.outDir),options.dryRun)
+            for box,lumi in zip(boxes,lumiFloat): exec_me('rm dijet_combine_%s_%s_lumi-%.3f_%s.txt'%(model,massPoint,lumi,box),options.dryRun)
     
 if __name__ == '__main__':
 
@@ -239,7 +288,7 @@ if __name__ == '__main__':
     parser.add_option('--mass',dest="mass", default='750',type="string",
                   help="mass of resonance")
     parser.add_option('-l','--lumi',dest="lumi", default="1.918",type="string",
-                  help="lumi array in fb^-1, e.g.: 1.918")
+                  help="lumi in fb^-1, possibly for different channels e.g.: 1.918_2.590")
     parser.add_option('--signif',dest="signif",default=False,action='store_true',
                   help="calculate significance instead of limit")
     parser.add_option('-d','--dir',dest="outDir",default="./",type="string",
