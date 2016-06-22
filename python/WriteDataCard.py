@@ -297,6 +297,8 @@ if __name__ == '__main__':
                   help="apply trigger turn on systematics to signal")
     parser.add_option('--deco',dest="deco",default=False,action='store_true',
                   help="decorrelate parameters")
+    parser.add_option('--refit',dest="refit",default=False,action='store_true',
+                  help="refit for S+B")
 
     (options,args) = parser.parse_args()
     
@@ -403,7 +405,19 @@ if __name__ == '__main__':
             
         frIn.Print("V")
         
-        if options.deco:
+        for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
+            w.var(p.GetName()).setVal(p.getVal())
+            w.var(p.GetName()).setError(p.getError())
+            if "Ntot" in p.GetName():
+                if options.deco:
+                    w.factory('Ntot_bkg_deco_%s[%f]'%(box,p.getVal()))
+                    w.var('Ntot_bkg_deco_%s'%(box)).setError(p.getError())
+                    
+        for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
+            w.var(p.GetName()).setVal(p.getVal())
+            w.var(p.GetName()).setError(p.getError())
+        
+        if options.deco or options.refit:
             sigDataHist = w.data('%s_%s'%(box,model))
             sigPdf = rt.RooHistPdf('%s_sig'%box,'%s_sig'%box,rt.RooArgSet(th1x), sigDataHist)
             rootTools.Utils.importToWS(w,sigPdf)
@@ -416,11 +430,16 @@ if __name__ == '__main__':
             w.factory('SUM::extSpBPdf(Ntot_sig_%s*%s_sig,Ntot_bkg_%s*%s_bkg)'%(box,box,box,box))
             w.factory('SUM::extSigPdf(Ntot_sig_%s*%s_sig)'%(box,box))
             frSpB = BinnedFit.binnedFit(w.pdf('extSpBPdf'), w.data('data_obs'))
+            condCovMatrix = frSpB.conditionalCovarianceMatrix(rt.RooArgList(w.var('Ntot_bkg_%s'%box),w.var('p1_%s'%box),w.var('p2_%s'%box),w.var('p3_%s'%box)))
             w.var('mu').setConstant(True)
             frSpB_muFixed = BinnedFit.binnedFit(w.pdf('extSpBPdf'), w.data('data_obs'))
+            covMatrix = frSpB_muFixed.covarianceMatrix()
+            condCovMatrix.Print("V")
+            covMatrix.Print("V")
             frIn.Print('V')
             frSpB.Print('v')
             frSpB_muFixed.Print('v')
+        if options.deco:
             deco = rt.PdfDiagonalizer("deco_%s"%box,w,frSpB_muFixed)
             bkgs_deco = []
             for bkg in bkgs:
@@ -445,17 +464,13 @@ if __name__ == '__main__':
                     paramNames[loc] = 'deco_%s_eig3'%box
                     
             bkgs = bkgs_deco
-                
+            
         for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
-            w.var(p.GetName()).setVal(p.getVal())
-            w.var(p.GetName()).setError(p.getError())
             if "Ntot" in p.GetName():
                 if options.deco:
                     w.factory('Ntot_bkg_deco_%s[%f]'%(box,p.getVal()))
                     w.var('Ntot_bkg_deco_%s'%(box)).setError(p.getError())
-        for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
-            w.var(p.GetName()).setVal(p.getVal())
-            w.var(p.GetName()).setError(p.getError())
+                
                 
     if options.noSignalSys:
         shapes = []

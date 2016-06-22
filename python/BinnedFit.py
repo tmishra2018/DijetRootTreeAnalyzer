@@ -29,6 +29,8 @@ def binnedFit(pdf, data, fitRange='Full',useWeight=False):
         improve_status = m2.minimize('Minuit2','improve')
         hesse_status = m2.minimize('Minuit2','hesse')
         minos_status = m2.minos()
+        if hesse_status !=3 :
+            hesse_status = m2.minimize('Minuit2','hesse')
         fr = m2.save()
         
     return fr
