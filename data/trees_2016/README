@@ -35,12 +35,41 @@ eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/Scouting
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_GoldenUpdate_20160616_170519/*reduced_skim.root
 
 === RECO ===
-For full 2016 dataset so far with latest JEC, please uses dataset(s): 4)
+For full 2016 dataset so far with latest JEC, please uses dataset(s): 4) + 5)
+Luminosity of combined dataset:
+
+DCSOnly: 4774.123 /pb (ONLINE!)
+Golden: 3989.952 /pb (PassJSON==1) (ONLINE!)
 =========================
 (Most recent production first)
 
-4) Run2016B processing round 4 - 100% processing of 2016B data
+####
+# 5) Run2016B top-up production 'round5'
+####
 
+/JetHT/Run2016B-PromptReco-v2/MINIAOD (no new data in v1 in top-up production)
+Standard selection without DeltaEta cut
+
+JEC:
+Spring16 25nsV3 JEC (Latest, 2016 recommended)
+
+Luminosity (ONLINE, normtag not ready):
+DCSOnly: 2035.318 /pb
+processed_jsons/round5_topup/processedLumis_round5_topup_22Jun16.json
+
+Golden: 1413.358 /pb (PassJSON==1) (ONLINE!)
+processed_jsons/cert_and_processed_round5_22Jun16.json
+
+File location:
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_red/pub/Run2016B_round5_topup_Spring16_V3_8nh_s5_20160623_124301/*skim.root
+
+(please not that the filename reads *Run2015D* which is a typo, it
+should read *Run2016B* and is not trivial to change from the O(100) files)
+
+
+####
+# 4) Run2016B processing round 4 - 100% processing of 2016B data
+####
 
 /JetHT/Run2016B-PromptReco-v1/MINIAOD
 /JetHT/Run2016B-PromptReco-v2/MINIAOD
