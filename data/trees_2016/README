@@ -151,3 +151,24 @@ JEC Summer15_25nsV3 (for MC are same as V5)
 QCD with CMSSW_80X
 CERN eos: /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/eirini/QCD_Spring16_80X/
 JEC used: Spring16_25nsV2_MC
+
+Signal
+=======================
+
+Spring16 25ns MC samples
+========================
+
+/RSGravitonToGluonGluon_kMpl01_M_*_TuneCUETP8M1_13TeV_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
+JEC Summer16_25nsV3
+(CERN EOS)
+/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring16_25ns_JEC_Spring16_25nsV3/RSGravToGluGlu
+
+/RSGravitonToQuarkQuark_kMpl01_M_*_TuneCUETP8M1_13TeV_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
+JEC Summer16_25nsV3
+(CERN EOS)
+/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring16_25ns_JEC_Spring16_25nsV3/RSGravToQQ
+
+/QstarToJJ_M_*_TuneCUETP8M1_13TeV_pythia8/RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/MINIAODSIM
+JEC Summer16_25nsV3
+(CERN EOS)
+/store/group/phys_exotica/dijet/Dijet13TeV/reducedNtuples/mc/Spring16_25ns_JEC_Spring16_25nsV3/QstarToJJ
