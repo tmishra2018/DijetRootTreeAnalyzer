@@ -6,6 +6,22 @@ from array import *
 import os
 import sys
 
+def getDownFromUpNom(hUp,hNom):
+
+    hDown = hUp.Clone(hUp.GetName().replace('Up','Down'))    
+    for i in range(1,hDown.GetNbinsX()+1):
+        nom = hNom.GetBinContent(i)
+        up = hUp.GetBinContent(i)
+        if up > 0:
+            down = nom*nom / up 
+            hDown.SetBinContent(i, down)
+        else:
+            hDown.SetBinContent(i, 0)
+
+    return hDown
+
+    
+
 def fixPars(w, label, doFix=True, setVal=None):
     parSet = w.allVars()
     for par in rootTools.RootIterator.RootIterator(parSet):
@@ -494,6 +510,8 @@ if __name__ == '__main__':
 
     # JES and JER uncertainties
     hSigTh1x = signalHistos[0]
+    hUpTh1x = None
+    hDownTh1x = None
     for shape in shapes:
         if shapeFiles[shape+'Up'] is not None:
             fUp = rt.TFile.Open(shapeFiles[shape+'Up'])
@@ -506,8 +524,7 @@ if __name__ == '__main__':
             hUp.Rebin(len(x)-1,hUp.GetName()+'_rebin',x)
             hUpRebin = rt.gDirectory.Get(hUp.GetName()+'_rebin')
             hUpRebin.SetDirectory(0)        
-            hUpTh1x = convertToTh1xHist(hUpRebin)
-            
+            hUpTh1x = convertToTh1xHist(hUpRebin)            
             hUpTh1x.Scale(hSigTh1x.Integral()/hUpTh1x.Integral())
             
             hUp_DataHist = rt.RooDataHist('%s_%s_%sUp'%(box,model,shape),'%s_%s_%sUp'%(box,model,shape),rt.RooArgList(th1x),hUpTh1x)
@@ -531,7 +548,14 @@ if __name__ == '__main__':
         
             hDown_DataHist = rt.RooDataHist('%s_%s_%sDown'%(box,model,shape),'%s_%s_%sDown'%(box,model,shape),rt.RooArgList(th1x),hDownTh1x)
         
-            rootTools.Utils.importToWS(w,hDown_DataHist)            
+            rootTools.Utils.importToWS(w,hDown_DataHist)
+        else:
+            hDownTh1x = getDownFromUpNom(hUpTh1x,hSigTh1x)
+            hDownTh1x.Scale(hSigTh1x.Integral()/hDownTh1x.Integral())
+        
+            hDown_DataHist = rt.RooDataHist('%s_%s_%sDown'%(box,model,shape),'%s_%s_%sDown'%(box,model,shape),rt.RooArgList(th1x),hDownTh1x)
+        
+            rootTools.Utils.importToWS(w,hDown_DataHist)
 
             
     outFile = 'dijet_combine_%s_%i_lumi-%.3f_%s.root'%(model,massPoint,lumi/1000.,box)
