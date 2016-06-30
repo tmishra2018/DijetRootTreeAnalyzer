@@ -50,7 +50,10 @@ def writeBashScript(options,massPoint,iJob=0):
         toyString  ='--toys %i'%options.toys
 
     xsecString = '--xsec %f'%options.xsec
-        
+
+    signifString = ''
+    if options.signif:
+        signifString = '--signif'
         
     # prepare the script to run
     outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumi)+options.box+"_%i"%(iJob)+".src"
@@ -91,11 +94,11 @@ def writeBashScript(options,massPoint,iJob=0):
         script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring16.root -P inputs/\n'%(options.model)
         for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
             script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring16_%s.root -P inputs/\n'%(options.model,sys)            
-    if box=='PFDijet2016' in options.box.split('_'):
+    if 'PFDijet2016' in options.box.split('_'):
         script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16.root -P inputs/\n'%(options.model)
         for sys in ['JERUP','JESUP','JESDOWN']:
             script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16_%s.root -P inputs/\n'%(options.model,sys)        
-    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s %s\n'%(options.inputFitFile,
+    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s %s %s\n'%(options.inputFitFile,
                                                                                                                                                          options.model,
                                                                                                                                                          massPoint,
                                                                                                                                                          options.config,
@@ -110,7 +113,8 @@ def writeBashScript(options,massPoint,iJob=0):
                                                                                                                                                          decoString,
                                                                                                                                                          bayesString,
                                                                                                                                                          toyString,
-                                                                                                                                                         xsecString)
+                                                                                                                                                         xsecString,
+                                                                                                                                                         signifString)
     script += 'cp %s/higgsCombine* %s/\n'%(submitDir,combineDir)
     script += 'cd ../..\n'
     script += 'rm -rf $TWD\n'
