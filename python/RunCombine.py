@@ -82,10 +82,19 @@ def writeBashScript(options,massPoint,iJob=0):
     script += 'git clone git@github.com:CMSDIJET/DijetRootTreeAnalyzer CMSDIJET/DijetRootTreeAnalyzer\n'
     script += 'cd CMSDIJET/DijetRootTreeAnalyzer\n'
     script += 'git checkout -b Limits %s\n'%(options.tag)
-    script += 'mkdir -p %s\n'%submitDir
-    script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/\n'%(options.model)
-    for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
-        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/\n'%(options.model,sys)
+    script += 'mkdir -p %s\n'%submitDir    
+    if 'CaloDijet2015' in options.box.split('_') or options.box=='CaloDijet20152016':
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/\n'%(options.model)
+        for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
+            script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/\n'%(options.model,sys)            
+    if 'CaloDijet2016' in options.box.split('_'):        
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring16.root -P inputs/\n'%(options.model)
+        for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
+            script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring16_%s.root -P inputs/\n'%(options.model,sys)            
+    if box=='PFDijet2016' in options.box.split('_'):
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16.root -P inputs/\n'%(options.model)
+        for sys in ['JERUP','JESUP','JESDOWN']:
+            script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16_%s.root -P inputs/\n'%(options.model,sys)        
     script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s %s\n'%(options.inputFitFile,
                                                                                                                                                          options.model,
                                                                                                                                                          massPoint,
