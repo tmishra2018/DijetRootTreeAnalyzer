@@ -6,8 +6,10 @@
 #JSON data/json/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver.txt
 #JSON data/json_scouting_2015/Cert_246908-260627_13TeV_PromptReco_Collisions15_25ns_JSON_Silver_v2.txt
 #JSON data/json_scouting_2016/json_DCSONLY_272007_274443.txt
-JSON data/json_scouting_2016/lumiSummary_ScoutingPFHT_Jun-15-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json
+#JSON data/json_scouting_2016/lumiSummary_ScoutingPFHT_Jun-15-2016_Cert_271036-274421_13TeV_PromptReco_Collisions16_Golden.json
 #JSON data/json_scouting_2016/lumiSummary_crab_ScoutingPFCommissioning__Run2016B-v2__RAW_Cert_271036-274421_13TeV_PromptReco_Collisions16.json
+JSON data/json_scouting_2016/lumiSummary_ScoutingPFHT_Jun-23-2016_Cert_271036-274443_13TeV_PromptReco_Collisions16_Golden.json
+#JSON data/json_scouting_2016/lumiSummary_ScoutingPFCommissioning_Jun-23-2016_Cert_271036-274443_13TeV_PromptReco_Collisions16_Golden.json
 #
 #############################     Example of file with list of cuts
 #

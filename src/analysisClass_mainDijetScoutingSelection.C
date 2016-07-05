@@ -27,9 +27,9 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   if( int(getPreCutValue1("useJECs"))==1 )
   {
     std::cout << "Reapplying JECs on the fly" << std::endl;
-    std::string L1Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L2Relative_AK4PFchs.txt";
-    std::string L3Path = "data/Summer15_25nsV7_MC/Summer15_25nsV7_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1Path = "data/Spring16_25nsV3_MC/Spring16_25nsV3_MC_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = "data/Spring16_25nsV3_MC/Spring16_25nsV3_MC_L2Relative_AK4PFchs.txt";
+    std::string L3Path = "data/Spring16_25nsV3_MC/Spring16_25nsV3_MC_L3Absolute_AK4PFchs.txt";
     std::string L1DATAPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L1FastJet_AK4PFchs.txt";
     std::string L2DATAPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L2Relative_AK4PFchs.txt";
     std::string L3DATAPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L3Absolute_AK4PFchs.txt";
@@ -63,7 +63,8 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //unc = new JetCorrectionUncertainty("data/Summer15_50nsV5_DATA/Summer15_50nsV5_DATA_Uncertainty_AK4PFchs.txt");
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_Uncertainty_AK4PFchs.txt");
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
-    unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
+    //unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_Uncertainty_AK4PFchs.txt");
 
   }
 
