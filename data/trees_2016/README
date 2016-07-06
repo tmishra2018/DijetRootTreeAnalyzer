@@ -11,7 +11,30 @@ For data lumiSummary and corresponding luminosity calculated with brilcalc (http
 
 ====== DATA =====
 
-=== CaloScouting ===
+=== CaloScouting (4.0 /fb) ===
+
+/ScoutingCaloHT/Run2016B-v1/RAW
+/ScoutingCaloHT/Run2016B-v2/RAW
+/ScoutingCaloCommissioning/Run2016B-v1/RAW
+/ScoutingCaloCommissioning/Run2016B-v2/RAW
+
+Standard selection without DeltaEta cut
+JEC 80X_dataRun2_HLT_frozen_v12 AK4CALOHLT L1,L2,L3 + Spring16_25nsV3 AK4PF L2L3Residual + HLT->RECO bias correction
+
+Luminosity:
+DCSOnly: 5617.616 /pb
+processed_jsons/processedlumis_CaloHT.json
+processed_jsons/processedlumis_CaloCommissioning.json
+
+Golden: 4004.489 /pb (PassJSON==1)
+processed_jsons/overlap_CaloHT.json
+processed_jsons/overlap_CaloCommissioning.json
+
+File locations (CERN EOS):
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/HT2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden_20160702_104640/*reduced_skim.root
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden_20160702_104616/*reduced_skim.root
+
+=== CaloScouting (2.6 /fb) ===
 
 /ScoutingCaloHT/Run2016B-v1/RAW
 /ScoutingCaloHT/Run2016B-v2/RAW
