@@ -22,7 +22,10 @@ def exec_me(command,dryRun=True):
     if not dryRun: os.system(command)
         
 def writeBashScript(options,massPoint,iJob=0):
-    lumi = float(options.lumi)
+        
+    lumiFloat = [float(lumiStr) for lumiStr in options.lumi.split('_')]    
+    lumiTotal = sum(lumiFloat)
+    
     submitDir = options.outDir
     massPoint = str(massPoint)
 
@@ -56,7 +59,7 @@ def writeBashScript(options,massPoint,iJob=0):
         signifString = '--signif'
         
     # prepare the script to run
-    outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumi)+options.box+"_%i"%(iJob)+".src"
+    outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumiTotal)+options.box+"_%i"%(iJob)+".src"
         
     ffDir = submitDir+"/logs_"+options.model+"_"+massPoint+"_"+options.box+"_%i"%(iJob)
     user = os.environ['USER']
@@ -78,7 +81,7 @@ def writeBashScript(options,massPoint,iJob=0):
     script += "export CMSSW_BASE=%s\n"%(cmsswBase)
     script += 'eval `scramv1 runtime -sh`\n'
     script += 'cd - \n'
-    script += "export TWD=${PWD}/%s_%s_lumi-%.3f_%s\n"%(options.model,massPoint,lumi,options.box)
+    script += "export TWD=${PWD}/%s_%s_lumi-%.3f_%s\n"%(options.model,massPoint,lumiTotal,options.box)
     script += "mkdir -p $TWD\n"
     script += "cd $TWD\n"
     script += 'pwd\n'
@@ -98,11 +101,11 @@ def writeBashScript(options,massPoint,iJob=0):
         script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16.root -P inputs/\n'%(options.model)
         for sys in ['JERUP','JESUP','JESDOWN']:
             script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16_%s.root -P inputs/\n'%(options.model,sys)        
-    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s %s %s\n'%(options.inputFitFile,
+    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %s -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s %s %s\n'%(options.inputFitFile,
                                                                                                                                                          options.model,
                                                                                                                                                          massPoint,
                                                                                                                                                          options.config,
-                                                                                                                                                         lumi,
+                                                                                                                                                         options.lumi,
                                                                                                                                                          submitDir,
                                                                                                                                                          options.box,
                                                                                                                                                          penaltyString,
