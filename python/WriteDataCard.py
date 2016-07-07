@@ -6,6 +6,22 @@ from array import *
 import os
 import sys
 
+def getDownFromUpNom(hUp,hNom):
+
+    hDown = hUp.Clone(hUp.GetName().replace('Up','Down'))    
+    for i in range(1,hDown.GetNbinsX()+1):
+        nom = hNom.GetBinContent(i)
+        up = hUp.GetBinContent(i)
+        if up > 0:
+            down = nom*nom / up 
+            hDown.SetBinContent(i, down)
+        else:
+            hDown.SetBinContent(i, 0)
+
+    return hDown
+
+    
+
 def fixPars(w, label, doFix=True, setVal=None):
     parSet = w.allVars()
     for par in rootTools.RootIterator.RootIterator(parSet):
@@ -319,8 +335,13 @@ if __name__ == '__main__':
             if f.lower().find('resonanceshapes')!=-1:
                 signalFileName = f
             else:
-                rootFile = rt.TFile(f)
-                myTH1 = rootFile.Get('h_mjj_HLTpass_HT250_1GeVbin')
+                rootFile = rt.TFile(f)                
+                names = [k.GetName() for k in rootFile.GetListOfKeys()]
+                if 'h_mjj_HLTpass_HT250_1GeVbin' in names:
+                    myTH1 = rootFile.Get('h_mjj_HLTpass_HT250_1GeVbin')
+                elif 'mjj_gev' in names:
+                    myTH1 = rootFile.Get('mjj_gev')
+                    myTH1.Print('v')
 
     w = rt.RooWorkspace("w"+box)
     
@@ -478,50 +499,63 @@ if __name__ == '__main__':
     else:
         shapes = []
         shapeFiles = {}
-        if options.jesUpFile is not None and options.jesDownFile is not None:
+        if options.jesUpFile is not None or options.jesDownFile is not None:
             shapes.append('jes')
             shapeFiles['jesUp'] = options.jesUpFile
             shapeFiles['jesDown'] = options.jesDownFile
-        if options.jerUpFile is not None and options.jerDownFile is not None:
+        if options.jerUpFile is not None or options.jerDownFile is not None:
             shapes.append('jer')
             shapeFiles['jerUp'] = options.jerUpFile
             shapeFiles['jerDown'] = options.jerDownFile
 
     # JES and JER uncertainties
     hSigTh1x = signalHistos[0]
+    hUpTh1x = None
+    hDownTh1x = None
     for shape in shapes:
-        fUp = rt.TFile.Open(shapeFiles[shape+'Up'])
-        if options.trigger:
-            hUp = applyTurnonFunc(fUp.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
+        if shapeFiles[shape+'Up'] is not None:
+            fUp = rt.TFile.Open(shapeFiles[shape+'Up'])
+            if options.trigger:
+                hUp = applyTurnonFunc(fUp.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
+            else:
+                hUp = fUp.Get('h_%s_%i'%(model,massPoint))
+            hUp.SetName('h_%s_%i_%sUp'%(model,massPoint,shape))
+            hUp.SetDirectory(0)
+            hUp.Rebin(len(x)-1,hUp.GetName()+'_rebin',x)
+            hUpRebin = rt.gDirectory.Get(hUp.GetName()+'_rebin')
+            hUpRebin.SetDirectory(0)        
+            hUpTh1x = convertToTh1xHist(hUpRebin)            
+            hUpTh1x.Scale(hSigTh1x.Integral()/hUpTh1x.Integral())
+            
+            hUp_DataHist = rt.RooDataHist('%s_%s_%sUp'%(box,model,shape),'%s_%s_%sUp'%(box,model,shape),rt.RooArgList(th1x),hUpTh1x)
+        
+            rootTools.Utils.importToWS(w,hUp_DataHist)
+            
+        if shapeFiles[shape+'Down'] is not None: 
+            fDown = rt.TFile.Open(shapeFiles[shape+'Down'])
+            if options.trigger:
+                hDown = applyTurnonFunc(fDown.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
+            else:
+                hDown = fDown.Get('h_%s_%i'%(model,massPoint))
+            hDown.SetName('h_%s_%i_%sDown'%(model,massPoint,shape))
+            hDown.SetDirectory(0)
+        
+            hDown.Rebin(len(x)-1,hDown.GetName()+'_rebin',x)
+            hDownRebin = rt.gDirectory.Get(hDown.GetName()+'_rebin')
+            hDownRebin.SetDirectory(0)        
+            hDownTh1x = convertToTh1xHist(hDownRebin)
+            hDownTh1x.Scale(hSigTh1x.Integral()/hDownTh1x.Integral())
+        
+            hDown_DataHist = rt.RooDataHist('%s_%s_%sDown'%(box,model,shape),'%s_%s_%sDown'%(box,model,shape),rt.RooArgList(th1x),hDownTh1x)
+        
+            rootTools.Utils.importToWS(w,hDown_DataHist)
         else:
-            hUp = fUp.Get('h_%s_%i'%(model,massPoint))
-        hUp.SetName('h_%s_%i_%sUp'%(model,massPoint,shape))
-        hUp.SetDirectory(0)
-        fDown = rt.TFile.Open(shapeFiles[shape+'Down'])
-        if options.trigger:
-            hDown = applyTurnonFunc(fDown.Get('h_%s_%i'%(model,massPoint)),effFrIn,w)
-        else:
-            hDown = fDown.Get('h_%s_%i'%(model,massPoint))
-        hDown.SetName('h_%s_%i_%sDown'%(model,massPoint,shape))
-        hDown.SetDirectory(0)
+            hDownTh1x = getDownFromUpNom(hUpTh1x,hSigTh1x)
+            hDownTh1x.Scale(hSigTh1x.Integral()/hDownTh1x.Integral())
         
-        hUp.Rebin(len(x)-1,hUp.GetName()+'_rebin',x)
-        hUpRebin = rt.gDirectory.Get(hUp.GetName()+'_rebin')
-        hUpRebin.SetDirectory(0)        
-        hUpTh1x = convertToTh1xHist(hUpRebin)        
-        hUpTh1x.Scale(hSigTh1x.Integral()/hUpTh1x.Integral())
+            hDown_DataHist = rt.RooDataHist('%s_%s_%sDown'%(box,model,shape),'%s_%s_%sDown'%(box,model,shape),rt.RooArgList(th1x),hDownTh1x)
         
-        hDown.Rebin(len(x)-1,hDown.GetName()+'_rebin',x)
-        hDownRebin = rt.gDirectory.Get(hDown.GetName()+'_rebin')
-        hDownRebin.SetDirectory(0)        
-        hDownTh1x = convertToTh1xHist(hDownRebin)
-        hDownTh1x.Scale(hSigTh1x.Integral()/hDownTh1x.Integral())
-        
-        hUp_DataHist = rt.RooDataHist('%s_%s_%sUp'%(box,model,shape),'%s_%s_%sUp'%(box,model,shape),rt.RooArgList(th1x),hUpTh1x)
-        hDown_DataHist = rt.RooDataHist('%s_%s_%sDown'%(box,model,shape),'%s_%s_%sDown'%(box,model,shape),rt.RooArgList(th1x),hDownTh1x)
-        
-        rootTools.Utils.importToWS(w,hUp_DataHist)
-        rootTools.Utils.importToWS(w,hDown_DataHist)            
+            rootTools.Utils.importToWS(w,hDown_DataHist)
 
             
     outFile = 'dijet_combine_%s_%i_lumi-%.3f_%s.root'%(model,massPoint,lumi/1000.,box)

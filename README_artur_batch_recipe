@@ -1,32 +1,43 @@
 ## (These instructions are almost entirely a copy from Juskas recipe)
 
-lxplus066:...a/apresyan$cmsrel CMSSW_7_4_14
-lxplus066:...a/apresyan$cd CMSSW_7_4_14/src/CMSDIJET/DijetRootTreeAnalyzer/
-lxplus066:...a/apresyan$git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
+cmsrel CMSSW_8_0_11
+cd CMSSW_8_0_11/src/CMSDIJET/DijetRootTreeAnalyzer/
+git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
 
 ## in a directory setup for Analyzer, create a list of files to be run over.
 
 # With this cryptic command I write a sorted lists of absolute file paths
-lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$ls -1 eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_big/2016/CaloScouting/DiJetNtupleV3.0/v1/sixie/ScoutingCaloCommissioning/DiJetNtuplerV3p0_ToCERN_Data_2016_CaloScouting_Run2016B-v1_v1_v1/160512_134847/0000/*root >> lists/ScoutingData/CaloScoutingCommissioning2016.txt
+ls -1 eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_big/2016/ScoutingCaloCommissioning_Run2016B-v1_Jun-10-2016_20160610_230518/ScoutingCaloCommissioning/crab_ScoutingCaloCommissioning__Run2016B-v1__RAW/160610_210532/0000/*.root > lists/ScoutingData/Commissioning/CaloScoutingCommissioning2016.txt
+s -1 eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_big/2016/ScoutingCaloCommissioning_Run2016B-v2_Jun-10-2016_20160610_230545/ScoutingCaloCommissioning/crab_ScoutingCaloCommissioning__Run2016B-v2__RAW/160610_210607/0000/*.root >> lists/ScoutingData/Commissioning/CaloScoutingCommissioning2016.txt
+ls -1 eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_big/2016/ScoutingCaloCommissioning_Run2016B-v2_Jun-16-2016_20160616_155820/ScoutingCaloCommissioning/crab_ScoutingCaloCommissioning__Run2016B-v2__RAW/160616_135851/0000/*.root >> lists/ScoutingData/Commissioning/CaloScoutingCommissioning2016.txt
+ls -1 eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_big/2016/ScoutingCaloCommissioning_Run2016B-v2_Jun-24-2016_20160625_074015/ScoutingCaloCommissioning/crab_ScoutingCaloCommissioning__Run2016B-v2__RAW/160625_054104/0000/*.root >> lists/ScoutingData/Commissioning/CaloScoutingCommissioning2016.txt
 
 # The above lists would work just fine with a single analysis job if EOS
 # is mounted, but in batch processing the paths have to start with
 # 'root://eoscms//eos/cms/store/', so lets search and replace:
 # (I don't know if there's a script for this)
-sed -i 's/eos\/cms\/store/root:\/\/eoscms\/\/eos\/cms\/store/g' lists/ScoutingData/CaloScoutingCommissioning2016.txt
+sed -i 's/eos\/cms\/store/root:\/\/eoscms\/\/eos\/cms\/store/g' lists/ScoutingData/Commissioning/CaloScoutingCommissioning2016.txt
+
+## Recompile
+
+./scripts/make_rootNtupleClass.sh -f eos/cms/store/group/phys_exotica/dijet/Dijet13TeVScouting/rootTrees_big/2016/ScoutingCaloHT_Run2016B-v2_Jun-24-2016_20160625_165656/ScoutingCaloHT/crab_ScoutingCaloHT__Run2016B-v2__RAW/160625_145744/0000/ScoutingCaloHT__Run2016B-v2__RAW_1.root -t dijetscouting/events
+ln -sf analysisClass_mainDijetCaloScoutingSelection.C src/analysisClass.C
+make clean
+make
 
 ## Download fresh cert JSON and change the path accordingly in cutfile
 
-lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$wget https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/DCSOnly/json_DCSONLY.txt
+wget https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions16/13TeV/DCSOnly/json_DCSONLY.txt
 
 # Replace the beginning of the cutfile with path to new JSON. Use your favourite editor.
 vim config/cutFile_mainDijetCaloScoutingSelection.txt 
 
 ## Create necessary directories and start batch analysis. Pay attention to the -m flag and the -o output directory
-[juska@lxplus0022 DijetRootTreeAnalyzer]$ mkdir batch
-lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$python scripts/submit_batch_EOS_split_scouting.py -i lists/ScoutingData/Commissioning -m 2016 -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/apresyan/reduced_skims -q 1nh --tag Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual --split 1 --cut config/cutFile_mainDijetCaloScoutingSelection.txt
+mkdir batch
+python scripts/submit_batch_EOS_split_scouting.py -i lists/ScoutingData/Commissioning -m 2016 -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims -q 1nh --tag Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden --split 1 --cut config/cutFile_mainDijetCaloScoutingSelection.txt
+python scripts/submit_batch_EOS_split_scouting.py -i lists/ScoutingData/HT -m 2016 -o /eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims -q 8nh --tag HT2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden --split 1 --cut config/cutFile_mainDijetCaloScoutingSelection.txt
 
 ## update the location of file lists here:
-lxplus066:...CMSDIJET/DijetRootTreeAnalyzer$vim data/json_scouting_2016/README
+vim data/trees_2016/README
 
 

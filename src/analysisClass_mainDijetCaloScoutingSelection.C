@@ -72,9 +72,9 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV5_DATA/Summer15_25nsV5_DATA_Uncertainty_AK4PFchs.txt");
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV6_DATA/Summer15_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
     // for 2015 CaloScouting
-    unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
-    // for 2016 CaloScouting... to be updated...
-    unc = new JetCorrectionUncertainty("data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
+    //unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
+    // for 2016 CaloScouting
+    unc = new JetCorrectionUncertainty("data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_Uncertainty_AK4PFchs.txt");
 
   }
   
@@ -464,6 +464,42 @@ void analysisClass::Loop()
      double MJJWide_shift = 0; 
      if( wj1.Pt()>0 && wj2.Pt()>0 )
      {
+       /*
+       // 2015 bias correction from Mikko/Federico
+       float p0 = - 0.63;
+       float p1 =   0.636;
+       float p2 = - 1.0;
+
+       float f1 = p0 + p1 * pow( 0.01 * wj1.Pt() , p2);
+       float f2 = p0 + p1 * pow( 0.01 * wj2.Pt() , p2);
+       
+       float corr1 = 1. / (1. + 0.01*f1);
+       float corr2 = 1. / (1. + 0.01*f2);
+       
+       wj1 = wj1*corr1;
+       wj2 = wj2*corr2;
+       */
+       
+       // 2016 bias correction from Mikko/Federico
+       // (page 4 https://indico.cern.ch/event/546408/contributions/2217944/attachments/1298388/1936977/Giugno-24-2016_-_CaloScouting.pdf)
+       float p0 = 0.419;
+       float p1 = -5;
+       float p2 = -0.188;
+       float p3 = -0.5;
+       float p4 = 1.15;
+       float p5 = 399;
+       float p6 = 252;
+
+       float f1 = p0 + p1 * pow( wj1.Pt() , p2) + p3/wj1.Pt() + p4 * exp( -0.5 * ((wj1.Pt() - p5)/p6) * ((wj1.Pt() - p5)/p6) );
+       float f2 = p0 + p1 * pow( wj2.Pt() , p2) + p3/wj2.Pt() + p4 * exp( -0.5 * ((wj2.Pt() - p5)/p6) * ((wj2.Pt() - p5)/p6) );
+       
+       float corr1 = 1. / (1. + 0.01*f1);
+       float corr2 = 1. / (1. + 0.01*f2);
+       
+       wj1 = wj1*corr1;
+       wj2 = wj2*corr2;
+
+
        // Create dijet system
        wdijet = wj1 + wj2;
        MJJWide = wdijet.M();

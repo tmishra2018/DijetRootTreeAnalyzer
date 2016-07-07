@@ -22,7 +22,10 @@ def exec_me(command,dryRun=True):
     if not dryRun: os.system(command)
         
 def writeBashScript(options,massPoint,iJob=0):
-    lumi = float(options.lumi)
+        
+    lumiFloat = [float(lumiStr) for lumiStr in options.lumi.split('_')]    
+    lumiTotal = sum(lumiFloat)
+    
     submitDir = options.outDir
     massPoint = str(massPoint)
 
@@ -50,10 +53,13 @@ def writeBashScript(options,massPoint,iJob=0):
         toyString  ='--toys %i'%options.toys
 
     xsecString = '--xsec %f'%options.xsec
-        
+
+    signifString = ''
+    if options.signif:
+        signifString = '--signif'
         
     # prepare the script to run
-    outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumi)+options.box+"_%i"%(iJob)+".src"
+    outputname = submitDir+"/submit_"+options.model+"_"+massPoint+"_lumi-%.3f_"%(lumiTotal)+options.box+"_%i"%(iJob)+".src"
         
     ffDir = submitDir+"/logs_"+options.model+"_"+massPoint+"_"+options.box+"_%i"%(iJob)
     user = os.environ['USER']
@@ -75,22 +81,31 @@ def writeBashScript(options,massPoint,iJob=0):
     script += "export CMSSW_BASE=%s\n"%(cmsswBase)
     script += 'eval `scramv1 runtime -sh`\n'
     script += 'cd - \n'
-    script += "export TWD=${PWD}/%s_%s_lumi-%.3f_%s\n"%(options.model,massPoint,lumi,options.box)
+    script += "export TWD=${PWD}/%s_%s_lumi-%.3f_%s\n"%(options.model,massPoint,lumiTotal,options.box)
     script += "mkdir -p $TWD\n"
     script += "cd $TWD\n"
     script += 'pwd\n'
     script += 'git clone git@github.com:CMSDIJET/DijetRootTreeAnalyzer CMSDIJET/DijetRootTreeAnalyzer\n'
     script += 'cd CMSDIJET/DijetRootTreeAnalyzer\n'
     script += 'git checkout -b Limits %s\n'%(options.tag)
-    script += 'mkdir -p %s\n'%submitDir
-    script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/\n'%(options.model)
-    for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
-        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/\n'%(options.model,sys)
-    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %f -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s %s\n'%(options.inputFitFile,
+    script += 'mkdir -p %s\n'%submitDir    
+    if 'CaloDijet2015' in options.box.split('_') or options.box=='CaloDijet20152016':
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/\n'%(options.model)
+        for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
+            script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/\n'%(options.model,sys)            
+    if 'CaloDijet2016' in options.box.split('_'):        
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root -P inputs/\n'%(options.model)
+        for sys in ['JERUP','JERDOWN','JESUP','JESDOWN']:
+            script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_%s.root -P inputs/\n'%(options.model,sys)            
+    if 'PFDijet2016' in options.box.split('_'):
+        script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16.root -P inputs/\n'%(options.model)
+        for sys in ['JERUP','JESUP','JESDOWN']:
+            script += 'wget https://github.com/CMSDIJET/DijetShapeInterpolator/raw/master/ResonanceShapes_%s_13TeV_Spring16_%s.root -P inputs/\n'%(options.model,sys)        
+    script += 'python python/RunCombine.py -i %s -m %s --mass %s -c %s --lumi %s -d %s -b %s %s %s --min-tol %e --min-strat %i --rMax %f %s %s %s %s %s\n'%(options.inputFitFile,
                                                                                                                                                          options.model,
                                                                                                                                                          massPoint,
                                                                                                                                                          options.config,
-                                                                                                                                                         lumi,
+                                                                                                                                                         options.lumi,
                                                                                                                                                          submitDir,
                                                                                                                                                          options.box,
                                                                                                                                                          penaltyString,
@@ -101,7 +116,8 @@ def writeBashScript(options,massPoint,iJob=0):
                                                                                                                                                          decoString,
                                                                                                                                                          bayesString,
                                                                                                                                                          toyString,
-                                                                                                                                                         xsecString)
+                                                                                                                                                         xsecString,
+                                                                                                                                                         signifString)
     script += 'cp %s/higgsCombine* %s/\n'%(submitDir,combineDir)
     script += 'cd ../..\n'
     script += 'rm -rf $TWD\n'
@@ -164,8 +180,15 @@ def main(options,args):
         if options.noSignalSys or options.noSys:
             signalSys = '--no-signal-sys'
         else:
-            signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESDOWN.root'%(model,model)
-            signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERUP.root --jerDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERDOWN.root'%(model,model)
+            if box=='CaloDijet2015' or box=='CaloDijet20152016':
+                signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESDOWN.root'%(model,model)
+                signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERUP.root --jerDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERDOWN.root'%(model,model)
+            elif box=='CaloDijet2016':
+                signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JESDOWN.root'%(model,model)
+                signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERUP.root --jerDown inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15_JERDOWN.root'%(model,model)
+            elif box=='PFDijet2016':
+                signalSys  =   '--jesUp inputs/ResonanceShapes_%s_13TeV_Spring16_JESUP.root --jesDown inputs/ResonanceShapes_%s_13TeV_Spring16_JESDOWN.root'%(model,model)
+                signalSys += ' --jerUp inputs/ResonanceShapes_%s_13TeV_Spring16_JERUP.root'%(model)
         
         penaltyString = ''
         if options.penalty:
@@ -174,11 +197,19 @@ def main(options,args):
             penaltyString = '--fixed'
     
         xsecString = '--xsec %f'%(options.xsec)    
-    
-        signalDsName = 'inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root'%model
+
+        
+        if box=='CaloDijet2015' or box=='CaloDijet20152016':
+            signalDsName = 'inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root'%model
+        elif box=='CaloDijet2016':
+            signalDsName = 'inputs/ResonanceShapes_%s_13TeV_CaloScouting_Spring15.root'%model
+        elif box=='PFDijet2016':
+            signalDsName = 'inputs/ResonanceShapes_%s_13TeV_Spring16.root'%model
+            
         backgroundDsName = {'CaloDijet2015':'inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet2015.root',
                             'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016B_GoldenUpdate_CaloDijet2016.root',
-                            'CaloDijet20152016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root'
+                            'CaloDijet20152016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root',
+                            'PFDijet2016':'inputs/data_PFRECOHT_Run2016B_PFDijet2016.root'
                             }
 
         blindString = ''
@@ -260,20 +291,20 @@ def main(options,args):
             sysStringTotal = ''
             if options.noSys:
                 sysStringTotal = '-S 0 --freezeNuisances=' + ','.join(paramFreezeList)
-            exec_me('combine -M MarkovChainMC -H Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 30 --proposal ortho --burnInSteps 1000 --iteration 40000 --propHelperWidthRangeDivisor 10 %s %s %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumiTotal,box,rRangeStringTotal,blindString,sysStringTotal,toyString),options.dryRun)
+            exec_me('combine -M MarkovChainMC -H Asymptotic %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --tries 30 --proposal ortho --burnInSteps 1000 --iteration 40000 --propHelperWidthRangeDivisor 10 %s %s %s %s'%(options.outDir,model,massPoint,lumiTotal,options.box,model,massPoint,lumiTotal,options.box,rRangeStringTotal,blindString,sysStringTotal,toyString),options.dryRun)
             exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.MarkovChainMC.mH120*root %s/'%(model,massPoint,lumiTotal,options.box,options.outDir),options.dryRun)             
         else:
             if signif:
                 rRangeString = ''               
                 if options.rMax>-1:
                     rRangeString = '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
-                exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s %s'%(options.outDir,model,massPoint,lumiTotal,options.box,model,massPoint,lumi,box,rRangeString,sysString),options.dryRun)
+                exec_me('combine -M ProfileLikelihood --signif %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s %s %s'%(options.outDir,model,massPoint,lumiTotal,options.box,model,massPoint,lumiTotal,options.box,rRangeString,sysString),options.dryRun)
                 exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.ProfileLikelihood.mH120.root %s/'%(model,massPoint,lumiTotal,options.box,options.outDir),options.dryRun)
             else:
                 rRangeString = ''
                 if options.rMax>-1:                
                     rRangeString =  '--setPhysicsModelParameterRanges r=0,%f'%(options.rMax)
-                exec_me('combine -M Asymptotic -H ProfileLikelihood %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i %s --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumiTotal,options.box,options.min_tol,options.min_strat,rRangeString,blindString,sysString),options.dryRun)
+                exec_me('combine -M Asymptotic -H ProfileLikelihood %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s --minimizerTolerance %f --minimizerStrategy %i %s --saveWorkspace %s %s'%(options.outDir,model,massPoint,lumiTotal,options.box,model,massPoint,lumiTotal,options.box,options.min_tol,options.min_strat,rRangeString,blindString,sysString),options.dryRun)
                 exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s.Asymptotic.mH120.root %s/'%(model,massPoint,lumiTotal,options.box,options.outDir),options.dryRun)
             for box,lumi in zip(boxes,lumiFloat): exec_me('rm dijet_combine_%s_%s_lumi-%.3f_%s.txt'%(model,massPoint,lumi,box),options.dryRun)
     

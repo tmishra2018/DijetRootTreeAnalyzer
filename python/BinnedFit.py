@@ -256,7 +256,11 @@ if __name__ == '__main__':
     for f in args:
         if f.lower().endswith('.root'):
             rootFile = rt.TFile(f)
-            myTH1 = rootFile.Get('h_mjj_HLTpass_HT250_1GeVbin')
+            names = [k.GetName() for k in rootFile.GetListOfKeys()]
+            if 'h_mjj_HLTpass_HT250_1GeVbin' in names:
+                myTH1 = rootFile.Get('h_mjj_HLTpass_HT250_1GeVbin')
+            elif 'mjj_gev' in names:
+                myTH1 = rootFile.Get('mjj_gev')
     if myTH1 is None:
         print "give a root file as input"
 
@@ -465,7 +469,9 @@ if __name__ == '__main__':
             d = signalFile.Get(name)
             if isinstance(d, rt.TH1):
                 if name=='h_%s_%i'%(options.model,options.mass):
+                    print d.Integral()
                     d.Scale(options.xsec*lumi/d.Integral())
+                    print d.Integral()
                     if options.triggerDataFile is not None:
                         if options.doSimultaneousFit:
                             d_turnon = applyTurnonFunc(d,fr,w)
@@ -487,6 +493,8 @@ if __name__ == '__main__':
     
                     d_th1x = convertToTh1xHist(d_rebin)
                     signalHistos.append(d_th1x)
+                    print d_th1x.Integral()
+        sys.exit()
         
 
     asimov = extDijetPdf.generateBinned(rt.RooArgSet(th1x),rt.RooFit.Name('central'),rt.RooFit.Asimov())
@@ -753,6 +761,7 @@ if __name__ == '__main__':
     pad_1 = c.GetPad(1)
     pad_1.SetPad(0.01,0.36,0.99,0.98)
     pad_1.SetLogy()
+    #pad_1.SetLogx()
     pad_1.SetRightMargin(0.05)
     pad_1.SetTopMargin(0.05)
     pad_1.SetLeftMargin(0.175)
@@ -768,6 +777,7 @@ if __name__ == '__main__':
     pad_2.SetRightMargin(0.05)
     pad_2.SetGridx()
     pad_2.SetGridy()
+    #pad_2.SetLogx()
 
     pad_1.cd()
     
@@ -790,10 +800,10 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.SetLineColor(rt.kWhite)
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
     myRebinnedDensityTH1.SetLineWidth(0)
-    #myRebinnedDensityTH1.SetMaximum(1e3)
     myRebinnedDensityTH1.SetMaximum(2e3)
     myRebinnedDensityTH1.SetMinimum(2e-5)
-    #myRebinnedDensityTH1.SetMinimum(2e-10)
+    #myRebinnedDensityTH1.SetMaximum(2)
+    #myRebinnedDensityTH1.SetMinimum(2e-8)
     myRebinnedDensityTH1.Draw("pe")    
     g_data_clone.Draw("pezsame")
     if options.doTriggerFit or options.doSimultaneousFit or options.doSpectrumFit or options.noFit:
@@ -870,20 +880,22 @@ if __name__ == '__main__':
     leg.AddEntry(background,"Fit","l")
     if options.signalFileName!=None:
         leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")
-        leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
-        #leg.AddEntry(None,"%.2f pb"%(options.xsec),"")
+        #leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
     leg.Draw()
+    #background.Draw("csame")
+    #g_data.Draw("pezsame")
 
-    pave_sel = rt.TPaveText(0.2,0.03,0.5,0.25,"NDC")
+    #pave_sel = rt.TPaveText(0.2,0.03,0.5,0.25,"NDC")
+    pave_sel = rt.TPaveText(0.2,0.03,0.5,0.23,"NDC")
     pave_sel.SetFillColor(0)
     pave_sel.SetBorderSize(0)
     pave_sel.SetFillStyle(0)
     pave_sel.SetTextFont(42)
     pave_sel.SetTextSize(0.045)
     pave_sel.SetTextAlign(11)
-    pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
-                          list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
-                          list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
+    #pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+    #                      list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
+    #                      list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
     pave_sel.AddText("Wide Jets")
     pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin('Low'),w.var('mjj').getMax('High')))
     pave_sel.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
@@ -927,7 +939,7 @@ if __name__ == '__main__':
         pave_param.AddText("#epsilon = %s"%valString)
         pave_param.AddText("#delta#epsilon = %s"%errString)
             
-    pave_param.Draw("SAME")    
+    #pave_param.Draw("SAME")    
     
     pad_1.Update()
 
@@ -948,7 +960,8 @@ if __name__ == '__main__':
     h_fit_residual_vs_mass.GetXaxis().SetTitleSize(2*0.06)
     h_fit_residual_vs_mass.GetXaxis().SetLabelSize(2*0.05)
     h_fit_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
-    
+    h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
+    h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()
     
     h_fit_residual_vs_mass.Draw("histsame")
     
