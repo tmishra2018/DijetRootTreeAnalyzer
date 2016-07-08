@@ -61,7 +61,7 @@ eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/Scouting
 For full 2016 dataset so far with latest JEC, please uses dataset 6)
 Luminosity of full dataset:
 
-DCSOnly: 7338 /pb (ONLINE!)
+DCSOnly: 8000 /pb (offline)
 Golden: 6253 /pb (PassJSON==1) (offline)
 =========================
 (Most recent production first)
@@ -79,7 +79,7 @@ JEC:
 Spring16 25nsV6 JEC
 
 Luminosity:
-DCSOnly: 7338/pb (online)
+DCSOnly: 8000/pb (offline)
 processed_jsons/lumiSummary_sofar_rounds456_7Jul16.json
 
 Golden: 6253 /pb (offline) (PassJSON==1)
