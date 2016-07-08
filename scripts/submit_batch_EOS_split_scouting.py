@@ -23,6 +23,10 @@ parser.add_option("-o", "--output", dest="output",
     help="the directory OUTDIR contains the output of the program",
     metavar="OUTDIR")
 
+parser.add_option("--timestamp", dest="timestamp",
+    help="rerun failed jobs for specific timestamp",
+    default="")
+
 parser.add_option("-m", "--match", dest="match",
     help="run only the samples containing this string in the name",
     default="")
@@ -55,7 +59,11 @@ timeMarker = "mycutFile_%04d%02d%02d_%02d%02d%02d__" % (current_time.year,curren
 cutfileName = timeMarker+os.path.split(opt.cutfile)[1]
 print cutfileName
 
-newTag = opt.tag+simpletimeMarker
+if not opt.timestamp:
+  newTag = opt.tag+simpletimeMarker
+else:
+  newTag = opt.tag+"_"+opt.timestamp
+
 ###
 os.system("/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select mkdir -p "+opt.output+"/"+newTag)
 #os.system("rm -rf batch")
@@ -149,6 +157,12 @@ for line in  ins:
     logfile = "batch/"+newTag+"/logfile_"+sample+"_"+newTag+"_"+str(jj)+".log"#NEW
     crablogfile = "batch/"+newTag+"/crablogfile_"+sample+"_"+newTag+"_"+str(jj)+".crablog"#NEW
 
+    ntupleDone = opt.output[1:]+"/"+newTag+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+"_reduced_skim.root"
+
+    if os.path.isfile(ntupleDone)==True:
+      print "This job has already been run, output is here: "+ntupleDone+"\n"
+      continue
+
     ###################################
     #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events "+opt.output+simpletimeMarker+"/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" "+opt.output+simpletimeMarker+"/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
     #command = "./main "+splittedlist[jj]+" config/cutFile_mainDijetSelection.txt dijets/events $TWD/rootfile_"+sample+"_"+newTag+"_"+str(jj)+" $TWD/cutEfficiencyFile_"+sample+"_"+newTag+"_"+str(jj)
@@ -189,7 +203,7 @@ for line in  ins:
       #bsubCommand = "bsub -q "+opt.queue+" -o "+pwd+"/"+crablogfile+" < "+pwd+"/"+outputname
       print bsubCommand ##NEW
       submitCommandsFile.write(bsubCommand+"\n")      
-      time.sleep(3)
+      #time.sleep(3)
       os.system(bsubCommand)##NEW
     else:
       print logfile

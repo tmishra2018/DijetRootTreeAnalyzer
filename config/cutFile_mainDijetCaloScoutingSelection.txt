@@ -1,4 +1,4 @@
-JSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
+JSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275783_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -108,3 +108,5 @@ HadEnFrac_j1         -inf           +inf                -               -       
 EmEnFrac_j1         -inf           +inf                -               -               1       100 0 1           SAVE
 HadEnFrac_j2         -inf           +inf                -               -               1       100 0 1           SAVE
 EmEnFrac_j2         -inf           +inf                -               -               1       100 0 1           SAVE
+corr1_WJ1           -inf           +inf                -               -               1       100 0 1           SAVE
+corr2_WJ2           -inf           +inf                -               -               1       100 0 1           SAVE

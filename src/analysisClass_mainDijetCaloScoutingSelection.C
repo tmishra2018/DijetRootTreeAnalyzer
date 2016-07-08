@@ -42,7 +42,8 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     // 76X 2015 data
     //std::string L2L3ResidualPath = "data/Fall15_25nsV2_DATA/Fall15_25nsV2_DATA_L2L3Residual_AK4PF.txt" ;
     // 2016 data 
-    std::string L2L3ResidualPath = "data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_L2L3Residual_AK4PF.txt";
+    //    std::string L2L3ResidualPath = "data/Spring16_25ns±V3_DATA/Spring16_25nsV3_DATA_L2L3Residual_AK4PF.txt";
+    std::string L2L3ResidualPath = "data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_L2L3Residual_AK4PF.txt";
     
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
@@ -151,8 +152,8 @@ void analysisClass::Loop()
    ////// If the root version is updated and rootNtupleClass regenerated,     /////
    ////// these lines may need to be updated.                                 /////    
    Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
-   // for (Long64_t jentry=0; jentry<2000;jentry++) {
+     for (Long64_t jentry=0; jentry<nentries;jentry++) {
+      // for (Long64_t jentry=0; jentry<2000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -462,6 +463,8 @@ void analysisClass::Loop()
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
      double MJJWide_shift = 0; 
+     double corr1 = 1.;
+     double corr2 = 1.;
      if( wj1.Pt()>0 && wj2.Pt()>0 )
      {
        /*
@@ -482,7 +485,7 @@ void analysisClass::Loop()
        
        // 2016 bias correction from Mikko/Federico
        // (page 4 https://indico.cern.ch/event/546408/contributions/2217944/attachments/1298388/1936977/Giugno-24-2016_-_CaloScouting.pdf)
-       float p0 = 0.419;
+       /*       float p0 = 0.419;
        float p1 = -5;
        float p2 = -0.188;
        float p3 = -0.5;
@@ -493,13 +496,12 @@ void analysisClass::Loop()
        float f1 = p0 + p1 * pow( wj1.Pt() , p2) + p3/wj1.Pt() + p4 * exp( -0.5 * ((wj1.Pt() - p5)/p6) * ((wj1.Pt() - p5)/p6) );
        float f2 = p0 + p1 * pow( wj2.Pt() , p2) + p3/wj2.Pt() + p4 * exp( -0.5 * ((wj2.Pt() - p5)/p6) * ((wj2.Pt() - p5)/p6) );
        
-       float corr1 = 1. / (1. + 0.01*f1);
-       float corr2 = 1. / (1. + 0.01*f2);
+       corr1 = 1. / (1. + 0.01*f1);
+       corr2 = 1. / (1. + 0.01*f2);
        
        wj1 = wj1*corr1;
        wj2 = wj2*corr2;
-
-
+       */
        // Create dijet system
        wdijet = wj1 + wj2;
        MJJWide = wdijet.M();
@@ -611,6 +613,7 @@ void analysisClass::Loop()
 	 //no cuts on these variables, just to store in output
          fillVariableWithValue( "massWJ_j1", widejets[0].M());
          fillVariableWithValue( "phiWJ_j1", widejets[0].Phi());
+         fillVariableWithValue( "corr1_WJ1", corr1);
        }
 
      if( widejets.size() >= 2 ){
@@ -625,6 +628,7 @@ void analysisClass::Loop()
 	 //dijet
          fillVariableWithValue( "CosThetaStarWJ", TMath::TanH( (widejets[0].Eta()-widejets[1].Eta())/2 )); 
 	 fillVariableWithValue( "deltaPHIjj", DeltaPhiJJWide ) ;
+         fillVariableWithValue( "corr2_WJ2", corr2);
 	 //fillVariableWithValue( "Dijet_MassAK8", mjjAK8 ) ;  
 	 //fillVariableWithValue( "Dijet_MassC", mjjCA8 ) ;
 	 // if(wdijet.M()<1){
