@@ -42,7 +42,6 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     // 76X 2015 data
     //std::string L2L3ResidualPath = "data/Fall15_25nsV2_DATA/Fall15_25nsV2_DATA_L2L3Residual_AK4PF.txt" ;
     // 2016 data 
-    //    std::string L2L3ResidualPath = "data/Spring16_25ns±V3_DATA/Spring16_25nsV3_DATA_L2L3Residual_AK4PF.txt";
     std::string L2L3ResidualPath = "data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_L2L3Residual_AK4PF.txt";
     
     L1Par = new JetCorrectorParameters(L1Path);
@@ -75,7 +74,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     // for 2015 CaloScouting
     //unc = new JetCorrectionUncertainty("data/Summer15_25nsV7_DATA/Summer15_25nsV7_DATA_Uncertainty_AK4PFchs.txt");
     // for 2016 CaloScouting
-    unc = new JetCorrectionUncertainty("data/Spring16_25nsV3_DATA/Spring16_25nsV3_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
 
   }
   
@@ -167,7 +166,9 @@ void analysisClass::Loop()
      size_t no_jets_ak4=jetPtAK4->size();
 
      vector<TLorentzVector> widejets;
+     vector<TLorentzVector> widejets_noCorr;
      TLorentzVector wj1, wj2, wdijet; 
+     TLorentzVector wj1_noCorr, wj2_noCorr, wdijet_noCorr; 
      TLorentzVector wj1_shift, wj2_shift, wdijet_shift; 
 
      vector<TLorentzVector> AK4jets;
@@ -460,11 +461,12 @@ void analysisClass::Loop()
 
 
      double MJJWide = 0; 
+     double MJJWideNoCorr = 0; 
      double DeltaEtaJJWide = 0;
      double DeltaPhiJJWide = 0;
      double MJJWide_shift = 0; 
-     double corr1 = 1.;
-     double corr2 = 1.;
+     float corr1 = 1.;
+     float corr2 = 1.;
      if( wj1.Pt()>0 && wj2.Pt()>0 )
      {
        /*
@@ -476,8 +478,8 @@ void analysisClass::Loop()
        float f1 = p0 + p1 * pow( 0.01 * wj1.Pt() , p2);
        float f2 = p0 + p1 * pow( 0.01 * wj2.Pt() , p2);
        
-       float corr1 = 1. / (1. + 0.01*f1);
-       float corr2 = 1. / (1. + 0.01*f2);
+       corr1 = 1. / (1. + 0.01*f1);
+       corr2 = 1. / (1. + 0.01*f2);
        
        wj1 = wj1*corr1;
        wj2 = wj2*corr2;
@@ -485,7 +487,7 @@ void analysisClass::Loop()
        
        // 2016 bias correction from Mikko/Federico
        // (page 4 https://indico.cern.ch/event/546408/contributions/2217944/attachments/1298388/1936977/Giugno-24-2016_-_CaloScouting.pdf)
-       /*       float p0 = 0.419;
+       float p0 = 0.419;
        float p1 = -5;
        float p2 = -0.188;
        float p3 = -0.5;
@@ -498,10 +500,22 @@ void analysisClass::Loop()
        
        corr1 = 1. / (1. + 0.01*f1);
        corr2 = 1. / (1. + 0.01*f2);
+
+
+       // Get MJJ before corrections
+       wj1_noCorr = TLorentzVector(wj1);
+       wj2_noCorr = TLorentzVector(wj2);
+       wdijet_noCorr = wj1_noCorr + wj2_noCorr;
+       MJJWideNoCorr = wdijet_noCorr.M();
        
+       // Put widejets in the container
+       widejets_noCorr.push_back( wj1_noCorr );
+       widejets_noCorr.push_back( wj2_noCorr );
+
+       // Apply corrections
        wj1 = wj1*corr1;
        wj2 = wj2*corr2;
-       */
+       
        // Create dijet system
        wdijet = wj1 + wj2;
        MJJWide = wdijet.M();
@@ -609,6 +623,7 @@ void analysisClass::Loop()
 
      if( widejets.size() >= 1 ){
          fillVariableWithValue( "pTWJ_j1", widejets[0].Pt() );
+         fillVariableWithValue( "pTWJ_j1_noCorr", widejets_noCorr[0].Pt() );
          fillVariableWithValue( "etaWJ_j1", widejets[0].Eta());
 	 //no cuts on these variables, just to store in output
          fillVariableWithValue( "massWJ_j1", widejets[0].M());
@@ -618,9 +633,11 @@ void analysisClass::Loop()
 
      if( widejets.size() >= 2 ){
          fillVariableWithValue( "pTWJ_j2", widejets[1].Pt() );
+         fillVariableWithValue( "pTWJ_j2_noCorr", widejets_noCorr[1].Pt() );
          fillVariableWithValue( "etaWJ_j2", widejets[1].Eta());
 	 fillVariableWithValue( "deltaETAjj", DeltaEtaJJWide ) ;
          fillVariableWithValue( "mjj", MJJWide ) ;
+         fillVariableWithValue( "mjj_noCorr", MJJWideNoCorr ) ;
          fillVariableWithValue( "mjj_shiftJEC", MJJWide_shift ) ;
 	 //no cuts on these variables, just to store in output
          fillVariableWithValue( "massWJ_j2", widejets[1].M());
