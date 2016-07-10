@@ -12,13 +12,17 @@ if __name__ == '__main__':
                   help="Output ROOT file to store output histograms")
     parser.add_option('-l','--list',dest="list", default="lists/testlist.txt",type="string",
                   help="test list")
-    
+    parser.add_option('--no-corr',dest="noCorr",default=False,action='store_true',
+                  help="no bias correction")
 
+    corr = ''
+    if options.noCorr:
+        corr = '_noCorr'
     (options,args) = parser.parse_args()
 
     tchain = rt.TChain('rootTupleTree/tree')
     tchain.SetBranchStatus('*',0)
-    tchain.SetBranchStatus('mjj',1)
+    tchain.SetBranchStatus('mjj%s'%corr,1)
     tchain.SetBranchStatus('passHLT_CaloScoutingHT250',1)
     tchain.SetBranchStatus('event',1)
     tchain.SetBranchStatus('lumi',1)
@@ -30,15 +34,8 @@ if __name__ == '__main__':
     tchain.SetBranchStatus('phiWJ_j2',1)
     tchain.SetBranchStatus('etaWJ_j1',1)
     tchain.SetBranchStatus('etaWJ_j2',1)
-    tchain.SetBranchStatus('pTWJ_j1',1)
-    tchain.SetBranchStatus('pTWJ_j2',1)
-    tchain.SetBranchStatus('deltaETAjjAK4',1)
-    tchain.SetBranchStatus('phiAK4_j1',1)
-    tchain.SetBranchStatus('phiAK4_j2',1)
-    tchain.SetBranchStatus('etaAK4_j1',1)
-    tchain.SetBranchStatus('etaAK4_j2',1)
-    tchain.SetBranchStatus('pTAK4_j1',1)
-    tchain.SetBranchStatus('pTAK4_j2',1)
+    tchain.SetBranchStatus('pTWJ_j1%s'%corr,1)
+    tchain.SetBranchStatus('pTWJ_j2%s'%corr,1)
     
     h_mjj_1GeVbin = rt.TH1D('h_mjj_HLTpass_HT250_1GeVbin','h_mjj_HLTpass_HT250_1GeVbin',14000,0,14000)
     h_deltaETAjj = rt.TH1D('h_deltaETAjj_HLTpass_HT250','h_deltaETAjj_HLTpass_HT250',1000,0,5)
@@ -49,39 +46,22 @@ if __name__ == '__main__':
     h_phiWJ_j2 = rt.TH1D('h_phiWJ_j2_HLTpass_HT250','h_phiWJ_j2_HLTpass_HT250',1000,-4,4)
     h_pTWJ_j1 = rt.TH1D('h_pTWJ_j1_HLTpass_HT250','h_pTWJ_j1_HLTpass_HT250',10000,0,10000)
     h_pTWJ_j2 = rt.TH1D('h_pTWJ_j2_HLTpass_HT250','h_pTWJ_j2_HLTpass_HT250',10000,0,10000)    
-    h_deltaETAjjAK4 = rt.TH1D('h_deltaETAjjAK4_HLTpass_HT250','h_deltaETAjjAK4_HLTpass_HT250',1000,0,5)
-    h_deltaPHIjjAK4 = rt.TH1D('h_deltaPHIjjAK4_HLTpass_HT250','h_deltaPHIjjAK4_HLTpass_HT250',1000,0,4)
-    h_etaAK4_j1 = rt.TH1D('h_etaAK4_j1_HLTpass_HT250','h_etaAK4_j1_HLTpass_HT250',1000,-5,5)
-    h_etaAK4_j2 = rt.TH1D('h_etaAK4_j2_HLTpass_HT250','h_etaAK4_j2_HLTpass_HT250',1000,-5,5)
-    h_phiAK4_j1 = rt.TH1D('h_phiAK4_j1_HLTpass_HT250','h_phiAK4_j1_HLTpass_HT250',1000,-4,4)
-    h_phiAK4_j2 = rt.TH1D('h_phiAK4_j2_HLTpass_HT250','h_phiAK4_j2_HLTpass_HT250',1000,-4,4)
-    h_pTAK4_j1 = rt.TH1D('h_pTAK4_j1_HLTpass_HT250','h_pTAK4_j1_HLTpass_HT250',10000,0,10000)
-    h_pTAK4_j2 = rt.TH1D('h_pTAK4_j2_HLTpass_HT250','h_pTAK4_j2_HLTpass_HT250',10000,0,10000)
     
-    cut = 'passHLT_CaloScoutingHT250&&abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30&&PassJSON'
+    cut = 'passHLT_CaloScoutingHT250&&abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1%s>60&&pTWJ_j2%s>30&&PassJSON'%(corr,corr)
     
-    histoExpr = { h_mjj_1GeVbin: 'mjj', 
+    histoExpr = { h_mjj_1GeVbin: 'mjj%s'%corr, 
                   h_deltaETAjj: 'deltaETAjj',
                   h_deltaPHIjj: 'deltaPHIjj',
                   h_etaWJ_j1: 'etaWJ_j1',
                   h_etaWJ_j2: 'etaWJ_j2',
                   h_phiWJ_j1: 'phiWJ_j1',
                   h_phiWJ_j2: 'phiWJ_j2',
-                  h_pTWJ_j1: 'pTWJ_j1',
-                  h_pTWJ_j2: 'pTWJ_j2',
-                  h_deltaETAjjAK4: 'deltaETAjjAK4',
-                  h_deltaPHIjjAK4: 'deltaPHIjjAK4',
-                  h_etaAK4_j1: 'etaAK4_j1',
-                  h_etaAK4_j2: 'etaAK4_j2',
-                  h_phiAK4_j1: 'phiAK4_j1',
-                  h_phiAK4_j2: 'phiAK4_j2',
-                  h_pTAK4_j1: 'pTAK4_j1',
-                  h_pTAK4_j2: 'pTAK4_j2',
+                  h_pTWJ_j1: 'pTWJ_j1%s'%corr,
+                  h_pTWJ_j2: 'pTWJ_j2%s'%corr
                 }
     
     f = open(options.list)
     for i, line in enumerate(f):
-        #if i>1: continue
         print line.replace('\n','')
         tchain.Add(line.replace('\n',''))
 
@@ -90,7 +70,7 @@ if __name__ == '__main__':
         tree.Project(h.GetName(),var,cut)
 
     for hist,var in histoExpr.iteritems():
-        if var!='mjj': continue
+        if var!='mjj%s'%corr: continue
         project(tchain, hist, var, cut)
     
     #tchain.Draw('>>elist',cut+"&&mjj>1000",'entrylist')
