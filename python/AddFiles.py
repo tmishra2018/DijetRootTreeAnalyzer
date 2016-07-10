@@ -15,10 +15,10 @@ if __name__ == '__main__':
     parser.add_option('--no-corr',dest="noCorr",default=False,action='store_true',
                   help="no bias correction")
 
+    (options,args) = parser.parse_args()
     corr = ''
     if options.noCorr:
         corr = '_noCorr'
-    (options,args) = parser.parse_args()
 
     tchain = rt.TChain('rootTupleTree/tree')
     tchain.SetBranchStatus('*',0)
