@@ -494,7 +494,7 @@ if __name__ == '__main__':
                     d_th1x = convertToTh1xHist(d_rebin)
                     signalHistos.append(d_th1x)
                     print d_th1x.Integral()
-        sys.exit()
+        #sys.exit()
         
 
     asimov = extDijetPdf.generateBinned(rt.RooArgSet(th1x),rt.RooFit.Name('central'),rt.RooFit.Asimov())
@@ -625,15 +625,16 @@ if __name__ == '__main__':
     
         l = rt.TLatex()
         l.SetTextAlign(11)
-        l.SetTextSize(0.05)
+        l.SetTextSize(0.045)
         l.SetTextFont(42)
         l.SetNDC()
-        l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+        #l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+        l.DrawLatex(0.73,0.96,"%.1f fb^{-1} (%i TeV)"%(lumi/1000.,w.var('sqrts').getVal()/1000.))
         l.SetTextFont(62)
-        l.SetTextSize(0.06)
+        l.SetTextSize(0.055)
         l.DrawLatex(0.2,0.96,"CMS")
         l.SetTextFont(52)
-        l.SetTextSize(0.05)
+        l.SetTextSize(0.045)
         l.DrawLatex(0.3,0.96,"Preliminary")
         
         leg = rt.TLegend(0.7,0.6,0.89,0.78)
@@ -698,7 +699,8 @@ if __name__ == '__main__':
         
         h_eff_residual_vs_mass.GetXaxis().SetTitleSize(2*0.06)
         h_eff_residual_vs_mass.GetXaxis().SetLabelSize(2*0.05)
-        h_eff_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
+        #h_eff_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
+        h_eff_residual_vs_mass.GetXaxis().SetTitle('Dijet Mass [GeV]')
     
     
         h_eff_residual_vs_mass.Draw("histsame")
@@ -761,7 +763,8 @@ if __name__ == '__main__':
     pad_1 = c.GetPad(1)
     pad_1.SetPad(0.01,0.36,0.99,0.98)
     pad_1.SetLogy()
-    #pad_1.SetLogx()
+    if 'PF' in box:
+        pad_1.SetLogx()
     pad_1.SetRightMargin(0.05)
     pad_1.SetTopMargin(0.05)
     pad_1.SetLeftMargin(0.175)
@@ -777,7 +780,8 @@ if __name__ == '__main__':
     pad_2.SetRightMargin(0.05)
     pad_2.SetGridx()
     pad_2.SetGridy()
-    #pad_2.SetLogx()
+    if 'PF' in box:
+        pad_2.SetLogx()
 
     pad_1.cd()
     
@@ -800,10 +804,12 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.SetLineColor(rt.kWhite)
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
     myRebinnedDensityTH1.SetLineWidth(0)
-    myRebinnedDensityTH1.SetMaximum(2e3)
-    myRebinnedDensityTH1.SetMinimum(2e-5)
-    #myRebinnedDensityTH1.SetMaximum(2)
-    #myRebinnedDensityTH1.SetMinimum(2e-8)
+    if 'Calo' in box:
+        myRebinnedDensityTH1.SetMaximum(2e3)
+        myRebinnedDensityTH1.SetMinimum(2e-5)
+    elif 'PF' in box:
+        myRebinnedDensityTH1.SetMaximum(20)
+        myRebinnedDensityTH1.SetMinimum(2e-8)
     myRebinnedDensityTH1.Draw("pe")    
     g_data_clone.Draw("pezsame")
     if options.doTriggerFit or options.doSimultaneousFit or options.doSpectrumFit or options.noFit:
@@ -812,7 +818,7 @@ if __name__ == '__main__':
         h_background.SetLineColor(rt.kRed)
         h_background.SetLineWidth(2)
         h_background.Draw("histsame")
-    g_data.Draw("pezsame")
+    g_data_clone.Draw("pezsame")
 
     if options.signalFileName is not None:
         sigHist = signalHistosRebin[0]
@@ -857,15 +863,16 @@ if __name__ == '__main__':
     
     l = rt.TLatex()
     l.SetTextAlign(11)
-    l.SetTextSize(0.05)
+    l.SetTextSize(0.045)
     l.SetTextFont(42)
     l.SetNDC()
-    l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+    #l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+    l.DrawLatex(0.72,0.96,"%.1f fb^{-1} (%i TeV)"%(lumi/1000.,w.var('sqrts').getVal()/1000.))
     l.SetTextFont(62)
-    l.SetTextSize(0.06)
+    l.SetTextSize(0.055)
     l.DrawLatex(0.2,0.96,"CMS")
     l.SetTextFont(52)
-    l.SetTextSize(0.05)
+    l.SetTextSize(0.045)
     l.DrawLatex(0.3,0.96,"Preliminary")
     if options.signalFileName!=None:
         leg = rt.TLegend(0.6,0.52,0.89,0.88)
@@ -879,8 +886,11 @@ if __name__ == '__main__':
     leg.AddEntry(g_data,"Data","pe")
     leg.AddEntry(background,"Fit","l")
     if options.signalFileName!=None:
-        leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")
-        #leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
+        if 'PF' in box:
+            leg.AddEntry(g_signal,"%s (%.1f TeV)"%(options.model,options.mass/1000.),"l")
+        elif 'Calo' in box:
+            leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")
+            #leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
     leg.Draw()
     #background.Draw("csame")
     #g_data.Draw("pezsame")
@@ -893,11 +903,16 @@ if __name__ == '__main__':
     pave_sel.SetTextFont(42)
     pave_sel.SetTextSize(0.045)
     pave_sel.SetTextAlign(11)
-    #pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
-    #                      list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
-    #                      list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
-    pave_sel.AddText("Wide Jets")
-    pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin('Low'),w.var('mjj').getMax('High')))
+    pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                          list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
+                          list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
+
+    if 'Calo' in box:
+        pave_sel.AddText("Wide Calo-jets")
+        pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin('Low'),w.var('mjj').getMax('High')))
+    elif 'PF' in box:
+        pave_sel.AddText("Wide PF-jets")        
+        pave_sel.AddText("%.1f < m_{jj} < %.1f TeV"%(w.var('mjj').getMin('Low')/1000.,w.var('mjj').getMax('High')/1000.))
     pave_sel.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
     pave_sel.Draw("SAME")
     
@@ -939,7 +954,15 @@ if __name__ == '__main__':
         pave_param.AddText("#epsilon = %s"%valString)
         pave_param.AddText("#delta#epsilon = %s"%errString)
             
-    #pave_param.Draw("SAME")    
+    pave_param.Draw("SAME")
+    
+    if options.doTriggerFit or options.doSimultaneousFit or options.doSpectrumFit or options.noFit:
+        background.Draw("csame")
+    else:
+        h_background.SetLineColor(rt.kRed)
+        h_background.SetLineWidth(2)
+        h_background.Draw("histsame")
+    g_data.Draw("pezsame")
     
     pad_1.Update()
 
@@ -959,12 +982,29 @@ if __name__ == '__main__':
         
     h_fit_residual_vs_mass.GetXaxis().SetTitleSize(2*0.06)
     h_fit_residual_vs_mass.GetXaxis().SetLabelSize(2*0.05)
-    h_fit_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
-    h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
-    h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()
-    
+    #h_fit_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
+    h_fit_residual_vs_mass.GetXaxis().SetTitle('Dijet Mass [GeV]')
+
     h_fit_residual_vs_mass.Draw("histsame")
     
+    if 'PF' in box:
+        h_fit_residual_vs_mass.GetXaxis().SetTitle('Dijet Mass [TeV]')
+        h_fit_residual_vs_mass.GetXaxis().SetLabelOffset(1000)
+        #h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
+        #h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()
+    
+        xLab = rt.TLatex()
+        xLab.SetTextAlign(22)
+        xLab.SetTextSize(0.05)
+        xLab.SetTextFont(42)
+        xLab.SetTextSize(2*0.05)
+        xLab.DrawLatex(2000, -4, "2")
+        xLab.DrawLatex(3000, -4, "3")
+        xLab.DrawLatex(4000, -4, "4")
+        xLab.DrawLatex(5000, -4, "5")
+        xLab.DrawLatex(6000, -4, "6")
+        xLab.DrawLatex(7000, -4, "7")
+        xLab.DrawLatex(8000, -4, "8")
         
     if options.signalFileName is not None:
         sigHistResidual = sigHist.Clone(sigHist.GetName()+"_residual")
