@@ -806,7 +806,10 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.SetLineWidth(0)
     if 'Calo' in box:
         myRebinnedDensityTH1.SetMaximum(2e3)
-        myRebinnedDensityTH1.SetMinimum(2e-5)
+        if w.var('mjj').getMax() > 2037:
+            myRebinnedDensityTH1.SetMinimum(2e-8)
+        else:
+            myRebinnedDensityTH1.SetMinimum(2e-5)
     elif 'PF' in box:
         myRebinnedDensityTH1.SetMaximum(20)
         myRebinnedDensityTH1.SetMinimum(2e-8)
