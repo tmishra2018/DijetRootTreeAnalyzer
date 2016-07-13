@@ -559,7 +559,6 @@ if __name__ == '__main__':
 
             
     outFile = 'dijet_combine_%s_%i_lumi-%.3f_%s.root'%(model,massPoint,lumi/1000.,box)
-    
     outputFile = rt.TFile.Open(options.outDir+"/"+outFile,"recreate")
     writeDataCard(box,model,options.outDir+"/"+outFile.replace(".root",".txt"),bkgs,paramNames,w,options.penalty,options.fixed,shapes=shapes)
     w.Write()

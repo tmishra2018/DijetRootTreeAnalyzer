@@ -200,7 +200,7 @@ if __name__ == '__main__':
     
     btagLabel = ""
 
-    lumiLabel = "%.0f fb^{-1} (13 TeV)" % (lumi)
+    lumiLabel = "%.1f fb^{-1} (13 TeV)" % (lumi/1000.)
     boxLabel = ''
 
     chi2_func = rt.TF1('chisqpdf','[0]*ROOT::Math::chisquared_pdf(x,[1])',0,100)
