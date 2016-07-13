@@ -58,13 +58,37 @@ eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/Scouting
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_GoldenUpdate_20160616_170519/*reduced_skim.root
 
 === RECO ===
-For full 2016 dataset so far with latest JEC, please uses dataset 6)
+For full 2016 dataset so far with latest JEC, please use dataset 7)
 Luminosity of full dataset:
 
-DCSOnly: 8000 /pb (offline)
-Golden: 6253 /pb (PassJSON==1) (offline)
+DCSOnly: 9556 /pb (offline)
+Golden: 7640 /pb (PassJSON==1) (offline)
 =========================
 (Most recent production first)
+
+####
+# 7) Run2016B+C+D top-up production 'round7'
+####
+
+/JetHT/Run2016B-PromptReco-v1/MINIAOD
+/JetHT/Run2016B-PromptReco-v2/MINIAOD
+/JetHT/Run2016C-PromptReco-v2/MINIAOD
+/JetHT/Run2016D-PromptReco-v2/MINIAOD
+Standard selection without DeltaEta cut
+
+JEC:
+Spring16 25nsV6 JEC
+
+Luminosity:
+DCSOnly: 9556/pb (offline)
+processed_jsons/lumiSummary_sofar_rounds4567_12Jul16.json
+
+Golden: 7640 /pb (offline) (PassJSON==1)
+processed_jsons/lumi_sofar_round7_and_cert_upto_276097_8Jul16.json
+
+File location:
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_red/pub/Run2016BCD_round7_topup_4567_1nd_s20_20160712_173548/*skim.root
+
 
 ####
 # 6) Run2016B+C top-up production 'round6'
