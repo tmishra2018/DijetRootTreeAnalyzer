@@ -209,7 +209,7 @@ def main(options,args):
         backgroundDsName = {'CaloDijet2015':'inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet2015.root',
                             'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016BCD_NoBiasCorr_Golden7640pb_CaloDijet2016.root',
                             'CaloDijet20152016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root',
-                            'PFDijet2016':'inputs/data_PFRECOHT_Run2016B_PFDijet2016.root'
+                            'PFDijet2016':'inputs/data_PFRECOHT_Run2016BCD_PFDijet2016.root'
                             }
 
         blindString = ''

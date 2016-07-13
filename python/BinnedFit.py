@@ -297,6 +297,8 @@ if __name__ == '__main__':
 
     # get trigger dataset    
     triggerData = None
+    # Use uncorrected mjj / pT of wide jets
+    corr = '_noCorr'
     if options.triggerDataFile is not None:
         triggerFile = rt.TFile.Open(options.triggerDataFile)
         names = [k.GetName() for k in triggerFile.GetListOfKeys()]
@@ -305,20 +307,22 @@ if __name__ == '__main__':
             triggerData = rt.RooDataSet("triggerData","triggerData",rt.RooArgSet(w.var("mjj"),w.cat("cut")))
             # l1 efficiency:
             if options.l1Trigger:
-                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30&&PassJSON&&passHLT_CaloJet40_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))                
+                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1%s>60&&pTWJ_j2%s>30&&PassJSON&&passHLT_CaloJet40_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(corr,corr,w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))                
             # hlt efficiency:
             else:
-                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30&&PassJSON&&passHLT_L1HTT_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))
+                #cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1%s>60&&pTWJ_j2%s>30&&PassJSON&&passHLT_L1HTT_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(corr,corr,w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))
+                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1%s>60&&pTWJ_j2%s>30&&PassJSON&&passHLT_CaloJet40_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(corr,corr,w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))
             #set the RooArgSet and save
             tree.Draw('>>elist',cutString,'entrylist')        
             elist = rt.gDirectory.Get('elist')    
             entry = -1
+            print 'trigger cut string:', cutString
             while True:
                 entry = elist.Next()
                 if entry == -1: break
                 tree.GetEntry(entry)          
                 a = rt.RooArgSet(w.var('mjj'),w.cat('cut'))   
-                a.setRealValue('mjj',tree.mjj)
+                a.setRealValue('mjj',eval('tree.mjj%s'%corr))
                 # l1 efficiency:
                 if options.l1Trigger:
                     #a.setCatIndex('cut',min(int(tree.passL1T_HTT125 + tree.passL1T_HTT150 + tree.passL1T_HTT175),1)) # for 2015
@@ -839,7 +843,7 @@ if __name__ == '__main__':
         for i in range(0,g_signal.GetN()): 
             N = g_signal.GetY()[i]
             binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]      
-            if g_signal.GetX()[i]>options.mass*0.5 and notSet:                
+            if g_signal.GetX()[i]>options.mass*0.7 and notSet:                
                 firstX = g_signal.GetX()[i]
                 firstY = N/(binWidth * lumi)
                 notSet = False
@@ -847,18 +851,17 @@ if __name__ == '__main__':
         for i in range(0,g_signal.GetN()):
             N = g_signal.GetY()[i]
             binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]            
-            if g_signal.GetX()[i]<=options.mass*0.5:
+            if g_signal.GetX()[i]<=options.mass*0.7:
                 g_signal.SetPoint(i,firstX,firstY)
             else:
                 g_signal.SetPoint(i, g_signal.GetX()[i], N/(binWidth * lumi))
             g_signal.SetPointEYlow(i, 0)
             g_signal.SetPointEYhigh(i, 0)            
-            if g_signal.GetX()[i]>options.mass*1.5:
+            if g_signal.GetX()[i]>options.mass*1.3:
                 g_signal.SetPoint(i,lastX,lastY)
             else:                
                 lastX = g_signal.GetX()[i]
                 lastY = g_signal.GetY()[i]
-        #sys.exit()
         g_signal.Draw("lxsame")
 
     
