@@ -767,7 +767,7 @@ if __name__ == '__main__':
     pad_1 = c.GetPad(1)
     pad_1.SetPad(0.01,0.36,0.99,0.98)
     pad_1.SetLogy()
-    if 'PF' in box:
+    if 'PF' in box or w.var('mjj').getMax() > 2037:
         pad_1.SetLogx()
     pad_1.SetRightMargin(0.05)
     pad_1.SetTopMargin(0.05)
@@ -784,7 +784,7 @@ if __name__ == '__main__':
     pad_2.SetRightMargin(0.05)
     pad_2.SetGridx()
     pad_2.SetGridy()
-    if 'PF' in box:
+    if 'PF' in box or w.var('mjj').getMax() > 2037:
         pad_2.SetLogx()
 
     pad_1.cd()
@@ -807,16 +807,17 @@ if __name__ == '__main__':
     
     myRebinnedDensityTH1.SetLineColor(rt.kWhite)
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
-    myRebinnedDensityTH1.SetLineWidth(0)
-    if 'Calo' in box:
+    myRebinnedDensityTH1.SetLineWidth(0)    
+    if 'PF' in box:
+        myRebinnedDensityTH1.SetMaximum(20)
+        myRebinnedDensityTH1.SetMinimum(2e-8)
+    elif 'Calo' in box:
         myRebinnedDensityTH1.SetMaximum(2e3)
-        if w.var('mjj').getMax() > 2037:
+        if w.var('mjj').getMax() > 2037:            
+            myRebinnedDensityTH1.SetMaximum(20)
             myRebinnedDensityTH1.SetMinimum(2e-8)
         else:
             myRebinnedDensityTH1.SetMinimum(2e-5)
-    elif 'PF' in box:
-        myRebinnedDensityTH1.SetMaximum(20)
-        myRebinnedDensityTH1.SetMinimum(2e-8)
     myRebinnedDensityTH1.Draw("pe")    
     g_data_clone.Draw("pezsame")
     if options.doTriggerFit or options.doSimultaneousFit or options.doSpectrumFit or options.noFit:
@@ -895,8 +896,11 @@ if __name__ == '__main__':
         if 'PF' in box:
             leg.AddEntry(g_signal,"%s (%.1f TeV)"%(options.model,options.mass/1000.),"l")
         elif 'Calo' in box:
-            leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")
-            #leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
+            if w.var('mjj').getMax() > 2037:
+                leg.AddEntry(g_signal,"%s (%.1f TeV)"%(options.model,options.mass/1000.),"l")
+            else:    
+                leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")   
+            #leg.AddEntry(None,"%.1f pb"%(options.xsec),"")         
     leg.Draw()
     #background.Draw("csame")
     #g_data.Draw("pezsame")
@@ -915,7 +919,10 @@ if __name__ == '__main__':
 
     if 'Calo' in box:
         pave_sel.AddText("Wide Calo-jets")
-        pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin('Low'),w.var('mjj').getMax('High')))
+        if w.var('mjj').getMax() > 2037:
+            pave_sel.AddText("%.1f < m_{jj} < %.1f TeV"%(w.var('mjj').getMin('Low')/1000.,w.var('mjj').getMax('High')/1000.))
+        else:
+            pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin('Low'),w.var('mjj').getMax('High')))
     elif 'PF' in box:
         pave_sel.AddText("Wide PF-jets")        
         pave_sel.AddText("%.1f < m_{jj} < %.1f TeV"%(w.var('mjj').getMin('Low')/1000.,w.var('mjj').getMax('High')/1000.))
@@ -993,17 +1000,19 @@ if __name__ == '__main__':
 
     h_fit_residual_vs_mass.Draw("histsame")
     
-    if 'PF' in box:
+    if 'PF' in box or w.var('mjj').getMax() > 2037:
         h_fit_residual_vs_mass.GetXaxis().SetTitle('Dijet Mass [TeV]')
         h_fit_residual_vs_mass.GetXaxis().SetLabelOffset(1000)
         #h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
-        #h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()
-    
+        #h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()    
         xLab = rt.TLatex()
         xLab.SetTextAlign(22)
         xLab.SetTextSize(0.05)
         xLab.SetTextFont(42)
         xLab.SetTextSize(2*0.05)
+        if w.var('mjj').getMin() < 1000:
+            xLab.DrawLatex(500, -4, "0.5")
+            xLab.DrawLatex(1000, -4, "1")
         xLab.DrawLatex(2000, -4, "2")
         xLab.DrawLatex(3000, -4, "3")
         xLab.DrawLatex(4000, -4, "4")
@@ -1045,3 +1054,4 @@ if __name__ == '__main__':
     outFile.cd()
     w.Write()
     outFile.Close()
+

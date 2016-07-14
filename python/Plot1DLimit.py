@@ -255,6 +255,14 @@ if __name__ == '__main__':
                   help="Input/Output directory to store output")    
     parser.add_option('-l','--lumi',dest="lumi", default=1.,type="float",
                   help="integrated luminosity in fb^-1")
+    parser.add_option('--massMin',dest="massMin", default=500.,type="float",
+                  help="minimum mass")
+    parser.add_option('--massMax',dest="massMax", default=8000.,type="float",
+                  help="maximum mass")
+    parser.add_option('--xsecMin',dest="xsecMin", default=1e-4,type="float",
+                  help="minimum mass")
+    parser.add_option('--xsecMax',dest="xsecMax", default=1e4,type="float",
+                  help="maximum mass")
     parser.add_option('--signif',dest="doSignificance",default=False,action='store_true',
                   help="for significance instead of limit")
     parser.add_option('--bayes',dest="bayes",default=False,action='store_true',
@@ -443,19 +451,19 @@ if __name__ == '__main__':
         
     h_limit.Draw("a3")
     if 'PF' in Box:
-        h_limit.GetXaxis().SetLimits(1200,8000)
+        h_limit.GetXaxis().SetLimits(options.massMin,options.massMax)
     else:
-        h_limit.GetXaxis().SetLimits(500,1600)
+        h_limit.GetXaxis().SetLimits(options.massMin,options.massMax)
     if options.doSignificance:
         h_limit.SetMaximum(4)
         h_limit.SetMinimum(0)
     else:
         if 'PF' in Box:
-            h_limit.SetMaximum(100)
-            h_limit.SetMinimum(1e-4)
+            h_limit.SetMaximum(options.xsecMax)
+            h_limit.SetMinimum(options.xsecMin)
         else:
-            h_limit.SetMaximum(10000)
-            h_limit.SetMinimum(1e-2)
+            h_limit.SetMaximum(options.xsecMax)
+            h_limit.SetMinimum(options.xsecMin)
             
     h_limit.Draw("a3")
     if options.doSignificance:
@@ -559,7 +567,7 @@ if __name__ == '__main__':
             gr_observedLimit[model].Draw("lp SAME")
 
 
-    if 'PF' in Box:
+    if 'PF' in Box or options.massMax>1600:
         h_limit.GetXaxis().SetTitle('Resonance Mass m_{X} [TeV]')
         h_limit.GetXaxis().SetLabelOffset(1000)
         #h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
@@ -573,8 +581,9 @@ if __name__ == '__main__':
             yOffset = -0.138
         else:
             yOffset = 6.5e-5
-        for i in range(2,9):
-            xLab.DrawLatex(i*1000, yOffset, "%i"%i)
+        for i in range(1,9):
+            if i*1000>=options.massMin:
+                xLab.DrawLatex(i*1000, yOffset, "%g"%i)
 
     if options.doSignificance:
         c.SaveAs(options.outDir+"/signif_"+options.model+"_"+box+".pdf")
