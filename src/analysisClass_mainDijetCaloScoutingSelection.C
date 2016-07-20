@@ -483,9 +483,8 @@ void analysisClass::Loop()
        
        wj1 = wj1*corr1;
        wj2 = wj2*corr2;
-       */
        
-       // 2016 bias correction from Mikko/Federico
+       // old 2016 bias correction from Mikko/Federico
        // (page 4 https://indico.cern.ch/event/546408/contributions/2217944/attachments/1298388/1936977/Giugno-24-2016_-_CaloScouting.pdf)
        float p0 = 0.419;
        float p1 = -5;
@@ -500,7 +499,19 @@ void analysisClass::Loop()
        
        corr1 = 1. / (1. + 0.01*f1);
        corr2 = 1. / (1. + 0.01*f2);
+       */
+       
+       // new 2016 bias correction from Federico
+       // (page 10 https://www.dropbox.com/s/7sporqeim01675d/Luglio_20_2016_CaloScouting.pdf?dl=1)
+       float p0 = -31.7198;
+       float p1 = 8.58611;
+       float p2 = -0.622092;
 
+       float f1 = p0 + p1 * log( wj1.Pt() ) + p2 * log( wj1.Pt() ) * log( wj1.Pt() ) ;
+       float f2 = p0 + p1 * log( wj2.Pt() ) + p2 * log( wj2.Pt() ) * log( wj2.Pt() ) ;
+       
+       corr1 = 1. / (1. + 0.01*f1);
+       corr2 = 1. / (1. + 0.01*f2);
 
        // Get MJJ before corrections
        wj1_noCorr = TLorentzVector(wj1);
