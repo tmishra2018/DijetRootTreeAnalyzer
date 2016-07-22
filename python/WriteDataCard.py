@@ -152,12 +152,17 @@ def writeDataCard(box,model,txtfileName,bkgs,paramNames,w,penalty,fixed,shapes=[
         if signals>1:
                 rates = [w.data("%s_%s"%(box,sig)).sumEntries() for sig in model.split('p')]
                 processes = ["%s_%s"%(box,sig) for sig in model.split('p')]
-                lumiErrs = [1.027 for sig in model.split('p')]
+                if '2015' in box:
+                        lumiErrs = [1.027 for sig in model.split('p')]
+                elif '2016' in box:
+                        lumiErrs = [1.062 for sig in model.split('p')]                  
         else:
                 rates = [w.data("%s_%s"%(box,model)).sumEntries()]
                 processes = ["%s_%s"%(box,model)]
-                lumiErrs = [1.027]
-            
+                if '2015' in box:
+                        lumiErrs = [1.027]
+                elif '2016' in box:
+                        lumiErrs = [1.062]            
         rates.extend([w.var('Ntot_%s_%s'%(bkg,box)).getVal() for bkg in bkgs])
         processes.extend(["%s_%s"%(box,bkg) for bkg in bkgs])
         lumiErrs.extend([1.00 for bkg in bkgs])
