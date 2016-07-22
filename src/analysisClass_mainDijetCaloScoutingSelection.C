@@ -503,12 +503,22 @@ void analysisClass::Loop()
        
        // new 2016 bias correction from Federico
        // (page 10 https://www.dropbox.com/s/7sporqeim01675d/Luglio_20_2016_CaloScouting.pdf?dl=1)
+       // flattened above 993.264 (point of zero slope)
        float p0 = -31.7198;
        float p1 = 8.58611;
        float p2 = -0.622092;
 
-       float f1 = p0 + p1 * log( wj1.Pt() ) + p2 * log( wj1.Pt() ) * log( wj1.Pt() ) ;
-       float f2 = p0 + p1 * log( wj2.Pt() ) + p2 * log( wj2.Pt() ) * log( wj2.Pt() ) ;
+       float f1 = 0;
+       float f2 = 0;
+       if (wj1.Pt() >= 993.264)
+	 f1 = p0 + p1 * log( 993.264 ) + p2 * log( 993.264 ) * log( 993.264 ) ;
+       else
+	 f1 = p0 + p1 * log( wj1.Pt() ) + p2 * log( wj1.Pt() ) * log( wj1.Pt() ) ;
+       
+       if (wj2.Pt() >= 993.264)
+	 f2 = p0 + p1 * log( 993.264 ) + p2 * log( 993.264 ) * log( 993.264 ) ;
+       else	 
+	 f2 = p0 + p1 * log( wj2.Pt() ) + p2 * log( wj2.Pt() ) * log( wj2.Pt() ) ;
        
        corr1 = 1. / (1. + 0.01*f1);
        corr2 = 1. / (1. + 0.01*f2);
