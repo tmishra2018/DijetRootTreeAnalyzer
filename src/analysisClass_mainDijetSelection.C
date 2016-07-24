@@ -35,6 +35,10 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L2DATAPath = "data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_L2Relative_AK4PFchs.txt"; 
     std::string L3DATAPath = "data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_L3Absolute_AK4PFchs.txt";
     std::string L2L3ResidualPath = "data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_L2L3Residual_AK4PFchs.txt";
+
+    //uncertainty
+    unc = new JetCorrectionUncertainty("data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
+        
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
     L3Par = new JetCorrectorParameters(L3Path);
@@ -58,9 +62,6 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
 
     JetCorrector = new FactorizedJetCorrector(vPar); assert(JetCorrector);
     JetCorrector_data = new FactorizedJetCorrector(vPar_data); assert(JetCorrector_data);
-
-    //uncertainty
-    unc = new JetCorrectionUncertainty("data/Spring16_25nsV2_DATA/Spring16_25nsV2_DATA_Uncertainty_AK4PFchs.txt");
   }
   
   std::cout << "analysisClass::analysisClass(): ends " << std::endl;

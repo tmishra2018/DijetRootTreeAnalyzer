@@ -95,6 +95,32 @@ Golden: 7640 /pb (PassJSON==1) (offline)
 (Most recent production first)
 
 ####
+# 8) Run2016B+C+D+E top-up production 'round8'
+####
+
+/JetHT/Run2016B-PromptReco-v1/MINIAOD
+/JetHT/Run2016B-PromptReco-v2/MINIAOD
+/JetHT/Run2016C-PromptReco-v2/MINIAOD
+/JetHT/Run2016D-PromptReco-v2/MINIAOD
+/JetHT/Run2016E-PromptReco-v2/MINIAOD
+Standard selection without DeltaEta cut
+
+JEC:
+Spring16 25nsV6 JEC
+
+Luminosity:
+DCSOnly: 14655 /pb (online)
+processed_jsons/lumiSummary_sofar_rounds45678_22Jul16.json
+
+
+Golden: 12910 /pb (offline) (PassJSON==1)
+processed_jsons/lumis_sofar_round8_and_cert_upto_276811_ICHEP.json
+
+File location:
+
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/juska/Run2016B_red/pub/Run2016BCDE_round8_topup_45678_1nd_s30_20160723_190441/*skim.root
+
+####
 # 7) Run2016B+C+D top-up production 'round7'
 ####
 
