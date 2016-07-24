@@ -86,11 +86,8 @@ eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/Scouting
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_GoldenUpdate_20160616_170519/*reduced_skim.root
 
 === RECO ===
-For full 2016 dataset so far with latest JEC, please use dataset 7)
-Luminosity of full dataset:
+For full 2016 dataset so far with latest JEC, please use dataset 8
 
-DCSOnly: 9556 /pb (offline)
-Golden: 7640 /pb (PassJSON==1) (offline)
 =========================
 (Most recent production first)
 
