@@ -29,14 +29,22 @@ parser.add_option("-s", "--inputStorage", dest="storageDir",
 proc = subprocess.Popen(["ls %s | grep .src | grep -v \"\~\"" % opt.inputDir], stdout=subprocess.PIPE, shell=True)
 (out, err) = proc.communicate()
 out = out.splitlines()
-#print out
+#print out[:10]
+
+procEOS = subprocess.Popen(["ls %s | grep _reduced_skim.root | grep -v \"\~\"" % opt.storageDir], stdout=subprocess.PIPE, shell=True)
+(outEOS, errEOS) = procEOS.communicate()
+outEOS = outEOS.splitlines()
+#print outEOS
 
 procResub = subprocess.Popen(["less %s" % opt.inputDir+"/bsub_commands.txt"], stdout=subprocess.PIPE, shell=True)
 (outResub, errResub) = procResub.communicate()
 outResub = outResub.splitlines()
-#print outResub
+#print outResub[:10]
+
+print "total jobs = %i"%(len(outResub))
 
 overallresubmit = 0
+toBeResubmitted = 0
 
 for srcFile in out:   
 
@@ -44,7 +52,9 @@ for srcFile in out:
 
     srcFile.rstrip('\n')
     numberOfJob = ((srcFile.split(".")[0]).split("_"))[-1]
-    print numberOfJob + " " + srcFile
+
+    print numberOfJob
+    #print numberOfJob + " " + srcFile
 
     if (_checklog):
        logfile =  "logfile"+((srcFile.split("submit")[1]).split(".src")[0])+".log"
@@ -88,16 +98,23 @@ for srcFile in out:
         resubmit = 1
         overallresubmit = 1
 
-
+    #check presence of output file in EOS directory
+    
+        
     if resubmit == 1:
         print "=== job "+numberOfJob+" should be resubmmitted"
         print outResub[int(numberOfJob)]
         os.system(outResub[int(numberOfJob)])
+        toBeResubmitted += 1
 
         
     
 if  overallresubmit == 0:
     print "All jobs are done successfully"
+
+    
+print "total jobs = %i"%(len(outResub))
+print "to be resubmitted = %i"%(toBeResubmitted)
 
 
 
