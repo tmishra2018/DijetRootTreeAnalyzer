@@ -11,6 +11,33 @@ For data lumiSummary and corresponding luminosity calculated with brilcalc (http
 
 ====== DATA =====
 
+=== CaloScouting (12.9 /fb) ===
+
+/ScoutingCaloHT/Run2016B-v1/RAW
+/ScoutingCaloHT/Run2016B-v2/RAW
+/ScoutingCaloHT/Run2016C-v2/RAW
+/ScoutingCaloHT/Run2016D-v2/RAW
+/ScoutingCaloCommissioning/Run2016B-v1/RAW
+/ScoutingCaloCommissioning/Run2016B-v2/RAW
+/ScoutingCaloCommissioning/Run2016C-v2/RAW
+/ScoutingCaloCommissioning/Run2016D-v2/RAW
+
+Looser selection without DeltaEta cut: (pTWJ_j1 > 50, pTWj_j2 > 20, so we can save both with and without HLT->RECO bias corretion)
+JEC 80X_dataRun2_HLT_frozen_v12 AK4CALOHLT L1,L2,L3 + Spring16_25nsV6 AK4PF L2L3Residual + with and without *updated and flattened* HLT->RECO bias correction
+
+Luminosity:
+DCSOnly: 13323.371 /pb
+processed_jsons/processedlumis_CaloHT.json
+processed_jsons/processedlumis_CaloCommissioning.json
+
+Golden: 12910.447 /pb (PassJSON==1)
+processed_jsons/overlap_CaloHT.json
+processed_jsons/overlap_CaloCommissioning.json
+
+File locations (CERN EOS):
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloHT2016_JEC_CaloL1L2L3_PFL2L3Residual_NewBiasCorrectedFlat_Golden12910pb_20160723_003113/*reduced_skim.root
+eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_NewBiasCorrectedFlat_Golden12910pb_20160723_003106/*reduced_skim.root
+
 === CaloScouting (7.6 /fb) ===
 
 /ScoutingCaloHT/Run2016B-v1/RAW
@@ -23,7 +50,7 @@ For data lumiSummary and corresponding luminosity calculated with brilcalc (http
 /ScoutingCaloCommissioning/Run2016D-v2/RAW
 
 Looser selection without DeltaEta cut: (pTWJ_j1 > 50, pTWj_j2 > 20, so we can save both with and without HLT->RECO bias corretion)
-JEC 80X_dataRun2_HLT_frozen_v12 AK4CALOHLT L1,L2,L3 + Spring16_25nsV6 AK4PF L2L3Residual + with and without HLT->RECO bias correction
+JEC 80X_dataRun2_HLT_frozen_v12 AK4CALOHLT L1,L2,L3 + Spring16_25nsV6 AK4PF L2L3Residual + with and without *updated* HLT->RECO bias correction
 
 Luminosity:
 DCSOnly: 9459.341 /pb
@@ -38,52 +65,6 @@ processed_jsons/overlap_CaloCommissioning.json
 File locations (CERN EOS):
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloHT2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden7640pb_20160709_235951/*reduced_skim.root
 eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden7640pb_20160709_235848/*reduced_skim.root
-
-=== CaloScouting (4.0 /fb) ===
-
-/ScoutingCaloHT/Run2016B-v1/RAW
-/ScoutingCaloHT/Run2016B-v2/RAW
-/ScoutingCaloCommissioning/Run2016B-v1/RAW
-/ScoutingCaloCommissioning/Run2016B-v2/RAW
-
-Standard selection without DeltaEta cut
-JEC 80X_dataRun2_HLT_frozen_v12 AK4CALOHLT L1,L2,L3 + Spring16_25nsV3 AK4PF L2L3Residual + HLT->RECO bias correction
-
-Luminosity:
-DCSOnly: 5617.616 /pb
-processed_jsons/processedlumis_CaloHT.json
-processed_jsons/processedlumis_CaloCommissioning.json
-
-Golden: 4004.489 /pb (PassJSON==1)
-processed_jsons/overlap_CaloHT.json
-processed_jsons/overlap_CaloCommissioning.json
-
-File locations (CERN EOS):
-eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/HT2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden_20160702_104640/*reduced_skim.root
-eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/Commissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_BiasCorrected_Golden_20160702_104616/*reduced_skim.root
-
-=== CaloScouting (2.6 /fb) ===
-
-/ScoutingCaloHT/Run2016B-v1/RAW
-/ScoutingCaloHT/Run2016B-v2/RAW
-/ScoutingCaloCommissioning/Run2016B-v1/RAW
-/ScoutingCaloCommissioning/Run2016B-v2/RAW
-
-Standard selection without DeltaEta cut
-JEC 80X_dataRun2_HLT_frozen_v12 AK4CALOHLT L1,L2,L3 + Spring16_25nsV3 AK4PF L2L3Residual
-
-Luminosity:
-DCSOnly: 2755.231 /pb
-processed_jsons/processedlumis_CaloHT.json
-processed_jsons/processedlumis_CaloCommissioning.json
-
-Golden: 2590.315 /pb (PassJSON==1)
-processed_jsons/overlap_CaloHT.json
-processed_jsons/overlap_CaloCommissioning.json
-
-File locations (CERN EOS):
-eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloHT2016_JEC_CaloL1L2L3_PFL2L3Residual_GoldenUpdate_20160616_170549/*reduced_skim.root
-eos/cms/store/group/phys_exotica/dijet/Dijet13TeV/woodson/reduced_skims/ScoutingCaloCommissioning2016_JEC_CaloL1L2L3_PFL2L3Residual_GoldenUpdate_20160616_170519/*reduced_skim.root
 
 === RECO ===
 For full 2016 dataset so far with latest JEC, please use dataset 8
