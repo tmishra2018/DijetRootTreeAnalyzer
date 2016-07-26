@@ -207,10 +207,9 @@ def main(options,args):
             signalDsName = 'inputs/ResonanceShapes_%s_13TeV_Spring16.root'%model
             
         backgroundDsName = {'CaloDijet2015':'inputs/data_CaloScoutingHT_Run2015D_BiasCorrected_CaloDijet2015.root',
-                            #'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016BCD_NoBiasCorr_Golden7640pb_CaloDijet2016.root',
-                            'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016BCD_NewBiasCorrected_Golden7640pb_CaloDijet2016.root',
-                            'CaloDijet20152016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root',
-                            'PFDijet2016':'inputs/data_PFRECOHT_Run2016BCD_PFDijet2016.root'
+                            'CaloDijet2016':'inputs/data_CaloScoutingHT_Run2016BCD_NewBiasCorrectedFlat_Golden12910pb_CaloDijet2016.root',
+                            'PFDijet2016':'inputs/data_PFRECOHT_Run2016BCD_Golden12910pb_PFDijet2016.root',
+                            'CaloDijet20152016':'inputs/data_CaloScoutingHT_Run2015D2016B_CaloDijet20152016.root'
                             }
 
         blindString = ''
