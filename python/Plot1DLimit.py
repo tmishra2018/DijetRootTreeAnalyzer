@@ -1,11 +1,41 @@
 #! /usr/bin/env python
-
 import ROOT as rt
 import os.path
 import sys, glob, re
 from array import *
 from optparse import OptionParser
-     
+
+def getThyXsecDict():    
+    thyXsecDict = {}
+    xsecFiles = ['data/all_lowmass_lhc13TeV.txt','data/rsg_gg_lhc13TeV.txt','data/S8_13TeV_narrow.txt','data/string_total_13TeV.txt','data/axi_lhc13TeV_NLO.txt']
+    
+    for xsecFile in xsecFiles:
+        moreThyModels = []
+        f = open(xsecFile)
+        for i,line in enumerate(f.readlines()):
+            if line[0]=='#': continue
+            line = line.replace('\n','')
+            line = line.replace('\t','')
+            line = line.replace('\r','')
+            lineList = [l for l in line.split(" ") if l!='']
+            
+            if lineList[0]=='Mass':
+                for l in lineList:
+                    if l=='Mass': continue
+                    thyXsecDict[l] = {}
+                    moreThyModels.append(l)
+            else:
+                for j, thyModel in enumerate(moreThyModels):
+                    thyXsecDict[thyModel][int(float(lineList[0]))] = float(lineList[j+1])
+        f.close()
+
+        thyXsecDict['AxigluonkNLO'] = {}
+        for (mass,thyXsec) in thyXsecDict['Axigluon'].iteritems():
+            thyXsecDict['AxigluonkNLO'][mass] = 1.08 * thyXsec
+            
+    return thyXsecDict
+
+
 def file_key(filename):
     massPoint = re.findall("[0-9]+.000000",filename)
     gluinoMass    = massPoint[0]
@@ -225,6 +255,14 @@ if __name__ == '__main__':
                   help="Input/Output directory to store output")    
     parser.add_option('-l','--lumi',dest="lumi", default=1.,type="float",
                   help="integrated luminosity in fb^-1")
+    parser.add_option('--massMin',dest="massMin", default=500.,type="float",
+                  help="minimum mass")
+    parser.add_option('--massMax',dest="massMax", default=8000.,type="float",
+                  help="maximum mass")
+    parser.add_option('--xsecMin',dest="xsecMin", default=1e-4,type="float",
+                  help="minimum mass")
+    parser.add_option('--xsecMax',dest="xsecMax", default=1e4,type="float",
+                  help="maximum mass")
     parser.add_option('--signif',dest="doSignificance",default=False,action='store_true',
                   help="for significance instead of limit")
     parser.add_option('--bayes',dest="bayes",default=False,action='store_true',
@@ -233,87 +271,95 @@ if __name__ == '__main__':
                   help="for no systematics limits")
     
     (options,args) = parser.parse_args()
-    Box = options.box
+    Boxes = options.box.split('_')
     models = options.model.split('_')
     model = models[0]
     directory      = options.outDir
 
+    Box = Boxes[0]
     box = Box.lower()
     
-    thyXsecDict = {}
-    thyModels = []
-    f = open('data/all_lowmass_lhc13TeV.txt')
-    for i,line in enumerate(f.readlines()):
-        if line[0]=='#': continue
-        line = line.replace('\n','')
-        lineList = [l for l in line.split(" ") if l!='']
-        
-        if lineList[0]=='Mass':
-            for l in lineList:
-                if l=='Mass': continue
-                thyXsecDict[l] = {}
-                thyModels.append(l)
-        else:
-            for j, thyModel in enumerate(thyModels):
-                thyXsecDict[thyModel][int(float(lineList[0]))] = float(lineList[j+1])
-    f.close()
-
-    moreThyModels = []
-    f = open('data/rsg_gg_lhc13TeV.txt')
-    for i,line in enumerate(f.readlines()):
-        if line[0]=='#': continue
-        line = line.replace('\n','')
-        lineList = [l for l in line.split(" ") if l!='']        
-        if lineList[0]=='Mass':
-            for l in lineList:
-                if l=='Mass': continue
-                thyXsecDict[l] = {}
-                moreThyModels.append(l)
-        else:
-            for j, thyModel in enumerate(moreThyModels):
-                thyXsecDict[thyModel][int(float(lineList[0]))] = float(lineList[j+1])
-    f.close()
-
+    thyXsecDict = getThyXsecDict() 
     thyModels = thyXsecDict.keys()
 
     thyModelsToDraw = []
     if options.model=='gg':
-        thyModelsToDraw = ['RSGravitonGG']
-    elif options.model=='qq':
-        thyModelsToDraw = ['Axigluon','E6Diquark',"W'","Z'"]
-    elif options.model=='gg_qq_gaus':
-        thyModelsToDraw = ['Axigluon','E6Diquark',"W'","Z'",'RSGravitonGG']
+        if 'PF' in Box:
+            thyModelsToDraw = ['S8']
+        else:
+            thyModelsToDraw = []
+    elif options.model=='qq':        
+        if 'PF' in Box:
+            thyModelsToDraw = ['AxigluonNLO','E6Diquark',"W'","Z'"]            
+        else:
+            thyModelsToDraw = ['AxigluonkNLO','E6Diquark',"W'","Z'"]            
+    elif options.model=='qg':
+        if 'PF' in Box:
+            thyModelsToDraw = ['String','q*']
+        else:
+            thyModelsToDraw = ['q*']        
+    elif options.model=='gg_qq_gaus' or options.model=='gg_qq_gaus10':
+        thyModelsToDraw = ['AxigluonkNLO','E6Diquark',"W'","Z'"]
+    elif options.model=='gg_qg_qq':
+        thyModelsToDraw = ['String','q*','AxigluonNLO','E6Diquark','S8',"W'","Z'",'RSGraviton']
+    elif options.model=='gg_qg_qq_gaus' or options.model=='gg_qg_qq_gaus10':
+        thyModelsToDraw = ['q*','AxigluonkNLO','E6Diquark','RSGraviton',"W'","Z'"]
 
     lineStyle = {'RSGravitonGG':4,
+                 'RSGraviton':4,
                  'Axigluon':3,
+                 'AxigluonkNLO':3,
+                 'AxigluonNLO':3,
                  'E6Diquark':9,
+                 'S8':1,
                  "W'":5,
-                 "Z'":6,                 
+                 "Z'":6,       
+                 "String":7,     
+                 "q*":10,                  
                  }
         
     lineColor = {'RSGravitonGG':rt.kGray+1,
+                 'RSGraviton':rt.kGray+2,
                  'Axigluon':rt.kBlue+1,
+                 'AxigluonkNLO':rt.kBlue+1,
+                 'AxigluonNLO':rt.kBlue+1,
                  'E6Diquark':rt.kOrange+2,
+                 'S8':rt.kMagenta,
                  "W'":rt.kRed+1,
                  "Z'":rt.kBlue-1,
+                 "String":rt.kAzure-3,
+                 "q*":rt.kBlack,       
                  'gg':rt.kGreen+1,
                  'qq':rt.kRed,
-                 'gaus':rt.kBlue
+                 'qg':rt.kBlue,
+                 'gaus':rt.kCyan+1,
+                 'gaus10':rt.kCyan+1
                  }
         
     markerStyle = {'gg':24,
                  'qq':20,
-                 'gaus':26
+                 'qg':23,
+                 'gaus':26,
+                 'gaus10':26
                  }
         
     legendLabel = {'RSGravitonGG':'RS graviton (gg#rightarrowG#rightarrowgg)',
+                   'RSGraviton':'RS graviton',
                    'Axigluon': 'Axiguon/coloron',
+                   'AxigluonkNLO': 'Axiguon/coloron',
+                   'AxigluonNLO': 'Axiguon/coloron',
                    'E6Diquark':'Scalar diquark',
+                   #'S8':'Color-octet scalar (k_{s}^{2} = 1/2)',
+                   'S8':'Color-octet scalar',
                    "W'": "W'",
                    "Z'": "Z'",
-                   'gg':'gg #rightarrow X #rightarrow jj',
-                   'qq':'qq #rightarrow X #rightarrow jj',
-                   'gaus':'Gaussian, 7% width'
+                    "String": "String",
+                    "q*": "Excited quark",
+                   'gg':'gluon-gluon',
+                   'qq':'quark-quark',
+                   'qg':'quark-gluon',
+                   'gaus':'Gaussian, 7% width',
+                   'gaus10':'Gaussian, 10% width'
                    }
     
     mass_xsec = {}
@@ -336,7 +382,7 @@ if __name__ == '__main__':
 
     setstyle()
     rt.gStyle.SetOptStat(0)
-    c = rt.TCanvas("c","c",500,400)
+    c = rt.TCanvas("c","c",800,800)
     if options.doSignificance:
         c.SetLogy(0)
     else:        
@@ -358,12 +404,13 @@ if __name__ == '__main__':
     expectedLimit_plus2sigma = {}
     
     if options.doSignificance:
-        h_limit.SetTitle(" ;Resonance Mass m_{X} [GeV];Local Significance n#sigma")
+        h_limit.SetTitle(" ;Resonance Mass [GeV];Local Significance n#sigma")
     else:
-        h_limit.SetTitle(" ;Resonance Mass m_{X} [GeV];95% C.L. upper limit on #sigma B A [pb]")
+        h_limit.SetTitle(" ;Resonance Mass [GeV]; #sigma B A [pb]")
 
     for model in models:
         if len(models)>1:
+            #directory =  options.outDir+'/%s_IntermediateRange'%model
             directory =  options.outDir+'/%s'%model
         if options.doSignificance:
             gluinoMassArray[model], gluinoMassArray_er[model], observedLimit[model], observedLimit_er[model], expectedLimit[model], expectedLimit_minus1sigma[model], expectedLimit_plus1sigma[model], expectedLimit_minus2sigma[model], expectedLimit_plus2sigma[model] = getSignificanceArrays(directory, model, Box)
@@ -376,7 +423,7 @@ if __name__ == '__main__':
         gr_observedLimit[model] = rt.TGraph(nPoints, gluinoMassArray[model], observedLimit[model])
         gr_observedLimit[model].SetMarkerColor(1)
         gr_observedLimit[model].SetMarkerStyle(22)
-        gr_observedLimit[model].SetMarkerSize(0.6)
+        gr_observedLimit[model].SetMarkerSize(1)
         gr_observedLimit[model].SetLineWidth(3)
         gr_observedLimit[model].SetLineColor(rt.kBlack)
         gr_observedLimit[model].SetMarkerStyle(20)
@@ -398,12 +445,9 @@ if __name__ == '__main__':
         gr_expectedLimit2sigma[model].SetFillStyle(1001)
     
         gr_expectedLimit1sigma[model] = rt.TGraphAsymmErrors(nPoints, gluinoMassArray[model], expectedLimit[model], gluinoMassArray_er[model], gluinoMassArray_er[model], expectedLimit_minus1sigma[model], expectedLimit_plus1sigma[model])
-    
-        #col1 = rt.gROOT.GetColor(rt.kGreen-7)
-        #col1.SetAlpha(0.5)
+
         gr_expectedLimit1sigma[model].SetLineColor(rt.kGreen-7)
         gr_expectedLimit1sigma[model].SetFillColor(rt.kGreen-7)
-        #gr_expectedLimit1sigma[model].SetFillStyle(3001)
 
         if len(models)==1:
             h_limit.Add(gr_expectedLimit2sigma[model])
@@ -415,27 +459,35 @@ if __name__ == '__main__':
         h_limit.Add(xsec_gr_nom[thyModel])
         
     h_limit.Draw("a3")
-    h_limit.GetXaxis().SetLimits(500,1600)
+    if 'PF' in Box:
+        h_limit.GetXaxis().SetLimits(options.massMin,options.massMax)
+    else:
+        h_limit.GetXaxis().SetLimits(options.massMin,options.massMax)
     if options.doSignificance:
         h_limit.SetMaximum(4)
         h_limit.SetMinimum(0)
     else:
-        h_limit.SetMaximum(10000)
-        h_limit.SetMinimum(1e-2)
+        if 'PF' in Box:
+            h_limit.SetMaximum(options.xsecMax)
+            h_limit.SetMinimum(options.xsecMin)
+        else:
+            h_limit.SetMaximum(options.xsecMax)
+            h_limit.SetMinimum(options.xsecMin)
+            
     h_limit.Draw("a3")
     if options.doSignificance:
         h_limit.GetYaxis().SetNdivisions(405,True)
     
-    for model in models:
-    
+    for model in models:    
         if options.doSignificance:
             gr_observedLimit[model].SetMarkerStyle(21)
-            gr_observedLimit[model].SetMarkerSize(0.6)
+            gr_observedLimit[model].SetMarkerSize(1)
             gr_observedLimit[model].SetLineColor(rt.kRed)
             gr_observedLimit[model].SetMarkerColor(rt.kBlue)
             gr_observedLimit[model].Draw("lp SAME")
         else:
-            gr_expectedLimit[model].Draw("c same")
+            if len(models)==1:
+                gr_expectedLimit[model].Draw("c same")
             for thyModel in thyModelsToDraw:
                 xsec_gr_nom[thyModel].Draw("c same")
             gr_observedLimit[model].Draw("lp SAME")
@@ -449,25 +501,27 @@ if __name__ == '__main__':
     
     l = rt.TLatex()
     l.SetTextAlign(11)
-    l.SetTextSize(0.05)
+    l.SetTextSize(0.045)
     l.SetNDC()
     l.SetTextFont(62)
     l.DrawLatex(0.17,0.92,"CMS")
         
-    #l.DrawLatex(0.16,0.95,"CMS")
     l.SetTextFont(52)
-    l.DrawLatex(0.26,0.92,"Preliminary")
+    l.DrawLatex(0.28,0.92,"Preliminary")
     l.SetTextFont(42)
-    l.DrawLatex(0.65,0.92,"%.0f pb^{-1} (13 TeV)"%(options.lumi*1000))
+    #l.DrawLatex(0.65,0.92,"%.0f pb^{-1} (13 TeV)"%(options.lumi*1000))
+    l.DrawLatex(0.63,0.92,"%.1f fb^{-1} (13 TeV)"%(options.lumi))
     
     if options.model=="gg":
-        l.DrawLatex(0.3,0.8,"gg #rightarrow X #rightarrow jj")
+        l.DrawLatex(0.3,0.8,"gluon-gluon")
     elif options.model=="qg":        
-        l.DrawLatex(0.3,0.8,"qg #rightarrow X #rightarrow jj")
+        l.DrawLatex(0.3,0.8,"quark-gluon")
     elif options.model=="qq":
-        l.DrawLatex(0.3,0.8,"qq #rightarrow X #rightarrow jj")
+        l.DrawLatex(0.3,0.8,"quark-quark")
     elif options.model=="gaus":
         l.DrawLatex(0.24,0.8,"Gaussian, 7% width")
+    elif options.model=="gaus10":
+        l.DrawLatex(0.2,0.8,"Gaussian, 10% width")
 
     #if options.bayes:
     #    if options.noSys:        
@@ -494,19 +548,22 @@ if __name__ == '__main__':
         if options.doSignificance:
             leg.AddEntry(gr_observedLimit[model], "Observed","lp")
         else:
+            leg.AddEntry(None,"95% CL limits","")
             leg.AddEntry(gr_observedLimit[model], "Observed","lp")
         if not options.doSignificance:
             leg.AddEntry(gr_expectedLimit1sigma[model], "Expected #pm 1#sigma","lf")    
         if not options.doSignificance:
             leg.AddEntry(gr_expectedLimit2sigma[model], "Expected #pm 2#sigma","lf")
     else:
+        leg.AddEntry(None,"95% CL limits","")
         for model in models:
             leg.AddEntry(gr_observedLimit[model], legendLabel[model],"lp")
             
     leg.Draw("SAME")
         
     if len(thyModelsToDraw)>0 and not options.doSignificance:        
-        legThyModel = rt.TLegend(0.2,0.17,0.55,0.35)
+        #legThyModel = rt.TLegend(0.2,0.17,0.55,0.35)
+        legThyModel = rt.TLegend(0.2,0.17,0.55,0.4)
         legThyModel.SetTextFont(42)
         legThyModel.SetFillColor(rt.kWhite)
         legThyModel.SetLineColor(rt.kWhite)
@@ -514,22 +571,59 @@ if __name__ == '__main__':
             legThyModel.AddEntry(xsec_gr_nom[thyModel], legendLabel[thyModel],'l')
         legThyModel.Draw("same")
 
+        
+    for model in models:    
+        if options.doSignificance:
+            gr_observedLimit[model].Draw("lp SAME")
+        else:
+            if len(models)==1:
+                gr_expectedLimit[model].Draw("c same")
+            for thyModel in thyModelsToDraw:
+                xsec_gr_nom[thyModel].Draw("c same")
+            gr_observedLimit[model].Draw("lp SAME")
+
+
+    if 'PF' in Box or options.massMax>1600:
+        h_limit.GetXaxis().SetTitle('Resonance Mass [TeV]')
+        h_limit.GetXaxis().SetLabelOffset(1000)
+        #h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
+        #h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()    
+        xLab = rt.TLatex()
+        xLab.SetTextAlign(22)
+        xLab.SetTextSize(0.05)
+        xLab.SetTextFont(42)
+        xLab.SetTextSize(0.05)
+        if options.doSignificance:
+            yOffset = -0.138
+        else:
+            #yOffset = 6.5e-5 # for 1e-4 min
+            yOffset = 5.25e-6 # for 1e-5 min
+        for i in range(1,8):
+            if i*1000>=options.massMin:
+                xLab.DrawLatex(i*1000, yOffset, "%g"%i)
+
+    else:
+        h_limit.GetXaxis().SetNdivisions(408,True)
+        
+        
+
+    c.RedrawAxis() # request from David
     if options.doSignificance:
-        c.SaveAs(options.outDir+"/signif_"+options.model+"_"+box+".pdf")
-        c.SaveAs(options.outDir+"/signif_"+options.model+"_"+box+".C")
+        c.SaveAs(options.outDir+"/signif_"+options.model+"_"+options.box.lower()+".pdf")
+        c.SaveAs(options.outDir+"/signif_"+options.model+"_"+options.box.lower()+".C")
     else:
         if options.bayes:
             if options.noSys:
-                c.SaveAs(options.outDir+"/limits_bayes_nosys_"+options.model+"_"+box+".pdf")
-                c.SaveAs(options.outDir+"/limits_bayes_nosys_"+options.model+"_"+box+".C")
+                c.SaveAs(options.outDir+"/limits_bayes_nosys_"+options.model+"_"+options.box.lower()+".pdf")
+                c.SaveAs(options.outDir+"/limits_bayes_nosys_"+options.model+"_"+options.box.lower()+".C")
             else:
-                c.SaveAs(options.outDir+"/limits_bayes_"+options.model+"_"+box+".pdf")
-                c.SaveAs(options.outDir+"/limits_bayes_"+options.model+"_"+box+".C")
+                c.SaveAs(options.outDir+"/limits_bayes_"+options.model+"_"+options.box.lower()+".pdf")
+                c.SaveAs(options.outDir+"/limits_bayes_"+options.model+"_"+options.box.lower()+".C")
         else:
             if options.noSys:
-                c.SaveAs(options.outDir+"/limits_freq_nosys_"+options.model+"_"+box+".pdf")
-                c.SaveAs(options.outDir+"/limits_freq_nosys_"+options.model+"_"+box+".C")
+                c.SaveAs(options.outDir+"/limits_freq_nosys_"+options.model+"_"+options.box.lower()+".pdf")
+                c.SaveAs(options.outDir+"/limits_freq_nosys_"+options.model+"_"+options.box.lower()+".C")
             else:
-                c.SaveAs(options.outDir+"/limits_freq_"+options.model+"_"+box+".pdf")
-                c.SaveAs(options.outDir+"/limits_freq_"+options.model+"_"+box+".C")
+                c.SaveAs(options.outDir+"/limits_freq_"+options.model+"_"+options.box.lower()+".pdf")
+                c.SaveAs(options.outDir+"/limits_freq_"+options.model+"_"+options.box.lower()+".C")
 

@@ -1,4 +1,4 @@
-JSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-275125_13TeV_PromptReco_Collisions16_JSON.txt
+JSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt
 #
 #############################     Example of file with list of cuts
 #
@@ -57,12 +57,15 @@ jetAlgo				AntiKt 		-		-		-		-1
 PassJSON              -1            1                   -               -               0       2 -0.5 1.5        SAVE  
 nVtx               -inf             +inf                -               -               1      -2  0 50	          SAVE
 nJet	      	      1     	    +inf		-		-		1	31 -0.5 30.5      SAVE
-pTWJ_j1	      	      60	    +inf		-	        -	        1	500 0 5000        SAVE
+pTWJ_j1	      	     50	    +inf		-	        -	        1	500 0 5000        SAVE
+pTWJ_j1_noCorr	      	     50	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j1             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
-pTWJ_j2	      	      30	    +inf		-	        -	        1	500 0 5000        SAVE
+pTWJ_j2	      	      20	    +inf		-	        -	        1	500 0 5000        SAVE
+pTWJ_j2_noCorr	      	      20	    +inf		-	        -	        1	500 0 5000        SAVE
 etaWJ_j2             -2.5           2.5                 -               -               1       50  -2.5 2.5      SAVE
 deltaETAjj           -inf           +inf               	-               -               1       100 0. 3.         SAVE
 mjj            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
+mjj_noCorr            	     -inf           +inf                -               -               1       10000 0 10000      SAVE
 mjj_shiftJEC         -inf           +inf                -               -               1       10000 0 10000      SAVE
 # no cut on these variables, just want to save histograms and variables
 passHLT_CaloJet40_CaloScouting_PFScouting -inf           +inf                -	        -	        1       2  0 2.	  	  SAVE
@@ -108,3 +111,5 @@ HadEnFrac_j1         -inf           +inf                -               -       
 EmEnFrac_j1         -inf           +inf                -               -               1       100 0 1           SAVE
 HadEnFrac_j2         -inf           +inf                -               -               1       100 0 1           SAVE
 EmEnFrac_j2         -inf           +inf                -               -               1       100 0 1           SAVE
+corr1_WJ1           -inf           +inf                -               -               1       100 0 1           SAVE
+corr2_WJ2           -inf           +inf                -               -               1       100 0 1           SAVE

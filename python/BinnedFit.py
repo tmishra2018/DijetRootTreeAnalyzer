@@ -224,9 +224,9 @@ if __name__ == '__main__':
                   help="input dataset file for signal pdf")
     parser.add_option('-m','--model',dest="model", default="gg",type="string",
                   help="signal model")
-    parser.add_option('--mass',dest="mass", default=750,type="float",
+    parser.add_option('--mass',dest="mass", default="750",type="string",
                   help="mgluino")
-    parser.add_option('--xsec',dest="xsec", default=1,type="float",
+    parser.add_option('--xsec',dest="xsec", default="1",type="string",
                   help="cross section in pb")
     parser.add_option('-t','--trigger',dest="triggerDataFile", default=None,type="string",
                   help="trigger data file")
@@ -251,6 +251,18 @@ if __name__ == '__main__':
     noFit = options.noFit
     fitRegion = options.fitRegion
     plotRegion = options.plotRegion
+
+    signalFileNames = options.signalFileName.split(",")
+    models = options.model.split("_")
+    masses = options.mass.split("_")
+    xsecs = options.xsec.split("_")
+    colors = [rt.kBlue+1, rt.kCyan+1, rt.kViolet+1]
+    styles = [2, 4, 6]
+
+    print signalFileNames
+    print models
+    print masses
+    print xsecs
     
     myTH1 = None
     for f in args:
@@ -297,6 +309,8 @@ if __name__ == '__main__':
 
     # get trigger dataset    
     triggerData = None
+    # Use uncorrected mjj / pT of wide jets
+    corr = '_noCorr'
     if options.triggerDataFile is not None:
         triggerFile = rt.TFile.Open(options.triggerDataFile)
         names = [k.GetName() for k in triggerFile.GetListOfKeys()]
@@ -305,20 +319,22 @@ if __name__ == '__main__':
             triggerData = rt.RooDataSet("triggerData","triggerData",rt.RooArgSet(w.var("mjj"),w.cat("cut")))
             # l1 efficiency:
             if options.l1Trigger:
-                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30&&PassJSON&&passHLT_CaloJet40_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))                
+                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1%s>60&&pTWJ_j2%s>30&&PassJSON&&passHLT_CaloJet40_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(corr,corr,w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))                
             # hlt efficiency:
             else:
-                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1>60&&pTWJ_j2>30&&PassJSON&&passHLT_L1HTT_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))
+                #cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1%s>60&&pTWJ_j2%s>30&&PassJSON&&passHLT_L1HTT_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(corr,corr,w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))
+                cutString = 'abs(deltaETAjj)<1.3&&abs(etaWJ_j1)<2.5&&abs(etaWJ_j2)<2.5&&pTWJ_j1%s>60&&pTWJ_j2%s>30&&PassJSON&&passHLT_CaloJet40_CaloScouting_PFScouting&&mjj>=%i&&mjj<%i'%(corr,corr,w.var("mjj").getMin("Eff"),w.var("mjj").getMax("Eff"))
             #set the RooArgSet and save
             tree.Draw('>>elist',cutString,'entrylist')        
             elist = rt.gDirectory.Get('elist')    
             entry = -1
+            print 'trigger cut string:', cutString
             while True:
                 entry = elist.Next()
                 if entry == -1: break
                 tree.GetEntry(entry)          
                 a = rt.RooArgSet(w.var('mjj'),w.cat('cut'))   
-                a.setRealValue('mjj',tree.mjj)
+                a.setRealValue('mjj',eval('tree.mjj%s'%corr))
                 # l1 efficiency:
                 if options.l1Trigger:
                     #a.setCatIndex('cut',min(int(tree.passL1T_HTT125 + tree.passL1T_HTT150 + tree.passL1T_HTT175),1)) # for 2015
@@ -462,16 +478,18 @@ if __name__ == '__main__':
     signalHistos = []
     signalHistosOriginal = []
     signalHistosRebin = []
-    if options.signalFileName is not None:
-        signalFile = rt.TFile.Open(options.signalFileName)
+    signalFiles = []
+    for model, mass, xsec, signalFileName in zip(models,masses,xsecs,signalFileNames):
+        print model, mass, xsec, signalFileName
+        signalFile = rt.TFile.Open(signalFileName)
+        signalFiles.append(signalFile)
         names = [k.GetName() for k in signalFile.GetListOfKeys()]
         for name in names:
             d = signalFile.Get(name)
             if isinstance(d, rt.TH1):
-                if name=='h_%s_%i'%(options.model,options.mass):
-                    print d.Integral()
-                    d.Scale(options.xsec*lumi/d.Integral())
-                    print d.Integral()
+                if name=='h_%s_%i'%(model,float(mass)):
+                    print name
+                    d.Scale(float(xsec)*lumi/d.Integral())
                     if options.triggerDataFile is not None:
                         if options.doSimultaneousFit:
                             d_turnon = applyTurnonFunc(d,fr,w)
@@ -492,10 +510,7 @@ if __name__ == '__main__':
                     signalHistosRebin.append(d_rebin)
     
                     d_th1x = convertToTh1xHist(d_rebin)
-                    signalHistos.append(d_th1x)
-                    print d_th1x.Integral()
-        sys.exit()
-        
+                    signalHistos.append(d_th1x)        
 
     asimov = extDijetPdf.generateBinned(rt.RooArgSet(th1x),rt.RooFit.Name('central'),rt.RooFit.Asimov())
         
@@ -625,18 +640,19 @@ if __name__ == '__main__':
     
         l = rt.TLatex()
         l.SetTextAlign(11)
-        l.SetTextSize(0.05)
+        l.SetTextSize(0.045)
         l.SetTextFont(42)
         l.SetNDC()
-        l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+        #l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+        l.DrawLatex(0.73,0.96,"%.1f fb^{-1} (%i TeV)"%(lumi/1000.,w.var('sqrts').getVal()/1000.))
         l.SetTextFont(62)
-        l.SetTextSize(0.06)
+        l.SetTextSize(0.055)
         l.DrawLatex(0.2,0.96,"CMS")
         l.SetTextFont(52)
-        l.SetTextSize(0.05)
+        l.SetTextSize(0.045)
         l.DrawLatex(0.3,0.96,"Preliminary")
         
-        leg = rt.TLegend(0.7,0.6,0.89,0.78)
+        leg = rt.TLegend(0.7,0.7,0.89,0.88)
         leg.SetTextFont(42)
         leg.SetFillColor(rt.kWhite)
         leg.SetFillStyle(0)
@@ -672,7 +688,7 @@ if __name__ == '__main__':
             pave_param.AddText("#epsilon = %s"%valString)
             pave_param.AddText("#delta#epsilon = %s"%errString)
             
-        pave_param.Draw("SAME")
+        #pave_param.Draw("SAME")
 
 
         pad_2.cd()
@@ -698,7 +714,8 @@ if __name__ == '__main__':
         
         h_eff_residual_vs_mass.GetXaxis().SetTitleSize(2*0.06)
         h_eff_residual_vs_mass.GetXaxis().SetLabelSize(2*0.05)
-        h_eff_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
+        #h_eff_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
+        h_eff_residual_vs_mass.GetXaxis().SetTitle('Dijet Mass [GeV]')
     
     
         h_eff_residual_vs_mass.Draw("histsame")
@@ -761,7 +778,8 @@ if __name__ == '__main__':
     pad_1 = c.GetPad(1)
     pad_1.SetPad(0.01,0.36,0.99,0.98)
     pad_1.SetLogy()
-    #pad_1.SetLogx()
+    if 'PF' in box or w.var('mjj').getMax() > 2037:
+        pad_1.SetLogx()
     pad_1.SetRightMargin(0.05)
     pad_1.SetTopMargin(0.05)
     pad_1.SetLeftMargin(0.175)
@@ -777,7 +795,8 @@ if __name__ == '__main__':
     pad_2.SetRightMargin(0.05)
     pad_2.SetGridx()
     pad_2.SetGridy()
-    #pad_2.SetLogx()
+    if 'PF' in box or w.var('mjj').getMax() > 2037:
+        pad_2.SetLogx()
 
     pad_1.cd()
     
@@ -796,14 +815,20 @@ if __name__ == '__main__':
     myRebinnedDensityTH1.GetYaxis().SetTitleOffset(1)
     myRebinnedDensityTH1.GetYaxis().SetTitleSize(0.07)
     myRebinnedDensityTH1.GetYaxis().SetLabelSize(0.05)
-    
+    myRebinnedDensityTH1.Scale(0)
     myRebinnedDensityTH1.SetLineColor(rt.kWhite)
     myRebinnedDensityTH1.SetMarkerColor(rt.kWhite)
-    myRebinnedDensityTH1.SetLineWidth(0)
-    myRebinnedDensityTH1.SetMaximum(2e3)
-    myRebinnedDensityTH1.SetMinimum(2e-5)
-    #myRebinnedDensityTH1.SetMaximum(2)
-    #myRebinnedDensityTH1.SetMinimum(2e-8)
+    myRebinnedDensityTH1.SetLineWidth(0)    
+    if 'PF' in box:
+        myRebinnedDensityTH1.SetMaximum(20)
+        myRebinnedDensityTH1.SetMinimum(2e-8)
+    elif 'Calo' in box:
+        myRebinnedDensityTH1.SetMaximum(2e3)
+        if w.var('mjj').getMax() > 2037:            
+            myRebinnedDensityTH1.SetMaximum(20)
+            myRebinnedDensityTH1.SetMinimum(2e-8)
+        else:
+            myRebinnedDensityTH1.SetMinimum(2e-5)
     myRebinnedDensityTH1.Draw("pe")    
     g_data_clone.Draw("pezsame")
     if options.doTriggerFit or options.doSimultaneousFit or options.doSpectrumFit or options.noFit:
@@ -812,15 +837,15 @@ if __name__ == '__main__':
         h_background.SetLineColor(rt.kRed)
         h_background.SetLineWidth(2)
         h_background.Draw("histsame")
-    g_data.Draw("pezsame")
+    g_data_clone.Draw("pezsame")
 
-    if options.signalFileName is not None:
-        sigHist = signalHistosRebin[0]
-        
+
+    g_signals = []
+    for model, mass, xsec, signalFileName, sigHist, color, style in zip(models,masses,xsecs,signalFileNames,signalHistosRebin,colors,styles):        
         g_signal = rt.TGraphAsymmErrors(sigHist)
-        g_signal.SetLineColor(rt.kBlue)
+        g_signal.SetLineColor(color)
+        g_signal.SetLineStyle(style)
         g_signal.SetLineWidth(3)
-        g_signal.SetLineStyle(2)
 
         lastX = 0
         lastY = 0
@@ -830,7 +855,7 @@ if __name__ == '__main__':
         for i in range(0,g_signal.GetN()): 
             N = g_signal.GetY()[i]
             binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]      
-            if g_signal.GetX()[i]>options.mass*0.5 and notSet:                
+            if g_signal.GetX()[i]>float(mass)*0.75 and notSet:                
                 firstX = g_signal.GetX()[i]
                 firstY = N/(binWidth * lumi)
                 notSet = False
@@ -838,18 +863,18 @@ if __name__ == '__main__':
         for i in range(0,g_signal.GetN()):
             N = g_signal.GetY()[i]
             binWidth = g_signal.GetEXlow()[i] + g_signal.GetEXhigh()[i]            
-            if g_signal.GetX()[i]<=options.mass*0.5:
+            if g_signal.GetX()[i]<=float(mass)*0.75:
                 g_signal.SetPoint(i,firstX,firstY)
             else:
                 g_signal.SetPoint(i, g_signal.GetX()[i], N/(binWidth * lumi))
             g_signal.SetPointEYlow(i, 0)
             g_signal.SetPointEYhigh(i, 0)            
-            if g_signal.GetX()[i]>options.mass*1.5:
+            if g_signal.GetX()[i]>float(mass)*1.25:
                 g_signal.SetPoint(i,lastX,lastY)
             else:                
                 lastX = g_signal.GetX()[i]
                 lastY = g_signal.GetY()[i]
-        #sys.exit()
+        g_signals.append(g_signal)
         g_signal.Draw("lxsame")
 
     
@@ -857,18 +882,19 @@ if __name__ == '__main__':
     
     l = rt.TLatex()
     l.SetTextAlign(11)
-    l.SetTextSize(0.05)
+    l.SetTextSize(0.045)
     l.SetTextFont(42)
     l.SetNDC()
-    l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+    #l.DrawLatex(0.7,0.96,"%i pb^{-1} (%i TeV)"%(lumi,w.var('sqrts').getVal()/1000.))
+    l.DrawLatex(0.72,0.96,"%.1f fb^{-1} (%i TeV)"%(lumi/1000.,w.var('sqrts').getVal()/1000.))
     l.SetTextFont(62)
-    l.SetTextSize(0.06)
+    l.SetTextSize(0.055)
     l.DrawLatex(0.2,0.96,"CMS")
     l.SetTextFont(52)
-    l.SetTextSize(0.05)
+    l.SetTextSize(0.045)
     l.DrawLatex(0.3,0.96,"Preliminary")
     if options.signalFileName!=None:
-        leg = rt.TLegend(0.6,0.52,0.89,0.88)
+        leg = rt.TLegend(0.6,0.58,0.89,0.94)
     else:        
         leg = rt.TLegend(0.7,0.7,0.89,0.88)
     leg.SetTextFont(42)
@@ -878,9 +904,15 @@ if __name__ == '__main__':
     leg.SetLineColor(rt.kWhite)
     leg.AddEntry(g_data,"Data","pe")
     leg.AddEntry(background,"Fit","l")
-    if options.signalFileName!=None:
-        leg.AddEntry(g_signal,"%s (%i GeV)"%(options.model,options.mass),"l")
-        #leg.AddEntry(None,"%.1f pb"%(options.xsec),"")
+    for model, mass, xsec, signalFileName, g_signal in zip(models,masses,xsecs,signalFileNames, g_signals):
+        if 'PF' in box:
+            leg.AddEntry(g_signal,"%s (%.1f TeV)"%(model,float(mass)/1000.),"l")
+        elif 'Calo' in box:
+            if w.var('mjj').getMax() > 2037:
+                leg.AddEntry(g_signal,"%s (%.1f TeV)"%(model,float(mass)/1000.),"l")
+            else:    
+                leg.AddEntry(g_signal,"%s (%i GeV)"%(model,float(mass)),"l")   
+            #leg.AddEntry(None,"%.1f pb"%(xsec),"")         
     leg.Draw()
     #background.Draw("csame")
     #g_data.Draw("pezsame")
@@ -896,8 +928,18 @@ if __name__ == '__main__':
     #pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
     #                      list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
     #                      list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
-    pave_sel.AddText("Wide Jets")
-    pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin('Low'),w.var('mjj').getMax('High')))
+
+    if 'Calo' in box:
+        pave_sel.AddText("Wide Calo-jets")
+        if w.var('mjj').getMax() > 2037:
+            #pave_sel.AddText("%.1f < m_{jj} < %.1f TeV"%(w.var('mjj').getMin('Low')/1000.,w.var('mjj').getMax('High')/1000.))
+            pave_sel.AddText("m_{jj} > %.1f TeV"%(w.var('mjj').getMin('Low')/1000.))
+        else:
+            pave_sel.AddText("%i < m_{jj} < %i GeV"%(w.var('mjj').getMin('Low'),w.var('mjj').getMax('High')))
+    elif 'PF' in box:
+        pave_sel.AddText("Wide PF-jets")        
+        #pave_sel.AddText("%.1f < m_{jj} < %.1f TeV"%(w.var('mjj').getMin('Low')/1000.,w.var('mjj').getMax('High')/1000.))
+        pave_sel.AddText("m_{jj} > %.1f TeV"%(w.var('mjj').getMin('Low')/1000.))
     pave_sel.AddText("|#eta| < 2.5, |#Delta#eta| < 1.3")
     pave_sel.Draw("SAME")
     
@@ -939,8 +981,36 @@ if __name__ == '__main__':
         pave_param.AddText("#epsilon = %s"%valString)
         pave_param.AddText("#delta#epsilon = %s"%errString)
             
-    #pave_param.Draw("SAME")    
+    #pave_param.Draw("SAME")
     
+    if options.doTriggerFit or options.doSimultaneousFit or options.doSpectrumFit or options.noFit:
+        background.Draw("csame")
+    else:
+        h_background.SetLineColor(rt.kRed)
+        h_background.SetLineWidth(2)
+        h_background.Draw("histsame")
+    g_data.Draw("pezsame")
+
+
+    
+    if 'PF' in box:
+        myRebinnedDensityTH1.GetYaxis().SetTitle('d#sigma / dm_{jj} [pb / TeV]')
+        myRebinnedDensityTH1.GetYaxis().SetLabelOffset(1000)
+        yLab = rt.TLatex()
+        yLab.SetTextAlign(32)
+        yLab.SetTextSize(0.05)
+        yLab.SetTextFont(42)
+        yLab.DrawLatex(1029, 10, "10^{4}")
+        yLab.DrawLatex(1029, 1, "10^{3}")
+        yLab.DrawLatex(1029, 0.1, "10^{2}")
+        yLab.DrawLatex(1029, 0.01, "10")
+        yLab.DrawLatex(1029, 0.001, "1")
+        yLab.DrawLatex(1029, 0.0001, "10^{#minus1}")
+        yLab.DrawLatex(1029, 0.00001, "10^{#minus2}")
+        yLab.DrawLatex(1029, 0.000001, "10^{#minus3}")
+        yLab.DrawLatex(1029, 0.0000001, "10^{#minus4}")
+
+        
     pad_1.Update()
 
     pad_2.cd()
@@ -959,18 +1029,38 @@ if __name__ == '__main__':
         
     h_fit_residual_vs_mass.GetXaxis().SetTitleSize(2*0.06)
     h_fit_residual_vs_mass.GetXaxis().SetLabelSize(2*0.05)
-    h_fit_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
-    h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
-    h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()
-    
+    #h_fit_residual_vs_mass.GetXaxis().SetTitle('m_{jj} [GeV]')
+    h_fit_residual_vs_mass.GetXaxis().SetTitle('Dijet Mass [GeV]')
+
     h_fit_residual_vs_mass.Draw("histsame")
     
-        
-    if options.signalFileName is not None:
+    if 'PF' in box or w.var('mjj').getMax() > 2037:
+        h_fit_residual_vs_mass.GetXaxis().SetTitle('Dijet Mass [TeV]')
+        h_fit_residual_vs_mass.GetXaxis().SetLabelOffset(1000)
+        #h_fit_residual_vs_mass.GetXaxis().SetNoExponent()
+        #h_fit_residual_vs_mass.GetXaxis().SetMoreLogLabels()    
+        xLab = rt.TLatex()
+        xLab.SetTextAlign(22)
+        xLab.SetTextFont(42)
+        xLab.SetTextSize(2*0.05)
+        if w.var('mjj').getMin() < 1000:
+            xLab.DrawLatex(500, -4, "0.5")
+            xLab.DrawLatex(1000, -4, "1")
+        xLab.DrawLatex(2000, -4, "2")
+        xLab.DrawLatex(3000, -4, "3")
+        xLab.DrawLatex(4000, -4, "4")
+        xLab.DrawLatex(5000, -4, "5")
+        xLab.DrawLatex(6000, -4, "6")
+        xLab.DrawLatex(7000, -4, "7")
+        xLab.DrawLatex(8000, -4, "8")
+
+    sigHistResiduals = []
+    g_signal_residuals = []
+    for model, mass, xsec, signalFileName, sigHist, color, style in zip(models,masses,xsecs,signalFileNames,signalHistosRebin,colors,styles):        
         sigHistResidual = sigHist.Clone(sigHist.GetName()+"_residual")
-        sigHistResidual.SetLineColor(rt.kBlue)
+        sigHistResidual.SetLineColor(color)
         sigHistResidual.SetLineWidth(2)
-        sigHistResidual.SetLineStyle(2)
+        sigHistResidual.SetLineStyle(style)
         for bin in range (0,g_data.GetN()):
             value_data = g_data.GetY()[bin]
             err_tot_data = g_data.GetEYhigh()[bin]
@@ -985,9 +1075,45 @@ if __name__ == '__main__':
     
             ## Fill histo with residuals
             sigHistResidual.SetBinContent(bin+1,sig_residual)
-        sigHistResidual.Draw("histsame")
+        sigHistResiduals.append(sigHistResidual)
+        #sigHistResidual.Draw("histsame")
+        g_signal_residual = rt.TGraphAsymmErrors(sigHistResidual)
+        g_signal_residual.SetLineColor(color)
+        g_signal_residual.SetLineWidth(3)
+        g_signal_residual.SetLineStyle(style)
+
+        lastX = 0
+        lastY = 0
+        firstX = 0
+        firstY = 0
+        notSet = True
+        for i in range(0,g_signal_residual.GetN()): 
+            N = g_signal_residual.GetY()[i]
+            binWidth = g_signal_residual.GetEXlow()[i] + g_signal_residual.GetEXhigh()[i]      
+            if g_signal_residual.GetX()[i]>float(mass)*0.75 and notSet:                
+                firstX = g_signal_residual.GetX()[i]
+                firstY = N
+                notSet = False
+            
+        for i in range(0,g_signal_residual.GetN()):
+            N = g_signal_residual.GetY()[i]
+            binWidth = g_signal_residual.GetEXlow()[i] + g_signal_residual.GetEXhigh()[i]            
+            if g_signal_residual.GetX()[i]<=float(mass)*0.75:
+                g_signal_residual.SetPoint(i,firstX,firstY)
+            else:
+                g_signal_residual.SetPoint(i, g_signal_residual.GetX()[i], N)
+            g_signal_residual.SetPointEYlow(i, 0)
+            g_signal_residual.SetPointEYhigh(i, 0)            
+            if g_signal_residual.GetX()[i]>float(mass)*1.25:
+                g_signal_residual.SetPoint(i,lastX,lastY)
+            else:                
+                lastX = g_signal_residual.GetX()[i]
+                lastY = g_signal_residual.GetY()[i]
+        g_signal_residuals.append(g_signal_residual)
+        g_signal_residual.Draw("lxsame")
 
     
+    #c.RedrawAxis() # request from David
     c.Print(options.outDir+"/fit_mjj_%s_%s.pdf"%(fitRegion.replace(',','_'),box))
     c.Print(options.outDir+"/fit_mjj_%s_%s.C"%(fitRegion.replace(',','_'),box))
     tdirectory.cd()
@@ -999,3 +1125,4 @@ if __name__ == '__main__':
     outFile.cd()
     w.Write()
     outFile.Close()
+
