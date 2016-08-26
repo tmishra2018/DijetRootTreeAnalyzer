@@ -252,18 +252,27 @@ if __name__ == '__main__':
     fitRegion = options.fitRegion
     plotRegion = options.plotRegion
 
-    signalFileNames = options.signalFileName.split(",")
-    models = options.model.split("_")
-    masses = options.mass.split("_")
-    xsecs = options.xsec.split("_")
-    colors = [rt.kBlue+1, rt.kCyan+1, rt.kViolet+1]
-    styles = [2, 4, 6]
+    if options.signalFileName==None:
+        signalFileNames = []
+        models = []
+        xsecs = []
+        colors = []
+        styles = []
+        masses = []
+    else:
+        signalFileNames = options.signalFileName.split(",")
+        models = options.model.split("_")
+        masses = options.mass.split("_")
+        xsecs = options.xsec.split("_")
+        colors = [rt.kBlue+1, rt.kCyan+1, rt.kViolet+1]
+        styles = [2, 4, 6]
 
     print signalFileNames
     print models
     print masses
     print xsecs
-    
+
+
     myTH1 = None
     for f in args:
         if f.lower().endswith('.root'):
@@ -338,7 +347,8 @@ if __name__ == '__main__':
                 # l1 efficiency:
                 if options.l1Trigger:
                     #a.setCatIndex('cut',min(int(tree.passL1T_HTT125 + tree.passL1T_HTT150 + tree.passL1T_HTT175),1)) # for 2015
-                    a.setCatIndex('cut',min(int(tree.passL1T_HTT120 + tree.passL1T_HTT170 + tree.passL1T_HTT200),1)) # for 2016  
+                    #a.setCatIndex('cut',min(int(tree.passL1T_HTT120 + tree.passL1T_HTT170 + tree.passL1T_HTT200),1)) # for 2016
+                    a.setCatIndex('cut',min(int(tree.passL1T_HTT170),1)) # for 2016 ICHEP: variable called L1T_HTT170 is actually L1_HTT240 and L1T_HTT200 is actually L1T_HTT270 due to bug                  
                 # hlt efficiency:
                 else:
                     a.setCatIndex('cut',int(tree.passHLT_CaloScoutingHT250))
@@ -875,7 +885,7 @@ if __name__ == '__main__':
                 lastX = g_signal.GetX()[i]
                 lastY = g_signal.GetY()[i]
         g_signals.append(g_signal)
-        g_signal.Draw("lxsame")
+        g_signal.Draw("cxsame")
 
     
     rt.gPad.SetLogy()
@@ -1110,10 +1120,11 @@ if __name__ == '__main__':
                 lastX = g_signal_residual.GetX()[i]
                 lastY = g_signal_residual.GetY()[i]
         g_signal_residuals.append(g_signal_residual)
-        g_signal_residual.Draw("lxsame")
+        g_signal_residual.Draw("cxsame")
 
     
     #c.RedrawAxis() # request from David
+    
     c.Print(options.outDir+"/fit_mjj_%s_%s.pdf"%(fitRegion.replace(',','_'),box))
     c.Print(options.outDir+"/fit_mjj_%s_%s.C"%(fitRegion.replace(',','_'),box))
     tdirectory.cd()
