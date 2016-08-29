@@ -29,7 +29,7 @@ def fixPars(w, label, doFix=True, setVal=None):
             par.setConstant(doFix)
             if setVal is not None: par.setVal(setVal)
 
-def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1D=None):
+def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,multi=False,x=None,emptyHist1D=None):
     
     if x is None:
         x = array('d', cfg.getBinning(box)[0]) # mjj binning
@@ -97,7 +97,7 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
                 if w.var(myvar)!=None:
                     arglist.append(w.var(myvar))
                 elif w.function(myvar)!=None:
-                    arglist.append(w.function(myvar))                    
+                    arglist.append(w.function(myvar))  
                 elif 'eff_' in myvar:
                         parlist = rt.RooArgList(myvar)
                         listdef = ''
@@ -125,10 +125,15 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
                         rootTools.Utils.importToWS(w,parlist)
                         rootTools.Utils.importToWS(w,prodlist)
                         prod = rt.RooProdPdf('g_eff','g_eff',prodlist)
-                        rootTools.Utils.importToWS(w,prod)
-                        
-                        
-                        arglist.append(parlist)
+                        rootTools.Utils.importToWS(w,prod)                        
+                        arglist.append(parlist)                        
+            if myclass == 'RooMultiPdf':
+                arglist = arglist[0:2]
+                arglist.append(w.cat(mylist[0]))
+                mypdfs = rt.RooArgList('pdf_list')
+                [mypdfs.add(w.pdf(myvar)) for myvar in mylist[1:]]
+                rootTools.Utils.importToWS(w,mypdfs)
+                arglist.append(mypdfs)                
                         
             args = tuple(arglist)
             pdf = getattr(rt,myclass)(*args)
@@ -141,10 +146,13 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,x=None,emptyHist1
 
     
     w.Print('v')
+    if multi:
+        paramNames.append('pdf_index')
+        bkgs = ['multi']
     return paramNames, bkgs
 
 
-def writeDataCard(box,model,txtfileName,bkgs,paramNames,w,penalty,fixed,shapes=[]):
+def writeDataCard(box,model,txtfileName,bkgs,paramNames,w,penalty,fixed,shapes=[],multi=False):
         obsRate = w.data("data_obs").sumEntries()
         nBkgd = len(bkgs)
         rootFileName = txtfileName.replace('.txt','.root')
@@ -222,9 +230,15 @@ def writeDataCard(box,model,txtfileName,bkgs,paramNames,w,penalty,fixed,shapes=[
             else:
                 if "Ntot" in paramName:
                     continue
+                
+                elif paramName=='pdf_index':                            
+                    datacard += "%s\tdiscrete\n"%(paramName)
                 elif paramName in ["meff","seff"]:
                     datacard += "%s\tparam\t%e\t%e\n"%(paramName,w.var(paramName+"_Mean").getVal(),w.var(paramName+"_Sigma").getVal())
                 else:
+                    if multi:
+                        if ('_norm' in paramName and 'multi' not in paramName):
+                            continue
                     datacard += "%s\tflatParam\n"%(paramName)
             
         txtfile = open(txtfileName,"w")
@@ -320,6 +334,8 @@ if __name__ == '__main__':
                   help="decorrelate parameters")
     parser.add_option('--refit',dest="refit",default=False,action='store_true',
                   help="refit for S+B")
+    parser.add_option('--multi',dest="multi",default=False,action='store_true',
+                  help="using RooMultiPdf for total background")
 
     (options,args) = parser.parse_args()
     
@@ -350,7 +366,7 @@ if __name__ == '__main__':
 
     w = rt.RooWorkspace("w"+box)
     
-    paramNames, bkgs = initializeWorkspace(w,cfg,box,scaleFactor=1,penalty=options.penalty)
+    paramNames, bkgs = initializeWorkspace(w,cfg,box,scaleFactor=1,penalty=options.penalty,multi=options.multi)
     
     
     th1x = w.var('th1x')
@@ -565,7 +581,7 @@ if __name__ == '__main__':
             
     outFile = 'dijet_combine_%s_%i_lumi-%.3f_%s.root'%(model,massPoint,lumi/1000.,box)
     outputFile = rt.TFile.Open(options.outDir+"/"+outFile,"recreate")
-    writeDataCard(box,model,options.outDir+"/"+outFile.replace(".root",".txt"),bkgs,paramNames,w,options.penalty,options.fixed,shapes=shapes)
+    writeDataCard(box,model,options.outDir+"/"+outFile.replace(".root",".txt"),bkgs,paramNames,w,options.penalty,options.fixed,shapes=shapes,multi=options.multi)
     w.Write()
     w.Print('v')
     os.system("cat %s"%options.outDir+"/"+outFile.replace(".root",".txt"))
