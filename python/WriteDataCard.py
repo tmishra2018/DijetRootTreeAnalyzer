@@ -45,7 +45,7 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,multi=False,x=Non
             continue
         w.factory(parameter)
         
-    constPars = ['sqrts','p0_%s'%box]
+    constPars = ['sqrts','p0_%s'%box, 'sqrts5', 'p50_%s'%box, 'sqrtsm', 'pm0_%s'%box]
     if w.var('meff_%s'%box).getVal()<0 and w.var('seff_%s'%box).getVal()<0:
         constPars.extend(['meff_%s'%box,'seff_%s'%box])
         
@@ -448,16 +448,18 @@ if __name__ == '__main__':
         frIn.Print("V")
         
         for p in rootTools.RootIterator.RootIterator(frIn.floatParsFinal()):
-            w.var(p.GetName()).setVal(p.getVal())
-            w.var(p.GetName()).setError(p.getError())
+            if w.var(p.GetName()) != None:
+                w.var(p.GetName()).setVal(p.getVal())
+                w.var(p.GetName()).setError(p.getError())
             if "Ntot" in p.GetName():
                 if options.deco:
                     w.factory('Ntot_bkg_deco_%s[%f]'%(box,p.getVal()))
                     w.var('Ntot_bkg_deco_%s'%(box)).setError(p.getError())
                     
         for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
-            w.var(p.GetName()).setVal(p.getVal())
-            w.var(p.GetName()).setError(p.getError())
+            if w.var(p.GetName()) != None:
+                w.var(p.GetName()).setVal(p.getVal())
+                w.var(p.GetName()).setError(p.getError())
         
         if options.deco or options.refit:
             sigDataHist = w.data('%s_%s'%(box,model))
