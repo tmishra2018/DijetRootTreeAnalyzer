@@ -496,6 +496,7 @@ void analysisClass::Loop()
        
        fillVariableWithValue( "jetJecAK4_j1", jecFactors[sortedJetIdx[0]] );
        fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
+       fillVariableWithValue( "jetCsvAK4_j1", jetCsvAK4->at(sortedJetIdx[0]) );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "chargedHadEnFrac_j1", jetChfAK4->at(sortedJetIdx[0]));
@@ -517,6 +518,7 @@ void analysisClass::Loop()
        //fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
        fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[1]]); 
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[1]] );
+       fillVariableWithValue( "jetCsvAK4_j2", jetCsvAK4->at(sortedJetIdx[1]) );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(sortedJetIdx[1]));
        fillVariableWithValue( "chargedHadEnFrac_j2", jetChfAK4->at(sortedJetIdx[1]));
