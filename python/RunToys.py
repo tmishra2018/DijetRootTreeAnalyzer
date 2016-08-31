@@ -9,7 +9,7 @@ import os
 import random
 import sys
 import math
-from progressbar import AnimatedMarker, Bar, BouncingBar, Counter, ETA, FileTransferSpeed, FormatLabel, Percentage, ProgressBar, ReverseBar, RotatingMarker, SimpleProgress, Timer
+#from progressbar import AnimatedMarker, Bar, BouncingBar, Counter, ETA, FileTransferSpeed, FormatLabel, Percentage, ProgressBar, ReverseBar, RotatingMarker, SimpleProgress, Timer
 
 def getErrorData(N,F):    
     alpha = 1-0.6827
@@ -30,7 +30,8 @@ def getTree(myTree,paramNames,nBins,box):
     
     rando = random.randint(1,999999)
     # first structure
-    stringMyStruct1 = "void tempMacro_%d(){struct MyStruct1{"%(rando)
+    #stringMyStruct1 = "void tempMacro_%d(){struct MyStruct1{"%(rando)
+    stringMyStruct1 = "struct MyStruct1{"
     stringMyStruct1 += "float toy_num; float nll_%s; float n2llr_%s; float chi2p_%s; float chi2_%s; float chi2non0_%s;"%(box,box,box,box,box)
     stringMyStruct1 += "int covQual_%s; int migrad_%s; int hesse_%s; int minos_%s;"%(box,box,box,box)
     for paramName in paramNames:
@@ -42,9 +43,9 @@ def getTree(myTree,paramNames,nBins,box):
     tempMacro = open("tempMacro_%d.C"%rando,"w")
     tempMacro.write(stringMyStruct1+"};}")
     tempMacro.close()
-    rt.gROOT.Macro("tempMacro_%d.C"%rando)
+    #rt.gROOT.Macro("tempMacro_%d.C"%rando)
     #rt.gROOT.ProcessLine(".x tempMacro_%d.C"%rando)
-    #rt.gROOT.ProcessLine(stringMyStruct1+"};")
+    rt.gROOT.ProcessLine(stringMyStruct1+"};")
     from ROOT import MyStruct1
 
     # fills the bins list and associate the bins to the corresponding variables in the structure
@@ -203,8 +204,8 @@ def runToys(w,options,cfg,seed):
         pBestVal[p.GetName()] = p.getVal()
         pBestErr[p.GetName()] = p.getError()
                 
-    widgets = ['Running %s toys '%unc, Percentage(), ' ', Bar(marker=RotatingMarker()),' ', ETA(), ' ', FileTransferSpeed()]
-    pbar = ProgressBar(widgets=widgets, max_value=options.nToys).start()
+    #widgets = ['Running %s toys '%unc, Percentage(), ' ', Bar(marker=RotatingMarker()),' ', ETA(), ' ', FileTransferSpeed()]
+    #pbar = ProgressBar(widgets=widgets, max_value=options.nToys).start()
     iAttempt = -1
     while iToy < options.nToys:
         iAttempt+=1
@@ -373,11 +374,11 @@ def runToys(w,options,cfg,seed):
 
         
         value =  setattr(s1, 'toy_num', iToy) # save toy number
-        pbar.update(iToy)
+        #pbar.update(iToy)
         myTree.Fill()
         iToy+=1        
     rt.RooMsgService.instance().reset()
-    pbar.finish()
+    #pbar.finish()
     
     w.Print('v')
     output.cd()
