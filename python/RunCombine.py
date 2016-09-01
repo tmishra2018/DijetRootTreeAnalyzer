@@ -12,9 +12,9 @@ NSIGMA = 10.0
 
 def massIterable(massList):    
     if len(massList.split(','))==1:
-        massIterableList = [options.mass]
+        massIterableList = [massList]
     else:
-        massIterableList = list(eval(options.mass))
+        massIterableList = list(eval(massList))
     return massIterableList
         
 def exec_me(command,dryRun=True):

@@ -455,6 +455,10 @@ if __name__ == '__main__':
                 if options.deco:
                     w.factory('Ntot_bkg_deco_%s[%f]'%(box,p.getVal()))
                     w.var('Ntot_bkg_deco_%s'%(box)).setError(p.getError())
+                if options.multi:
+                    w.var('Ntot_multi_%s'%(box)).setVal(p.getVal())
+                    w.var('Ntot_multi_%s'%(box)).setError(p.getError())
+                    
                     
         for p in rootTools.RootIterator.RootIterator(frIn.constPars()):
             if w.var(p.GetName()) != None:
