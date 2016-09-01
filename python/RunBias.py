@@ -29,6 +29,8 @@ if __name__ == '__main__':
                   help="Just print out commands to run")
     parser.add_option('--rMax',dest="rMax",default=20,type="float",
                   help="maximum r value (for better precision)")
+    parser.add_option('-r',dest="r",default=1,type="float",
+                  help="expect signal r value")
     parser.add_option('--rMin',dest="rMin",default=-20,type="float",
                   help="minimum r value (for better precision)")
     parser.add_option('--xsec',dest="xsec",default=10,type="float",
@@ -94,8 +96,8 @@ if __name__ == '__main__':
     
     for massPoint in massIterable(options.mass):        
         exec_me('python python/WriteDataCard.py -m %s --mass %s -i %s -l %f -c %s -b %s -d %s %s %s %s --multi'%(model, massPoint, options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName[box],xsecString),options.dryRun)
-        exec_me('combine -M GenerateOnly %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s_%s_%s %s %s %s --toysFrequentist --saveToys --expectSignal 1 -t %i'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.genPdf,options.fitPdf,rRangeString,fixStringGen,freezeStringGen,options.toys),options.dryRun)
-        exec_me('combine -M MaxLikelihoodFit  %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_%s_%s_%s --toysFile higgsCombine%s_%s_lumi-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root -t %i %s %s %s --minimizerTolerance 0.01 --minimizerStrategy 2 --minos poi --saveWorkspace'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,box,options.genPdf,options.fitPdf,model,massPoint,lumi,box,options.genPdf,options.fitPdf,options.toys,rRangeString,fixStringFit,freezeStringFit),options.dryRun)
-        exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root %s/'%(model,massPoint,lumi,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
-        exec_me('mv higgsCombine%s_%s_lumi-%.3f_%s_%s_%s.MaxLikelihoodFit.mH120.123456.root %s/'%(model,massPoint,lumi,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
-        exec_me('mv mlfit%s_%s_lumi-%.3f_%s_%s_%s.root %s/'%(model,massPoint,lumi,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
+        exec_me('combine -M GenerateOnly %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_r-%.3f_%s_%s_%s %s %s %s --toysFrequentist --saveToys --expectSignal %f -t %i'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,rRangeString,fixStringGen,freezeStringGen,options.r,options.toys),options.dryRun)
+        exec_me('combine -M MaxLikelihoodFit  %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_r-%.3f_%s_%s_%s --toysFile higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root -t %i %s %s %s --minimizerTolerance 0.01 --minimizerStrategy 2 --minos poi --saveWorkspace'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.toys,rRangeString,fixStringFit,freezeStringFit),options.dryRun)
+        exec_me('mv higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root %s/'%(model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
+        exec_me('mv higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.MaxLikelihoodFit.mH120.123456.root %s/'%(model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
+        exec_me('mv mlfit%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.root %s/'%(model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
