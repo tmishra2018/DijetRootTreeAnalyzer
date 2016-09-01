@@ -72,9 +72,9 @@ if __name__ == '__main__':
 
         
     xsecString = '--xsec %f'%options.xsec
-    rRangeString =  '--setPhysicsModelParameterRanges r=%f,%f'%(options.rMin,options.rMax)
+    rRangeString =  '--setPhysicsModelParameterRanges r=%.3f,%.3f'%(options.rMin,options.rMax)
 
-    fixStringGen = '--setPhysicsModelParameters pdf_index=%i'%pdfIndexMap[options.genPdf]
+    fixStringGen = '--setPhysicsModelParameters pdf_index=%i,r=%.3f'%(pdfIndexMap[options.genPdf],options.r)
     freezeStringGen = '--freezeNuisances pdf_index'
     if options.genPdf != 'fiveparam':
         freezeStringGen += ',p51_CaloDijet2016,p52_CaloDijet2016,p53_CaloDijet2016,p54_CaloDijet2016'
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     if options.genPdf != 'fourparam':
         freezeStringGen += ',p1_CaloDijet2016,p2_CaloDijet2016,p3_CaloDijet2016'
         
-    fixStringFit = '--setPhysicsModelParameters pdf_index=%i'%pdfIndexMap[options.fitPdf]
+    fixStringFit = '--setPhysicsModelParameters pdf_index=%i,r=%.3f'%(pdfIndexMap[options.fitPdf],options.r)
     freezeStringFit = '--freezeNuisances pdf_index'
     if options.fitPdf != 'fiveparam':
         freezeStringFit += ',p51_CaloDijet2016,p52_CaloDijet2016,p53_CaloDijet2016,p54_CaloDijet2016'
