@@ -60,8 +60,8 @@ if __name__ == '__main__':
         tchain.GetEntry(i)
 
         #implement analysis
-        if not (tchain.passHLT_CaloScoutingHT250 and
-                abs(tchain.deltaETAjj)<1.3       and
+#        if not (tchain.passHLT_CaloScoutingHT250 and
+        if not (abs(tchain.deltaETAjj)<1.3       and
                 abs(tchain.etaWJ_j1)<2.5         and
                 abs(tchain.etaWJ_j2)<2.5         and
                 tchain.pTWJ_j1>60                and

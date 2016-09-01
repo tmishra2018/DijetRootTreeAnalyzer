@@ -13,7 +13,8 @@ gROOT.SetBatch(kTRUE)
 
 ################# configuration ######################
 sqrtS = 13000.
-lumiValue = 4411 #[pb]
+#lumiValue = 4411 #[pb]
+lumiValue = 7202 #[pb]
 showCrossSection = 1 #1=cross section [pb] , 0=number of events/GeV
 #drawSignalShapeAlsoAlone = 1
 fixedRange = 1 #1=YES , 0=NO  (the option works only if showCrossSection=1; otherwise=0)
@@ -23,8 +24,10 @@ if showCrossSection==1:
     lumi = lumiValue
 else:
     lumi = 1
-massMin = 453
-massMax = 2037
+#massMin = 453
+#massMax = 2037
+massMin = 1058
+massMax = 7866 
 blindRegionMassMin = 0
 #blindRegionMassMin = 649
 blindRegionMassMax = 0
@@ -437,6 +440,9 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     #pad_1.SetPad(0.01,0.26,0.99,0.98) #FIXME
     pad_1.SetPad(0.01,0.36,0.99,0.98)
     pad_1.SetLogy()
+    #for high mass
+    #pad_1.SetLogx()
+
     pad_1.SetRightMargin(0.05)
     pad_1.SetTopMargin(0.05)
     pad_1.SetFillColor(0)
@@ -444,8 +450,10 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     pad_1.SetFrameFillStyle(0)
     pad_1.SetFrameBorderMode(0)
 
+
+
     if fixedRange==1 and showCrossSection==1:
-        minY = 0.0001/lumi
+        minY = 0.0000001/lumi
         #minY = 10.0/lumi
         maxY = data_obs_TGraph_.GetY()[0]*100
         
@@ -456,10 +464,10 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     #vFrame.SetYTitle(yaxisTitle_main)
     vFrame.GetXaxis().SetTitleSize(0.06)
     vFrame.GetXaxis().SetTitleOffset(0.95)
-    vFrame.GetXaxis().SetLabelSize(0.05)
+    #vFrame.GetXaxis().SetLabelSize(0.05)
     vFrame.GetYaxis().SetTitleSize(0.06)
     #vFrame.GetYaxis().SetTitleOffset(1.0)
-    vFrame.GetYaxis().SetLabelSize(0.05)
+    #vFrame.GetYaxis().SetLabelSize(0.05)
 
     #style data spectrum    
     gStyle.SetErrorX(1)
@@ -572,17 +580,20 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     pad_2.SetGridx()
     pad_2.SetGridy()
 
+    #for high mass
+    #pad_2.SetLogx()
+
     vFrame2 = pad_2.DrawFrame(pad_1.GetUxmin(), -range_residual, pad_1.GetUxmax(), +range_residual)    
     vFrame2.SetTitle("")
     vFrame2.SetXTitle(xaxisTitle)
     vFrame2.GetXaxis().SetTitleSize(0.06)
     vFrame2.SetYTitle(yaxisTitle_secondary)
     vFrame2.GetYaxis().SetTitleSize(0.12)
-    vFrame2.GetYaxis().SetTitleOffset(0.60)
-    vFrame2.GetYaxis().SetLabelSize(0.09)
+    vFrame2.GetYaxis().SetTitleOffset(0.40)
+    #vFrame2.GetYaxis().SetLabelSize(0.09)
     vFrame2.GetXaxis().SetTitleSize(0.15)
     vFrame2.GetXaxis().SetTitleOffset(0.90)
-    vFrame2.GetXaxis().SetLabelSize(0.12)
+    vFrame2.GetXaxis().SetLabelSize(0.06)
 
     #style residuals
     hist_fit_residual_vsMass_.GetXaxis().SetRangeUser(massMin,massMax)
@@ -597,7 +608,7 @@ def drawAndSavePlot_background(data_obs_TGraph_,background_TH1_,hist_fit_residua
     line.Draw("")
 
     #draw pad
-    pad_2.RedrawAxis()
+    #pad_2.RedrawAxis()
 
     #============
 

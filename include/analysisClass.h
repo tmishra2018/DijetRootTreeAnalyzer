@@ -41,8 +41,13 @@ private :
   JetCorrectorParameters *L2DATAPar;
   JetCorrectorParameters *L3DATAPar;
   JetCorrectorParameters *L2L3Residual;
+  JetCorrectorParameters *L1DATAHLTPar;
+  JetCorrectorParameters *L2DATAHLTPar;
+  JetCorrectorParameters *L3DATAHLTPar;
+  JetCorrectorParameters *L2L3ResidualHLT;
   FactorizedJetCorrector *JetCorrector;
   FactorizedJetCorrector *JetCorrector_data;
+  FactorizedJetCorrector *JetCorrector_dataHLT;
   JetCorrectionUncertainty *unc;
 };
 

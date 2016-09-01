@@ -1,6 +1,6 @@
 import os
 import ROOT as rt
-from setTDRStyle import *
+from rootTools import tdrstyle as setTDRStyle
 
 class Drawer():
     """Class to draw overlayed histos for data and signals"""
@@ -8,27 +8,45 @@ class Drawer():
     def __init__(self, hData, hSignal):
         print "Drawer::init"
 
+        self._hData = hData
+        self._hSignal = hSignal
+
         self._dataHistos = {}
         self._sigHistos = {}
 
+        #get the histos
         for sample,opts in hData.items():
-            self.loopfile(opts[0],sample)
+            self._dataHistos[sample] = self.loopfile(opts[0])
         for sample,opts in hSignal.items():
-            self.loopfile(opts[0],sample)
+            self._sigHistos[sample] = self.loopfile(opts[0])
 
-    def loopfile(self, infile, sample):
-        print "Drawer::loopfile"
+
+    def scalePlots(self, lumi):
+        for sample,opts in self._hSignal.items():
+            for histo in self._sigHistos[sample]:
+                integral = histo.Integral()
+                if integral > 0:
+                    print opts[1]*lumi/integral
+                    histo.Scale(opts[1]*lumi/integral)
+
+
+    def loopfile(self, infile):
+        print "Drawer::loopfile",infile
         hlist = []
         rootFile = rt.TFile(infile)
         hnames = [k.GetName() for k in rootFile.GetListOfKeys()]
         for name in hnames:
-            hlist.append(rootFile.Get(name))
-        self._dataHistos[sample] = hlist
-
+            myTh1 = rootFile.Get(name)
+            myTh1.SetDirectory(0)
+            hlist.append(myTh1)
+            
+        return hlist
     
     def setStyle(self):
         print "Drawer::setStyle"
-        setTDRStyle()
+        setTDRStyle.setTDRStyle()
+
+        
         
 
     def addRatioBox(self, histo):
@@ -39,18 +57,14 @@ class Drawer():
         print "Drawer::printCanvas"
         self.setStyle()
 
+        for it,dataplot in enumerate(self._dataHistos["data"]):
+            corrCanvas = rt.TCanvas()
 
-        for dataplot in self._dataHistos["data"]:
-            corrCanvas = rt.TCanvas('c','c',500,500)
-            corrCanvas.SetRightMargin(0.15)            
+            dataplot.Draw()
 
-            print type(dataplot)
-
-            myTH1 = dataplot
-            print myTH1.GetName()
-            #myTH1.Draw()
-
-            #for mcplot in _sigHistos:
+            for mcsample,hlist in self._sigHistos.items():
+                hlist[it].Draw("sames")
+                
             
             corrCanvas.Print(outPath+'/'+dataplot.GetName()+'.pdf')
 
@@ -58,5 +72,4 @@ class Drawer():
 
 
 
-    #def getHisto
     #def drawSignificance

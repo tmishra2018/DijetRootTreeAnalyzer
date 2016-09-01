@@ -6,7 +6,7 @@ import optparse
 import datetime
 import time
 
-usage = "usage: python scripts/splitAndSubmit.py -e python/bTag_analysis.py -t config/bTag_analysis.cfg -q cmscaf1nh -i lists/myList.txt -o histo_mjj --split 1"
+usage = "usage: python scripts/splitAndSubmit.py -e python/bTag_fordqm.py -t config/bTag.cfg  -b BTag2016_fordqm -q cmscaf1nh -i lists/myList_ParkingScoutingMonitor_Run2016D.txt  -o histo_mjj --split 1"
 
 parser = optparse.OptionParser(usage)
 parser.add_option("-e", "--executable", dest="executable",
@@ -15,6 +15,10 @@ parser.add_option("-e", "--executable", dest="executable",
 
 parser.add_option("-t", "--template", dest="template",
     help="name of the template config to be used",
+    )
+
+parser.add_option("-b", "--box", dest="box",
+    help="analysis box to be used",
     )
 
 parser.add_option('-q', '--queue',       action='store',     dest='queue',       
@@ -79,7 +83,7 @@ for line in  ins:
             contents = fi.read()
             replaced_contents = contents.replace('INPUTLIST', str(inputlist))
             replaced_contents = replaced_contents.replace('OUTPUTFILE', "\""+opt.output+"_"+str(jobCount)+".root\"")
-        with open(workingDir+"/"+str(jobCount)+"/config.py", "w") as fo:
+        with open(workingDir+"/"+str(jobCount)+"/config.cfg", "w") as fo:
             fo.write(replaced_contents)
 
         inputlist = []
@@ -87,7 +91,7 @@ for line in  ins:
         os.system("echo cd "+pwd+" > launch.sh")
         os.system("echo 'eval `scramv1 runtime -sh`\n' >> launch.sh")
         os.system("echo cd - >> launch.sh")
-        os.system("echo python "+executable+" -c "+workingDir+"/"+str(jobCount)+"/config.py >> launch.sh")
+        os.system("echo python "+executable+" -c "+workingDir+"/"+str(jobCount)+"/config.cfg -b "+opt.box+" >> launch.sh")
         os.system("echo mv "+opt.output+"_"+str(jobCount)+".root "+workingDir+" >> launch.sh")
         os.system("chmod 755 launch.sh")
         os.system("mv launch.sh "+workingDir+"/"+str(jobCount))
