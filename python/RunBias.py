@@ -41,15 +41,15 @@ if __name__ == '__main__':
                   help="Output directory to store everything")
     parser.add_option('-t','--toys',dest="toys",default=1000,type="int",
                   help="number of toys")    
-    parser.add_option('--gen-pdf',dest="genPdf", default="modexp", choices=['modexp','fourparam','fiveparam'],
+    parser.add_option('--gen-pdf',dest="genPdf", default="modexp", choices=['modexp','fourparam','fiveparam','atlas'],
                   help="pdf for generating")
-    parser.add_option('--fit-pdf',dest="fitPdf", default="fourparam", choices=['modexp','fourparam','fiveparam'],
+    parser.add_option('--fit-pdf',dest="fitPdf", default="fourparam", choices=['modexp','fourparam','fiveparam','atlas'],
                   help="pdf for fitting")
     
     (options,args) = parser.parse_args()
 
     pdfIndexMap = {'fourparam': 0,
-                   'fiveparam': 1,
+                   'atlas': 1,
                    'modexp': 2
                    }
 
@@ -80,6 +80,8 @@ if __name__ == '__main__':
         freezeStringGen += ',p51_CaloDijet2016,p52_CaloDijet2016,p53_CaloDijet2016,p54_CaloDijet2016'
     if options.genPdf != 'modexp':
         freezeStringGen += ',pm1_CaloDijet2016,pm2_CaloDijet2016,pm3_CaloDijet2016,pm4_CaloDijet2016'
+    if options.genPdf != 'atlas':
+        freezeStringGen += ',pa1_CaloDijet2016,pa2_CaloDijet2016,pa3_CaloDijet2016,pa4_CaloDijet2016'
     if options.genPdf != 'fourparam':
         freezeStringGen += ',p1_CaloDijet2016,p2_CaloDijet2016,p3_CaloDijet2016'
         
@@ -89,6 +91,8 @@ if __name__ == '__main__':
         freezeStringFit += ',p51_CaloDijet2016,p52_CaloDijet2016,p53_CaloDijet2016,p54_CaloDijet2016'
     if options.fitPdf != 'modexp':
         freezeStringFit += ',pm1_CaloDijet2016,pm2_CaloDijet2016,pm3_CaloDijet2016,pm4_CaloDijet2016'
+    if options.fitPdf != 'atlas':
+        freezeStringFit += ',pa1_CaloDijet2016,pa2_CaloDijet2016,pa3_CaloDijet2016,pa4_CaloDijet2016'
     if options.fitPdf != 'fourparam':
         freezeStringFit += ',p1_CaloDijet2016,p2_CaloDijet2016,p3_CaloDijet2016'
 
