@@ -45,7 +45,7 @@ def initializeWorkspace(w,cfg,box,scaleFactor=1.,penalty=False,multi=False,x=Non
             continue
         w.factory(parameter)
         
-    constPars = ['sqrts','p0_%s'%box, 'sqrts5', 'p50_%s'%box, 'sqrtsm', 'pm0_%s'%box]
+    constPars = ['sqrts','p0_%s'%box, 'sqrts5', 'p50_%s'%box, 'sqrtsm', 'pm0_%s'%box, 'sqrtsa', 'pa0_%s'%box]
     if w.var('meff_%s'%box).getVal()<0 and w.var('seff_%s'%box).getVal()<0:
         constPars.extend(['meff_%s'%box,'seff_%s'%box])
         
