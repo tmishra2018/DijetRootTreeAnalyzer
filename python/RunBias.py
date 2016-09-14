@@ -45,6 +45,8 @@ if __name__ == '__main__':
                   help="pdf for generating")
     parser.add_option('--fit-pdf',dest="fitPdf", default="fourparam", choices=['modexp','fourparam','fiveparam','atlas'],
                   help="pdf for fitting")
+    parser.add_option('--asymptotic-file',dest="asymptoticFile",default=None,type="string",
+                  help="load asymptotic cross section results file")
     
     (options,args) = parser.parse_args()
 
@@ -70,11 +72,30 @@ if __name__ == '__main__':
     elif box=='PFDijet2016':
         signalDsName = 'inputs/ResonanceShapes_%s_13TeV_Spring16.root'%model
 
+
+    xsecTree = None
+    rDict = {}
+    if options.asymptoticFile is not None:
+        print "INFO: Input ref xsec file!"
+        asymptoticRootFile = rt.TFile.Open(options.asymptoticFile,"READ")
+        xsecTree = asymptoticRootFile.Get("xsecTree")        
+        xsecTree.Draw('>>elist','','entrylist')
+        elist = rt.gDirectory.Get('elist')
+        entry = -1
+        while True:
+            entry = elist.Next()
+            if entry == -1: break
+            xsecTree.GetEntry(entry)
+            rDict[int(eval('xsecTree.mass'))] = eval('xsecTree.xsecULExp_%s'%box)/options.xsec
+    else:        
+        for massPoint in massIterable(options.mass):   
+            rDict[int(massPoint)] = options.r
+    print rDict
         
     xsecString = '--xsec %f'%options.xsec
     rRangeString =  '--setPhysicsModelParameterRanges r=%.3f,%.3f'%(options.rMin,options.rMax)
 
-    fixStringGen = '--setPhysicsModelParameters pdf_index=%i,r=%.3f'%(pdfIndexMap[options.genPdf],options.r)
+    fixStringGen = '--setPhysicsModelParameters pdf_index=%i'%(pdfIndexMap[options.genPdf])
     freezeStringGen = '--freezeNuisances pdf_index'
     if options.genPdf != 'fiveparam':
         freezeStringGen += ',p51_CaloDijet2016,p52_CaloDijet2016,p53_CaloDijet2016,p54_CaloDijet2016'
@@ -85,7 +106,7 @@ if __name__ == '__main__':
     if options.genPdf != 'fourparam':
         freezeStringGen += ',p1_CaloDijet2016,p2_CaloDijet2016,p3_CaloDijet2016'
         
-    fixStringFit = '--setPhysicsModelParameters pdf_index=%i,r=%.3f'%(pdfIndexMap[options.fitPdf],options.r)
+    fixStringFit = '--setPhysicsModelParameters pdf_index=%i'%(pdfIndexMap[options.fitPdf])
     freezeStringFit = '--freezeNuisances pdf_index'
     if options.fitPdf != 'fiveparam':
         freezeStringFit += ',p51_CaloDijet2016,p52_CaloDijet2016,p53_CaloDijet2016,p54_CaloDijet2016'
@@ -100,8 +121,8 @@ if __name__ == '__main__':
     
     for massPoint in massIterable(options.mass):        
         exec_me('python python/WriteDataCard.py -m %s --mass %s -i %s -l %f -c %s -b %s -d %s %s %s %s --multi'%(model, massPoint, options.inputFitFile,1000*lumi,options.config,box,options.outDir,signalDsName,backgroundDsName[box],xsecString),options.dryRun)
-        exec_me('combine -M GenerateOnly %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_r-%.3f_%s_%s_%s %s %s %s --toysFrequentist --saveToys --expectSignal %f -t %i'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,rRangeString,fixStringGen,freezeStringGen,options.r,options.toys),options.dryRun)
-        exec_me('combine -M MaxLikelihoodFit  %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_r-%.3f_%s_%s_%s --toysFile higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root -t %i %s %s %s --minimizerTolerance 0.01 --minimizerStrategy 2 --minos poi --saveWorkspace'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.toys,rRangeString,fixStringFit,freezeStringFit),options.dryRun)
-        exec_me('mv higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root %s/'%(model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
-        exec_me('mv higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.MaxLikelihoodFit.mH120.123456.root %s/'%(model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
-        exec_me('mv mlfit%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.root %s/'%(model,massPoint,lumi,options.r,box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
+        exec_me('combine -M GenerateOnly %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_r-%.3f_%s_%s_%s %s %s %s --toysFrequentist --saveToys --expectSignal %.3f -t %i'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,rDict[int(massPoint)],box,options.genPdf,options.fitPdf,rRangeString,fixStringGen,freezeStringGen,rDict[int(massPoint)],options.toys),options.dryRun)
+        exec_me('combine -M MaxLikelihoodFit  %s/dijet_combine_%s_%s_lumi-%.3f_%s.txt -n %s_%s_lumi-%.3f_r-%.3f_%s_%s_%s --toysFile higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root -t %i %s %s %s --minimizerTolerance 0.01 --minimizerStrategy 2 --minos poi --saveWorkspace'%(options.outDir,model,massPoint,lumi,box,model,massPoint,lumi,rDict[int(massPoint)],box,options.genPdf,options.fitPdf,model,massPoint,lumi,rDict[int(massPoint)],box,options.genPdf,options.fitPdf,options.toys,rRangeString,fixStringFit,freezeStringFit),options.dryRun)
+        exec_me('mv higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.GenerateOnly.mH120.123456.root %s/'%(model,massPoint,lumi,rDict[int(massPoint)],box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
+        exec_me('mv higgsCombine%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.MaxLikelihoodFit.mH120.123456.root %s/'%(model,massPoint,lumi,rDict[int(massPoint)],box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)
+        exec_me('mv mlfit%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.root %s/'%(model,massPoint,lumi,rDict[int(massPoint)],box,options.genPdf,options.fitPdf,options.outDir),options.dryRun)

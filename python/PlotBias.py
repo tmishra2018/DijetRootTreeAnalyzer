@@ -95,6 +95,7 @@ def print1DBias(c,rootFile,h,func,printName,xTitle,yTitle,lumiLabel="",boxLabel=
     l.SetTextSize(0.045)
 
     pdf_dict = {'modexp':'mod. exp.',
+                'atlas':'ATLAS func.',
                 'fourparam':'4-param. dijet',
                 'fiveparam':'5-param. dijet'
                 }
@@ -128,9 +129,9 @@ if __name__ == '__main__':
                   help="input toy file")
     parser.add_option('-r',dest="r",default=1,type="float",
                   help="expect signal r value")
-    parser.add_option('--gen-pdf',dest="genPdf", default="modexp", choices=['modexp','fourparam','fiveparam'],
+    parser.add_option('--gen-pdf',dest="genPdf", default="modexp", choices=['modexp','fourparam','fiveparam','atlas'],
                   help="pdf for generating")
-    parser.add_option('--fit-pdf',dest="fitPdf", default="fourparam", choices=['modexp','fourparam','fiveparam'],
+    parser.add_option('--fit-pdf',dest="fitPdf", default="fourparam", choices=['modexp','fourparam','fiveparam','atlas'],
                   help="pdf for fitting")
     
     (options,args) = parser.parse_args()
