@@ -29,7 +29,7 @@ def binnedFit(pdf, data, fitRange='Full',useWeight=False):
         improve_status = m2.minimize('Minuit2','improve')
         hesse_status = m2.minimize('Minuit2','hesse')
         minos_status = m2.minos()
-        if hesse_status !=3 :
+        if hesse_status != 3 :
             hesse_status = m2.minimize('Minuit2','hesse')
         fr = m2.save()
         
@@ -120,6 +120,15 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     nParFit = 4
     if workspace_.var('meff_%s'%box).getVal()>0 and workspace_.var('seff_%s'%box).getVal()>0 :
         nParFit = 6
+    if workspace_.var('p54_%s'%box) != None or workspace_.var('pm4_%s'%box) != None or workspace_.var('pa4_%s'%box) != None :
+        if workspace_.var('pa4_%s'%box) != None and workspace_.var('pa4_%s'%box).getVal()==0:
+            nParFit = 4
+        elif workspace_.var('pm4_%s'%box) != None and workspace_.var('pm4_%s'%box).getVal()==0 and workspace_.var('pm3_%s'%box) != None and workspace_.var('pm3_%s'%box).getVal()==0:
+            nParFit = 3
+        elif workspace_.var('pm3_%s'%box) != None and workspace_.var('pm3_%s'%box).getVal()==0:
+            nParFit = 4
+        else:
+            nParFit = 5
 
     chi2_FullRangeAll = 0
     chi2_PlotRangeAll = 0
@@ -129,7 +138,7 @@ def calculateChi2AndFillResiduals(data_obs_TGraph_,background_hist_,hist_fit_res
     N_FullRangeAll = 0
     N_PlotRangeAll = 0
     N_PlotRangeNonZero = 0
-    N_PlotRangeMinNumEvents = 0 
+    N_PlotRangeMinNumEvents = 0
 
     for bin in range (0,N_massBins_):
         ## Values and errors
@@ -238,6 +247,8 @@ if __name__ == '__main__':
                   help="fit spectrum")
     parser.add_option('--sim',dest="doSimultaneousFit", default=False,action='store_true',
                   help="do simultaneous trigger fit")
+    parser.add_option('--multi',dest="multi", default=True,action='store_true',
+                  help="multiple background pdfs")
 
     rt.RooMsgService.instance().setGlobalKillBelow(rt.RooFit.FATAL)
     rt.gStyle.SetPaintTextFormat('+.2f')
@@ -287,7 +298,7 @@ if __name__ == '__main__':
 
     w = rt.RooWorkspace("w"+box)
 
-    paramNames, bkgs = initializeWorkspace(w,cfg,box)
+    paramNames, bkgs = initializeWorkspace(w,cfg,box,multi=options.multi)
         
     if options.inputFitFile is not None:
         inputRootFile = rt.TFile.Open(options.inputFitFile,"r")
@@ -453,6 +464,7 @@ if __name__ == '__main__':
                 fr = binnedFit(extDijetPdf,dataHist,sideband,options.useWeight)       
                 rootTools.Utils.importToWS(w,fr)     
                 fr.Print('v')
+                fr.Print()
                 fr.covarianceMatrix().Print('v')
                 fr.correlationMatrix().Print('v')
                 corrHist = fr.correlationHist('correlation_matrix')
@@ -531,12 +543,16 @@ if __name__ == '__main__':
         asimov_reduce.add(asimov.reduce(opt[iOpt]))
         dataHist_reduce.add(dataHist.reduce(opt[iOpt]))
 
+
         
+    rss = 0
     for i in range(0,len(x)-1):
         th1x.setVal(i+0.5)
         predYield = asimov.weight(rt.RooArgSet(th1x))
         dataYield = dataHist_reduce.weight(rt.RooArgSet(th1x))
+        rss += float(predYield-dataYield) * float(predYield-dataYield)
         print "%i <= mjj < %i; prediction: %.2f; data %i"  % (x[i],x[i+1],predYield,dataYield)
+    print "RSS = ", rss 
         
     rt.TH1D.SetDefaultSumw2()
     
@@ -657,7 +673,7 @@ if __name__ == '__main__':
         l.DrawLatex(0.73,0.96,"%.1f fb^{-1} (%i TeV)"%(lumi/1000.,w.var('sqrts').getVal()/1000.))
         l.SetTextFont(62)
         l.SetTextSize(0.055)
-        l.DrawLatex(0.2,0.96,"CMS")
+        l.DrawLatex(0.175,0.96,"CMS")
         l.SetTextFont(52)
         l.SetTextSize(0.045)
         l.DrawLatex(0.3,0.96,"Preliminary")
@@ -899,7 +915,7 @@ if __name__ == '__main__':
     l.DrawLatex(0.72,0.96,"%.1f fb^{-1} (%i TeV)"%(lumi/1000.,w.var('sqrts').getVal()/1000.))
     l.SetTextFont(62)
     l.SetTextSize(0.055)
-    l.DrawLatex(0.2,0.96,"CMS")
+    l.DrawLatex(0.175,0.96,"CMS")
     l.SetTextFont(52)
     l.SetTextSize(0.045)
     l.DrawLatex(0.3,0.96,"Preliminary")
@@ -922,7 +938,7 @@ if __name__ == '__main__':
                 leg.AddEntry(g_signal,"%s (%.1f TeV)"%(model,float(mass)/1000.),"l")
             else:    
                 leg.AddEntry(g_signal,"%s (%i GeV)"%(model,float(mass)),"l")   
-            #leg.AddEntry(None,"%.1f pb"%(xsec),"")         
+            #leg.AddEntry(None,"%.1f pb"%(float(xsec)),"")         
     leg.Draw()
     #background.Draw("csame")
     #g_data.Draw("pezsame")
@@ -935,9 +951,9 @@ if __name__ == '__main__':
     pave_sel.SetTextFont(42)
     pave_sel.SetTextSize(0.045)
     pave_sel.SetTextAlign(11)
-    #pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
-    #                      list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
-    #                      list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
+    pave_sel.AddText("#chi^{{2}} / ndf = {0:.1f} / {1:d} = {2:.1f}".format(
+                          list_chi2AndNdf_background[4], list_chi2AndNdf_background[5],
+                          list_chi2AndNdf_background[4]/list_chi2AndNdf_background[5]))
 
     if 'Calo' in box:
         pave_sel.AddText("Wide Calo-jets")

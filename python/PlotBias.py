@@ -10,7 +10,7 @@ import math
 from scipy.integrate import quad
 from itertools import *
 from operator import *
-
+from RunCombine import massIterable
 
 def setStyle():
     rt.gStyle.SetOptStat(0)
@@ -75,8 +75,8 @@ def print1DBias(c,rootFile,h,func,printName,xTitle,yTitle,lumiLabel="",boxLabel=
     tLeg.SetLineColor(rt.kWhite)
     tLeg.SetLineWidth(0)
     tLeg.SetFillStyle(0)
-    tLeg.AddEntry(h,"toy data, %s, %s GeV, #mu=%.2f"%(options.model, options.mass,options.r),"lep")
-    tLeg.AddEntry(func,"gaus, mean = %.2f, std. = %.2f"%(func.GetParameter(1),func.GetParameter(2)),"l")
+    tLeg.AddEntry(h,"#splitline{Toy data}{%s (%s GeV) #mu=%1.3f}"%(options.model, massPoint,rDict[int(massPoint)]),"lep")
+    tLeg.AddEntry(func,"#splitline{Gaussian fit}{mean = %+1.2f, std. = %1.2f}"%(func.GetParameter(1),func.GetParameter(2)),"l")
             
     tLeg.Draw("same")
 
@@ -113,26 +113,28 @@ def print1DBias(c,rootFile,h,func,printName,xTitle,yTitle,lumiLabel="",boxLabel=
     
 if __name__ == '__main__':
     parser = OptionParser()
-    parser.add_option('-c','--config',dest="config",type="string",default="config/run2.config",
+    parser.add_option('-c','--config',dest="config",type="string",default="config/dijet_bias.config",
                   help="Name of the config file to use")
     parser.add_option('-d','--dir',dest="outDir",default="./",type="string",
                   help="Output directory to store results")
-    parser.add_option('-l','--lumi',dest="lumi", default=3000.,type="float",
+    parser.add_option('-l','--lumi',dest="lumi", default=12910.,type="float",
                   help="integrated luminosity in pb^-1")
-    parser.add_option('-b','--box',dest="box", default="MultiJet",type="string",
+    parser.add_option('-b','--box',dest="box", default="CaloDijet2016",type="string",
                   help="box name")
     parser.add_option('-m','--model',dest="model", default="qq",type="string",
                   help="signal model name")
     parser.add_option('--mass',dest="mass", default='750',type="string",
                   help="mass of resonance")
-    parser.add_option('-t','--input-toy-file',dest="inputToyFile", default=None,type="string",
-                  help="input toy file")
     parser.add_option('-r',dest="r",default=1,type="float",
                   help="expect signal r value")
     parser.add_option('--gen-pdf',dest="genPdf", default="modexp", choices=['modexp','fourparam','fiveparam','atlas'],
                   help="pdf for generating")
     parser.add_option('--fit-pdf',dest="fitPdf", default="fourparam", choices=['modexp','fourparam','fiveparam','atlas'],
                   help="pdf for fitting")
+    parser.add_option('--asymptotic-file',dest="asymptoticFile",default=None,type="string",
+                  help="load asymptotic cross section results file")
+    parser.add_option('--xsec',dest="xsec",default=10,type="float",
+                  help="xsec for signal in pb (r = 1)")
     
     (options,args) = parser.parse_args()
      
@@ -142,13 +144,26 @@ if __name__ == '__main__':
     lumi = options.lumi
     cfg = Config.Config(options.config)
 
-    
-    toyTree = None
-    if options.inputToyFile is not None:
-        toyFiles = options.inputToyFile.split(',')
-        toyTree = rt.TChain("tree_fit_sb")
-        for toyFile in toyFiles:
-            toyTree.Add(toyFile)
+
+    xsecTree = None
+    rDict = {}
+    if options.asymptoticFile is not None:
+        print "INFO: Input ref xsec file!"
+        asymptoticRootFile = rt.TFile.Open(options.asymptoticFile,"READ")
+        xsecTree = asymptoticRootFile.Get("xsecTree")        
+        xsecTree.Draw('>>elist','','entrylist')
+        elist = rt.gDirectory.Get('elist')
+        entry = -1
+        while True:
+            entry = elist.Next()
+            if entry == -1: break
+            xsecTree.GetEntry(entry)
+            rDict[int(eval('xsecTree.mass'))] = eval('xsecTree.xsecULExp_%s'%box)/options.xsec
+    else:        
+        for massPoint in massIterable(options.mass):   
+            rDict[int(massPoint)] = options.r
+    print rDict
+
     
     c = rt.TCanvas('c','c',500,400)    
     c.SetLeftMargin(0.12) 
@@ -158,29 +173,76 @@ if __name__ == '__main__':
     if tdirectory==None:
         rootFile.mkdir(options.outDir)
         tdirectory = rootFile.GetDirectory(options.outDir)
-
+        
     dataString = "Sim. Data"
-
-    eventsLabel = "Toy Datasets"
-    
+    eventsLabel = "Toy Datasets"    
     x = array('d', cfg.getBinning(box)[0]) # mjj binning
     nBins = (len(x)-1)
-
-    toyTree.Print()
-        
-    h_bias = getBiasHistos('(mu-%.3f)/muErr'%options.r,toyTree)     
     
     btagLabel = ""
 
     lumiLabel = "%.1f fb^{-1} (13 TeV)" % (lumi/1000.)
-    boxLabel = ''
+    boxLabel = ''    
+
+    graph = rt.TGraphErrors(len(massIterable(options.mass)))
+    histVsMass = rt.TH1D('histVsMass','histVsMass',100,massIterable(options.mass)[0]-100,massIterable(options.mass)[-1]+100)
+    
+    for i, massPoint in enumerate(massIterable(options.mass)):
+        inputToyFile = '%s/mlfit%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.root'%(options.outDir,options.model,massPoint,(options.lumi/1000.),rDict[int(massPoint)],box,options.genPdf,options.fitPdf) 
+        toyTree = rt.TChain("tree_fit_sb")
+        toyTree.Add(inputToyFile)
+        toyTree.Print()
+
+        
+        h_bias = getBiasHistos('(mu-%.3f)/muErr'%rDict[int(massPoint)],toyTree)
+        
+        gaus_func = rt.TF1("gaus_func","gaus(0)",-4,4)
+        gaus_func.SetParameter(0,30)
+        gaus_func.SetParameter(1,0)
+        gaus_func.SetParameter(2,1)
+        print1DBias(c,tdirectory,h_bias,gaus_func,options.outDir+"/bias_%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.pdf"%(options.model,massPoint,(options.lumi/1000.),rDict[int(massPoint)],box,options.genPdf,options.fitPdf),"(#hat{#mu} - #mu)/#sigma_{#mu}",eventsLabel,lumiLabel,boxLabel,'',None)
+
+        graph.SetPoint(i, int(massPoint), 100.*gaus_func.GetParameter(1))
+        #graph.SetPointError(i, 0, 100.*gaus_func.GetParameter(2))
+        graph.SetPointError(i, 0, 100.*gaus_func.GetParError(1))
+
+    histVsMass.Draw()
+    histVsMass.SetMinimum(-300)
+    histVsMass.SetMaximum(300)
+    histVsMass.SetLineColor(rt.kBlue)
+    histVsMass.SetLineStyle(2)
+    histVsMass.SetYTitle("Bias [% of stat.+syst. unc.]")
+    histVsMass.GetYaxis().SetTitleOffset(1.5)
+    histVsMass.SetXTitle("Resonance Mass [GeV]")   
+    graph.SetMarkerStyle(20)
+    graph.SetMarkerSize(0.7)
+    graph.Draw("pzsame")
 
     
+
+    l = rt.TLatex()
+    l.SetTextAlign(11)
+    l.SetTextSize(0.06)
+    l.SetTextFont(62)
+    l.SetNDC()
+    l.DrawLatex(0.12,0.91,"CMS")
+    l.SetTextSize(0.05)
+    l.SetTextFont(52)
+    l.DrawLatex(0.23,0.91,"Preliminary")
+    l.SetTextFont(42)
+    l.DrawLatex(0.62,0.91,"%s"%lumiLabel)
+    l.SetTextFont(52)
+    l.SetTextSize(0.045)
+
+    pdf_dict = {'modexp':'mod. exp.',
+                'atlas':'ATLAS func.',
+                'fourparam':'4-param. dijet',
+                'fiveparam':'5-param. dijet'
+                }
+    l.DrawLatex(0.15,0.82,'gen. pdf = %s'%pdf_dict[options.genPdf])
+    l.DrawLatex(0.15,0.77,'fit. pdf = %s'%pdf_dict[options.fitPdf])
     
-    gaus_func = rt.TF1("gaus_func","gaus(0)",-4,4)
-    gaus_func.SetParameter(0,30)
-    gaus_func.SetParameter(1,0)
-    gaus_func.SetParameter(2,1)
-    print1DBias(c,tdirectory,h_bias,gaus_func,options.outDir+"/bias_%s_%s_lumi-%.3f_r-%.3f_%s_%s_%s.pdf"%(options.model,options.mass,(options.lumi/1000.),options.r,box,options.genPdf,options.fitPdf),"(#hat{#mu} - #mu)/#sigma_{#mu}",eventsLabel,lumiLabel,boxLabel,'',None)
-    
+
+    c.Print("%s/biasVsMass_%s_lumi-%.3f_%s_%s_%s.pdf"%(options.outDir,options.model,(options.lumi/1000.),box,options.genPdf,options.fitPdf))
+    c.Print("%s/biasVsMass_%s_lumi-%.3f_%s_%s_%s.C"%(options.outDir,options.model,(options.lumi/1000.),box,options.genPdf,options.fitPdf))
  
