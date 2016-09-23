@@ -64,7 +64,7 @@ Instructions to run Calo Scouting Dijet Resonance Search from start to finish.
     ```
 
 ### Bias studies with 4-parameter modified exponential 
-8. Run combine-based bias studies with 1000 toys for r = 1 and  using 4-parameter modified exponential (defined in confif/dijet_bias.config)
+8. Run combine-based bias studies with 1000 toys for r = 1 and 10 pb cross section using 4-parameter modified exponential for generation and 4-parameter dijet functin for fitting (defined in confif/dijet_bias.config)
 
     ```sh
     $ mkdir signal_bias/
