@@ -63,6 +63,15 @@ Instructions to run Calo Scouting Dijet Resonance Search from start to finish.
     $ python python/Plot1DLimit.py -d cards_gg_freq/ -m gg -b CaloDijet2016 -l 12.910 --massMin 600 --massMax 1600 --xsecMin 1e-3 --xsecMax 1e5
     ```
 
-
+### Bias studies with 4-parameter modified exponential 
+8. Run combine-based bias studies with 1000 toys for r = 1 and  using 4-parameter modified exponential (defined in confif/dijet_bias.config)
+    ```sh
+    	$ mkdir signal_bias/
+	$ python python/RunBias.py -c config/dijet_bias.config --mass 750 -m gg -d signal_bias/ -r 1 -l 12.910 --xsec 10 -t 1000 --gen-pdf modexp  --fit-pdf fourparam
+    ```
+9. Make plots of bias
+    ```sh
+	$ python python/PlotBias.py -c config/dijet_bias.config --mass 750 -m gg -d signal_bias/ -r 1 -l 12.910 --xsec 10 -t 1000 --gen-pdf modexp  --fit-pdf fourparam
+    ```
 
 
