@@ -52,38 +52,28 @@ class PtBinning {
 
   private:
     std::vector<std::pair<float, float> > mPtBins;
-    int step_pt = 100;
-    int pT_max= 3000;
+    int step_pt = 200;
+    int pT_max= 5000;
 
     void fillPtBins() {
-
-      /*
-      // ogni bin uguale -- per adesso faccio Macrobins      
+      
       int n_bin = pT_max/ step_pt;
-      
+
       for(int jj=0; jj<n_bin ; jj++){	 
-      int pt_min = ( (jj-1)*step_pt)+step_pt;
-      int pt_max = (jj*step_pt)+step_pt;
-      
+	int pt_min = ( (jj-1)*step_pt)+step_pt;
+	int pt_max = (jj*step_pt)+step_pt;
+	
       mPtBins.push_back(std::make_pair(pt_min, pt_max));
-      }
-      */
-      
-      mPtBins.push_back(std::make_pair(0., 10000.));                        
-      //      mPtBins.push_back(std::make_pair(200., 6000.));                        
-      
-      
-    
-    }
+
+	}
+    } 
 };
 
-// if we want a variable binning
-
-//      mPtBins.push_back(std::make_pair(60., 85.));                                                                                             
-//mPtBins.push_back(std::make_pair(85., 100.));                                                                                                  
-// mPtBins.push_back(std::make_pair(100., 130.));                                                                                                
-// mPtBins.push_back(std::make_pair(130., 175.));                                                                                                
-// mPtBins.push_back(std::make_pair(175., 250.));                                                                                                
-// mPtBins.push_back(std::make_pair(250., 300.));                                                                                                
-// mPtBins.push_back(std::make_pair(300., 400.));                                                                                                
-// mPtBins.push_back(std::make_pair(400., 1100.));
+      //      mPtBins.push_back(std::make_pair(60., 85.));
+      //mPtBins.push_back(std::make_pair(85., 100.));
+      // mPtBins.push_back(std::make_pair(100., 130.));
+      // mPtBins.push_back(std::make_pair(130., 175.));
+      // mPtBins.push_back(std::make_pair(175., 250.));
+      // mPtBins.push_back(std::make_pair(250., 300.));
+      // mPtBins.push_back(std::make_pair(300., 400.));
+      // mPtBins.push_back(std::make_pair(400., 1100.));

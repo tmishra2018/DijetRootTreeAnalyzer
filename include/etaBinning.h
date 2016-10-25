@@ -54,19 +54,6 @@ class EtaBinning {
 
       EtaBin bin;
 
-      bin.bin = std::make_pair(0., 1.5);
-      bin.name = "eta_00_15";
-      bin.title = "|#eta| < 1.5";  
-      mEtaBins.push_back(bin);
-
-      bin.bin = std::make_pair(1.5, 2.5);
-      bin.name = "eta_15_25";
-      bin.title = "1.5 < |#eta| < 2.5";  
-      mEtaBins.push_back(bin);
-
-
-      /*
-      // Official calibration
       bin.bin = std::make_pair(0., 0.5);
       bin.name = "eta_00_05";
       bin.title = "|#eta| < 0.5";  
@@ -96,7 +83,7 @@ class EtaBinning {
       bin.name = "eta_25_30";
       bin.title = "2.5 #leq |#eta| < 3.0";
       mEtaBins.push_back(bin);
-      */
+
 
     }
 };
