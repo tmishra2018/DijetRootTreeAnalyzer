@@ -148,24 +148,29 @@ void analysisClass::Loop()
      sprintf(name_histoHLT,"h_mjj_HLTpass_%s",HLTname[i]);
      h_mjj_HLTpass[i]= new TH1F(name_histoHLT,"",103,massBoundaries);
    }
-  
+   
+   
+    TH1F *SumWeight  = new TH1F("h_sumW", "h_sumW", 1, -0.5, 5.5) ;    
+    SumWeight->Sumw2();
+    TParameter<float> *totalluminosityP = new  TParameter<float>("totallumi", 0.);
+    float storelumi = 0.;
+    float totalluminosity = 0.; 
    int nselectedevent = 0;
    /////////initialize variables
 
    Long64_t nentries = fChain->GetEntriesFast();
-   std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;   
-    
+   std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;      
    ////// The following ~7 lines have been taken from rootNtupleClass->Loop() /////
    ////// If the root version is updated and rootNtupleClass regenerated,     /////
    ////// these lines may need to be updated.                                 /////    
-   Long64_t nbytes = 0, nb = 0;
+  Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
    //for (Long64_t jentry=0; jentry<2000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
      
      nb = fChain->GetEntry(jentry);   nbytes += nb;
-     if(jentry < 10 || jentry%1000 == 0) std::cout << "analysisClass::Loop(): jentry = " << jentry << std::endl;   
+    if(jentry < 10 || jentry%1000 == 0) std::cout << "analysisClass::Loop(): jentry = " << jentry << std::endl;   
      // if (Cut(ientry) < 0) continue;
 
      ////////////////////// User's code starts here ///////////////////////
@@ -468,6 +473,14 @@ void analysisClass::Loop()
     {
      nselectedevent++;
      
+     if(lumi != storelumi)
+      {
+        totalluminosity += lumi ;
+      }
+      storelumi = lumi;
+
+     
+     
      
      fillVariableWithValue("N_photon", nPhoton);
      fillVariableWithValue("run",runNo);     
@@ -502,7 +515,7 @@ void analysisClass::Loop()
        {
           fillVariableWithValue("weight", 1);
           
-           
+           SumWeight->Fill(0.,weight);
         }
        if(!isData)
        {
@@ -512,7 +525,7 @@ void analysisClass::Loop()
 	 fillVariableWithValue("Energy_photonGEN",photonEnergyGen->at(0));
 	 
 	 fillVariableWithValue("weight",weight);
-	 
+	 SumWeight->Fill(0.,weight);
 	 
        }//MC
      
@@ -604,32 +617,33 @@ void analysisClass::Loop()
      if( NtriggerBits > 0 && isData)
      {
        fillVariableWithValue("passHLT_Photon30",triggerResult->at(0));// 
-      // fillVariableWithValue("prescaletrigger_Photon30", triggerPrescale->at(0)); //
+     //  fillVariableWithValue("prescaletrigger_Photon30",triggerPrescale->at(0));// 
+
      }
     if( NtriggerBits > 1 && isData)
     {
        fillVariableWithValue("passHLT_Photon50",triggerResult->at(1));//
-     // fillVariableWithValue("prescaletrigger_Photon50", triggerPrescale->at(1));  //  
+
      }
      if( NtriggerBits > 2 && isData)
      {
        fillVariableWithValue("passHLT_Photon75",triggerResult->at(2));// 
-     //  fillVariableWithValue("prescaletrigger_Photon75", triggerPrescale->at(2));   //
+
      }
      if( NtriggerBits > 3 && isData)
      {
        fillVariableWithValue("passHLT_Photon90",triggerResult->at(3));//
-      // fillVariableWithValue("prescaletrigger_Photon90", triggerPrescale->at(3));//    
+
      }
      if( NtriggerBits > 4 && isData)
      {
        fillVariableWithValue("passHLT_Photon120",triggerResult->at(4));//
-    //   fillVariableWithValue("prescaletrigger_Photon120", triggerPrescale->at(4)); //    
+
      }
      if( NtriggerBits > 5 && isData)
      {
        fillVariableWithValue("passHLT_Photon165",triggerResult->at(5));//
-    //   fillVariableWithValue("prescaletrigger_Photon165", triggerPrescale->at(5));//
+
      }
      
      
@@ -653,9 +667,10 @@ void analysisClass::Loop()
 }//end photon condition
  
    } // End loop over events
-
+   totalluminosityP->SetVal(totalluminosity);
   
-   
+   SumWeight->Write();
+   totalluminosityP->Write();
    std::cout<<" nb of selected event " << nselectedevent<<std::endl;
    std::cout << "analysisClass::Loop() ends" <<std::endl;   
    }

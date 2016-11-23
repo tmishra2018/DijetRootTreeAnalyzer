@@ -1,6 +1,6 @@
-///////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri Oct 28 11:00:52 2016 by ROOT version 6.06/01
+// Tue Nov 22 19:00:11 2016 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -17,6 +17,7 @@ using namespace std;
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
+#include "vector"
 #include "vector"
 #include "vector"
 #include "vector"
@@ -225,7 +226,7 @@ public :
    vector<float>   *jetPhiGenAK4;
    vector<float>   *jetMassGenAK4;
    vector<float>   *jetEnergyGenAK4;
-   vector<int>   *jetpdgIDGenAK4;
+   vector<int>     *jetpdgIDGenAK4;
    vector<float>   *jetPtGenAK8;
    vector<float>   *jetEtaGenAK8;
    vector<float>   *jetPhiGenAK8;
@@ -238,10 +239,10 @@ public :
    TBranch        *b_lumi_;   //!
    TBranch        *b_nVtx_;   //!
    TBranch        *b_rho_;   //!
-   TBranch        *b_metEnergy;   //!
-   TBranch        *b_metPt;   //!
-   TBranch        *b_metEta;   //!
-   TBranch        *b_metPhi;   //!
+   TBranch        *b_metEnergy_;   //!
+   TBranch        *b_metPt_;   //!
+   TBranch        *b_metEta_;   //!
+   TBranch        *b_metPhi_;   //!
    TBranch        *b_metSig_;   //!
    TBranch        *b_metcorrected_;   //!
    TBranch        *b_gen_eta;   //!
@@ -276,7 +277,7 @@ public :
    TBranch        *b_nPhotonsTight_;   //!
    TBranch        *b_PhotonLoosePt;   //!
    TBranch        *b_PhotonsmearPt;   //!
-   TBranch        *b_PhotonSCPt;   //! 
+   TBranch        *b_PhotonSCPt;   //!
    TBranch        *b_PhotonLooseEta;   //!
    TBranch        *b_PhotonsmearEta;   //!
    TBranch        *b_PhotonSCEta;   //!
@@ -357,8 +358,8 @@ public :
    TBranch        *b_neMultAK8;   //!
    TBranch        *b_phoMultAK8;   //!
    TBranch        *b_triggerResult;   //!
-   TBranch        *b_triggerPrescale; //!
-   TBranch        *b_triggerName;    //!
+   TBranch        *b_triggerPrescale;   //!
+   TBranch        *b_triggerName;   //!
    TBranch        *b_passFilterHBHE_;   //!
    TBranch        *b_passFilterCSCHalo_;   //!
    TBranch        *b_passFilterHCALlaser_;   //!
@@ -430,7 +431,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("../DijetRootTreeMaker/prod/mylocaltest_Run2016B_10.root/dijets/events");
+      chain->Add("../../DijetRootTreeMaker/prod/mylocaltest_Run2016B_10.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -574,6 +575,7 @@ void rootNtupleClass::Init(TTree *tree)
    phoMultAK8 = 0;
    triggerResult = 0;
    triggerPrescale = 0;
+   triggerName = 0;
    npu = 0;
    PileupInteractions = 0;
    PileupOriginBX = 0;
@@ -603,10 +605,10 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("lumi", &lumi, &b_lumi_);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nVtx_);
    fChain->SetBranchAddress("rho", &rho, &b_rho_);
-   fChain->SetBranchAddress("metEnergy", &metEnergy, &b_metEnergy);
-   fChain->SetBranchAddress("metPt", &metPt, &b_metPt);
-   fChain->SetBranchAddress("metEta", &metEta, &b_metEta);
-   fChain->SetBranchAddress("metPhi", &metPhi, &b_metPhi);
+   fChain->SetBranchAddress("metEnergy", &metEnergy, &b_metEnergy_);
+   fChain->SetBranchAddress("metPt", &metPt, &b_metPt_);
+   fChain->SetBranchAddress("metEta", &metEta, &b_metEta_);
+   fChain->SetBranchAddress("metPhi", &metPhi, &b_metPhi_);
    fChain->SetBranchAddress("metSig", &metSig, &b_metSig_);
    fChain->SetBranchAddress("metTypeI", &metTypeI, &b_metcorrected_);
    fChain->SetBranchAddress("gen_eta", &gen_eta, &b_gen_eta);
@@ -644,7 +646,7 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("PhotonSCPt", &PhotonSCPt, &b_PhotonSCPt);
    fChain->SetBranchAddress("PhotonLooseEta", &PhotonLooseEta, &b_PhotonLooseEta);
    fChain->SetBranchAddress("PhotonsmearEta", &PhotonsmearEta, &b_PhotonsmearEta);
-   fChain->SetBranchAddress("PhotonSCEta", &PhotonSCEta, &b_PhotonSCEta);   
+   fChain->SetBranchAddress("PhotonSCEta", &PhotonSCEta, &b_PhotonSCEta);
    fChain->SetBranchAddress("PhotonLoosePhi", &PhotonLoosePhi, &b_PhotonLoosePhi);
    fChain->SetBranchAddress("PhotonsmearPhi", &PhotonsmearPhi, &b_PhotonsmearPhi);
    fChain->SetBranchAddress("PhotonSCPhi", &PhotonSCPhi, &b_PhotonSCPhi);

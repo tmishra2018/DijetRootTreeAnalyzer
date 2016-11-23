@@ -30,6 +30,7 @@ public :
   analysisClass(string * inputList, string * cutFile, string * treeName,  string *outputFileName=0, string * cutEfficFile=0);
   virtual ~analysisClass();
   void Loop();
+  void correctMETWithTypeI();
 private :
   ClusterSequencePtr  fjClusterSeq, fjClusterSeq_shift;
   JetDefPtr           fjJetDefinition;
@@ -48,7 +49,15 @@ private :
   FactorizedJetCorrector *JetCorrector;
   FactorizedJetCorrector *JetCorrector_data;
   FactorizedJetCorrector *JetCorrector_dataHLT;
+  
+  FactorizedJetCorrector *JetCorrectortypI;
+  FactorizedJetCorrector *JetCorrectortypIL123;
+  FactorizedJetCorrector *JetCorrectortypIMC;
+  FactorizedJetCorrector *JetCorrectortypIL123MC;
   JetCorrectionUncertainty *unc;
+  JetCorrectorParameters *L1JetParForTypeI;
+  JetCorrectorParameters *L1JetParForTypeIMC;
+  
 };
 
 #endif
