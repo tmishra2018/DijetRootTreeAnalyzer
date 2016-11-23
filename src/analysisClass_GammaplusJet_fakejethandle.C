@@ -469,7 +469,7 @@ void analysisClass::Loop()
      
      
       //== Fill Variables ==
-     if(ak4j1.Pt()>0 && idTAK4->at(sortedJetIdx[0] == 1)/*&& no_jets_ak4-nfakejet<=2*/) 
+     if(ak4j1.Pt()>0 && idTAK4->at(sortedJetIdx[0] == 1)) 
     {
      nselectedevent++;
      

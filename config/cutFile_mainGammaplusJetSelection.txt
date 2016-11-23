@@ -109,7 +109,7 @@ deltaPHIgj           -inf           +inf                -               -       
 run		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 event		     -inf	    +inf		-		-		1	50  0 100000	  SAVE
 lumi		     -inf	    +inf		-		-		1	50  0 10000	  SAVE
-trueInteraction		     -inf	    +inf		-		-		1	50  0 50	  SAVE
+trueInteraction      -inf	    +inf		-		-		1	50  0 50	  SAVE
 MET		     -inf           +inf                -               -               1       500 -5000 5000        SAVE
 METRAW		     -inf           +inf                -               -               1       500 -5000 5000        SAVE
 metSig		     -inf           +inf                -               -               1       100 0 1           SAVE

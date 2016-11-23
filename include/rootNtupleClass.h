@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Nov 22 19:00:11 2016 by ROOT version 6.06/01
+// Wed Nov 23 15:02:24 2016 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -32,36 +32,22 @@ public :
    const Int_t kMaxevt = 1;
    const Int_t kMaxlumi = 1;
    const Int_t kMaxnVtx = 1;
+   const Int_t kMaxBXnumber = 1;
    const Int_t kMaxrho = 1;
-   const Int_t kMaxmet = 1;
+   const Int_t kMaxmetEnergy = 1;
+   const Int_t kMaxmetPt = 1;
+   const Int_t kMaxmetEta = 1;
+   const Int_t kMaxmetPhi = 1;
    const Int_t kMaxmetSig = 1;
    const Int_t kMaxmetcorrected = 1;
    const Int_t kMaxnJetsAK4 = 1;
    const Int_t kMaxhtAK4 = 1;
-   const Int_t kMaxmjjAK4 = 1;
-   const Int_t kMaxdEtajjAK4 = 1;
-   const Int_t kMaxdPhijjAK4 = 1;
    const Int_t kMaxnJetsAK8 = 1;
    const Int_t kMaxhtAK8 = 1;
-   const Int_t kMaxmjjAK8 = 1;
-   const Int_t kMaxdEtajjAK8 = 1;
-   const Int_t kMaxdPhijjAK8 = 1;
    const Int_t kMaxnPhotons = 1;
    const Int_t kMaxnPhotonsLoose = 1;
    const Int_t kMaxnPhotonsMedium = 1;
    const Int_t kMaxnPhotonsTight = 1;
-   const Int_t kMaxpassFilterHBHE = 1;
-   const Int_t kMaxpassFilterCSCHalo = 1;
-   const Int_t kMaxpassFilterHCALlaser = 1;
-   const Int_t kMaxpassFilterECALDeadCell = 1;
-   const Int_t kMaxpassFilterGoodVtx = 1;
-   const Int_t kMaxpassFilterTrkFailure = 1;
-   const Int_t kMaxpassFilterEEBadSc = 1;
-   const Int_t kMaxpassFilterECALlaser = 1;
-   const Int_t kMaxpassFilterTrkPOG = 1;
-   const Int_t kMaxpassFilterTrkPOG_manystrip = 1;
-   const Int_t kMaxpassFilterTrkPOG_toomanystrip = 1;
-   const Int_t kMaxpassFilterTrkPOG_logError = 1;
    const Int_t kMaxptHat = 1;
    const Int_t kMaxprocessID = 1;
    const Int_t kMaxweight = 1;
@@ -74,6 +60,7 @@ public :
    Int_t           evtNo;
    Int_t           lumi;
    Int_t           nvtx;
+   Int_t           BXnumber;
    Float_t         rho;
    Float_t         metEnergy;
    Float_t         metPt;
@@ -99,14 +86,8 @@ public :
    vector<int>     *gen_motherIndex;
    Int_t           nJetsAK4;
    Float_t         htAK4;
-   Float_t         mjjAK4;
-   Float_t         dEtajjAK4;
-   Float_t         dPhijjAK4;
    Int_t           nJetsAK8;
    Float_t         htAK8;
-   Float_t         mjjAK8;
-   Float_t         dEtajjAK8;
-   Float_t         dPhijjAK8;
    Int_t           nPhoton;
    Int_t           nPhotonLoose;
    Int_t           nPhotonMedium;
@@ -196,18 +177,6 @@ public :
    vector<bool>    *triggerResult;
    vector<float>   *triggerPrescale;
    vector<string>  *triggerName;
-   Bool_t          passFilterHBHE;
-   Bool_t          passFilterCSCHalo;
-   Bool_t          passFilterHCALlaser;
-   Bool_t          passFilterECALDeadCell;
-   Bool_t          passFilterGoodVtx;
-   Bool_t          passFilterTrkFailure;
-   Bool_t          passFilterEEBadSc;
-   Bool_t          passFilterECALlaser;
-   Bool_t          passFilterTrkPOG;
-   Bool_t          passFilterTrkPOG_manystrip;
-   Bool_t          passFilterTrkPOG_toomanystrip;
-   Bool_t          passFilterTrkPOG_logError;
    vector<float>   *npu;
    vector<int>     *PileupInteractions;
    vector<int>     *PileupOriginBX;
@@ -238,6 +207,7 @@ public :
    TBranch        *b_evt_;   //!
    TBranch        *b_lumi_;   //!
    TBranch        *b_nVtx_;   //!
+   TBranch        *b_BXnumber_;   //!
    TBranch        *b_rho_;   //!
    TBranch        *b_metEnergy_;   //!
    TBranch        *b_metPt_;   //!
@@ -263,14 +233,8 @@ public :
    TBranch        *b_gen_motherIndex;   //!
    TBranch        *b_nJetsAK4_;   //!
    TBranch        *b_htAK4_;   //!
-   TBranch        *b_mjjAK4_;   //!
-   TBranch        *b_dEtajjAK4_;   //!
-   TBranch        *b_dPhijjAK4_;   //!
    TBranch        *b_nJetsAK8_;   //!
    TBranch        *b_htAK8_;   //!
-   TBranch        *b_mjjAK8_;   //!
-   TBranch        *b_dEtajjAK8_;   //!
-   TBranch        *b_dPhijjAK8_;   //!
    TBranch        *b_nPhotons_;   //!
    TBranch        *b_nPhotonsLoose_;   //!
    TBranch        *b_nPhotonsMedium_;   //!
@@ -360,18 +324,6 @@ public :
    TBranch        *b_triggerResult;   //!
    TBranch        *b_triggerPrescale;   //!
    TBranch        *b_triggerName;   //!
-   TBranch        *b_passFilterHBHE_;   //!
-   TBranch        *b_passFilterCSCHalo_;   //!
-   TBranch        *b_passFilterHCALlaser_;   //!
-   TBranch        *b_passFilterECALDeadCell_;   //!
-   TBranch        *b_passFilterGoodVtx_;   //!
-   TBranch        *b_passFilterTrkFailure_;   //!
-   TBranch        *b_passFilterEEBadSc_;   //!
-   TBranch        *b_passFilterECALlaser_;   //!
-   TBranch        *b_passFilterTrkPOG_;   //!
-   TBranch        *b_passFilterTrkPOG_manystrip_;   //!
-   TBranch        *b_passFilterTrkPOG_toomanystrip_;   //!
-   TBranch        *b_passFilterTrkPOG_logError_;   //!
    TBranch        *b_npu;   //!
    TBranch        *b_PileupInteractions;   //!
    TBranch        *b_PileupOriginBX;   //!
@@ -604,6 +556,7 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("evtNo", &evtNo, &b_evt_);
    fChain->SetBranchAddress("lumi", &lumi, &b_lumi_);
    fChain->SetBranchAddress("nvtx", &nvtx, &b_nVtx_);
+   fChain->SetBranchAddress("BXnumber", &BXnumber, &b_BXnumber_);
    fChain->SetBranchAddress("rho", &rho, &b_rho_);
    fChain->SetBranchAddress("metEnergy", &metEnergy, &b_metEnergy_);
    fChain->SetBranchAddress("metPt", &metPt, &b_metPt_);
@@ -629,14 +582,8 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("gen_motherIndex", &gen_motherIndex, &b_gen_motherIndex);
    fChain->SetBranchAddress("nJetsAK4", &nJetsAK4, &b_nJetsAK4_);
    fChain->SetBranchAddress("htAK4", &htAK4, &b_htAK4_);
-   fChain->SetBranchAddress("mjjAK4", &mjjAK4, &b_mjjAK4_);
-   fChain->SetBranchAddress("dEtajjAK4", &dEtajjAK4, &b_dEtajjAK4_);
-   fChain->SetBranchAddress("dPhijjAK4", &dPhijjAK4, &b_dPhijjAK4_);
    fChain->SetBranchAddress("nJetsAK8", &nJetsAK8, &b_nJetsAK8_);
    fChain->SetBranchAddress("htAK8", &htAK8, &b_htAK8_);
-   fChain->SetBranchAddress("mjjAK8", &mjjAK8, &b_mjjAK8_);
-   fChain->SetBranchAddress("dEtajjAK8", &dEtajjAK8, &b_dEtajjAK8_);
-   fChain->SetBranchAddress("dPhijjAK8", &dPhijjAK8, &b_dPhijjAK8_);
    fChain->SetBranchAddress("nPhoton", &nPhoton, &b_nPhotons_);
    fChain->SetBranchAddress("nPhotonLoose", &nPhotonLoose, &b_nPhotonsLoose_);
    fChain->SetBranchAddress("nPhotonMedium", &nPhotonMedium, &b_nPhotonsMedium_);
@@ -726,18 +673,6 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("triggerResult", &triggerResult, &b_triggerResult);
    fChain->SetBranchAddress("triggerPrescale", &triggerPrescale, &b_triggerPrescale);
    fChain->SetBranchAddress("triggerName", &triggerName, &b_triggerName);
-   fChain->SetBranchAddress("passFilterHBHE", &passFilterHBHE, &b_passFilterHBHE_);
-   fChain->SetBranchAddress("passFilterCSCHalo", &passFilterCSCHalo, &b_passFilterCSCHalo_);
-   fChain->SetBranchAddress("passFilterHCALlaser", &passFilterHCALlaser, &b_passFilterHCALlaser_);
-   fChain->SetBranchAddress("passFilterECALDeadCell", &passFilterECALDeadCell, &b_passFilterECALDeadCell_);
-   fChain->SetBranchAddress("passFilterGoodVtx", &passFilterGoodVtx, &b_passFilterGoodVtx_);
-   fChain->SetBranchAddress("passFilterTrkFailure", &passFilterTrkFailure, &b_passFilterTrkFailure_);
-   fChain->SetBranchAddress("passFilterEEBadSc", &passFilterEEBadSc, &b_passFilterEEBadSc_);
-   fChain->SetBranchAddress("passFilterECALlaser", &passFilterECALlaser, &b_passFilterECALlaser_);
-   fChain->SetBranchAddress("passFilterTrkPOG", &passFilterTrkPOG, &b_passFilterTrkPOG_);
-   fChain->SetBranchAddress("passFilterTrkPOG_manystrip", &passFilterTrkPOG_manystrip, &b_passFilterTrkPOG_manystrip_);
-   fChain->SetBranchAddress("passFilterTrkPOG_toomanystrip", &passFilterTrkPOG_toomanystrip, &b_passFilterTrkPOG_toomanystrip_);
-   fChain->SetBranchAddress("passFilterTrkPOG_logError", &passFilterTrkPOG_logError, &b_passFilterTrkPOG_logError_);
    fChain->SetBranchAddress("npu", &npu, &b_npu);
    fChain->SetBranchAddress("PileupInteractions", &PileupInteractions, &b_PileupInteractions);
    fChain->SetBranchAddress("PileupOriginBX", &PileupOriginBX, &b_PileupOriginBX);
