@@ -1,0 +1,30 @@
+
+
+## Setup a fresh analysis directory
+
+[hlattaud@lxplus0023 thesearch]$ scram p -n dec16_CMSSW8011 CMSSW CMSSW_8_0_11
+[hlattaud@lxplus0023 thesearch]$ cd dec16_CMSSW8011
+[hlattaud@lxplus0023 src]$ git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/responsecomputing/DijetRootTreeAnalyzer
+[hlattaud@lxplus0023 DijetRootTreeAnalyzer]$ ./scripts/make_rootNtupleClass.sh -f yourBIgtupleRootfile.root -t dijets/events
+mv: overwrite `include/rootNtupleClass.h'? yes
+mv: overwrite `src/rootNtupleClass.C'? yes
+[hlattaud@lxplus0023 DijetRootTreeAnalyzer]$ ln -sf analysisClass_GammaplusJet_fakejethandle.C src/analysisClass.C
+[hlattaud@lxplus0023 DijetRootTreeAnalyzer]$ make clean
+[hlattaud@lxplus0023 DijetRootTreeAnalyzer]$ cmsenv
+[hlattaud@lxplus0023 DijetRootTreeAnalyzer]$ make
+
+#create a list of your crab ouput file from the previous step : 
+
+#If it's store on eos the adress look like that : 
+
+#root://eoscms//eos/cms/store/group/phys_jetmet/hlattaud/GammaJet/GJet-RunIISpring16MiniAODv1/GJet_Pt-15To6000_TuneCUETP8M1-Flat_13TeV_pythia8/crab_GJet-RunIISpring16MiniAODv1_v2/161202_142806/0000/mylocaltest_10_19.root
+
+## Download fresh cert JSON and change the path accordingly in cutfile 
+
+
+# Just before starting you may want to do a test job with something like this:
+
+$ ./main file.txt config/cutFile_mainGammaplusJetSelection.txt dijets/events test test
+
+# where file.txt contains a path to a big ntuple file. Now to full production:
+

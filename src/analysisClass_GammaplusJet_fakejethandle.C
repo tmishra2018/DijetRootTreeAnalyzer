@@ -35,14 +35,14 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1FastJet_AK4PFchs.txt";
     std::string L2DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Relative_AK4PFchs.txt"; 
     std::string L3DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2L3Residual_AK4PFchs.txt";
+    std::string L2L3ResidualPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; //don't forget to put l2l3res for the analysis
     
     
     std::string L1RCcorrDATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
     std::string L1RCcorrMCPath = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1RC_AK4PFchs.txt";
 
     //uncertainty
-    unc = new JetCorrectionUncertainty("data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty("data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_Uncertainty_AK4PFchs.txt");
         
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
@@ -155,11 +155,13 @@ void analysisClass::Loop()
     PUvariable->Branch("Generatorweight", &genweight, "genweight/D");
     PUvariable->Branch("TrueInteractionall", &trueInteractionall, "trueInteractionall/F");    
      
+     
+    TH2F *DeltaPhiAlpha = new TH2F("DeltaPhi_vs_alpha", "DeltaPhi_vs_alpha", 50, 0, 1. ,50, 0, 4  ) ;
       
     TH1F *SumWeight  = new TH1F("h_sumW", "h_sumW", 1, -0.5, 5.5) ;    
     SumWeight->Sumw2();
     TParameter<float> *totalluminosityP = new  TParameter<float>("totallumi", 0.);
-    float storelumi = 0.;
+    float storelumi = -15;
     float totalluminosity = 0.; 
    int nselectedevent = 0;
    /////////initialize variables
@@ -349,7 +351,7 @@ void analysisClass::Loop()
        {	 
 	  
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[ijet])) < getPreCutValue1("jetFidRegion")
-	    && idTAK4->at(sortedJetIdx[ijet]) == getPreCutValue1("tightJetID")
+	    && idLAK4->at(sortedJetIdx[ijet]) == getPreCutValue1("tightJetID")
 	    && (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) > getPreCutValue1("ptCut"))
 	   {
 	     Nak4 += 1;
@@ -366,7 +368,7 @@ void analysisClass::Loop()
 
      
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[0])) < getPreCutValue1("jetFidRegion") 
-	    && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) > getPreCutValue1("pt0Cut"))
+	    && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) > getPreCutValue1("pt0Cut") && idLAK4->at(sortedJetIdx[0]) == getPreCutValue1("tightJetID"))
 	   {
 	     
 		 //cout << "filling ak4j1 and ak4j2" << endl;
@@ -376,7 +378,7 @@ void analysisClass::Loop()
 				     ,jetPhiAK4->at(sortedJetIdx[0])
 				     , (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetMassAK4->at(sortedJetIdx[0]));
 		if(no_jets_ak4-nfakejet >=2 && fabs(jetEtaAK4->at(sortedJetIdx[1])) < getPreCutValue1("jetFidRegion") 
-		&& (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) > getPreCutValue1("pt1Cut"))
+		&& (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) > getPreCutValue1("pt1Cut") && idLAK4->at(sortedJetIdx[1]) == getPreCutValue1("tightJetID"))
 	       {
 		      ak4j2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) *jetPtAK4->at(sortedJetIdx[1])
 				     ,jetEtaAK4->at(sortedJetIdx[1])
@@ -468,16 +470,17 @@ void analysisClass::Loop()
   double Rmpf = -999. ;
   double Rmpfraw = -999. ;
 
-  Rbal = (ak4j1.Pt()/gamma1smear.Pt());
-  double deltPHIgj = gamma1smear.DeltaPhi(ak4j1);
-  double deltaphiPhomet = (gamma1smear.Phi()- metPhi);
+  Rbal = (ak4j1.Pt()/gamma1.Pt());
+  double deltPHIgj = gamma1.DeltaPhi(ak4j1);
+  double deltaphiPhomet = (gamma1.Phi()- metPhi);
 
-  Rmpf = 1. + (MetTypeI.Px()*gamma1smear.Px()+MetTypeI.Py()*gamma1smear.Py())/std::pow(gamma1smear.Pt(),2);
-  Rmpfraw = 1. + metPt*gamma1smear.Pt()*cos(deltaphiPhomet)/std::pow(gamma1smear.Pt(),2);
+  Rmpf = 1. + (MetTypeI.Px()*gamma1.Px()+MetTypeI.Py()*gamma1.Py())/std::pow(gamma1.Pt(),2);
+  Rmpfraw = 1. + metPt*gamma1.Pt()*cos(deltaphiPhomet)/std::pow(gamma1.Pt(),2);
   double alpha = -999. ;
   
-  alpha = (ak4j2.Pt()/gamma1smear.Pt());
+  alpha = (ak4j2.Pt()/gamma1.Pt());
 
+ DeltaPhiAlpha->Fill(alpha,deltPHIgj);
 
      if(deltPHIgj>=2.8 && alpha<0.3)
      {
@@ -493,7 +496,7 @@ void analysisClass::Loop()
      
      
       //== Fill Variables ==
-     if(ak4j1.Pt()>0 && idTAK4->at(sortedJetIdx[0] == 1)) 
+     if(ak4j1.Pt()>0 && idLAK4->at(sortedJetIdx[0] == 1)) 
     {
      nselectedevent++;
      
@@ -517,10 +520,10 @@ void analysisClass::Loop()
      fillVariableWithValue( "PassJSON", passJSON (runNo, lumi, isData));
      fillVariableWithValue("rho",rho);
      
-     fillVariableWithValue("Pt_photon", gamma1smear.Pt());
-     fillVariableWithValue("Eta_photon", gamma1smear.Eta());
-     fillVariableWithValue("Phi_photon", gamma1smear.Phi());
-     fillVariableWithValue("Energy_photon", gamma1smear.Energy());
+     fillVariableWithValue("Pt_photon", gamma1.Pt());
+     fillVariableWithValue("Eta_photon", gamma1.Eta());
+     fillVariableWithValue("Phi_photon", gamma1.Phi());
+     fillVariableWithValue("Energy_photon", gamma1.Energy());
      fillVariableWithValue("Rbalancing", Rbal);
      fillVariableWithValue("RMPF", Rmpf);
      fillVariableWithValue("RMPFRAW", Rmpfraw);
@@ -558,7 +561,7 @@ void analysisClass::Loop()
      {
        //cout << "AK4jets.size() " <<  AK4jets.size() << endl;
        //cout << "IdTight_j1 : " << idTAK4->at(sortedJetIdx[0]) << endl;
-       fillVariableWithValue( "IdTight_j1",idTAK4->at(sortedJetIdx[0]));
+       fillVariableWithValue( "IdTight_j1",idLAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "pTAK4_j1", AK4jets[0].Pt());
        fillVariableWithValue( "etaAK4_j1", AK4jets[0].Eta());
        fillVariableWithValue( "phiAK4_j1", AK4jets[0].Phi());
@@ -589,7 +592,7 @@ void analysisClass::Loop()
      
      if( AK4jets.size() >=2){
 
-       fillVariableWithValue( "IdTight_j2",idTAK4->at(sortedJetIdx[1]));
+       fillVariableWithValue( "IdTight_j2",idLAK4->at(sortedJetIdx[1]));
        fillVariableWithValue( "pTAK4_j2", AK4jets[1].Pt() );
        fillVariableWithValue( "etaAK4_j2", AK4jets[1].Eta());
        fillVariableWithValue( "phiAK4_j2", AK4jets[1].Phi());
@@ -628,6 +631,9 @@ void analysisClass::Loop()
        fillVariableWithValue("trueInteraction",999);     
 
      fillVariableWithValue("MET",MetTypeI.Et());
+     fillVariableWithValue("MET_Pt",MetTypeI.Pt());
+     fillVariableWithValue("MET_Eta",MetTypeI.Eta());
+     fillVariableWithValue("MET_Phi",MetTypeI.Phi());
      fillVariableWithValue("METRAW",metEnergy);
      //double METoverHTAK4=double(met/htAK4);
      double METoverHTAK4=double(MetTypeI.Et()/HTak4);
@@ -696,6 +702,7 @@ void analysisClass::Loop()
    SumWeight->Write();
    totalluminosityP->Write();
    PUvariable->Write();
+   DeltaPhiAlpha->Write();
    std::cout<<" nb of selected event " << nselectedevent<<std::endl;
    std::cout << "analysisClass::Loop() ends" <<std::endl; 
    
