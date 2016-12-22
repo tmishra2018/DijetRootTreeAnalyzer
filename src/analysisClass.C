@@ -1,1 +1,1 @@
-analysisClass_GammaplusJet_fakejethandle.C
+analysisClass_GammaplusJet_fakejethandle_newSmearing.C

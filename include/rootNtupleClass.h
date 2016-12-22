@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Nov 28 10:52:45 2016 by ROOT version 6.06/01
+// Sun Dec 18 12:59:54 2016 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -17,6 +17,7 @@ using namespace std;
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
+#include "vector"
 #include "vector"
 #include "vector"
 #include "vector"
@@ -44,6 +45,14 @@ public :
    const Int_t kMaxmetPhipuppi = 1;
    const Int_t kMaxmetSig = 1;
    const Int_t kMaxmetcorrected = 1;
+   const Int_t kMaxmetEnergyGen = 1;
+   const Int_t kMaxmetPtGen = 1;
+   const Int_t kMaxmetEtaGen = 1;
+   const Int_t kMaxmetPhiGen = 1;
+   const Int_t kMaxmetEnergypuppiGen = 1;
+   const Int_t kMaxmetPtpuppiGen = 1;
+   const Int_t kMaxmetEtapuppiGen = 1;
+   const Int_t kMaxmetPhipuppiGen = 1;
    const Int_t kMaxnJetsAK4 = 1;
    const Int_t kMaxnJetsPUPPI = 1;
    const Int_t kMaxhtAK4 = 1;
@@ -53,6 +62,7 @@ public :
    const Int_t kMaxnPhotonsLoose = 1;
    const Int_t kMaxnPhotonsMedium = 1;
    const Int_t kMaxnPhotonsTight = 1;
+   const Int_t kMaxnMuonsLoose = 1;
    const Int_t kMaxptHat = 1;
    const Int_t kMaxprocessID = 1;
    const Int_t kMaxweight = 1;
@@ -77,6 +87,14 @@ public :
    Float_t         metPhiPUPPI;
    Float_t         metSig;
    Float_t         metTypeI;
+   Float_t         metEnergyGen;
+   Float_t         metPtGen;
+   Float_t         metEtaGen;
+   Float_t         metPhiGen;
+   Float_t         metEnergyPUPPIGen;
+   Float_t         metPtPUPPIGen;
+   Float_t         metEtaPUPPIGen;
+   Float_t         metPhiPUPPIGen;
    vector<float>   *gen_eta;
    vector<float>   *gen_phi;
    vector<float>   *gen_p;
@@ -114,15 +132,34 @@ public :
    vector<float>   *PhotonLooseEnergy;
    vector<float>   *PhotonsmearEnergy;
    vector<float>   *PhotonSCEnergy;
+   vector<double>  *PhotonEcorrBump;
    vector<float>   *Photonfull5x5SigmaIEtaIEtaMapToken;
    vector<float>   *PhotonphoChargedIsolationToken;
    vector<float>   *PhotonphoNeutralHadronIsolationToken;
    vector<float>   *PhotonphoPhotonIsolationToken;
    vector<bool>    *HaspixelSeed;
+   vector<bool>    *ElectronVeto;
    vector<float>   *hadTowOverEm;
    vector<bool>    *isPhotonLoose;
    vector<bool>    *isPhotonMedium;
    vector<bool>    *isPhotonTight;
+   vector<float>   *electronPt;
+   vector<float>   *electronEta;
+   vector<float>   *electronPhi;
+   vector<float>   *electronEnergy;
+   vector<float>   *electronID;
+   vector<float>   *electronISO;
+   vector<float>   *electronPtsmeared;
+   vector<float>   *electronEtasmeared;
+   vector<float>   *electronPhismeared;
+   vector<float>   *electronEnergysmeared;
+   vector<float>   *electronIDsmeared;
+   vector<float>   *electronISOsmeared;
+   vector<float>   *muonPt;
+   vector<float>   *muonEta;
+   vector<float>   *muonPhi;
+   vector<float>   *muonEnergy;
+   Int_t           nMuonsLoose;
    vector<float>   *jetPtAK4;
    vector<float>   *jetJecAK4;
    vector<float>   *jetEtaAK4;
@@ -216,7 +253,7 @@ public :
    vector<int>     *neMultAK8;
    vector<int>     *phoMultAK8;
    vector<bool>    *triggerResult;
-   vector<float>   *triggerPrescale;
+   vector<int>     *triggerPrescale;
    vector<string>  *triggerName;
    vector<float>   *npu;
    vector<int>     *PileupInteractions;
@@ -266,6 +303,14 @@ public :
    TBranch        *b_metPhipuppi_;   //!
    TBranch        *b_metSig_;   //!
    TBranch        *b_metcorrected_;   //!
+   TBranch        *b_metEnergyGen_;   //!
+   TBranch        *b_metPtGen_;   //!
+   TBranch        *b_metEtaGen_;   //!
+   TBranch        *b_metPhiGen_;   //!
+   TBranch        *b_metEnergypuppiGen_;   //!
+   TBranch        *b_metPtpuppiGen_;   //!
+   TBranch        *b_metEtapuppiGen_;   //!
+   TBranch        *b_metPhipuppiGen_;   //!
    TBranch        *b_gen_eta;   //!
    TBranch        *b_gen_phi;   //!
    TBranch        *b_gen_p;   //!
@@ -303,15 +348,34 @@ public :
    TBranch        *b_PhotonLooseEnergy;   //!
    TBranch        *b_PhotonsmearEnergy;   //!
    TBranch        *b_PhotonSCEnergy;   //!
+   TBranch        *b_PhotonEcorrBump;   //!
    TBranch        *b_Photonfull5x5SigmaIEtaIEtaMapToken;   //!
    TBranch        *b_PhotonphoChargedIsolationToken;   //!
    TBranch        *b_PhotonphoNeutralHadronIsolationToken;   //!
    TBranch        *b_PhotonphoPhotonIsolationToken;   //!
    TBranch        *b_HaspixelSeed;   //!
+   TBranch        *b_ElectronVeto;   //!
    TBranch        *b_hadTowOverEm;   //!
    TBranch        *b_isPhotonLoose;   //!
    TBranch        *b_isPhotonMedium;   //!
    TBranch        *b_isPhotonTight;   //!
+   TBranch        *b_electronPt;   //!
+   TBranch        *b_electronEta;   //!
+   TBranch        *b_electronPhi;   //!
+   TBranch        *b_electronEnergy;   //!
+   TBranch        *b_electronID;   //!
+   TBranch        *b_electronISO;   //!
+   TBranch        *b_electronPtsmeared;   //!
+   TBranch        *b_electronEtasmeared;   //!
+   TBranch        *b_electronPhismeared;   //!
+   TBranch        *b_electronEnergysmeared;   //!
+   TBranch        *b_electronIDsmeared;   //!
+   TBranch        *b_electronISOsmeared;   //!
+   TBranch        *b_muonPt;   //!
+   TBranch        *b_muonEta;   //!
+   TBranch        *b_muonPhi;   //!
+   TBranch        *b_muonEnergy;   //!
+   TBranch        *b_nMuonsLoose_;   //!
    TBranch        *b_jetPtAK4;   //!
    TBranch        *b_jetJecAK4;   //!
    TBranch        *b_jetEtaAK4;   //!
@@ -472,7 +536,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("../../DijetRootTreeMaker/prod/mylocaltest_Run2016B_10.root/dijets/events");
+      chain->Add("root://eoscms//eos/cms/store/group/phys_jetmet/hlattaud/GammaJet/GJet-ReReco-Run2016C/SinglePhoton/crab_GJet-ReReco-Run2016C_Newsmearing/161215_135352/0000/mylocaltest_Run2016B_10_1.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -544,15 +608,33 @@ void rootNtupleClass::Init(TTree *tree)
    PhotonLooseEnergy = 0;
    PhotonsmearEnergy = 0;
    PhotonSCEnergy = 0;
+   PhotonEcorrBump = 0;
    Photonfull5x5SigmaIEtaIEtaMapToken = 0;
    PhotonphoChargedIsolationToken = 0;
    PhotonphoNeutralHadronIsolationToken = 0;
    PhotonphoPhotonIsolationToken = 0;
    HaspixelSeed = 0;
+   ElectronVeto = 0;
    hadTowOverEm = 0;
    isPhotonLoose = 0;
    isPhotonMedium = 0;
    isPhotonTight = 0;
+   electronPt = 0;
+   electronEta = 0;
+   electronPhi = 0;
+   electronEnergy = 0;
+   electronID = 0;
+   electronISO = 0;
+   electronPtsmeared = 0;
+   electronEtasmeared = 0;
+   electronPhismeared = 0;
+   electronEnergysmeared = 0;
+   electronIDsmeared = 0;
+   electronISOsmeared = 0;
+   muonPt = 0;
+   muonEta = 0;
+   muonPhi = 0;
+   muonEnergy = 0;
    jetPtAK4 = 0;
    jetJecAK4 = 0;
    jetEtaAK4 = 0;
@@ -694,6 +776,14 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("metPhiPUPPI", &metPhiPUPPI, &b_metPhipuppi_);
    fChain->SetBranchAddress("metSig", &metSig, &b_metSig_);
    fChain->SetBranchAddress("metTypeI", &metTypeI, &b_metcorrected_);
+   fChain->SetBranchAddress("metEnergyGen", &metEnergyGen, &b_metEnergyGen_);
+   fChain->SetBranchAddress("metPtGen", &metPtGen, &b_metPtGen_);
+   fChain->SetBranchAddress("metEtaGen", &metEtaGen, &b_metEtaGen_);
+   fChain->SetBranchAddress("metPhiGen", &metPhiGen, &b_metPhiGen_);
+   fChain->SetBranchAddress("metEnergyPUPPIGen", &metEnergyPUPPIGen, &b_metEnergypuppiGen_);
+   fChain->SetBranchAddress("metPtPUPPIGen", &metPtPUPPIGen, &b_metPtpuppiGen_);
+   fChain->SetBranchAddress("metEtaPUPPIGen", &metEtaPUPPIGen, &b_metEtapuppiGen_);
+   fChain->SetBranchAddress("metPhiPUPPIGen", &metPhiPUPPIGen, &b_metPhipuppiGen_);
    fChain->SetBranchAddress("gen_eta", &gen_eta, &b_gen_eta);
    fChain->SetBranchAddress("gen_phi", &gen_phi, &b_gen_phi);
    fChain->SetBranchAddress("gen_p", &gen_p, &b_gen_p);
@@ -731,15 +821,34 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("PhotonLooseEnergy", &PhotonLooseEnergy, &b_PhotonLooseEnergy);
    fChain->SetBranchAddress("PhotonsmearEnergy", &PhotonsmearEnergy, &b_PhotonsmearEnergy);
    fChain->SetBranchAddress("PhotonSCEnergy", &PhotonSCEnergy, &b_PhotonSCEnergy);
+   fChain->SetBranchAddress("PhotonEcorrBump", &PhotonEcorrBump, &b_PhotonEcorrBump);
    fChain->SetBranchAddress("Photonfull5x5SigmaIEtaIEtaMapToken", &Photonfull5x5SigmaIEtaIEtaMapToken, &b_Photonfull5x5SigmaIEtaIEtaMapToken);
    fChain->SetBranchAddress("PhotonphoChargedIsolationToken", &PhotonphoChargedIsolationToken, &b_PhotonphoChargedIsolationToken);
    fChain->SetBranchAddress("PhotonphoNeutralHadronIsolationToken", &PhotonphoNeutralHadronIsolationToken, &b_PhotonphoNeutralHadronIsolationToken);
    fChain->SetBranchAddress("PhotonphoPhotonIsolationToken", &PhotonphoPhotonIsolationToken, &b_PhotonphoPhotonIsolationToken);
    fChain->SetBranchAddress("HaspixelSeed", &HaspixelSeed, &b_HaspixelSeed);
+   fChain->SetBranchAddress("ElectronVeto", &ElectronVeto, &b_ElectronVeto);
    fChain->SetBranchAddress("hadTowOverEm", &hadTowOverEm, &b_hadTowOverEm);
    fChain->SetBranchAddress("isPhotonLoose", &isPhotonLoose, &b_isPhotonLoose);
    fChain->SetBranchAddress("isPhotonMedium", &isPhotonMedium, &b_isPhotonMedium);
    fChain->SetBranchAddress("isPhotonTight", &isPhotonTight, &b_isPhotonTight);
+   fChain->SetBranchAddress("electronPt", &electronPt, &b_electronPt);
+   fChain->SetBranchAddress("electronEta", &electronEta, &b_electronEta);
+   fChain->SetBranchAddress("electronPhi", &electronPhi, &b_electronPhi);
+   fChain->SetBranchAddress("electronEnergy", &electronEnergy, &b_electronEnergy);
+   fChain->SetBranchAddress("electronID", &electronID, &b_electronID);
+   fChain->SetBranchAddress("electronISO", &electronISO, &b_electronISO);
+   fChain->SetBranchAddress("electronPtsmeared", &electronPtsmeared, &b_electronPtsmeared);
+   fChain->SetBranchAddress("electronEtasmeared", &electronEtasmeared, &b_electronEtasmeared);
+   fChain->SetBranchAddress("electronPhismeared", &electronPhismeared, &b_electronPhismeared);
+   fChain->SetBranchAddress("electronEnergysmeared", &electronEnergysmeared, &b_electronEnergysmeared);
+   fChain->SetBranchAddress("electronIDsmeared", &electronIDsmeared, &b_electronIDsmeared);
+   fChain->SetBranchAddress("electronISOsmeared", &electronISOsmeared, &b_electronISOsmeared);
+   fChain->SetBranchAddress("muonPt", &muonPt, &b_muonPt);
+   fChain->SetBranchAddress("muonEta", &muonEta, &b_muonEta);
+   fChain->SetBranchAddress("muonPhi", &muonPhi, &b_muonPhi);
+   fChain->SetBranchAddress("muonEnergy", &muonEnergy, &b_muonEnergy);
+   fChain->SetBranchAddress("nMuonsLoose", &nMuonsLoose, &b_nMuonsLoose_);
    fChain->SetBranchAddress("jetPtAK4", &jetPtAK4, &b_jetPtAK4);
    fChain->SetBranchAddress("jetJecAK4", &jetJecAK4, &b_jetJecAK4);
    fChain->SetBranchAddress("jetEtaAK4", &jetEtaAK4, &b_jetEtaAK4);
