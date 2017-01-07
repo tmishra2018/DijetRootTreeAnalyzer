@@ -8,22 +8,25 @@
 #include <TLorentzVector.h>
 #include <TVector2.h>
 #include <TVector3.h>
+#define RESET_COLOR "\033[m"
+#define MAKE_RED "\033[31m"
+#define MAKE_BLUE "\033[34m"
 
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile)
 {
   std::cout << "analysisClass::analysisClass(): begins " << std::endl;
 
-  std::string jetAlgo = getPreCutString1("jetAlgo");
-  double rParam = getPreCutValue1("DeltaR");
+ // std::string jetAlgo = getPreCutString1("jetAlgo");
+ // double rParam = getPreCutValue1("DeltaR");
 
-  if( jetAlgo == "AntiKt" )
+/*  if( jetAlgo == "AntiKt" )
     fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::antikt_algorithm, rParam) );
   else if( jetAlgo == "Kt" )
     fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::kt_algorithm, rParam) );
   else 
     fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::cambridge_algorithm, rParam) );
-
+*/
   // For JECs
   if( int(getPreCutValue1("useJECs"))==1 )
   {
@@ -119,14 +122,24 @@ void analysisClass::Loop()
     PUvariable->Branch("TrueInteractionall", &trueInteractionall, "trueInteractionall/F");    
      
      
-    TH2F *DeltaPhiAlpha = new TH2F("DeltaPhi_vs_alpha", "DeltaPhi_vs_alpha", 50, 0, 1. ,50, 0, 4  ) ;
+    TH2F *DeltaPhiAlpha = new TH2F("DeltaPhi_vs_alpha", "DeltaPhi_vs_alpha", 50, 0, 1. ,50, 0, 5  ) ;
       
     TH1F *SumWeight  = new TH1F("h_sumW", "h_sumW", 1, -0.5, 5.5) ;    
     SumWeight->Sumw2();
     TParameter<float> *totalluminosityP = new  TParameter<float>("totallumi", 0.);
     float storelumi = -15;
     float totalluminosity = 0.; 
-   int nselectedevent = 0;
+    int nselectedevent = 0;
+    int ncut_photon = 0;
+    int ncut_photonpt = 0;
+    int ncut_nophoton = 0;
+    int ncut_deltaphi = 0;
+    int ncut_alpha = 0;
+    int ncut_pixelseed = 0;
+    int ncut_muons = 0;
+    int ncut_electron = 0;
+    int ncut_jet = 0 ;
+    int ncut_ptjet = 0;
    /////////initialize variables
 
    Long64_t nentries = fChain->GetEntriesFast();
@@ -173,23 +186,50 @@ void analysisClass::Loop()
      {
           SumWeight->Fill(0.,1);
           weight = 1 ;  
-          trueInteractionall = 999;   
+          trueInteractionall = -999;   
           PUvariable->Fill();
      }
     
     
      
-     
-     
-     if(nPhotonTight==1 && nPhoton == 1  && !HaspixelSeed->at(0) && PhotonLoosePt->at(0)>40.  && nMuonsLoose == -999) 
-{
+     if(nPhoton > 0){
+          if(nPhotonTight == 1 ){
+             size_t nb_photon =  PhotonLoosePt->size();
+             int indexgoodpho = 0  ; 
+             for(size_t pho = 0 ; pho <  nb_photon ; pho ++)
+          {
+              if(isPhotonTight->at(pho)){
+               indexgoodpho = pho ;
+               break ; 
+              }
+          }
+          
+          
+               if(!HaspixelSeed->at(indexgoodpho)){
+                     if(PhotonLoosePt->at(indexgoodpho)>=40.){
+                        bool keepmuon = true ;
+                        if(nMuonsLoose != -999){ 
+                        size_t nb_muons = muonPt->size();
+                       
+                        for(size_t mu = 0 ; mu < nb_muons ; mu++)
+                        {
+                          if(muonPt->at(mu) > 5.){
+                           keepmuon = false ;
+                           break;
+                          }
+                        }
+                        }
+                        
+                          if(nMuonsLoose == -999 || keepmuon ){
+
+
      size_t no_jets_ak4=jetPtAK4->size();
     
      
      TLorentzVector gamma1      ;
      TLorentzVector gamma1smear ;
-       gamma1.SetPtEtaPhiE(PhotonLoosePt->at(0),PhotonLooseEta->at(0),PhotonLoosePhi->at(0),PhotonLooseEnergy->at(0));
-       gamma1smear.SetPtEtaPhiE(PhotonsmearPt->at(0),PhotonsmearEta->at(0),PhotonsmearPhi->at(0),PhotonsmearEnergy->at(0)); 
+       gamma1.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
+       gamma1smear.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
        
        
        
@@ -203,7 +243,11 @@ void analysisClass::Loop()
       }
     }
     
-     if(!keepEvent) continue;
+     if(!keepEvent){
+      ncut_electron++;
+      continue;
+      
+      }
      vector<TLorentzVector> AK4jets;
      TLorentzVector ak4j1, ak4j2;
      
@@ -332,7 +376,7 @@ void analysisClass::Loop()
 	  
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[ijet])) < getPreCutValue1("jetFidRegion")
 	    && idLAK4->at(sortedJetIdx[ijet]) == getPreCutValue1("tightJetID")
-	    && (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) > getPreCutValue1("ptCut"))
+	    && (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) >= getPreCutValue1("ptCut"))
 	   {
 	     Nak4 += 1;
 	     HTak4 += (jecFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]);
@@ -348,7 +392,7 @@ void analysisClass::Loop()
 
      
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[0])) < getPreCutValue1("jetFidRegion") 
-	    && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) > getPreCutValue1("pt0Cut") && idLAK4->at(sortedJetIdx[0]) == getPreCutValue1("tightJetID"))
+	    && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= getPreCutValue1("pt0Cut") && idLAK4->at(sortedJetIdx[0]) == getPreCutValue1("tightJetID") && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold") )
 	   {
 	     
 		 //cout << "filling ak4j1 and ak4j2" << endl;
@@ -358,16 +402,20 @@ void analysisClass::Loop()
 				     ,jetPhiAK4->at(sortedJetIdx[0])
 				     , (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetMassAK4->at(sortedJetIdx[0]));
 		if(no_jets_ak4-nfakejet >=2 && fabs(jetEtaAK4->at(sortedJetIdx[1])) < getPreCutValue1("jetFidRegion") 
-		&& (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) > getPreCutValue1("pt1Cut") && idLAK4->at(sortedJetIdx[1]) == getPreCutValue1("tightJetID"))
+		/*&& (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) >= getPreCutValue1("pt1Cut")*/ && idLAK4->at(sortedJetIdx[1]) == getPreCutValue1("tightJetID"))
 	       {
 		      ak4j2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) *jetPtAK4->at(sortedJetIdx[1])
 				     ,jetEtaAK4->at(sortedJetIdx[1])
 				     ,jetPhiAK4->at(sortedJetIdx[1])
 				     , (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1])) *jetMassAK4->at(sortedJetIdx[1]));
-	       }
+	       }else{ak4j2.SetPtEtaPhiM(0,0,0,0);}
+	   }else{
+	   ncut_ptjet++;
+	   continue;
 	   }
    
-     }
+     }else{ncut_jet++;
+     continue;}
 
 
  //----------------------TYPE I MET computation------------------
@@ -451,7 +499,7 @@ void analysisClass::Loop()
   double Rmpfraw = -999. ;
 
   Rbal = (ak4j1.Pt()/gamma1.Pt());
-  double deltPHIgj = gamma1.DeltaPhi(ak4j1);
+  double deltPHIgj = fabs(gamma1.DeltaPhi(ak4j1));
   double deltaphiPhomet = (gamma1.Phi()- metPhi);
 
   Rmpf = 1. + (MetTypeI.Px()*gamma1.Px()+MetTypeI.Py()*gamma1.Py())/std::pow(gamma1.Pt(),2);
@@ -462,8 +510,9 @@ void analysisClass::Loop()
 
  DeltaPhiAlpha->Fill(alpha,deltPHIgj);
 
-     if(deltPHIgj>=2.8 && alpha<0.3)
+     if(deltPHIgj>=2.8 )
      {
+     if( ak4j2.Pt() == 0 ||(ak4j2.Pt() < 10. || alpha < 0.3 ) ){
      if( ak4j1.Pt()>0   )
      {
        
@@ -509,15 +558,15 @@ void analysisClass::Loop()
      fillVariableWithValue("RMPFRAW", Rmpfraw);
      fillVariableWithValue("alpha", alpha);
      fillVariableWithValue("deltaPHIgj", deltPHIgj);
-     fillVariableWithValue("sigmaietaieta_photon", Photonfull5x5SigmaIEtaIEtaMapToken->at(0));
-     fillVariableWithValue("CHiso_photon", PhotonphoChargedIsolationToken->at(0));
-     fillVariableWithValue("NHiso_photon", PhotonphoNeutralHadronIsolationToken->at(0));
-     fillVariableWithValue("Photoniso_photon", PhotonphoPhotonIsolationToken->at(0));
-     fillVariableWithValue("Pt_photonSC",PhotonSCPt->at(0));
-     fillVariableWithValue("Eta_photonSC",PhotonSCEta->at(0));
-     fillVariableWithValue("Phi_photonSC",PhotonSCPhi->at(0));
-     fillVariableWithValue("Energy_photonSC",PhotonSCEnergy->at(0));
-     fillVariableWithValue("hadTowOverEm",hadTowOverEm->at(0));
+     fillVariableWithValue("sigmaietaieta_photon", Photonfull5x5SigmaIEtaIEtaMapToken->at(indexgoodpho));
+     fillVariableWithValue("CHiso_photon", PhotonphoChargedIsolationToken->at(indexgoodpho));
+     fillVariableWithValue("NHiso_photon", PhotonphoNeutralHadronIsolationToken->at(indexgoodpho));
+     fillVariableWithValue("Photoniso_photon", PhotonphoPhotonIsolationToken->at(indexgoodpho));
+     fillVariableWithValue("Pt_photonSC",PhotonSCPt->at(indexgoodpho));
+     fillVariableWithValue("Eta_photonSC",PhotonSCEta->at(indexgoodpho));
+     fillVariableWithValue("Phi_photonSC",PhotonSCPhi->at(indexgoodpho));
+     fillVariableWithValue("Energy_photonSC",PhotonSCEnergy->at(indexgoodpho));
+     fillVariableWithValue("hadTowOverEm",hadTowOverEm->at(indexgoodpho));
      if(isData)
        {
           fillVariableWithValue("weight", 1);
@@ -526,10 +575,10 @@ void analysisClass::Loop()
         }
        if(!isData)
        {
-         fillVariableWithValue("Pt_photonGEN",photonPtGen->at(0));
-	 fillVariableWithValue("Eta_photonGEN",photonEtaGen->at(0));
-	 fillVariableWithValue("Phi_photonGEN",photonPhiGen->at(0));
-	 fillVariableWithValue("Energy_photonGEN",photonEnergyGen->at(0));
+         fillVariableWithValue("Pt_photonGEN",photonPtGen->at(indexgoodpho));
+	 fillVariableWithValue("Eta_photonGEN",photonEtaGen->at(indexgoodpho));
+	 fillVariableWithValue("Phi_photonGEN",photonPhiGen->at(indexgoodpho));
+	 fillVariableWithValue("Energy_photonGEN",photonEnergyGen->at(indexgoodpho));
 	 
 	 fillVariableWithValue("weight",weight);
 	// SumWeight->Fill(0.,weight);
@@ -617,10 +666,10 @@ void analysisClass::Loop()
      fillVariableWithValue("METRAW",metEnergy);
      if(!isData && metEnergyGen)
      {
-       fillVariableWithValue("METGEN",metEnergyGen);
-       fillVariableWithValue("METGEN_Pt",metPtGen);
-       fillVariableWithValue("METGEN_Eta",metEtaGen);
-       fillVariableWithValue("METGEN_Phi",metPhiGen);
+       fillVariableWithValue("METGEN",metEnergyPUPPIGen);
+       fillVariableWithValue("METGEN_Pt",metPtPUPPIGen);
+       fillVariableWithValue("METGEN_Eta",metEtaPUPPIGen);
+       fillVariableWithValue("METGEN_Phi",metPhiPUPPIGen);
      }
      
      //double METoverHTAK4=double(met/htAK4);
@@ -677,20 +726,55 @@ void analysisClass::Loop()
 	 fillReducedSkimTree();
 
        }
-
-}//end dphi cut
-}//end of pt j1 cut
+}
+}else{ncut_alpha++;
+continue;}
+}else{ncut_deltaphi++;
+continue;}//end dphi cut
+//end of pt j1 cut
      ////////////////////// User's code ends here ///////////////////////
-
-}//end photon condition
- 
+     
+     
+}else{ncut_muons++;
+continue;}
+}else{ncut_photonpt++;
+continue;}
+}else{ncut_pixelseed++;
+continue;}
+}else{ncut_photon++;
+ continue;}
+//end photon condition
+}else{
+   ncut_nophoton++;
+   continue;
+}//no photon 
    } // End loop over events
+   
+   
    totalluminosityP->SetVal(totalluminosity);
   
    SumWeight->Write();
    totalluminosityP->Write();
    PUvariable->Write();
    DeltaPhiAlpha->Write();
+   
+    std::cout << std::endl;
+  std::cout << "Absolute efficiency : related to initial number of event =  " << nentries<< std::endl;
+  std::cout << "Efficiency for photon presence cut: " << MAKE_RED << (double) ncut_nophoton  / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for photon cut: " << MAKE_RED << (double) ncut_photon  / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for  pt photon cut: " << MAKE_RED << (double) ncut_photonpt  / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  
+
+  std::cout << "Efficiency for Δφ cut: " << MAKE_RED << (double) ncut_deltaphi / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for pixel seed veto cut: " << MAKE_RED << (double) ncut_pixelseed / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for muons cut: " << MAKE_RED << (double) ncut_muons / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for electrons cut: " << MAKE_RED << (double) ncut_electron / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for n jet cut: " << MAKE_RED << (double) ncut_jet / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for Pt(j1) cut: " << MAKE_RED << (double)  ncut_ptjet / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for α cut: " << MAKE_RED << (double) ncut_alpha / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Selection efficiency: " << MAKE_RED << (double) nselectedevent / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << std::endl;
+   
    std::cout<<" nb of selected event " << nselectedevent<<std::endl;
    std::cout << "analysisClass::Loop() ends" <<std::endl; 
    
