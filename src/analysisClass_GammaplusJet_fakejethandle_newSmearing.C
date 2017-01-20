@@ -208,7 +208,7 @@ void analysisClass::Loop()
                if(!HaspixelSeed->at(indexgoodpho)){
                      if(PhotonLoosePt->at(indexgoodpho)>=40.){
                         bool keepmuon = true ;
-                        if(nMuonsLoose != -999){ 
+                        if(nMuonsLoose != 0){ 
                         size_t nb_muons = muonPt->size();
                        
                         for(size_t mu = 0 ; mu < nb_muons ; mu++)
@@ -220,7 +220,7 @@ void analysisClass::Loop()
                         }
                         }
                         
-                          if(nMuonsLoose == -999 || keepmuon ){
+                          if(nMuonsLoose == 0 || keepmuon ){
 
 
      size_t no_jets_ak4=jetPtAK4->size();
@@ -762,17 +762,30 @@ continue;}
   std::cout << "Absolute efficiency : related to initial number of event =  " << nentries<< std::endl;
   std::cout << "Efficiency for photon presence cut: " << MAKE_RED << (double) ncut_nophoton  / nentries * 100 << "%" << RESET_COLOR << std::endl;
   std::cout << "Efficiency for photon cut: " << MAKE_RED << (double) ncut_photon  / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for pixel seed veto cut: " << MAKE_RED << (double) ncut_pixelseed / nentries * 100 << "%" << RESET_COLOR << std::endl;    
   std::cout << "Efficiency for  pt photon cut: " << MAKE_RED << (double) ncut_photonpt  / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  
-
+  std::cout << "Efficiency for muons cut: " << MAKE_RED << (double) ncut_muons / nentries * 100 << "%" << RESET_COLOR << std::endl; 
+  std::cout << "Efficiency for electrons cut: " << MAKE_RED << (double) ncut_electron / nentries * 100 << "%" << RESET_COLOR << std::endl; 
+  std::cout << "Efficiency for n jet cut: " << MAKE_RED << (double) ncut_jet / nentries * 100 << "%" << RESET_COLOR << std::endl;  
+  std::cout << "Efficiency for Pt(j1) cut: " << MAKE_RED << (double)  ncut_ptjet / nentries * 100 << "%" << RESET_COLOR << std::endl;   
   std::cout << "Efficiency for Δφ cut: " << MAKE_RED << (double) ncut_deltaphi / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for pixel seed veto cut: " << MAKE_RED << (double) ncut_pixelseed / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for muons cut: " << MAKE_RED << (double) ncut_muons / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for electrons cut: " << MAKE_RED << (double) ncut_electron / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for n jet cut: " << MAKE_RED << (double) ncut_jet / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for Pt(j1) cut: " << MAKE_RED << (double)  ncut_ptjet / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for α cut: " << MAKE_RED << (double) ncut_alpha / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << "Efficiency for α cut: " << MAKE_RED << (double) ncut_alpha / nentries * 100 << "%" << RESET_COLOR << std::endl;  
   std::cout << "Selection efficiency: " << MAKE_RED << (double) nselectedevent / nentries * 100 << "%" << RESET_COLOR << std::endl;
+  std::cout << std::endl;
+  
+     std::cout << std::endl;
+  std::cout << "Absolute efficiency : related to initial number of event =  " << nentries<< std::endl;
+  std::cout << "Nevent after photon presence cut: " << MAKE_RED << nentries -  (double)  ncut_nophoton    << RESET_COLOR << std::endl;
+  std::cout << "Nevent after photon cut: " << MAKE_RED <<  nentries - (double)  ncut_nophoton - (double) ncut_photon  << RESET_COLOR << std::endl;
+  std::cout << "Nevent after pixel seed veto cut: " << MAKE_RED <<  nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  << RESET_COLOR << std::endl;    
+  std::cout << "Nevent after  pt photon cut: " << MAKE_RED <<   nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt  << RESET_COLOR << std::endl;
+  std::cout << "Nevent after muons cut: " << MAKE_RED << nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons  << RESET_COLOR << std::endl; 
+  std::cout << "Nevent after electrons cut: " << MAKE_RED << nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron << RESET_COLOR << std::endl; 
+  std::cout << "Nevent after n jet cut: " << MAKE_RED <<nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet << RESET_COLOR << std::endl;  
+  std::cout << "Nevent after Pt(j1) cut: " << MAKE_RED << nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet<< RESET_COLOR << std::endl;   
+  std::cout << "Nevent after Δφ cut: " << MAKE_RED << nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet - (double) ncut_deltaphi  << RESET_COLOR << std::endl;
+  std::cout << "Nevent after α cut: " << MAKE_RED << nentries - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet - (double) ncut_deltaphi - (double) ncut_alpha  << RESET_COLOR << std::endl;  
+  std::cout << "Selection efficiency: " << MAKE_RED << (double) nselectedevent  << RESET_COLOR << std::endl;
   std::cout << std::endl;
    
    std::cout<<" nb of selected event " << nselectedevent<<std::endl;
