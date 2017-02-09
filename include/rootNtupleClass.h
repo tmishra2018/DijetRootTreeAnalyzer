@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sun Dec 18 12:59:54 2016 by ROOT version 6.06/01
+// Tue Jan 24 09:36:42 2017 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -45,6 +45,7 @@ public :
    const Int_t kMaxmetPhipuppi = 1;
    const Int_t kMaxmetSig = 1;
    const Int_t kMaxmetcorrected = 1;
+   const Int_t kMaxgoodPVtx = 1;
    const Int_t kMaxmetEnergyGen = 1;
    const Int_t kMaxmetPtGen = 1;
    const Int_t kMaxmetEtaGen = 1;
@@ -87,6 +88,7 @@ public :
    Float_t         metPhiPUPPI;
    Float_t         metSig;
    Float_t         metTypeI;
+   Int_t           goodPVtx;
    Float_t         metEnergyGen;
    Float_t         metPtGen;
    Float_t         metEtaGen;
@@ -253,7 +255,7 @@ public :
    vector<int>     *neMultAK8;
    vector<int>     *phoMultAK8;
    vector<bool>    *triggerResult;
-   vector<int>     *triggerPrescale;
+   vector<double>  *triggerPrescale;
    vector<string>  *triggerName;
    vector<float>   *npu;
    vector<int>     *PileupInteractions;
@@ -303,6 +305,7 @@ public :
    TBranch        *b_metPhipuppi_;   //!
    TBranch        *b_metSig_;   //!
    TBranch        *b_metcorrected_;   //!
+   TBranch        *b_goodPVtx_;   //!
    TBranch        *b_metEnergyGen_;   //!
    TBranch        *b_metPtGen_;   //!
    TBranch        *b_metEtaGen_;   //!
@@ -536,7 +539,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("root://eoscms//eos/cms/store/group/phys_jetmet/hlattaud/GammaJet/GJet-ReReco-Run2016C/SinglePhoton/crab_GJet-ReReco-Run2016C_Newsmearing/161215_135352/0000/mylocaltest_Run2016B_10_1.root/dijets/events");
+      chain->Add("/afs/cern.ch/user/h/hlattaud/private/tutorial/CMSSW_8_0_24_patch1/src/CMSDIJET/DijetRootTreeMaker/mylocaltest_Run2016B_10.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -776,6 +779,7 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("metPhiPUPPI", &metPhiPUPPI, &b_metPhipuppi_);
    fChain->SetBranchAddress("metSig", &metSig, &b_metSig_);
    fChain->SetBranchAddress("metTypeI", &metTypeI, &b_metcorrected_);
+   fChain->SetBranchAddress("goodPVtx", &goodPVtx, &b_goodPVtx_);
    fChain->SetBranchAddress("metEnergyGen", &metEnergyGen, &b_metEnergyGen_);
    fChain->SetBranchAddress("metPtGen", &metPtGen, &b_metPtGen_);
    fChain->SetBranchAddress("metEtaGen", &metEtaGen, &b_metEtaGen_);
