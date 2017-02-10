@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Jan 24 09:36:42 2017 by ROOT version 6.06/01
+// Thu Feb  9 15:22:37 2017 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -88,7 +88,7 @@ public :
    Float_t         metPhiPUPPI;
    Float_t         metSig;
    Float_t         metTypeI;
-   Int_t           goodPVtx;
+   Char_t          goodPVtx;
    Float_t         metEnergyGen;
    Float_t         metPtGen;
    Float_t         metEtaGen;

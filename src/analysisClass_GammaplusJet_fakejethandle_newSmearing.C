@@ -28,7 +28,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1FastJet_AK4PFchs.txt";
     std::string L2DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Relative_AK4PFchs.txt"; 
     std::string L3DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2L3Residual_AK4PFchs.txt"; 
+    std::string L2L3ResidualPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; 
     
     
     std::string L1RCcorrDATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
@@ -155,10 +155,10 @@ void analysisClass::Loop()
      ////////////////////// User's code starts here ///////////////////////
 
      ///Stuff to be done for every event
-      int idx_InTimeBX=-1;
+     int idx_InTimeBX=-1;
      for(size_t j=0; j<PileupOriginBX->size(); ++j)
        {
-	 //cout << PileupOriginBX->at(j) << endl;	 
+	// cout << PileupOriginBX->at(j) << endl;	 
 	 if(PileupOriginBX->at(j)==0)
 	   {
 	     idx_InTimeBX = j;
@@ -169,6 +169,7 @@ void analysisClass::Loop()
      if(idx_InTimeBX > -1 ) isData = 0;
      else isData = 1;
      
+     //isData = 1;
      
      if(!isData)
      {
@@ -184,7 +185,7 @@ void analysisClass::Loop()
           trueInteractionall = -999;   
           PUvariable->Fill();
      }
-    
+  //  cout<<"good vtx "<<goodPVtx<<endl;
     if(!goodPVtx){
        
        Vtxcut++;
@@ -203,7 +204,7 @@ void analysisClass::Loop()
                break ; 
               }
           }
-          
+       //   cout<<"idx photon "<<indexgoodpho<<endl;
           
                if(!HaspixelSeed->at(indexgoodpho)){
                      if(PhotonLoosePt->at(indexgoodpho)/*PhotonsmearPt->at(indexgoodpho)*/>= 40.){
@@ -322,7 +323,7 @@ void analysisClass::Loop()
 	         jecFactors.push_back(correction);
 	  //    }
 	  
-	  Tmpjet.SetPtEtaPhiM(jetPtAK4->at(j)/jetJecAK4->at(j)*correction, jetEtaAK4->at(j), jetPhiAK4->at(j), jetMassAK4->at(j));
+	  Tmpjet.SetPtEtaPhiM(jetPtAK4->at(j)/jetJecAK4->at(j)*correction, jetEtaAK4->at(j), jetPhiAK4->at(j), jetMassAK4->at(j)/jetJecAK4->at(j)*correction);
 	  
 	 sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j))*correction, j));
 	 if(/*std::hypot((jetEtaAK4->at(j)-gamma1.Eta()),(jetPhiAK4->at(j)-gamma1.Phi()))*/ gamma1.DeltaR(Tmpjet) < 0.4)
@@ -343,7 +344,7 @@ void analysisClass::Loop()
 
         }
         int size_true = sortedJets.size();
-     //   int size_Jec = jecFactors.size();
+       // int size_Jec = jecFactors.size();
      //   std::cout<<"size jet vector "<< size_true << "size JEC vector "<< size_Jec << std::endl;
         
        if(size_all - size_true > 1) std::cout<<"Warning : more than two jet removed because of photon misidentification"<<std::endl;
@@ -448,8 +449,8 @@ void analysisClass::Loop()
   TLorentzVector  jetRC,corrJet; 
   
   
-  for (Long64_t it=0; it< no_jets_ak4-nfakejet ; it++) {
-    if(fakejetIdx==it)continue;
+  for (Long64_t it=0; it< no_jets_ak4/*-nfakejet*/ ; it++) {
+  //  if(fakejetIdx==it)continue;
     
     
     double corrs = 1.;
@@ -459,7 +460,7 @@ void analysisClass::Loop()
       if(isData)
       {
       JetCorrectortypI->setJetEta(jetEtaAK4->at(it));
-      JetCorrectortypI->setJetPt(jetPtAK4RC->at(it)/jetJecAK4->at(it));
+      JetCorrectortypI->setJetPt(jetPtAK4->at(it)/jetJecAK4->at(it));
       JetCorrectortypI->setJetA(jetAreaAK4->at(it));
       JetCorrectortypI->setRho(rho);
       corrsForTypeI = JetCorrectortypI->getCorrection(); //only RC
@@ -491,7 +492,8 @@ void analysisClass::Loop()
     corrJet.SetPtEtaPhiE((jetPtAK4->at(it)/jetJecAK4->at(it))*corrs,jetEtaAK4->at(it),jetPhiAK4->at(it),(jetEnergyAK4->at(it)/jetJecAK4->at(it))*corrs);
       
     double dR = gamma1.DeltaR(corrJet);
-   //   std::cout<<"pt of ak4jets "<<corrJet.Pt()<<" dr "<<dR<<std::endl;
+   
+  //    std::cout<<"pt of ak4jets "<<jetRC.Pt()<<" dr "<<dR<<std::endl;}
     if(corrJet.Pt() > 15 && dR > 0.25) {
 	
       double emEnergyFraction = jetNemfAK4->at(it) + jetCemfAK4->at(it);
@@ -509,7 +511,8 @@ void analysisClass::Loop()
   
   MetTypeI.SetPxPyPzE(correctedMetPx,correctedMetPy, rawMet.Pz(), std::hypot(correctedMetPx,correctedMetPy));  
  // MetTypeI.SetPxPyPzE(rawMet.Px(),rawMet.Py(),rawMet.Pz(),rawMet.E());
-  // std::coulst<<"MET type I: "<< MetTypeI.Pt() << " "<< MetTypeI.Eta() << " " << MetTypeI.Phi() << " " << MetTypeI.Et() <<std::endl; 
+ // if(evtNo == 231020624  ){
+  // std::cout<<"MET type I: "<< MetTypeI.Pt() << " "<< MetTypeI.Eta() << " " << MetTypeI.Phi() << " " << MetTypeI.Et() <<std::endl; }
 
 //------------------------END met calculation------------------
 
@@ -540,7 +543,7 @@ void analysisClass::Loop()
      std::cout<<" event : "<<evtNo<<" second jet Pt : "<< (jecFactors[sortedJetIdx[1]]/jetJecAK4->at(sortedJetIdx[1]))*jetPtAK4->at(sortedJetIdx[1]) << " Eta : "<<jetEtaAK4->at(sortedJetIdx[1])<<" ID "<< idLAK4->at(sortedJetIdx[1])<< std::endl;
      std::cout <<  std::endl;
          /*if (no_jets_ak4-nfakejet >=2 && idLAK4->at(sortedJetIdx[1])) std::cout<<" event : "<<evtNo<<" second jet Pt : "<< (jecFactors[sortedJetIdx[2]]/jetJecAK4->at(sortedJetIdx[2]))*jetPtAK4->at(sortedJetIdx[2]) << " Eta : "<<jetEtaAK4->at(sortedJetIdx[2])<<" ID "<< idLAK4->at(sortedJetIdx[2])<< std::endl;
-     std::cout <<  std::endl;}*/
+     std::cout <<  std::endl;*/
  
  
      if(deltPHIgj>=2.8 )
