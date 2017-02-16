@@ -12,6 +12,33 @@
 #define MAKE_RED "\033[31m"
 #define MAKE_BLUE "\033[34m"
 
+
+
+bool isNewonOldValidJetTight(const float& Eta_ak4, const float& chf, const float& neMult, const float& nemf, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet)
+{
+   
+    int idL = -999 ; 
+    if(!isDATA && !hasgenjet) return false;
+    
+    if(2.7 <fabs(Eta_ak4) <= 3.0)
+    {
+       idL = ( nemf>0.01 && chf<0.98 && neMult>2)  ;
+       
+       
+    }else{
+       if(isoldvalid){
+       idL =1;
+       }else{idL =0;}
+       
+    } 
+    
+ return idL;
+
+    
+    
+}
+
+
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile)
 {
@@ -61,7 +88,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vParTypeIL123.push_back(*L1DATAPar);
     vParTypeIL123.push_back(*L2DATAPar);
     vParTypeIL123.push_back(*L3DATAPar);
-    vParTypeIL123.push_back(*L2L3Residual);
+  //  vParTypeIL123.push_back(*L2L3Residual);
     
     std::vector<JetCorrectorParameters> vParTypeIMC;
     vParTypeIMC.push_back(*L1JetParForTypeIMC);
@@ -75,7 +102,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vPar_data.push_back(*L1DATAPar);
     vPar_data.push_back(*L2DATAPar);
     vPar_data.push_back(*L3DATAPar);
-    vPar_data.push_back(*L2L3Residual);
+  //  vPar_data.push_back(*L2L3Residual);
 
     JetCorrector = new FactorizedJetCorrector(vPar); assert(JetCorrector);
     JetCorrector_data = new FactorizedJetCorrector(vPar_data); assert(JetCorrector_data);
@@ -169,7 +196,7 @@ void analysisClass::Loop()
      if(idx_InTimeBX > -1 ) isData = 0;
      else isData = 1;
      
-     //isData = 1;
+     isData = 1;
      
      if(!isData)
      {
@@ -407,18 +434,21 @@ void analysisClass::Loop()
     if(no_jets_ak4-nfakejet>=1  ) 
       { 
      
-      
+      bool hasgen = false;
+      if(!isData && jetPtGenAK4->at(sortedJetIdx[0])){ hasgen = 1;}
      
          
-	 if((jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >=  15 /*getPreCutValue1("pt0Cut")*/ && idLAK4->at(sortedJetIdx[0])/*  && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold")*/)
+	 if((jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >=  15 /*getPreCutValue1("pt0Cut")*/ && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[0]), jetChfAK4->at(sortedJetIdx[0]), neMultAK4->at(sortedJetIdx[0]), jetNemfAK4->at(sortedJetIdx[0]),idLAK4->at(sortedJetIdx[0]), isData, hasgen)/*  && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold")*/)
 	   {
 		 ak4j1.SetPtEtaPhiM( (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0]) ,jetEtaAK4->at(sortedJetIdx[0])
 				     ,jetPhiAK4->at(sortedJetIdx[0])
 				     , (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetMassAK4->at(sortedJetIdx[0]));
 		
 		
-		for(size_t secjet = 1 ; secjet < no_jets_ak4-nfakejet ; secjet++ ){		     
-		if(no_jets_ak4-nfakejet >= secjet + 1 && (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet]))*jetPtAK4->at(sortedJetIdx[secjet]) >= 10 && idLAK4->at(sortedJetIdx[secjet]))
+		for(size_t secjet = 1 ; secjet < no_jets_ak4-nfakejet ; secjet++ ){	
+		bool hasgen2 = false;
+                if(!isData && jetPtGenAK4->at(sortedJetIdx[secjet])){ hasgen2 = 1;}	     
+		if(no_jets_ak4-nfakejet >= secjet + 1 && (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet]))*jetPtAK4->at(sortedJetIdx[secjet]) >= 10 && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[secjet]), jetChfAK4->at(sortedJetIdx[secjet]), neMultAK4->at(sortedJetIdx[secjet]), jetNemfAK4->at(sortedJetIdx[secjet]),idLAK4->at(sortedJetIdx[0]), isData,hasgen2))
 	       {
 		      ak4j2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet])) *jetPtAK4->at(sortedJetIdx[secjet])
 				     ,jetEtaAK4->at(sortedJetIdx[secjet])
