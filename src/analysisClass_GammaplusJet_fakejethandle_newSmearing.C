@@ -88,7 +88,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vParTypeIL123.push_back(*L1DATAPar);
     vParTypeIL123.push_back(*L2DATAPar);
     vParTypeIL123.push_back(*L3DATAPar);
-  //  vParTypeIL123.push_back(*L2L3Residual);
+    vParTypeIL123.push_back(*L2L3Residual);
     
     std::vector<JetCorrectorParameters> vParTypeIMC;
     vParTypeIMC.push_back(*L1JetParForTypeIMC);
@@ -102,7 +102,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vPar_data.push_back(*L1DATAPar);
     vPar_data.push_back(*L2DATAPar);
     vPar_data.push_back(*L3DATAPar);
-  //  vPar_data.push_back(*L2L3Residual);
+    vPar_data.push_back(*L2L3Residual);
 
     JetCorrector = new FactorizedJetCorrector(vPar); assert(JetCorrector);
     JetCorrector_data = new FactorizedJetCorrector(vPar_data); assert(JetCorrector_data);
@@ -196,7 +196,6 @@ void analysisClass::Loop()
      if(idx_InTimeBX > -1 ) isData = 0;
      else isData = 1;
      
-     isData = 1;
      
      if(!isData)
      {
@@ -257,7 +256,7 @@ void analysisClass::Loop()
      TLorentzVector gamma1      ;
     // TLorentzVector gamma1smear ;
        gamma1.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
-      // gamma1.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
+     //  gamma1.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
        
        
        
@@ -595,7 +594,9 @@ void analysisClass::Loop()
      
      
       //== Fill Variables ==
-     if(ak4j1.Pt()>0 && idLAK4->at(sortedJetIdx[0] == 1)) 
+      bool hasgen = false;
+      if(!isData && jetPtGenAK4->at(sortedJetIdx[0])){ hasgen = 1;}
+     if(ak4j1.Pt()>0 && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[0]), jetChfAK4->at(sortedJetIdx[0]), neMultAK4->at(sortedJetIdx[0]), jetNemfAK4->at(sortedJetIdx[0]),idLAK4->at(sortedJetIdx[0]), isData, hasgen)) 
     {
      nselectedevent++;
      
