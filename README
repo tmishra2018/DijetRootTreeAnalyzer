@@ -27,34 +27,33 @@ Instructions:
 -------------
 
 1) Environment setup:
-    cd CMSSW_7_4_4/src/ 
+    cd CMSSW_8_0_25/src/ 
     cmsenv	
 
-(or the most recent release)   
+(or the most recent release but not a patched release not suitable for standalone makefile)   
 
 2) Download the code:
-    git clone https://github.com/CMSDIJET/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
+    git clone https://github.com/lattaud/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
 
 3) Go inside:
     cd CMSDIJET/DijetRootTreeAnalyzer
 
 =======
-4) to generate the rootNtupleClass (you do not need to unless the ntuple format changes):
+4) to generate the rootNtupleClass :
     cd CMSDIJET/DijetRootTreeAnalyzer
     ./scripts/make_rootNtupleClass.sh
       (you will be asked for input arguments)
    i.e.
-    ./scripts/make_rootNtupleClass.sh -f dijetTree_signal.root -t dijets/events
+    ./scripts/make_rootNtupleClass.sh -f GammajetTree.root -t dijets/events
    where the rootfile has been produced by the DijetRootTreeMaker
    Note that there could be minor glitches and then you can fix by hand.
 =======
 
 5) Make a symbolic link analysisClass.C by:
-    ln -sf analysisClass_myCodeWide.C src/analysisClass.C 
+    ln -sf analysisClass_GammaplusJet_fakejethandle_newSmearing.C src/analysisClass.C 
    or 
-    ln -sf analysisClass_myCodeAK8.C src/analysisClass.C
-   or
-    ln -sf analysisClass_myCodeCA8.C src/analysisClass.C
+    ln -sf analysisClass_GammaplusJet_fakejethandlePuppi.C src/analysisClass.C to run on puppi jet
+   
 
 6) Compile to test that all is OK so far:
     make clean
@@ -64,11 +63,68 @@ Instructions:
     ./main
       (you will be asked for input arguments)
    i.e.
-    ./main config/inputListJets.txt config/cutFileExampleJet.txt dijets/events output/rootFile output/cutEfficiencyFile
+    ./main inputList.txt config/cutFileExample.txt dijets/events output/rootFile output/cutEfficiencyFile
 
 8) All the produced files are in the directory output
 
-Notes:
+   If everything went fine your root file should contain two tree, one tree with all the information needed for the PUreweighting and the other with all the variables
+   after selection. You are now ready to start the full production.
+   
+   
+9) To run your analysis on the LXplus batch use the Submit_job_to_batch.py script. To use it first make a list of the output of DijettreeMaker Step.
+   then moove the list in a new directory and split it 10 lines by 10 lines.
+   In the file Run_Analyser.py change the path to the output directory L39 (outputdir ="path to your output directory").
+   
+   for example : 
+   $ mkdir MC_summer
+   $ eos ls root://eoscms//eos/cms/store/group/phys_jetmet/hlattaud/GammaJet/GJet-RunIISummer16MiniAODv2/GJet_Pt-15To6000_TuneCUETP8M1-Flat_13TeV_pythia8_20M/
+crab_NEWGJet-RunIISummer16MiniAODv2_Newsmearing > list_MC.txt 
+   $ Split -l 10 list_MC.txt
+   
+   $ cd ../
+   $ python Submit_job_to_batch.py --config_file config/cutFile_mainGammaplusJetSelection_Newsmearing.txt --whichrun MC_summer_datalike --Nlist 4 --dirlist MC_summer/
+   
+   you will be ask for your grid password.
+   
+   
+   You can now go to the next step in NewGammaJet to perform trigger selection and PUreweighting : https://github.com/lattaud/NewGammaJet
+   
+  
+
+
+
+
+Notes 1:
+In the cut file you can chose etheir to apply the JEC on the fly or not.
+If you choose to re-apply  the JEC on the fly you have to provide those you want to use in the cut file.
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Notes 2:
 
 1) one can have several analyses in a directory, such as
     src/analysisClass_myCode1.C
@@ -77,6 +133,24 @@ Notes:
    and move the symbolic link to the one to be used:
     ln -sf analysisClass_myCode2.C src/analysisClass.C
    and compile/run as above.
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
 
 More details:
@@ -164,42 +238,6 @@ See ./doc/howToMakeAnalysisWithRootTuples.txt
 
 
 
-Using the Optimizer (Jeff Temple):
-----------------------------------
-
-The input cut file can also specify variables to be used in optimization studies.
-To do so, add a line in the file for each variable to optimize. The first field of a line
-must be the name of the variable, second field must be "OPT", third field either ">" or "<".
-(The ">" sign will pass values greater than the applied threshold, and "<" will pass
-those less than the threshold.) 4th and 5th fields should be the minimum
-and maximum thresholds you wish to apply when scanning for optimal cuts.
-An example of the optimization syntax is:
-
-#VariableName     must be OPT   > or <    RangeMin        RangeMax        unused
-#------------     -----------   ------    ------------    -------------   ------
-muonPt               OPT          >          10              55              5
-
-This optimizer will scan 10 different values, evenly distributed over
-the inclusive range [RangeMin, RangeMax]. At the moment, the 6th value is not used and
-does not need to be specified.
-The optimization cuts are always run after all the other cuts in the file, and are only run
-when all other cuts are passed.
-The above line will make 10 different cuts on muonPt, at [10, 15, 20, 25, ..., 55].
-('5' in the 6th field is meaningless here.)
-The output of the optimization will be a 10-bin histogram, showing the number of
-events passing each of the 10 thresholds.
-
-Multiple optimization cuts may be applied in the same file.  In the case where N optimization cuts
-are applied, a histogram of 10^N bins will be produced, with each bin corresponding to a unique cut combination.
-No more than 6 variables may be optimized at one time (limitation in the number of bins for a TH1F ~ 10^6).
-Since such file can become quite large, the default is to not create
-
-A file (optimizationCuts.txt in the working directory) that lists the cut values applied for
-each bin can be produced by uncommenting the line
-#FLAGS += -DCREATE_OPT_CUT_FILE
-in the Makefile. Since this file can be quite large (10^N lines), by default it is not created.
-
-
 
 Producing an ntuple skim (Dinko Ferencek):
 ------------------------------------------
@@ -227,10 +265,6 @@ See https://hypernews.cern.ch/HyperNews/CMS/get/exotica-lq/266.html
 
 
 
-PU reweight (Edmund Berry):
----------------------------
-
-See https://twiki.cern.ch/twiki/pub/CMS/Exo2011LQ1AndLQ2Analyses/PileupReweightingCode.pdf
 
 
 

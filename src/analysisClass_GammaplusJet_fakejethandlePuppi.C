@@ -14,15 +14,18 @@
 #define MAKE_BLUE "\033[34m"
 
 
-bool isNewonOldValidJetTight(const float& Eta_ak4, const float& chf, const float& neMult, const float& nemf, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet)
+bool isNewonOldValidJetTight(const float& Eta_ak4, const float& hhf, const float& neMult, const float& nemf, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet)
 {
    
     int idL = -999 ; 
+    // to comment to apply only the correction on jet selection
+    if(isoldvalid) return true ;
+    
     if(!isDATA && !hasgenjet) return false;
     
-    if(2.7 <fabs(Eta_ak4) <= 3.0)
+    if(fabs(Eta_ak4) > 2.7  && fabs(Eta_ak4) <= 3.0)
     {
-       idL = ( nemf>0.01 && chf<0.98 && neMult>2)  ;
+       idL = ( nemf>0.01 && hhf<0.98 && neMult>2)  ;
        
        
     }else{
@@ -43,36 +46,29 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
 {
   std::cout << "analysisClass::analysisClass(): begins " << std::endl;
 
-  std::string jetAlgo = getPreCutString1("jetAlgo");
-  double rParam = getPreCutValue1("DeltaR");
-
-  if( jetAlgo == "AntiKt" )
-    fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::antikt_algorithm, rParam) );
-  else if( jetAlgo == "Kt" )
-    fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::kt_algorithm, rParam) );
-  else 
-    fjJetDefinition = JetDefPtr( new fastjet::JetDefinition(fastjet::cambridge_algorithm, rParam) );
+ 
 
   // For JECs
   if( int(getPreCutValue1("useJECs"))==1 )
   {
     std::cout << "Reapplying JECs on the fly" << std::endl;
 
-    std::string L1Path = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1FastJet_AK4PFPuppi.txt";
-    std::string L2Path = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L2Relative_AK4PFPuppi.txt";
-    std::string L3Path = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L3Absolute_AK4PFPuppi.txt";
-    std::string L1DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1FastJet_AK4PFPuppi.txt";
-    std::string L2DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Relative_AK4PFPuppi.txt"; 
-    std::string L3DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L3Absolute_AK4PFPuppi.txt";
-    std::string L2L3ResidualPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2L3Residual_AK4PFPuppi.txt";
+    std::string L1Path =  getPreCutString1("L1MC");
+    std::string L2Path = getPreCutString1("L2MC");
+    std::string L3Path = getPreCutString1("L3MC");
+    std::string L1DATAPath = getPreCutString1("L1Dat");
+    std::string L2DATAPath = getPreCutString1("L2Dat"); 
+    std::string L3DATAPath = getPreCutString1("L3Dat");
+    std::string L2L3ResidualPath = getPreCutString1("L2L3Dat");
     
     
-    std::string L1RCcorrDATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFPuppi.txt";
-    std::string L1RCcorrMCPath = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1RC_AK4PFPuppi.txt";
+    std::string L1RCcorrDATAPath = getPreCutString1("L1RCMC");
+    std::string L1RCcorrMCPath = getPreCutString1("L1RCDat");
 
     //uncertainty
-    unc = new JetCorrectionUncertainty("data/Spring16_25nsV6_DATA/Spring16_25nsV6_DATA_Uncertainty_AK4PFPuppitxt");
-   L1Par = new JetCorrectorParameters(L1Path);
+    unc = new JetCorrectionUncertainty(getPreCutString1("JECuncDat"));
+        
+    L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
     L3Par = new JetCorrectorParameters(L3Path);
     L1DATAPar = new JetCorrectorParameters(L1DATAPath);
@@ -84,6 +80,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     L1JetParForTypeIMC =new JetCorrectorParameters(L1RCcorrMCPath);
 
 
+
     std::vector<JetCorrectorParameters> vPar;
     std::vector<JetCorrectorParameters> vPar_data;
     vPar.push_back(*L1Par);
@@ -93,7 +90,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
      std::vector<JetCorrectorParameters> vParTypeI;
     vParTypeI.push_back(*L1JetParForTypeI);
     std::vector<JetCorrectorParameters> vParTypeIL123;
-    vParTypeIL123.push_back(*L1DATAPar);
+
     vParTypeIL123.push_back(*L2DATAPar);
     vParTypeIL123.push_back(*L3DATAPar);
     vParTypeIL123.push_back(*L2L3Residual);
@@ -101,7 +98,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::vector<JetCorrectorParameters> vParTypeIMC;
     vParTypeIMC.push_back(*L1JetParForTypeIMC);
     std::vector<JetCorrectorParameters> vParTypeIL123MC;
-    vParTypeIL123MC.push_back(*L1Par);
+
     vParTypeIL123MC.push_back(*L2Par);
     vParTypeIL123MC.push_back(*L3Par);
     
@@ -209,7 +206,7 @@ void analysisClass::Loop()
      {
          SumWeight->Fill(0.,weight);
          genweight = weight;
-         trueInteractionall = npu->at(1)/*PileupInteractions->at(idx_InTimeBX)*/;
+         trueInteractionall = PileupInteractions->at(idx_InTimeBX);
          PUvariable->Fill();
          
      }else
@@ -309,7 +306,7 @@ void analysisClass::Loop()
      
 
      TLorentzVector Tmpjet;
-     
+      
      if( int(getPreCutValue1("useJECs"))==1 )
        {
 	 // sort jets by increasing pT
@@ -378,8 +375,8 @@ void analysisClass::Loop()
 
         }
         int size_true = sortedJets.size();
-       // int size_Jec = jecFactors.size();
-     //   std::cout<<"size jet vector "<< size_true << "size JEC vector "<< size_Jec << std::endl;
+        int size_Jec = jecFactors.size();
+
         
        if(size_all - size_true > 1) std::cout<<"Warning : more than two jet removed because of photon misidentification"<<std::endl;
      // get jet indices in decreasing pT order
@@ -445,7 +442,7 @@ void analysisClass::Loop()
       if(!isData && jetPtGenPUPPI->at(sortedJetIdx[0])){ hasgen = 1;}
      
          
-	 if((jecFactors[sortedJetIdx[0]]/jetJecPUPPI->at(sortedJetIdx[0]))*jetPtPUPPI->at(sortedJetIdx[0]) >=  15 /*getPreCutValue1("pt0Cut")*/ && isNewonOldValidJetTight(jetEtaPUPPI->at(sortedJetIdx[0]), jetChfPUPPI->at(sortedJetIdx[0]), neMultPUPPI->at(sortedJetIdx[0]), jetNemfPUPPI->at(sortedJetIdx[0]),idLPUPPI->at(sortedJetIdx[0]), isData, hasgen)/*  && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold")*/)
+	 if((jecFactors[sortedJetIdx[0]]/jetJecPUPPI->at(sortedJetIdx[0]))*jetPtPUPPI->at(sortedJetIdx[0]) >=  15 /*getPreCutValue1("pt0Cut")*/ && isNewonOldValidJetTight(jetEtaPUPPI->at(sortedJetIdx[0]), jetNhfPUPPI->at(sortedJetIdx[0]), neMultPUPPI->at(sortedJetIdx[0]), jetNemfPUPPI->at(sortedJetIdx[0]),idLPUPPI->at(sortedJetIdx[0]), isData, hasgen)/*  && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold")*/)
 	   {
 		 ak4j1.SetPtEtaPhiM( (jecFactors[sortedJetIdx[0]]/jetJecPUPPI->at(sortedJetIdx[0])) *jetPtPUPPI->at(sortedJetIdx[0]) ,jetEtaPUPPI->at(sortedJetIdx[0])
 				     ,jetPhiPUPPI->at(sortedJetIdx[0])
@@ -455,7 +452,7 @@ void analysisClass::Loop()
 		for(size_t secjet = 1 ; secjet < no_jets_ak4-nfakejet ; secjet++ ){	
 		bool hasgen2 = false;
                 if(!isData && jetPtGenPUPPI->at(sortedJetIdx[secjet])){ hasgen2 = 1;}	     
-		if(no_jets_ak4-nfakejet >= secjet + 1 && (jecFactors[sortedJetIdx[secjet]]/jetJecPUPPI->at(sortedJetIdx[secjet]))*jetPtPUPPI->at(sortedJetIdx[secjet]) >= 10 && isNewonOldValidJetTight(jetEtaPUPPI->at(sortedJetIdx[secjet]), jetChfPUPPI->at(sortedJetIdx[secjet]), neMultPUPPI->at(sortedJetIdx[secjet]), jetNemfPUPPI->at(sortedJetIdx[secjet]),idLPUPPI->at(sortedJetIdx[0]), isData,hasgen2))
+		if(no_jets_ak4-nfakejet >= secjet + 1 && (jecFactors[sortedJetIdx[secjet]]/jetJecPUPPI->at(sortedJetIdx[secjet]))*jetPtPUPPI->at(sortedJetIdx[secjet]) >= 10 && isNewonOldValidJetTight(jetEtaPUPPI->at(sortedJetIdx[secjet]), jetNhfPUPPI->at(sortedJetIdx[secjet]), neMultPUPPI->at(sortedJetIdx[secjet]), jetNemfPUPPI->at(sortedJetIdx[secjet]),idLPUPPI->at(sortedJetIdx[0]), isData,hasgen2))
 	       {
 		      ak4j2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[secjet]]/jetJecPUPPI->at(sortedJetIdx[secjet])) *jetPtPUPPI->at(sortedJetIdx[secjet])
 				     ,jetEtaPUPPI->at(sortedJetIdx[secjet])
@@ -474,7 +471,7 @@ void analysisClass::Loop()
      continue;}
 
 
-
+        
 
  //----------------------TYPE I MET computation------------------
  // std::cout<<"rawMet: "<< rawMet.Pt() << " "<< rawMet.Eta() << " " << rawMet.Phi() << " " << rawMet.Et() <<std::endl; 
@@ -500,13 +497,13 @@ void analysisClass::Loop()
       JetCorrectortypI->setJetPt(jetPtPUPPI->at(it)/jetJecPUPPI->at(it));
       JetCorrectortypI->setJetA(jetAreaPUPPI->at(it));
       JetCorrectortypI->setRho(rho);
-      corrsForTypeI = JetCorrectortypI->getCorrection(); //only RC
+      corrsForTypeI = JetCorrectortypI->getCorrection(); // not used here
 
       JetCorrectortypIL123 ->setJetEta(jetEtaPUPPI->at(it));
       JetCorrectortypIL123 ->setJetPt(jetPtPUPPI->at(it)/jetJecPUPPI->at(it));
       JetCorrectortypIL123 ->setJetA(jetAreaPUPPI->at(it));
       JetCorrectortypIL123 ->setRho(rho);
-      corrs = JetCorrectortypIL123->getCorrection(); // L1L2L3
+      corrs = JetCorrectortypIL123->getCorrection(); // L2L3
       
       }else{
 
@@ -514,16 +511,16 @@ void analysisClass::Loop()
       JetCorrectortypIMC->setJetPt(jetPtPUPPI->at(it)/jetJecPUPPI->at(it));
       JetCorrectortypIMC->setJetA(jetAreaPUPPI->at(it));
       JetCorrectortypIMC->setRho(rho);
-      corrsForTypeI = JetCorrectortypIMC->getCorrection(); //only RC
+      corrsForTypeI = JetCorrectortypIMC->getCorrection(); // not used here
       JetCorrectortypIL123MC ->setJetEta(jetEtaPUPPI->at(it));
       JetCorrectortypIL123MC ->setJetPt(jetPtPUPPI->at(it)/jetJecPUPPI->at(it));
       JetCorrectortypIL123MC ->setJetA(jetAreaPUPPI->at(it));
       JetCorrectortypIL123MC ->setRho(rho);
-      corrs = JetCorrectortypIL123MC->getCorrection(); // L1L2L3
+      corrs = JetCorrectortypIL123MC->getCorrection(); // L2L3
 
       }
 
-    jetRC.SetPtEtaPhiE((jetPtPUPPI->at(it)/jetJecPUPPI->at(it))*corrsForTypeI,jetEtaPUPPI->at(it),jetPhiPUPPI->at(it),(jetEnergyPUPPI->at(it)/jetJecPUPPI->at(it))*corrsForTypeI);
+    jetRC.SetPtEtaPhiE((jetPtPUPPI->at(it)/jetJecPUPPI->at(it)),jetEtaPUPPI->at(it),jetPhiPUPPI->at(it),(jetEnergyPUPPI->at(it)/jetJecPUPPI->at(it)));
      // only RC
       
     corrJet.SetPtEtaPhiE((jetPtPUPPI->at(it)/jetJecPUPPI->at(it))*corrs,jetEtaPUPPI->at(it),jetPhiPUPPI->at(it),(jetEnergyPUPPI->at(it)/jetJecPUPPI->at(it))*corrs);
@@ -542,8 +539,8 @@ void analysisClass::Loop()
     } // jet.pt() && dR
   }//loop over jets
     
-  double correctedMetPx = rawMet.Px() - deltaPx;
-  double correctedMetPy = rawMet.Py() - deltaPy;
+  double correctedMetPx = rawMet.Px() ;//- deltaPx;
+  double correctedMetPy = rawMet.Py(); //- deltaPy;
   double correctedMetPt = sqrt(correctedMetPx * correctedMetPx + correctedMetPy * correctedMetPy);
   
   MetTypeI.SetPxPyPzE(correctedMetPx,correctedMetPy, rawMet.Pz(), std::hypot(correctedMetPx,correctedMetPy));  
@@ -600,7 +597,7 @@ void analysisClass::Loop()
        }
      }
      
-     
+
       //== Fill Variables ==
      if(ak4j1.Pt()>0 && idLPUPPI->at(sortedJetIdx[0] == 1)) 
     {
@@ -661,8 +658,8 @@ void analysisClass::Loop()
 	// SumWeight->Fill(0.,weight);
 	 
        }//MC
-     
 
+    // std::cout<<"test range  "<< evtNo<< " before" << std::endl;
      if( AK4jets.size() >=1 )
      {
        //cout << "AK4jets.size() " <<  AK4jets.size() << endl;
@@ -673,10 +670,11 @@ void analysisClass::Loop()
        fillVariableWithValue( "phiAK4_j1", AK4jets[0].Phi());
        
        //fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(sortedJetIdx[0]));
-       
+    //                    std::cout<<"test range  "<< evtNo<< " after" << std::endl;
        fillVariableWithValue( "jetJecAK4_j1", jecFactors[sortedJetIdx[0]] );
        fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
-       fillVariableWithValue( "jetCSVAK4_j1", jetCSVPUPPI->at(sortedJetIdx[0]) );
+     //  fillVariableWithValue( "jetCSVAK4_j1", jetCSVPUPPI->at(sortedJetIdx[0]) );
+
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfPUPPI->at(sortedJetIdx[0]));
        fillVariableWithValue( "chargedHadEnFrac_j1", jetChfPUPPI->at(sortedJetIdx[0]));
@@ -695,7 +693,7 @@ void analysisClass::Loop()
 	 fillVariableWithValue("PDGIDAK4_j1",jetpdgIDGenPUPPI->at(sortedJetIdx[0]));
        }
      }
-     
+
      if( AK4jets.size() >=2){
 
        fillVariableWithValue( "IdTight_j2",idLPUPPI->at(sortedJetIdx[sndjetidx]));
@@ -705,7 +703,7 @@ void analysisClass::Loop()
        //fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
        fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[sndjetidx]]); 
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[sndjetidx]] );
-       fillVariableWithValue( "jetCSVAK4_j2", jetCSVPUPPI->at(sortedJetIdx[sndjetidx]) );
+      // fillVariableWithValue( "jetCSVAK4_j2", jetCSVPUPPI->at(sortedJetIdx[sndjetidx]) );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfPUPPI->at(sortedJetIdx[sndjetidx]));
        fillVariableWithValue( "chargedHadEnFrac_j2", jetChfPUPPI->at(sortedJetIdx[sndjetidx]));
@@ -834,40 +832,7 @@ continue;}
    totalluminosityP->Write();
    PUvariable->Write();
    DeltaPhiAlpha->Write();
-   /*
-    std::cout << std::endl;
-  std::cout << "Absolute efficiency : related to initial number of event =  " << nentries<< std::endl;
-  std::cout << "Efficiency for photon presence cut: " << MAKE_RED << (double) ncut_nophoton  / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for photon cut: " << MAKE_RED << (double) ncut_photon  / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for pixel seed veto cut: " << MAKE_RED << (double) ncut_pixelseed / nentries * 100 << "%" << RESET_COLOR << std::endl;    
-  std::cout << "Efficiency for  pt photon cut: " << MAKE_RED << (double) ncut_photonpt  / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for muons cut: " << MAKE_RED << (double) ncut_muons / nentries * 100 << "%" << RESET_COLOR << std::endl; 
-  std::cout << "Efficiency for electrons cut: " << MAKE_RED << (double) ncut_electron / nentries * 100 << "%" << RESET_COLOR << std::endl; 
-  std::cout << "Efficiency for n jet cut: " << MAKE_RED << (double) ncut_jet / nentries * 100 << "%" << RESET_COLOR << std::endl;  
-  std::cout << "Efficiency for Pt(j1) cut: " << MAKE_RED << (double)  ncut_ptjet / nentries * 100 << "%" << RESET_COLOR << std::endl;   
-  std::cout << "Efficiency for Δφ cut: " << MAKE_RED << (double) ncut_deltaphi / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << "Efficiency for α cut: " << MAKE_RED << (double) ncut_alpha / nentries * 100 << "%" << RESET_COLOR << std::endl;  
-  std::cout << "Selection efficiency: " << MAKE_RED << (double) nselectedevent / nentries * 100 << "%" << RESET_COLOR << std::endl;
-  std::cout << std::endl;
-  
-     std::cout << std::endl;
-  std::cout << "Absolute efficiency : related to initial number of event =  " << nentries<< std::endl;
-  std::cout << "Nevent after photon presence cut: " << MAKE_RED << nentries - (double) Vtxcut -  (double)  ncut_nophoton    << RESET_COLOR << std::endl;
-  std::cout << "Nevent after photon cut: " << MAKE_RED <<  nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon  << RESET_COLOR << std::endl;
-  std::cout << "Nevent after pixel seed veto cut: " << MAKE_RED <<  nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  << RESET_COLOR << std::endl;    
-  std::cout << "Nevent after  pt photon cut: " << MAKE_RED <<   nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt  << RESET_COLOR << std::endl;
-  std::cout << "Nevent after muons cut: " << MAKE_RED << nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons  << RESET_COLOR << std::endl; 
-  std::cout << "Nevent after electrons cut: " << MAKE_RED << nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron << RESET_COLOR << std::endl; 
-  std::cout << "Nevent after n jet cut: " << MAKE_RED <<nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet << RESET_COLOR << std::endl;  
-  std::cout << "Nevent after Pt(j1) cut: " << MAKE_RED << nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet<< RESET_COLOR << std::endl;   
-  std::cout << "Nevent after Δφ cut: " << MAKE_RED << nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet - (double) ncut_deltaphi  << RESET_COLOR << std::endl;
-  std::cout << "Nevent after α cut: " << MAKE_RED << nentries - (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet - (double) ncut_deltaphi - (double) ncut_alpha  << RESET_COLOR << std::endl;  
-  std::cout << "Selection efficiency: " << MAKE_RED << (double) nselectedevent  << RESET_COLOR << std::endl;
-  std::cout << std::endl;
    
-   std::cout<<" nb of selected event " << nselectedevent<<std::endl;
-   
-   */
    
     std::cout << std::endl;
   std::cout << "Absolute efficiency : related to initial number of event =  " << testcount<< std::endl;

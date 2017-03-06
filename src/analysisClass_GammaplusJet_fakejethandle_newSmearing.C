@@ -14,15 +14,18 @@
 
 
 
-bool isNewonOldValidJetTight(const float& Eta_ak4, const float& chf, const float& neMult, const float& nemf, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet)
+bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float& neMult, const float& nemf, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet)
 {
    
-    int idL = -999 ; 
+    int idL = -999 ;
+    if(isoldvalid) {
+    return true ;  
+    }else{return false;}   
     if(!isDATA && !hasgenjet) return false;
     
-    if(2.7 <fabs(Eta_ak4) <= 3.0)
+    if(fabs(Eta_ak4) > 2.7  && fabs(Eta_ak4) <= 3.0)
     {
-       idL = ( nemf>0.01 && chf<0.98 && neMult>2)  ;
+       idL = ( nemf>0.01 && nhf<0.98 && neMult>2)  ;
        
        
     }else{
@@ -49,20 +52,20 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   {
     std::cout << "Reapplying JECs on the fly" << std::endl;
 
-    std::string L1Path = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L2Relative_AK4PFchs.txt";
-    std::string L3Path = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1FastJet_AK4PFchs.txt";
-    std::string L2DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Relative_AK4PFchs.txt"; 
-    std::string L3DATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; 
+    std::string L1Path =  getPreCutString1("L1MC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1FastJet_AK4PFchs.txt";
+    std::string L2Path = getPreCutString1("L2MC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L2Relative_AK4PFchs.txt";
+    std::string L3Path = getPreCutString1("L3MC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L3Absolute_AK4PFchs.txt";
+    std::string L1DATAPath = getPreCutString1("L1Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1FastJet_AK4PFchs.txt";
+    std::string L2DATAPath = getPreCutString1("L2Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Relative_AK4PFchs.txt"; 
+    std::string L3DATAPath = getPreCutString1("L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L3Absolute_AK4PFchs.txt";
+    std::string L2L3ResidualPath = getPreCutString1("L2L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; 
     
     
-    std::string L1RCcorrDATAPath = "data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
-    std::string L1RCcorrMCPath = "data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1RC_AK4PFchs.txt";
+    std::string L1RCcorrDATAPath = getPreCutString1("L1RCMC");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
+    std::string L1RCcorrMCPath = getPreCutString1("L1RCDat");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1RC_AK4PFchs.txt";
 
     //uncertainty
-    unc = new JetCorrectionUncertainty("data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_Uncertainty_AK4PFchs.txt");
+    unc = new JetCorrectionUncertainty(getPreCutString1("JECuncDat")/*"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_Uncertainty_AK4PFchs.txt"*/);
         
     L1Par = new JetCorrectorParameters(L1Path);
     L2Par = new JetCorrectorParameters(L2Path);
@@ -233,7 +236,7 @@ void analysisClass::Loop()
        //   cout<<"idx photon "<<indexgoodpho<<endl;
           
                if(!HaspixelSeed->at(indexgoodpho)){
-                     if(PhotonLoosePt->at(indexgoodpho)/*PhotonsmearPt->at(indexgoodpho)*/>= 40.){
+                     if(/*PhotonLoosePt->at(indexgoodpho)*/PhotonsmearPt->at(indexgoodpho)>= 40.){
                         bool keepmuon = true ;
                         if(nMuonsLoose != 0){ 
                         size_t nb_muons = muonPt->size();
@@ -255,8 +258,8 @@ void analysisClass::Loop()
      
      TLorentzVector gamma1      ;
     // TLorentzVector gamma1smear ;
-       gamma1.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
-     //  gamma1.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
+      // gamma1.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
+       gamma1.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
        
        
        
@@ -437,7 +440,7 @@ void analysisClass::Loop()
       if(!isData && jetPtGenAK4->at(sortedJetIdx[0])){ hasgen = 1;}
      
          
-	 if((jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >=  15 /*getPreCutValue1("pt0Cut")*/ && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[0]), jetChfAK4->at(sortedJetIdx[0]), neMultAK4->at(sortedJetIdx[0]), jetNemfAK4->at(sortedJetIdx[0]),idLAK4->at(sortedJetIdx[0]), isData, hasgen)/*  && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold")*/)
+	 if((jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >=  15 /*getPreCutValue1("pt0Cut")*/ && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[0]), jetNhfAK4->at(sortedJetIdx[0]), neMultAK4->at(sortedJetIdx[0]), jetNemfAK4->at(sortedJetIdx[0]),idLAK4->at(sortedJetIdx[0]), isData, hasgen)/*  && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold")*/)
 	   {
 		 ak4j1.SetPtEtaPhiM( (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0]) ,jetEtaAK4->at(sortedJetIdx[0])
 				     ,jetPhiAK4->at(sortedJetIdx[0])
@@ -447,7 +450,7 @@ void analysisClass::Loop()
 		for(size_t secjet = 1 ; secjet < no_jets_ak4-nfakejet ; secjet++ ){	
 		bool hasgen2 = false;
                 if(!isData && jetPtGenAK4->at(sortedJetIdx[secjet])){ hasgen2 = 1;}	     
-		if(no_jets_ak4-nfakejet >= secjet + 1 && (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet]))*jetPtAK4->at(sortedJetIdx[secjet]) >= 10 && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[secjet]), jetChfAK4->at(sortedJetIdx[secjet]), neMultAK4->at(sortedJetIdx[secjet]), jetNemfAK4->at(sortedJetIdx[secjet]),idLAK4->at(sortedJetIdx[0]), isData,hasgen2))
+		if(no_jets_ak4-nfakejet >= secjet + 1 && (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet]))*jetPtAK4->at(sortedJetIdx[secjet]) >= 10 && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[secjet]), jetNhfAK4->at(sortedJetIdx[secjet]), neMultAK4->at(sortedJetIdx[secjet]), jetNemfAK4->at(sortedJetIdx[secjet]),idLAK4->at(sortedJetIdx[0]), isData,hasgen2))
 	       {
 		      ak4j2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet])) *jetPtAK4->at(sortedJetIdx[secjet])
 				     ,jetEtaAK4->at(sortedJetIdx[secjet])
