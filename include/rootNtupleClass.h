@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Feb  9 15:22:37 2017 by ROOT version 6.06/01
+// Wed Jun 14 11:05:48 2017 by ROOT version 5.34/36
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -17,16 +17,11 @@ using namespace std;
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
-#include "vector"
-#include "vector"
-#include "vector"
-#include "vector"
-#include "vector"
-
-class rootNtupleClass {
-public :
-   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-   Int_t           fCurrent; //!current Tree number in a TChain
+#include <vector>
+#include <vector>
+#include <vector>
+#include <vector>
+#include <vector>
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
    const Int_t kMaxrun = 1;
@@ -46,6 +41,8 @@ public :
    const Int_t kMaxmetSig = 1;
    const Int_t kMaxmetcorrected = 1;
    const Int_t kMaxgoodPVtx = 1;
+   const Int_t kMaxdeltaNHfootprintX = 1;
+   const Int_t kMaxdeltaNHfootprintY = 1;
    const Int_t kMaxmetEnergyGen = 1;
    const Int_t kMaxmetPtGen = 1;
    const Int_t kMaxmetEtaGen = 1;
@@ -71,6 +68,11 @@ public :
    const Int_t kMaxnGenJetsAK8 = 1;
    const Int_t kMaxnGenPhotons = 1;
 
+class rootNtupleClass {
+public :
+   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+   Int_t           fCurrent; //!current Tree number in a TChain
+
    // Declaration of leaf types
    Int_t           runNo;
    Int_t           evtNo;
@@ -89,6 +91,8 @@ public :
    Float_t         metSig;
    Float_t         metTypeI;
    Char_t          goodPVtx;
+   Float_t         deltaNHfootprintX;
+   Float_t         deltaNHfootprintY;
    Float_t         metEnergyGen;
    Float_t         metPtGen;
    Float_t         metEtaGen;
@@ -122,6 +126,12 @@ public :
    Int_t           nPhotonLoose;
    Int_t           nPhotonMedium;
    Int_t           nPhotonTight;
+   vector<bool>    *isMatch30;
+   vector<bool>    *isMatch50;
+   vector<bool>    *isMatch75;
+   vector<bool>    *isMatch90;
+   vector<bool>    *isMatch120;
+   vector<bool>    *isMatch165;
    vector<float>   *PhotonLoosePt;
    vector<float>   *PhotonsmearPt;
    vector<float>   *PhotonSCPt;
@@ -255,7 +265,7 @@ public :
    vector<int>     *neMultAK8;
    vector<int>     *phoMultAK8;
    vector<bool>    *triggerResult;
-   vector<double>  *triggerPrescale;
+   vector<int>     *triggerPrescale;
    vector<string>  *triggerName;
    vector<float>   *npu;
    vector<int>     *PileupInteractions;
@@ -306,6 +316,8 @@ public :
    TBranch        *b_metSig_;   //!
    TBranch        *b_metcorrected_;   //!
    TBranch        *b_goodPVtx_;   //!
+   TBranch        *b_deltaNHfootprintX_;   //!
+   TBranch        *b_deltaNHfootprintY_;   //!
    TBranch        *b_metEnergyGen_;   //!
    TBranch        *b_metPtGen_;   //!
    TBranch        *b_metEtaGen_;   //!
@@ -339,6 +351,12 @@ public :
    TBranch        *b_nPhotonsLoose_;   //!
    TBranch        *b_nPhotonsMedium_;   //!
    TBranch        *b_nPhotonsTight_;   //!
+   TBranch        *b_isMatch30;   //!
+   TBranch        *b_isMatch50;   //!
+   TBranch        *b_isMatch75;   //!
+   TBranch        *b_isMatch90;   //!
+   TBranch        *b_isMatch120;   //!
+   TBranch        *b_isMatch165;   //!
    TBranch        *b_PhotonLoosePt;   //!
    TBranch        *b_PhotonsmearPt;   //!
    TBranch        *b_PhotonSCPt;   //!
@@ -539,7 +557,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("/afs/cern.ch/user/h/hlattaud/private/tutorial/CMSSW_8_0_24_patch1/src/CMSDIJET/DijetRootTreeMaker/mylocaltest_Run2016B_10.root/dijets/events");
+      chain->Add("root://lyogrid06.in2p3.fr//dpm/in2p3.fr/home/cms/data/store/user/hlattaud/GammaJet/Gjet_amc_NLO/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_GJets_HT-40To100/170610_172443/0000/mylocaltest_10_9.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -599,6 +617,12 @@ void rootNtupleClass::Init(TTree *tree)
    gen_status = 0;
    gen_index = 0;
    gen_motherIndex = 0;
+   isMatch30 = 0;
+   isMatch50 = 0;
+   isMatch75 = 0;
+   isMatch90 = 0;
+   isMatch120 = 0;
+   isMatch165 = 0;
    PhotonLoosePt = 0;
    PhotonsmearPt = 0;
    PhotonSCPt = 0;
@@ -780,6 +804,8 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("metSig", &metSig, &b_metSig_);
    fChain->SetBranchAddress("metTypeI", &metTypeI, &b_metcorrected_);
    fChain->SetBranchAddress("goodPVtx", &goodPVtx, &b_goodPVtx_);
+   fChain->SetBranchAddress("deltaNHfootprintX", &deltaNHfootprintX, &b_deltaNHfootprintX_);
+   fChain->SetBranchAddress("deltaNHfootprintY", &deltaNHfootprintY, &b_deltaNHfootprintY_);
    fChain->SetBranchAddress("metEnergyGen", &metEnergyGen, &b_metEnergyGen_);
    fChain->SetBranchAddress("metPtGen", &metPtGen, &b_metPtGen_);
    fChain->SetBranchAddress("metEtaGen", &metEtaGen, &b_metEtaGen_);
@@ -813,6 +839,12 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("nPhotonLoose", &nPhotonLoose, &b_nPhotonsLoose_);
    fChain->SetBranchAddress("nPhotonMedium", &nPhotonMedium, &b_nPhotonsMedium_);
    fChain->SetBranchAddress("nPhotonTight", &nPhotonTight, &b_nPhotonsTight_);
+   fChain->SetBranchAddress("isMatch30", &isMatch30, &b_isMatch30);
+   fChain->SetBranchAddress("isMatch50", &isMatch50, &b_isMatch50);
+   fChain->SetBranchAddress("isMatch75", &isMatch75, &b_isMatch75);
+   fChain->SetBranchAddress("isMatch90", &isMatch90, &b_isMatch90);
+   fChain->SetBranchAddress("isMatch120", &isMatch120, &b_isMatch120);
+   fChain->SetBranchAddress("isMatch165", &isMatch165, &b_isMatch165);
    fChain->SetBranchAddress("PhotonLoosePt", &PhotonLoosePt, &b_PhotonLoosePt);
    fChain->SetBranchAddress("PhotonsmearPt", &PhotonsmearPt, &b_PhotonsmearPt);
    fChain->SetBranchAddress("PhotonSCPt", &PhotonSCPt, &b_PhotonSCPt);

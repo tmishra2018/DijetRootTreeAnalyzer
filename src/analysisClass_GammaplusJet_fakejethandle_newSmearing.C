@@ -61,8 +61,8 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L2L3ResidualPath = getPreCutString1("L2L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; 
     
     
-    std::string L1RCcorrDATAPath = getPreCutString1("L1RCMC");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
-    std::string L1RCcorrMCPath = getPreCutString1("L1RCDat");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1RC_AK4PFchs.txt";
+    std::string L1RCcorrDATAPath = getPreCutString1("L1RCDat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
+    std::string L1RCcorrMCPath = getPreCutString1("L1RCMC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1RC_AK4PFchs.txt";
 
     //uncertainty
     unc = new JetCorrectionUncertainty(getPreCutString1("JECuncDat")/*"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_Uncertainty_AK4PFchs.txt"*/);
@@ -236,7 +236,7 @@ void analysisClass::Loop()
        //   cout<<"idx photon "<<indexgoodpho<<endl;
           
                if(!HaspixelSeed->at(indexgoodpho)){
-                     if(/*PhotonLoosePt->at(indexgoodpho)*/PhotonsmearPt->at(indexgoodpho)>= 40.){
+                     if(PhotonLoosePt->at(indexgoodpho)>= 40.){
                         bool keepmuon = true ;
                         if(nMuonsLoose != 0){ 
                         size_t nb_muons = muonPt->size();
@@ -250,16 +250,17 @@ void analysisClass::Loop()
                         }
                         }
                         
-                          if(nMuonsLoose == 0 || keepmuon ){
+                          if(nMuonsLoose == 0  || keepmuon){
 
 
      size_t no_jets_ak4=jetPtAK4->size();
     
      
-     TLorentzVector gamma1      ;
-    // TLorentzVector gamma1smear ;
-      // gamma1.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
-       gamma1.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
+     TLorentzVector gamma1     ;
+     TLorentzVector gammaloose ;
+     gammaloose.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
+     gamma1.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
+    // gamma1.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
        
        
        
@@ -524,8 +525,19 @@ void analysisClass::Loop()
     corrJet.SetPtEtaPhiE((jetPtAK4->at(it)/jetJecAK4->at(it))*corrs,jetEtaAK4->at(it),jetPhiAK4->at(it),(jetEnergyAK4->at(it)/jetJecAK4->at(it))*corrs);
       
     double dR = gamma1.DeltaR(corrJet);
-   
-  //    std::cout<<"pt of ak4jets "<<jetRC.Pt()<<" dr "<<dR<<std::endl;}
+   /* if(it < 5 ){
+    std::cout<<" delta R "<<dR<<std::endl;
+    }*/
+    /*
+    if(it < 6 ){
+    std::cout<<" delta R "<<dR<<std::endl;
+    std::cout<<"pt of ak4chsjets["<<it<<"]    raw       "<<jetPtAK4->at(it)/jetJecAK4->at(it)<<" eta "<<jetEtaAK4->at(it)<<" phi "<<jetPhiAK4->at(it)<<std::endl;
+    std::cout<<"pt of ak4chsjets["<<it<<"]    corrected "<<corrJet.Pt()<<" eta "<<corrJet.Eta()<<" phi "<<corrJet.Phi()<<std::endl;
+    std::cout<<"pt of ak4chsjets["<<it<<"] RC corrected "<<jetRC.Pt()<<" eta "<<jetRC.Eta()<<" phi "<<jetRC.Phi()<<std::endl;
+	
+	
+    }*/
+    
     if(corrJet.Pt() > 15 && dR > 0.25) {
 	
       double emEnergyFraction = jetNemfAK4->at(it) + jetCemfAK4->at(it);
@@ -539,12 +551,22 @@ void analysisClass::Loop()
     
   double correctedMetPx = rawMet.Px() - deltaPx;
   double correctedMetPy = rawMet.Py() - deltaPy;
+  
+  
+ // propagate the EG smearing of the photon into the MET
+ // double deltasmearPx = gamma1.Px()- gammaloose.Px();
+  //double deltasmearPy = gamma1.Py()- gammaloose.Py();  
+ // correctedMetPx += -1*deltasmearPx;
+ // correctedMetPy += -1*deltasmearPy;
+ // cout<<deltasmearPx<<endl;
   double correctedMetPt = sqrt(correctedMetPx * correctedMetPx + correctedMetPy * correctedMetPy);
   
-  MetTypeI.SetPxPyPzE(correctedMetPx,correctedMetPy, rawMet.Pz(), std::hypot(correctedMetPx,correctedMetPy));  
+  MetTypeI.SetPxPyPzE(correctedMetPx,correctedMetPy, rawMet.Pz(), std::hypot(correctedMetPx,correctedMetPy)); 
+  /*std::cout<<"pt of photon               pt        "<<gamma1.Pt()<<" eta "<<gamma1.Eta()<<" phi "<<gamma1.Phi()<<std::endl;
+  std::cout<< "MET type I px : "<< MetTypeI.Px()<<" py : "<<MetTypeI.Py()<< " pT : "<<MetTypeI.Pt()<<std::endl;
+  std::cout<< "MET raw px : "<< rawMet.Px()<<" py : "<<rawMet.Py()<< " pT : "<<rawMet.Pt()<<std::endl;*/
  // MetTypeI.SetPxPyPzE(rawMet.Px(),rawMet.Py(),rawMet.Pz(),rawMet.E());
- // if(evtNo == 231020624  ){
-  // std::cout<<"MET type I: "<< MetTypeI.Pt() << " "<< MetTypeI.Eta() << " " << MetTypeI.Phi() << " " << MetTypeI.Et() <<std::endl; }
+ 
 
 //------------------------END met calculation------------------
 
@@ -674,6 +696,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "jetJecAK4_j1", jecFactors[sortedJetIdx[0]] );
        fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
        fillVariableWithValue( "jetCSVAK4_j1", jetCSVAK4->at(sortedJetIdx[0]) );
+       fillVariableWithValue( "jetQGDAK4_j1", jetQGDAK4->at(sortedJetIdx[0]) );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "chargedHadEnFrac_j1", jetChfAK4->at(sortedJetIdx[0]));
@@ -703,6 +726,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[sndjetidx]]); 
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[sndjetidx]] );
        fillVariableWithValue( "jetCSVAK4_j2", jetCSVAK4->at(sortedJetIdx[sndjetidx]) );
+       fillVariableWithValue( "jetQGDAK4_j2", jetQGDAK4->at(sortedJetIdx[sndjetidx]) );
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(sortedJetIdx[sndjetidx]));
        fillVariableWithValue( "chargedHadEnFrac_j2", jetChfAK4->at(sortedJetIdx[sndjetidx]));
@@ -754,34 +778,68 @@ void analysisClass::Loop()
      fillVariableWithValue("ptHat",ptHat);
 
      // Trigger
-     int NtriggerBits = triggerResult->size();
-     if( NtriggerBits > 0 && isData)
+
+     if( isMatch30->size() > 0 )//&& isData)
      {
-       fillVariableWithValue("passHLT_Photon30",triggerResult->at(0));// 
-     //  fillVariableWithValue("prescaletrigger_Photon30",triggerPrescale->at(0));// 
+       fillVariableWithValue("phomatchHLT_Photon30",isMatch30->at(indexgoodpho));// 
+       //fillVariableWithValue("prescaletrigger_Photon30",triggerPrescale->at(0));// 
+	//std::cout<<"prescale size"<<  triggerPrescale->size()<<std::endl;
+     }
+    if( isMatch50->size() > 0 )//&& isData)
+    {
+       fillVariableWithValue("phomatchHLT_Photon50",isMatch50->at(indexgoodpho));//
 
      }
-    if( NtriggerBits > 1 && isData)
+     if( isMatch75->size() > 0 )//&& isData)
+     {
+       fillVariableWithValue("phomatchHLT_Photon75",isMatch75->at(indexgoodpho));// 
+
+     }
+     if( isMatch90->size() > 0)// && isData)
+     {
+       fillVariableWithValue("phomatchHLT_Photon90",isMatch50->at(indexgoodpho));//
+
+     }
+     if( isMatch120->size() > 0 )//&& isData)
+     {
+       fillVariableWithValue("phomatchHLT_Photon120",isMatch120->at(indexgoodpho));//
+
+     }
+     if( isMatch165->size() > 0)// && isData)
+     {
+       fillVariableWithValue("phomatchHLT_Photon165",isMatch165->at(indexgoodpho));//
+
+     }
+     
+     
+          int NtriggerBits = triggerResult->size();
+     if( NtriggerBits > 0 )//&& isData)
+     {
+       fillVariableWithValue("passHLT_Photon30",triggerResult->at(0));// 
+       //fillVariableWithValue("prescaletrigger_Photon30",triggerPrescale->at(0));// 
+	//std::cout<<"prescale size"<<  triggerPrescale->size()<<std::endl;
+     }
+    if( NtriggerBits > 1 )//&& isData)
     {
        fillVariableWithValue("passHLT_Photon50",triggerResult->at(1));//
 
      }
-     if( NtriggerBits > 2 && isData)
+     if( NtriggerBits > 2 )//&& isData)
      {
        fillVariableWithValue("passHLT_Photon75",triggerResult->at(2));// 
 
      }
-     if( NtriggerBits > 3 && isData)
+     if( NtriggerBits > 3)// && isData)
      {
        fillVariableWithValue("passHLT_Photon90",triggerResult->at(3));//
 
      }
-     if( NtriggerBits > 4 && isData)
+     if( NtriggerBits > 4 )//&& isData)
      {
        fillVariableWithValue("passHLT_Photon120",triggerResult->at(4));//
 
      }
-     if( NtriggerBits > 5 && isData)
+     if( NtriggerBits > 5)// && isData)
      {
        fillVariableWithValue("passHLT_Photon165",triggerResult->at(5));//
 
