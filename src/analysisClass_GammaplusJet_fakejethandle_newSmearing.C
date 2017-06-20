@@ -778,39 +778,52 @@ void analysisClass::Loop()
      fillVariableWithValue("ptHat",ptHat);
 
      // Trigger
+//cout<<"test core begin"<<endl;
 
-     if( isMatch30->size() > 0 )//&& isData)
+//cout<<"sizes : "<< isMatch30->size()<<" "<<isMatch50->size()<<" "<<isMatch75->size()<<" "<<isMatch90->size()<<" "<<isMatch120->size()<<" "<<isMatch165->size()<<endl;
+     if( isMatch30->size() > 0 && indexgoodpho < isMatch30->size() )//&& isData)
      {
+      // cout<<"test core 1"<<endl;
        fillVariableWithValue("phomatchHLT_Photon30",isMatch30->at(indexgoodpho));// 
-       //fillVariableWithValue("prescaletrigger_Photon30",triggerPrescale->at(0));// 
-	//std::cout<<"prescale size"<<  triggerPrescale->size()<<std::endl;
+      // cout<<"test core 1 bis"<<endl;
+       
      }
-    if( isMatch50->size() > 0 )//&& isData)
+    if( isMatch50->size() > 0 && indexgoodpho < isMatch50->size() )//&& isData)
     {
+      // cout<<"test core 2"<<endl;
        fillVariableWithValue("phomatchHLT_Photon50",isMatch50->at(indexgoodpho));//
+     //  cout<<"test core 2 bis"<<endl;
 
      }
-     if( isMatch75->size() > 0 )//&& isData)
-     {
+     if( isMatch75->size() > 0 && indexgoodpho < isMatch75->size() )//&& isData)
+     { 
+     //  cout<<"test core 3"<<endl;
        fillVariableWithValue("phomatchHLT_Photon75",isMatch75->at(indexgoodpho));// 
+     //  cout<<"test core 3 bis"<<endl;
 
      }
-     if( isMatch90->size() > 0)// && isData)
+     if( isMatch90->size() > 0 && indexgoodpho < (isMatch90->size() )  )// && isData)
      {
-       fillVariableWithValue("phomatchHLT_Photon90",isMatch50->at(indexgoodpho));//
+      // cout<<"test core 4 index pho "<< indexgoodpho<< " size "<<(isMatch90->size() ) <<endl;
+       fillVariableWithValue("phomatchHLT_Photon90",isMatch90->at(indexgoodpho));//
+      // cout<<"test core 4 bis"<<endl;
 
      }
-     if( isMatch120->size() > 0 )//&& isData)
+     if( isMatch120->size() > 0 && indexgoodpho < isMatch120->size() )//&& isData)
      {
+     //  cout<<"test core 5"<<endl;
        fillVariableWithValue("phomatchHLT_Photon120",isMatch120->at(indexgoodpho));//
+     //  cout<<"test core 5 bis"<<endl;
 
      }
-     if( isMatch165->size() > 0)// && isData)
+     if( isMatch165->size() > 0 && indexgoodpho < isMatch165->size() )// && isData)
      {
+      // cout<<"test core 6"<<endl;
        fillVariableWithValue("phomatchHLT_Photon165",isMatch165->at(indexgoodpho));//
+      // cout<<"test core 6 bis"<<endl;
 
      }
-     
+     //cout<<"test core end"<<endl;
      
           int NtriggerBits = triggerResult->size();
      if( NtriggerBits > 0 )//&& isData)
