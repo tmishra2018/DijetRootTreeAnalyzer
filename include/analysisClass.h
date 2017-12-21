@@ -23,6 +23,9 @@ typedef boost::shared_ptr<fastjet::JetDefinition>    JetDefPtr;
 #include "CondFormats/JetMETObjects/interface/FactorizedJetCorrector.h"
 #include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
 
+//For JER
+#include "JetMETCorrections/Modules/interface/JetResolution.h"
+
 using namespace std;
 
 class analysisClass : public baseClass {
@@ -57,6 +60,12 @@ private :
   JetCorrectionUncertainty *unc;
   JetCorrectorParameters *L1JetParForTypeI;
   JetCorrectorParameters *L1JetParForTypeIMC;
+  
+  JME::JetResolution *resolution;
+  JME::JetResolutionScaleFactor *resolution_sf;
+  
+  JME::JetResolution *resolution_TI;
+  JME::JetResolutionScaleFactor *resolution_sf_TI;
   
 };
 

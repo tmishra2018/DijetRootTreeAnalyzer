@@ -111,7 +111,9 @@ void baseClass::init()
     for (map<string, cut>::iterator cc = cutName_cut_.begin(); cc != cutName_cut_.end(); cc++)
       {
 	cut * c = & (cc->second);
-	if(c->saveVariableInReducedSkim)    reduced_skim_tree_->Branch(c->variableName.c_str(),&c->value,(c->variableName+"/D").c_str());
+	if(c->saveVariableInReducedSkim){
+	    reduced_skim_tree_->Branch(c->variableName.c_str(),&c->value,(c->variableName+"/D").c_str());
+	
       }
   }
 
@@ -120,6 +122,19 @@ void baseClass::init()
   //  for (vector<string>::iterator it = orderedCutNames_.begin();
   //       it != orderedCutNames_.end(); it++) STDOUT("orderedCutNames_ = "<<*it)
   //STDOUT("ends");
+            /*pt_jets_    ->clear();
+            phi_jets_   ->clear();
+            eta_jets_   ->clear();
+            mass_jets_->clear();*/
+            pt_jets_     = new std::vector<double>;
+	    phi_jets_    = new std::vector<double>;
+	    eta_jets_    = new std::vector<double>;
+	    mass_jets_ = new std::vector<double>;  
+	    reduced_skim_tree_->Branch("pT_jets"    ,"vector<double>",&pt_jets_);
+	    reduced_skim_tree_->Branch("Eta_jets"   ,"vector<double>",&eta_jets_ );
+	    reduced_skim_tree_->Branch("Phi_jets"   ,"vector<double>",&phi_jets_);
+	    reduced_skim_tree_->Branch("Mass_jets","vector<double>",&mass_jets_);
+}
 }
 
 int baseClass::readInputList()

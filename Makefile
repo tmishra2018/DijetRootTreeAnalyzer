@@ -9,7 +9,7 @@ INC= -I.. -I. -I./include  -I${CLHEP}/include -I${CMSSW_RELEASE_BASE}/src -I$(ca
 ROOTINC= -I${ROOTSYS}/include
 LIBS= -L.  ${ROOTLIBS} -L${CLHEP}/lib
 SRC= ./src
-SELECTIONLIB=$(SRC)/rootNtupleClass.o $(SRC)/baseClass.o $(SRC)/analysisClass.o ${CMSSW_RELEASE_BASE}/lib/${SCRAM_ARCH}/libCondFormatsJetMETObjects.so $(SRC)/jsonParser.o $(SRC)/pileupReweighter.o $(SRC)/qcdFitter.o $(SRC)/qcdFitter_V1.o  $(SRC)/likelihoodGetter.o $(SRC)/eventListHelper.o
+SELECTIONLIB=$(SRC)/rootNtupleClass.o $(SRC)/baseClass.o $(SRC)/analysisClass.o ${CMSSW_RELEASE_BASE}/lib/${SCRAM_ARCH}/libCondFormatsJetMETObjects.so ${CMSSW_RELEASE_BASE}/lib/${SCRAM_ARCH}/libJetMETCorrectionsObjects.so  ${CMSSW_RELEASE_BASE}/lib/${SCRAM_ARCH}/libJetMETCorrectionsModules.so ${CMSSW_RELEASE_BASE}/lib/${SCRAM_ARCH}/libJetMETCorrectionsJetCorrector.so $(SRC)/jsonParser.o $(SRC)/pileupReweighter.o $(SRC)/qcdFitter.o $(SRC)/qcdFitter_V1.o  $(SRC)/likelihoodGetter.o $(SRC)/eventListHelper.o
 EXE = main
 
 # ********** TEMPLATE *************
