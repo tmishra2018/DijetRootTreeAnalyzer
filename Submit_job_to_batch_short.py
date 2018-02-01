@@ -37,7 +37,7 @@ for i in range(0, Nlist):
 	list_to_submit = List_splited[i]
 	outputN = str(i+1)
 	argforscript = "--config_file "+config_file+" --outputname "+Runsuffix+"_"+outputN+" --list "+list_to_submit+" --dirlist "+dirlist
-	cmd_3="bsub  -q 2nd -o /afs/cern.ch/work/h/hlattaud/"+Runsuffix+"_"+outputN+"_out.txt  /afs/cern.ch/work/h/hlattaud/private/CMSSW_8_0_25/src/CMSDIJET/responsecomputing/DijetRootTreeAnalyzer/Run_Analyser_short.py "+argforscript
+	cmd_3="bsub  -q 1nd -o /afs/cern.ch/work/h/hlattaud/txt_output/"+Runsuffix+"_"+outputN+"_out.txt  /afs/cern.ch/work/h/hlattaud/private/CMSSW_8_0_25/src/CMSDIJET/responsecomputing/DijetRootTreeAnalyzer/Run_Analyser_short.py "+argforscript
 	print(cmd_3)
 	os.system(cmd_1+" && "+cmd_2+" && "+cmd_3)
 

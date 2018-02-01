@@ -17,6 +17,7 @@
 #include <TH2F.h>
 #include <math.h>
 #include <stdlib.h>
+#include <boost/regex.hpp>
 
 #define STDOUT(STRING) {		   \
 	std::cout << __FILE__ <<" - Line "<<__LINE__<<" - "<<__FUNCTION__<<": "<< STRING <<std::endl;   \
@@ -202,7 +203,8 @@ class baseClass : public rootNtupleClass {
   PileupReweighter pileupReweighter_;
 
   TFile * output_root_;
-
+  std::vector<double> *pt_jets_, *phi_jets_, *eta_jets_, *mass_jets_; 
+  
   private :
   int nOptimizerCuts_;
   string * configFile_;
@@ -282,6 +284,7 @@ class baseClass : public rootNtupleClass {
   map<int, Optimize> optimizeName_cut_;
   TH1F* eventcuts_; // number of events passing each cut
   TH1F* h_optimizer_; // optimization histogram
+  
 
 };
 

@@ -111,7 +111,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vParTypeIL123.push_back(*L1DATAPar);
     vParTypeIL123.push_back(*L2DATAPar);
     vParTypeIL123.push_back(*L3DATAPar);
-    vParTypeIL123.push_back(*L2L3Residual);
+    if(int(getPreCutValue1("useResidual"))==1) vParTypeIL123.push_back(*L2L3Residual);
     
     std::vector<JetCorrectorParameters> vParTypeIMC;
     vParTypeIMC.push_back(*L1JetParForTypeIMC);
@@ -125,7 +125,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vPar_data.push_back(*L1DATAPar);
     vPar_data.push_back(*L2DATAPar);
     vPar_data.push_back(*L3DATAPar);
-    vPar_data.push_back(*L2L3Residual);
+    if(int(getPreCutValue1("useResidual"))==1) vPar_data.push_back(*L2L3Residual);
 
     JetCorrector = new FactorizedJetCorrector(vPar); assert(JetCorrector);
     JetCorrector_data = new FactorizedJetCorrector(vPar_data); assert(JetCorrector_data);

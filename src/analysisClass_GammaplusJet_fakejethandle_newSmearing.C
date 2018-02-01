@@ -21,7 +21,7 @@ bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float
     if(isoldvalid) {
     return true ;  
     }else{return false;}   
-    if(!isDATA && !hasgenjet) return false;
+  //  if(!isDATA && !hasgenjet) return false;
     
     if(fabs(Eta_ak4) > 2.7  && fabs(Eta_ak4) <= 3.0)
     {
@@ -58,7 +58,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     std::string L1DATAPath = getPreCutString1("L1Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1FastJet_AK4PFchs.txt";
     std::string L2DATAPath = getPreCutString1("L2Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Relative_AK4PFchs.txt"; 
     std::string L3DATAPath = getPreCutString1("L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = getPreCutString1("L2L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; 
+   // std::string L2L3ResidualPath = getPreCutString1("L2L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; 
     
     
     std::string L1RCcorrDATAPath = getPreCutString1("L1RCDat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
@@ -73,7 +73,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     L1DATAPar = new JetCorrectorParameters(L1DATAPath);
     L2DATAPar = new JetCorrectorParameters(L2DATAPath);
     L3DATAPar = new JetCorrectorParameters(L3DATAPath);
-    L2L3Residual = new JetCorrectorParameters(L2L3ResidualPath);
+   // L2L3Residual = new JetCorrectorParameters(L2L3ResidualPath);
     
     L1JetParForTypeI =new JetCorrectorParameters(L1RCcorrDATAPath);
     L1JetParForTypeIMC =new JetCorrectorParameters(L1RCcorrMCPath);
@@ -91,7 +91,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vParTypeIL123.push_back(*L1DATAPar);
     vParTypeIL123.push_back(*L2DATAPar);
     vParTypeIL123.push_back(*L3DATAPar);
-    vParTypeIL123.push_back(*L2L3Residual);
+   // vParTypeIL123.push_back(*L2L3Residual);
     
     std::vector<JetCorrectorParameters> vParTypeIMC;
     vParTypeIMC.push_back(*L1JetParForTypeIMC);
@@ -105,7 +105,7 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
     vPar_data.push_back(*L1DATAPar);
     vPar_data.push_back(*L2DATAPar);
     vPar_data.push_back(*L3DATAPar);
-    vPar_data.push_back(*L2L3Residual);
+    //vPar_data.push_back(*L2L3Residual);
 
     JetCorrector = new FactorizedJetCorrector(vPar); assert(JetCorrector);
     JetCorrector_data = new FactorizedJetCorrector(vPar_data); assert(JetCorrector_data);
@@ -431,32 +431,32 @@ void analysisClass::Loop()
 
 
     int sndjetidx = -10 ;
-
-
+    bool hasgen = false;
+    bool hasgen2 = false;
      //AK4 jets
     if(no_jets_ak4-nfakejet>=1  ) 
       { 
      
-      bool hasgen = false;
+      
       if(!isData && jetPtGenAK4->at(sortedJetIdx[0])){ hasgen = 1;}
      
          
 	 if((jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >=  15 /*getPreCutValue1("pt0Cut")*/ && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[0]), jetNhfAK4->at(sortedJetIdx[0]), neMultAK4->at(sortedJetIdx[0]), jetNemfAK4->at(sortedJetIdx[0]),idLAK4->at(sortedJetIdx[0]), isData, hasgen)/*  && (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0]))*jetPtAK4->at(sortedJetIdx[0]) >= gamma1.Pt()*getPreCutValue1("firstJetThreshold")*/)
 	   {
-		 ak4j1.SetPtEtaPhiM( (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0]) ,jetEtaAK4->at(sortedJetIdx[0])
+		 ak4j1.SetPtEtaPhiM( (jecFactors[sortedJetIdx[0]]/*1.*//jetJecAK4->at(sortedJetIdx[0])) *jetPtAK4->at(sortedJetIdx[0]) ,jetEtaAK4->at(sortedJetIdx[0])
 				     ,jetPhiAK4->at(sortedJetIdx[0])
-				     , (jecFactors[sortedJetIdx[0]]/jetJecAK4->at(sortedJetIdx[0])) *jetMassAK4->at(sortedJetIdx[0]));
+				     , (jecFactors[sortedJetIdx[0]]/*1.*//jetJecAK4->at(sortedJetIdx[0])) *jetMassAK4->at(sortedJetIdx[0]));
 		
 		
 		for(size_t secjet = 1 ; secjet < no_jets_ak4-nfakejet ; secjet++ ){	
-		bool hasgen2 = false;
+		
                 if(!isData && jetPtGenAK4->at(sortedJetIdx[secjet])){ hasgen2 = 1;}	     
 		if(no_jets_ak4-nfakejet >= secjet + 1 && (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet]))*jetPtAK4->at(sortedJetIdx[secjet]) >= 10 && isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[secjet]), jetNhfAK4->at(sortedJetIdx[secjet]), neMultAK4->at(sortedJetIdx[secjet]), jetNemfAK4->at(sortedJetIdx[secjet]),idLAK4->at(sortedJetIdx[0]), isData,hasgen2))
 	       {
-		      ak4j2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet])) *jetPtAK4->at(sortedJetIdx[secjet])
+		      ak4j2.SetPtEtaPhiM( (jecFactors[sortedJetIdx[secjet]]/*1.*//jetJecAK4->at(sortedJetIdx[secjet])) *jetPtAK4->at(sortedJetIdx[secjet])
 				     ,jetEtaAK4->at(sortedJetIdx[secjet])
 				     ,jetPhiAK4->at(sortedJetIdx[secjet])
-				     , (jecFactors[sortedJetIdx[secjet]]/jetJecAK4->at(sortedJetIdx[secjet])) *jetMassAK4->at(sortedJetIdx[secjet]));
+				     , (jecFactors[sortedJetIdx[secjet]]/*1.*//jetJecAK4->at(sortedJetIdx[secjet])) *jetMassAK4->at(sortedJetIdx[secjet]));
 				     sndjetidx = secjet;
 				     break;
 				     
@@ -675,7 +675,7 @@ void analysisClass::Loop()
 	 fillVariableWithValue("Eta_photonGEN",photonEtaGen->at(indexgoodpho));
 	 fillVariableWithValue("Phi_photonGEN",photonPhiGen->at(indexgoodpho));
 	 fillVariableWithValue("Energy_photonGEN",photonEnergyGen->at(indexgoodpho));
-	 
+	 fillVariableWithValue("PassGenmatching",isGenMatch->at(indexgoodpho));
 	 fillVariableWithValue("weight",weight);
 	// SumWeight->Fill(0.,weight);
 	 
@@ -708,11 +708,12 @@ void analysisClass::Loop()
        fillVariableWithValue( "chargedMult_j1", chMultAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "neutrMult_j1", neMultAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "photonMult_j1", phoMultAK4->at(sortedJetIdx[0]));
-       if(!isData )
+       if(!isData && hasgen )
        {
          fillVariableWithValue( "pTAK4_j1GEN", jetPtGenAK4->at(sortedJetIdx[0]));
 	 fillVariableWithValue( "etaAK4_j1GEN", jetEtaGenAK4->at(sortedJetIdx[0]));	       
 	 fillVariableWithValue("PDGIDAK4_j1",jetpdgIDGenAK4->at(sortedJetIdx[0]));
+
        }
      }
      
@@ -740,7 +741,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "photonMult_j2", phoMultAK4->at(sortedJetIdx[sndjetidx]));
        //dijet
        fillVariableWithValue( "CosThetaStarAK4", TMath::TanH( (AK4jets[0].Eta()-AK4jets[1].Eta())/2 ));
-       if(!isData )
+       if(!isData && hasgen2)
        {
           
 
@@ -857,7 +858,11 @@ void analysisClass::Loop()
        fillVariableWithValue("passHLT_Photon165",triggerResult->at(5));//
 
      }
-     
+     if( NtriggerBits > 6)// && isData)
+     {
+       fillVariableWithValue("passHLT_Photon200",triggerResult->at(6));//
+
+     }
      
 
      // Evaluate cuts (but do not apply them)

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Jun 14 11:05:48 2017 by ROOT version 5.34/36
+// Wed Jul 12 11:29:26 2017 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -17,11 +17,16 @@ using namespace std;
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
-#include <vector>
-#include <vector>
-#include <vector>
-#include <vector>
-#include <vector>
+#include "vector"
+#include "vector"
+#include "vector"
+#include "vector"
+#include "vector"
+
+class rootNtupleClass {
+public :
+   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
+   Int_t           fCurrent; //!current Tree number in a TChain
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
    const Int_t kMaxrun = 1;
@@ -67,11 +72,6 @@ using namespace std;
    const Int_t kMaxnGenJetsAK4 = 1;
    const Int_t kMaxnGenJetsAK8 = 1;
    const Int_t kMaxnGenPhotons = 1;
-
-class rootNtupleClass {
-public :
-   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
-   Int_t           fCurrent; //!current Tree number in a TChain
 
    // Declaration of leaf types
    Int_t           runNo;
@@ -132,6 +132,7 @@ public :
    vector<bool>    *isMatch90;
    vector<bool>    *isMatch120;
    vector<bool>    *isMatch165;
+   vector<bool>    *isGenMatch;
    vector<float>   *PhotonLoosePt;
    vector<float>   *PhotonsmearPt;
    vector<float>   *PhotonSCPt;
@@ -357,6 +358,7 @@ public :
    TBranch        *b_isMatch90;   //!
    TBranch        *b_isMatch120;   //!
    TBranch        *b_isMatch165;   //!
+   TBranch        *b_isGenMatch;   //!
    TBranch        *b_PhotonLoosePt;   //!
    TBranch        *b_PhotonsmearPt;   //!
    TBranch        *b_PhotonSCPt;   //!
@@ -557,7 +559,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("root://lyogrid06.in2p3.fr//dpm/in2p3.fr/home/cms/data/store/user/hlattaud/GammaJet/Gjet_amc_NLO/GJets_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_GJets_HT-40To100/170610_172443/0000/mylocaltest_10_9.root/dijets/events");
+      chain->Add("root://lyogrid06.in2p3.fr//dpm/in2p3.fr/home/cms/data/store/user/hlattaud/GammaJet/Gjet_amc_NLO/GJets_pythia_hltmatching_V1/GJet_Pt-15To6000_TuneCUETP8M1-Flat_13TeV_pythia8_20M/crab_GJets_pythia_hltmatching_V1/170706_094417/0000/mylocaltest_10_1.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -623,6 +625,7 @@ void rootNtupleClass::Init(TTree *tree)
    isMatch90 = 0;
    isMatch120 = 0;
    isMatch165 = 0;
+   isGenMatch = 0;
    PhotonLoosePt = 0;
    PhotonsmearPt = 0;
    PhotonSCPt = 0;
@@ -845,6 +848,7 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("isMatch90", &isMatch90, &b_isMatch90);
    fChain->SetBranchAddress("isMatch120", &isMatch120, &b_isMatch120);
    fChain->SetBranchAddress("isMatch165", &isMatch165, &b_isMatch165);
+   fChain->SetBranchAddress("isGenMatch", &isGenMatch, &b_isGenMatch);
    fChain->SetBranchAddress("PhotonLoosePt", &PhotonLoosePt, &b_PhotonLoosePt);
    fChain->SetBranchAddress("PhotonsmearPt", &PhotonsmearPt, &b_PhotonsmearPt);
    fChain->SetBranchAddress("PhotonSCPt", &PhotonSCPt, &b_PhotonSCPt);
