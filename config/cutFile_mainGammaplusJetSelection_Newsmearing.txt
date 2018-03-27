@@ -34,13 +34,13 @@ firstJetThreshold        	0.3		-		-		-		-1
 L1MC                            data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L1FastJet_AK4PFchs.txt		-		-		-		-1
 L2MC                            data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L2Relative_AK4PFchs.txt		-		-		-		-1
 L3MC                            data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L3Absolute_AK4PFchs.txt		-		-		-		-1
-L1Dat                           data/Summer16_07Aug2017BCD_V4_DATA/Summer16_07Aug2017BCD_V4_DATA_L1FastJet_AK4PFchs.txt		-		-		-		-1
-L2Dat                           data/Summer16_07Aug2017BCD_V4_DATA/Summer16_07Aug2017BCD_V4_DATA_L2Relative_AK4PFchs.txt		-		-		-		-1
-L3Dat                           data/Summer16_07Aug2017BCD_V4_DATA/Summer16_07Aug2017BCD_V4_DATA_L3Absolute_AK4PFchs.txt		-		-		-		-1
-L2L3Dat                         data/Summer16_07Aug2017BCD_V4_DATA/Summer16_07Aug2017BCD_V4_DATA_L2L3Residual_AK4PFchs.txt		-		-		-		-1
-L1RCDat                         data/Summer16_07Aug2017BCD_V4_DATA/Summer16_07Aug2017BCD_V4_DATA_L1RC_AK4PFchs.txt		-		-		-		-1
+L1Dat                           data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L1FastJet_AK4PFchs.txt		-		-		-		-1
+L2Dat                           data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L2Relative_AK4PFchs.txt		-		-		-		-1
+L3Dat                           data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L3Absolute_AK4PFchs.txt		-		-		-		-1
+L2L3Dat                         data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L2L3Residual_AK4PFchs.txt		-		-		-		-1
+L1RCDat                         data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L1RC_AK4PFchs.txt		-		-		-		-1
 L1RCMC                          data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L1RC_AK4PFchs.txt		-		-		-		-1
-JECuncDat                       data/Summer16_07Aug2017BCD_V4_DATA/Summer16_07Aug2017BCD_V4_DATA_Uncertainty_AK4PFchs.txt		-		-		-		-1
+JECuncDat                       data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_Uncertainty_AK4PFchs.txt		-		-		-		-1
 JERreso                         data/JER_textfile/Spring16_25nsV6_MC/Spring16_25nsV6_MC_PtResolution_AK4PFchs.txt		-		-		-		-1
 JERSF                           data/JER_textfile/Spring16_25nsV6_MC/Spring16_25nsV6_MC_SF_AK4PFchs.txt		-		-		-		-1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
@@ -120,6 +120,7 @@ Energy_photonGEN        -inf           +inf                -               -    
 hadTowOverEm          -inf           +inf                -               -               1       100 0 10000       SAVE
 sigmaietaieta_photon  -inf           +inf                -               -               1       100 0 10000       SAVE
 CHiso_photon          -inf           +inf                -               -               1       100 0 10000       SAVE
+Isfakephoton          -inf           +inf                -               -               1       100 0 10000       SAVE
 NHiso_photon          -inf           +inf                -               -               1       100 0 10000       SAVE
 Photoniso_photon      -inf           +inf                -               -               1       100 0 10000       SAVE
 Energy_photon        -inf           +inf                -               -               1       500 0 10000       SAVE
@@ -193,3 +194,14 @@ etaAK4_j2GEN          -inf           +inf                -               -      
 PDGIDAK4_j2  	     -inf           +inf                -               -               1       200 0 30    SAVE
 CosThetaStarAK4	     -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 evtWeightTot         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+sigmaietaiphi_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+E5_5_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+E2_2_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+ES_Eff_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+R9_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+etawidth_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+phiwidth_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+Es_energy_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+E2_5_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+E1_3_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+WorstChargedIsolation_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE

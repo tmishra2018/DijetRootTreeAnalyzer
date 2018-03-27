@@ -129,11 +129,15 @@ void baseClass::init()
             pt_jets_     = new std::vector<double>;
 	    phi_jets_    = new std::vector<double>;
 	    eta_jets_    = new std::vector<double>;
-	    mass_jets_ = new std::vector<double>;  
+	    mass_jets_ = new std::vector<double>;
+	    emF_jets_ = new std::vector<double>;
+	    IsID_jets_ = new std::vector<bool>;  
 	    reduced_skim_tree_->Branch("pT_jets"    ,"vector<double>",&pt_jets_);
 	    reduced_skim_tree_->Branch("Eta_jets"   ,"vector<double>",&eta_jets_ );
 	    reduced_skim_tree_->Branch("Phi_jets"   ,"vector<double>",&phi_jets_);
 	    reduced_skim_tree_->Branch("Mass_jets","vector<double>",&mass_jets_);
+	    reduced_skim_tree_->Branch("emF_jets","vector<double>",&emF_jets_);
+	    reduced_skim_tree_->Branch("IsID_jets","vector<bool>",&IsID_jets_);
 }
 }
 

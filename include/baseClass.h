@@ -203,8 +203,8 @@ class baseClass : public rootNtupleClass {
   PileupReweighter pileupReweighter_;
 
   TFile * output_root_;
-  std::vector<double> *pt_jets_, *phi_jets_, *eta_jets_, *mass_jets_; 
-  
+  std::vector<double> *pt_jets_, *phi_jets_, *eta_jets_, *mass_jets_, *emF_jets_; 
+  std::vector<bool> *IsID_jets_;
   private :
   int nOptimizerCuts_;
   string * configFile_;
