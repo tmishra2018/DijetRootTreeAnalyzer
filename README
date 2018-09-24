@@ -1,4 +1,17 @@
 
+Instructions for producing Gamma + jet step 2 Analyse Nuples
+-----------------------------------
+
+##########################################################
+# *Target: CMS Gamma + Jet  - JEC calculation            #
+# *Author: Hugues                                        #
+# *Last update: 22 Sept 2018                              #
+#                                                        #
+# Lines starting with '$' are commands to be executed    #
+# (after necessary changes when needed), all other text  #
+# is just instructions or program output.                #
+########################################################## 
+
 Introduction:
 -------------
 
@@ -47,10 +60,11 @@ Instructions:
     ./scripts/make_rootNtupleClass.sh -f GammajetTree.root -t dijets/events
    where the rootfile has been produced by the DijetRootTreeMaker
    Note that there could be minor glitches and then you can fix by hand.
+   type yes when asked to overwrite rootNtupleClass.h
 =======
 
 5) Make a symbolic link analysisClass.C by:
-    ln -sf analysisClass_GammaplusJet_fakejethandle_newSmearing.C src/analysisClass.C 
+    ln -sf analysisClass_GammaplusJet_New_methods.C src/analysisClass.C 
    or 
     ln -sf analysisClass_GammaplusJet_fakejethandlePuppi.C src/analysisClass.C to run on puppi jet
    
@@ -63,7 +77,7 @@ Instructions:
     ./main
       (you will be asked for input arguments)
    i.e.
-    ./main inputList.txt config/cutFileExample.txt dijets/events output/rootFile output/cutEfficiencyFile
+    ./main inputList.txt config/cutFile_mainGammaplusJetSelection_Newsmearing.txt dijets/events output/rootFileName output/rootFileName
 
 8) All the produced files are in the directory output
 
@@ -71,18 +85,19 @@ Instructions:
    after selection. You are now ready to start the full production.
    
    
-9) To run your analysis on the LXplus batch use the Submit_job_to_batch.py script. To use it first make a list of the output of DijettreeMaker Step.
+9) To run your analysis on the LXplus batch use the Submit_job_to_batch_short.py script. To use it first make a list of the output of DijettreeMaker Step.
    then moove the list in a new directory and split it 10 lines by 10 lines.
+   $split -l 10 NameOfYourList.txt
    In the file Run_Analyser.py change the path to the output directory L39 (outputdir ="path to your output directory").
    
    for example : 
    $ mkdir MC_summer
    $ eos ls root://eoscms//eos/cms/store/group/phys_jetmet/hlattaud/GammaJet/GJet-RunIISummer16MiniAODv2/GJet_Pt-15To6000_TuneCUETP8M1-Flat_13TeV_pythia8_20M/
 crab_NEWGJet-RunIISummer16MiniAODv2_Newsmearing > list_MC.txt 
-   $ Split -l 10 list_MC.txt
+   $ split -l 10 list_MC.txt
    
    $ cd ../
-   $ python Submit_job_to_batch.py --config_file config/cutFile_mainGammaplusJetSelection_Newsmearing.txt --whichrun MC_summer_datalike --Nlist 4 --dirlist MC_summer/
+   $ python Submit_job_to_batch_short.py --config_file config/cutFile_mainGammaplusJetSelection_Newsmearing.txt --whichrun MC_summer_datalike --Nlist 4 --dirlist MC_summer/
    
    you will be ask for your grid password.
    

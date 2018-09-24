@@ -58,6 +58,11 @@ private :
   FactorizedJetCorrector *JetCorrectortypIMC;
   FactorizedJetCorrector *JetCorrectortypIL123MC;
   JetCorrectionUncertainty *unc;
+  JetCorrectionUncertainty *unc_TI;
+  JetCorrectionUncertainty *unc_RC;
+  JetCorrectionUncertainty *unc_MC;
+  JetCorrectionUncertainty *unc_MC_TI;
+  JetCorrectionUncertainty *unc_MC_RC;
   JetCorrectorParameters *L1JetParForTypeI;
   JetCorrectorParameters *L1JetParForTypeIMC;
   
@@ -66,6 +71,7 @@ private :
   
   JME::JetResolution *resolution_TI;
   JME::JetResolutionScaleFactor *resolution_sf_TI;
+  
   
 };
 

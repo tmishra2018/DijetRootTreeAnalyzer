@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Jul 12 11:29:26 2017 by ROOT version 6.06/01
+// Fri May 18 13:59:29 2018 by ROOT version 6.06/09
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -156,6 +156,18 @@ public :
    vector<bool>    *isPhotonLoose;
    vector<bool>    *isPhotonMedium;
    vector<bool>    *isPhotonTight;
+   vector<bool>    *isfakephoton;
+   vector<float>   *Photonfull5x5SigmaIEtaIPhiMapToken;
+   vector<float>   *Photonfull5x5E5x5MapToken;
+   vector<float>   *Photonfull5x5E2x2MapToken;
+   vector<float>   *PhotonESEffSigmaRRMapToken;
+   vector<float>   *PhotonR9;
+   vector<float>   *Photon_etawidth;
+   vector<float>   *Photon_phiwidth;
+   vector<float>   *Photon_ES_energy;
+   vector<float>   *Photonfull5x5E2x5;
+   vector<float>   *Photonfull5x5E1x3;
+   vector<float>   *PhotonWorstChargedIsolation;
    vector<float>   *electronPt;
    vector<float>   *electronEta;
    vector<float>   *electronPhi;
@@ -204,67 +216,13 @@ public :
    vector<int>     *neHadMultAK4;
    vector<int>     *neMultAK4;
    vector<int>     *phoMultAK4;
-   vector<float>   *jetPtPUPPI;
-   vector<float>   *jetJecPUPPI;
-   vector<float>   *jetEtaPUPPI;
-   vector<float>   *jetPhiPUPPI;
-   vector<float>   *jetMassPUPPI;
-   vector<float>   *jetEnergyPUPPI;
-   vector<float>   *jetPtPUPPIRC;
-   vector<float>   *jetEtaPUPPIRC;
-   vector<float>   *jetPhiPUPPIRC;
-   vector<float>   *jetMassPUPPIRC;
-   vector<float>   *jetEnergyPUPPIRC;
-   vector<float>   *jetAreaPUPPI;
-   vector<float>   *jetCSVPUPPI;
-   vector<float>   *jetQGDPUPPI;
-   vector<float>   *jetChfPUPPI;
-   vector<float>   *jetNhfPUPPI;
-   vector<float>   *jetPhfPUPPI;
-   vector<float>   *jetMufPUPPI;
-   vector<float>   *jetElfPUPPI;
-   vector<float>   *jetNemfPUPPI;
-   vector<float>   *jetCemfPUPPI;
-   vector<float>   *jetHf_hfPUPPI;
-   vector<float>   *jetHf_emfPUPPI;
-   vector<float>   *jetHofPUPPI;
-   vector<int>     *idLPUPPI;
-   vector<int>     *idTPUPPI;
-   vector<int>     *chHadMultPUPPI;
-   vector<int>     *chMultPUPPI;
-   vector<int>     *neHadMultPUPPI;
-   vector<int>     *neMultPUPPI;
-   vector<int>     *phoMultPUPPI;
-   vector<float>   *jetPtAK8;
-   vector<float>   *jetJecAK8;
-   vector<float>   *jetEtaAK8;
-   vector<float>   *jetPhiAK8;
-   vector<float>   *jetMassAK8;
-   vector<float>   *jetEnergyAK8;
-   vector<float>   *jetAreaAK8;
-   vector<float>   *jetCSVAK8;
-   vector<float>   *jetChfAK8;
-   vector<float>   *jetNhfAK8;
-   vector<float>   *jetPhfAK8;
-   vector<float>   *jetMufAK8;
-   vector<float>   *jetElfAK8;
-   vector<float>   *jetNemfAK8;
-   vector<float>   *jetCemfAK8;
-   vector<float>   *jetHf_hfAK8;
-   vector<float>   *jetHf_emfAK8;
-   vector<float>   *jetHofAK8;
-   vector<int>     *idLAK8;
-   vector<int>     *idTAK8;
-   vector<float>   *jetMassPrunedAK8;
-   vector<float>   *jetMassSoftDropAK8;
-   vector<float>   *jetTau1AK8;
-   vector<float>   *jetTau2AK8;
-   vector<float>   *jetTau3AK8;
-   vector<int>     *chHadMultAK8;
-   vector<int>     *chMultAK8;
-   vector<int>     *neHadMultAK8;
-   vector<int>     *neMultAK8;
-   vector<int>     *phoMultAK8;
+   vector<int>     *hadronflavour;
+   vector<float>   *deepcsv_probb_AK4;
+   vector<float>   *deepcsv_probbb_AK4;
+   vector<float>   *deepcsv_probc_AK4;
+   vector<float>   *deepcsv_probcc_AK4;
+   vector<float>   *CvsB_taggerAK4;
+   vector<float>   *CvsL_taggerAK4;
    vector<bool>    *triggerResult;
    vector<int>     *triggerPrescale;
    vector<string>  *triggerName;
@@ -287,17 +245,6 @@ public :
    vector<float>   *jetMassGenAK4;
    vector<float>   *jetEnergyGenAK4;
    vector<int>     *jetpdgIDGenAK4;
-   vector<float>   *jetPtGenAK8;
-   vector<float>   *jetEtaGenAK8;
-   vector<float>   *jetPhiGenAK8;
-   vector<float>   *jetMassGenAK8;
-   vector<float>   *jetEnergyGenAK8;
-   vector<float>   *jetPtGenPUPPI;
-   vector<float>   *jetEtaGenPUPPI;
-   vector<float>   *jetPhiGenPUPPI;
-   vector<float>   *jetMassGenPUPPI;
-   vector<float>   *jetEnergyGenPUPPI;
-   vector<int>     *jetpdgIDGenPUPPI;
 
    // List of branches
    TBranch        *b_run_;   //!
@@ -382,6 +329,18 @@ public :
    TBranch        *b_isPhotonLoose;   //!
    TBranch        *b_isPhotonMedium;   //!
    TBranch        *b_isPhotonTight;   //!
+   TBranch        *b_isfakephoton;   //!
+   TBranch        *b_Photonfull5x5SigmaIEtaIPhiMapToken;   //!
+   TBranch        *b_Photonfull5x5E5x5MapToken;   //!
+   TBranch        *b_Photonfull5x5E2x2MapToken;   //!
+   TBranch        *b_PhotonESEffSigmaRRMapToken;   //!
+   TBranch        *b_PhotonR9;   //!
+   TBranch        *b_Photon_etawidth;   //!
+   TBranch        *b_Photon_phiwidth;   //!
+   TBranch        *b_Photon_ES_energy;   //!
+   TBranch        *b_Photonfull5x5E2x5;   //!
+   TBranch        *b_Photonfull5x5E1x3;   //!
+   TBranch        *b_PhotonWorstChargedIsolation;   //!
    TBranch        *b_electronPt;   //!
    TBranch        *b_electronEta;   //!
    TBranch        *b_electronPhi;   //!
@@ -430,67 +389,13 @@ public :
    TBranch        *b_neHadMultAK4;   //!
    TBranch        *b_neMultAK4;   //!
    TBranch        *b_phoMultAK4;   //!
-   TBranch        *b_jetPtPUPPI;   //!
-   TBranch        *b_jetJecPUPPI;   //!
-   TBranch        *b_jetEtaPUPPI;   //!
-   TBranch        *b_jetPhiPUPPI;   //!
-   TBranch        *b_jetMassPUPPI;   //!
-   TBranch        *b_jetEnergyPUPPI;   //!
-   TBranch        *b_jetPtPUPPIRC;   //!
-   TBranch        *b_jetEtaPUPPIRC;   //!
-   TBranch        *b_jetPhiPUPPIRC;   //!
-   TBranch        *b_jetMassPUPPIRC;   //!
-   TBranch        *b_jetEnergyPUPPIRC;   //!
-   TBranch        *b_jetAreaPUPPI;   //!
-   TBranch        *b_jetCSVPUPPI;   //!
-   TBranch        *b_jetQGDPUPPI;   //!
-   TBranch        *b_jetChfPUPPI;   //!
-   TBranch        *b_jetNhfPUPPI;   //!
-   TBranch        *b_jetPhfPUPPI;   //!
-   TBranch        *b_jetMufPUPPI;   //!
-   TBranch        *b_jetElfPUPPI;   //!
-   TBranch        *b_jetNemfPUPPI;   //!
-   TBranch        *b_jetCemfPUPPI;   //!
-   TBranch        *b_jetHf_hfPUPPI;   //!
-   TBranch        *b_jetHf_emfPUPPI;   //!
-   TBranch        *b_jetHofPUPPI;   //!
-   TBranch        *b_idLPUPPI;   //!
-   TBranch        *b_idTPUPPI;   //!
-   TBranch        *b_chHadMultPUPPI;   //!
-   TBranch        *b_chMultPUPPI;   //!
-   TBranch        *b_neHadMultPUPPI;   //!
-   TBranch        *b_neMultPUPPI;   //!
-   TBranch        *b_phoMultPUPPI;   //!
-   TBranch        *b_jetPtAK8;   //!
-   TBranch        *b_jetJecAK8;   //!
-   TBranch        *b_jetEtaAK8;   //!
-   TBranch        *b_jetPhiAK8;   //!
-   TBranch        *b_jetMassAK8;   //!
-   TBranch        *b_jetEnergyAK8;   //!
-   TBranch        *b_jetAreaAK8;   //!
-   TBranch        *b_jetCSVAK8;   //!
-   TBranch        *b_jetChfAK8;   //!
-   TBranch        *b_jetNhfAK8;   //!
-   TBranch        *b_jetPhfAK8;   //!
-   TBranch        *b_jetMufAK8;   //!
-   TBranch        *b_jetElfAK8;   //!
-   TBranch        *b_jetNemfAK8;   //!
-   TBranch        *b_jetCemfAK8;   //!
-   TBranch        *b_jetHf_hfAK8;   //!
-   TBranch        *b_jetHf_emfAK8;   //!
-   TBranch        *b_jetHofAK8;   //!
-   TBranch        *b_idLAK8;   //!
-   TBranch        *b_idTAK8;   //!
-   TBranch        *b_jetMassPrunedAK8;   //!
-   TBranch        *b_jetMassSoftDropAK8;   //!
-   TBranch        *b_jetTau1AK8;   //!
-   TBranch        *b_jetTau2AK8;   //!
-   TBranch        *b_jetTau3AK8;   //!
-   TBranch        *b_chHadMultAK8;   //!
-   TBranch        *b_chMultAK8;   //!
-   TBranch        *b_neHadMultAK8;   //!
-   TBranch        *b_neMultAK8;   //!
-   TBranch        *b_phoMultAK8;   //!
+   TBranch        *b_hadronflavour;   //!
+   TBranch        *b_deepcsv_probb_AK4;   //!
+   TBranch        *b_deepcsv_probbb_AK4;   //!
+   TBranch        *b_deepcsv_probc_AK4;   //!
+   TBranch        *b_deepcsv_probcc_AK4;   //!
+   TBranch        *b_CvsB_taggerAK4;   //!
+   TBranch        *b_CvsL_taggerAK4;   //!
    TBranch        *b_triggerResult;   //!
    TBranch        *b_triggerPrescale;   //!
    TBranch        *b_triggerName;   //!
@@ -513,17 +418,6 @@ public :
    TBranch        *b_jetMassGenAK4;   //!
    TBranch        *b_jetEnergyGenAK4;   //!
    TBranch        *b_jetpdgIDGenAK4;   //!
-   TBranch        *b_jetPtGenAK8;   //!
-   TBranch        *b_jetEtaGenAK8;   //!
-   TBranch        *b_jetPhiGenAK8;   //!
-   TBranch        *b_jetMassGenAK8;   //!
-   TBranch        *b_jetEnergyGenAK8;   //!
-   TBranch        *b_jetPtGenPUPPI;   //!
-   TBranch        *b_jetEtaGenPUPPI;   //!
-   TBranch        *b_jetPhiGenPUPPI;   //!
-   TBranch        *b_jetMassGenPUPPI;   //!
-   TBranch        *b_jetEnergyGenPUPPI;   //!
-   TBranch        *b_jetpdgIDGenPUPPI;   //!
 
    rootNtupleClass(TTree *tree=0);
    virtual ~rootNtupleClass();
@@ -559,7 +453,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("root://lyogrid06.in2p3.fr//dpm/in2p3.fr/home/cms/data/store/user/hlattaud/GammaJet/Gjet_amc_NLO/GJets_pythia_hltmatching_V1/GJet_Pt-15To6000_TuneCUETP8M1-Flat_13TeV_pythia8_20M/crab_GJets_pythia_hltmatching_V1/170706_094417/0000/mylocaltest_10_1.root/dijets/events");
+      chain->Add("/eos/cms/store/group/phys_smp/hlattaud/Gjets_HF/QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8/crab_QCD_Pt_170to300_ext_V6_MVA_deepCSV_lighttuple/180503_133027/0000/mylocaltest_Run2016B_10_10.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -649,6 +543,18 @@ void rootNtupleClass::Init(TTree *tree)
    isPhotonLoose = 0;
    isPhotonMedium = 0;
    isPhotonTight = 0;
+   isfakephoton = 0;
+   Photonfull5x5SigmaIEtaIPhiMapToken = 0;
+   Photonfull5x5E5x5MapToken = 0;
+   Photonfull5x5E2x2MapToken = 0;
+   PhotonESEffSigmaRRMapToken = 0;
+   PhotonR9 = 0;
+   Photon_etawidth = 0;
+   Photon_phiwidth = 0;
+   Photon_ES_energy = 0;
+   Photonfull5x5E2x5 = 0;
+   Photonfull5x5E1x3 = 0;
+   PhotonWorstChargedIsolation = 0;
    electronPt = 0;
    electronEta = 0;
    electronPhi = 0;
@@ -696,67 +602,13 @@ void rootNtupleClass::Init(TTree *tree)
    neHadMultAK4 = 0;
    neMultAK4 = 0;
    phoMultAK4 = 0;
-   jetPtPUPPI = 0;
-   jetJecPUPPI = 0;
-   jetEtaPUPPI = 0;
-   jetPhiPUPPI = 0;
-   jetMassPUPPI = 0;
-   jetEnergyPUPPI = 0;
-   jetPtPUPPIRC = 0;
-   jetEtaPUPPIRC = 0;
-   jetPhiPUPPIRC = 0;
-   jetMassPUPPIRC = 0;
-   jetEnergyPUPPIRC = 0;
-   jetAreaPUPPI = 0;
-   jetCSVPUPPI = 0;
-   jetQGDPUPPI = 0;
-   jetChfPUPPI = 0;
-   jetNhfPUPPI = 0;
-   jetPhfPUPPI = 0;
-   jetMufPUPPI = 0;
-   jetElfPUPPI = 0;
-   jetNemfPUPPI = 0;
-   jetCemfPUPPI = 0;
-   jetHf_hfPUPPI = 0;
-   jetHf_emfPUPPI = 0;
-   jetHofPUPPI = 0;
-   idLPUPPI = 0;
-   idTPUPPI = 0;
-   chHadMultPUPPI = 0;
-   chMultPUPPI = 0;
-   neHadMultPUPPI = 0;
-   neMultPUPPI = 0;
-   phoMultPUPPI = 0;
-   jetPtAK8 = 0;
-   jetJecAK8 = 0;
-   jetEtaAK8 = 0;
-   jetPhiAK8 = 0;
-   jetMassAK8 = 0;
-   jetEnergyAK8 = 0;
-   jetAreaAK8 = 0;
-   jetCSVAK8 = 0;
-   jetChfAK8 = 0;
-   jetNhfAK8 = 0;
-   jetPhfAK8 = 0;
-   jetMufAK8 = 0;
-   jetElfAK8 = 0;
-   jetNemfAK8 = 0;
-   jetCemfAK8 = 0;
-   jetHf_hfAK8 = 0;
-   jetHf_emfAK8 = 0;
-   jetHofAK8 = 0;
-   idLAK8 = 0;
-   idTAK8 = 0;
-   jetMassPrunedAK8 = 0;
-   jetMassSoftDropAK8 = 0;
-   jetTau1AK8 = 0;
-   jetTau2AK8 = 0;
-   jetTau3AK8 = 0;
-   chHadMultAK8 = 0;
-   chMultAK8 = 0;
-   neHadMultAK8 = 0;
-   neMultAK8 = 0;
-   phoMultAK8 = 0;
+   hadronflavour = 0;
+   deepcsv_probb_AK4 = 0;
+   deepcsv_probbb_AK4 = 0;
+   deepcsv_probc_AK4 = 0;
+   deepcsv_probcc_AK4 = 0;
+   CvsB_taggerAK4 = 0;
+   CvsL_taggerAK4 = 0;
    triggerResult = 0;
    triggerPrescale = 0;
    triggerName = 0;
@@ -773,17 +625,6 @@ void rootNtupleClass::Init(TTree *tree)
    jetMassGenAK4 = 0;
    jetEnergyGenAK4 = 0;
    jetpdgIDGenAK4 = 0;
-   jetPtGenAK8 = 0;
-   jetEtaGenAK8 = 0;
-   jetPhiGenAK8 = 0;
-   jetMassGenAK8 = 0;
-   jetEnergyGenAK8 = 0;
-   jetPtGenPUPPI = 0;
-   jetEtaGenPUPPI = 0;
-   jetPhiGenPUPPI = 0;
-   jetMassGenPUPPI = 0;
-   jetEnergyGenPUPPI = 0;
-   jetpdgIDGenPUPPI = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -872,6 +713,18 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("isPhotonLoose", &isPhotonLoose, &b_isPhotonLoose);
    fChain->SetBranchAddress("isPhotonMedium", &isPhotonMedium, &b_isPhotonMedium);
    fChain->SetBranchAddress("isPhotonTight", &isPhotonTight, &b_isPhotonTight);
+   fChain->SetBranchAddress("isfakephoton", &isfakephoton, &b_isfakephoton);
+   fChain->SetBranchAddress("Photonfull5x5SigmaIEtaIPhiMapToken", &Photonfull5x5SigmaIEtaIPhiMapToken, &b_Photonfull5x5SigmaIEtaIPhiMapToken);
+   fChain->SetBranchAddress("Photonfull5x5E5x5MapToken", &Photonfull5x5E5x5MapToken, &b_Photonfull5x5E5x5MapToken);
+   fChain->SetBranchAddress("Photonfull5x5E2x2MapToken", &Photonfull5x5E2x2MapToken, &b_Photonfull5x5E2x2MapToken);
+   fChain->SetBranchAddress("PhotonESEffSigmaRRMapToken", &PhotonESEffSigmaRRMapToken, &b_PhotonESEffSigmaRRMapToken);
+   fChain->SetBranchAddress("PhotonR9", &PhotonR9, &b_PhotonR9);
+   fChain->SetBranchAddress("Photon_etawidth", &Photon_etawidth, &b_Photon_etawidth);
+   fChain->SetBranchAddress("Photon_phiwidth", &Photon_phiwidth, &b_Photon_phiwidth);
+   fChain->SetBranchAddress("Photon_ES_energy", &Photon_ES_energy, &b_Photon_ES_energy);
+   fChain->SetBranchAddress("Photonfull5x5E2x5", &Photonfull5x5E2x5, &b_Photonfull5x5E2x5);
+   fChain->SetBranchAddress("Photonfull5x5E1x3", &Photonfull5x5E1x3, &b_Photonfull5x5E1x3);
+   fChain->SetBranchAddress("PhotonWorstChargedIsolation", &PhotonWorstChargedIsolation, &b_PhotonWorstChargedIsolation);
    fChain->SetBranchAddress("electronPt", &electronPt, &b_electronPt);
    fChain->SetBranchAddress("electronEta", &electronEta, &b_electronEta);
    fChain->SetBranchAddress("electronPhi", &electronPhi, &b_electronPhi);
@@ -920,67 +773,13 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("neHadMultAK4", &neHadMultAK4, &b_neHadMultAK4);
    fChain->SetBranchAddress("neMultAK4", &neMultAK4, &b_neMultAK4);
    fChain->SetBranchAddress("phoMultAK4", &phoMultAK4, &b_phoMultAK4);
-   fChain->SetBranchAddress("jetPtPUPPI", &jetPtPUPPI, &b_jetPtPUPPI);
-   fChain->SetBranchAddress("jetJecPUPPI", &jetJecPUPPI, &b_jetJecPUPPI);
-   fChain->SetBranchAddress("jetEtaPUPPI", &jetEtaPUPPI, &b_jetEtaPUPPI);
-   fChain->SetBranchAddress("jetPhiPUPPI", &jetPhiPUPPI, &b_jetPhiPUPPI);
-   fChain->SetBranchAddress("jetMassPUPPI", &jetMassPUPPI, &b_jetMassPUPPI);
-   fChain->SetBranchAddress("jetEnergyPUPPI", &jetEnergyPUPPI, &b_jetEnergyPUPPI);
-   fChain->SetBranchAddress("jetPtPUPPIRC", &jetPtPUPPIRC, &b_jetPtPUPPIRC);
-   fChain->SetBranchAddress("jetEtaPUPPIRC", &jetEtaPUPPIRC, &b_jetEtaPUPPIRC);
-   fChain->SetBranchAddress("jetPhiPUPPIRC", &jetPhiPUPPIRC, &b_jetPhiPUPPIRC);
-   fChain->SetBranchAddress("jetMassPUPPIRC", &jetMassPUPPIRC, &b_jetMassPUPPIRC);
-   fChain->SetBranchAddress("jetEnergyPUPPIRC", &jetEnergyPUPPIRC, &b_jetEnergyPUPPIRC);
-   fChain->SetBranchAddress("jetAreaPUPPI", &jetAreaPUPPI, &b_jetAreaPUPPI);
-   fChain->SetBranchAddress("jetCSVPUPPI", &jetCSVPUPPI, &b_jetCSVPUPPI);
-   fChain->SetBranchAddress("jetQGDPUPPI", &jetQGDPUPPI, &b_jetQGDPUPPI);
-   fChain->SetBranchAddress("jetChfPUPPI", &jetChfPUPPI, &b_jetChfPUPPI);
-   fChain->SetBranchAddress("jetNhfPUPPI", &jetNhfPUPPI, &b_jetNhfPUPPI);
-   fChain->SetBranchAddress("jetPhfPUPPI", &jetPhfPUPPI, &b_jetPhfPUPPI);
-   fChain->SetBranchAddress("jetMufPUPPI", &jetMufPUPPI, &b_jetMufPUPPI);
-   fChain->SetBranchAddress("jetElfPUPPI", &jetElfPUPPI, &b_jetElfPUPPI);
-   fChain->SetBranchAddress("jetNemfPUPPI", &jetNemfPUPPI, &b_jetNemfPUPPI);
-   fChain->SetBranchAddress("jetCemfPUPPI", &jetCemfPUPPI, &b_jetCemfPUPPI);
-   fChain->SetBranchAddress("jetHf_hfPUPPI", &jetHf_hfPUPPI, &b_jetHf_hfPUPPI);
-   fChain->SetBranchAddress("jetHf_emfPUPPI", &jetHf_emfPUPPI, &b_jetHf_emfPUPPI);
-   fChain->SetBranchAddress("jetHofPUPPI", &jetHofPUPPI, &b_jetHofPUPPI);
-   fChain->SetBranchAddress("idLPUPPI", &idLPUPPI, &b_idLPUPPI);
-   fChain->SetBranchAddress("idTPUPPI", &idTPUPPI, &b_idTPUPPI);
-   fChain->SetBranchAddress("chHadMultPUPPI", &chHadMultPUPPI, &b_chHadMultPUPPI);
-   fChain->SetBranchAddress("chMultPUPPI", &chMultPUPPI, &b_chMultPUPPI);
-   fChain->SetBranchAddress("neHadMultPUPPI", &neHadMultPUPPI, &b_neHadMultPUPPI);
-   fChain->SetBranchAddress("neMultPUPPI", &neMultPUPPI, &b_neMultPUPPI);
-   fChain->SetBranchAddress("phoMultPUPPI", &phoMultPUPPI, &b_phoMultPUPPI);
-   fChain->SetBranchAddress("jetPtAK8", &jetPtAK8, &b_jetPtAK8);
-   fChain->SetBranchAddress("jetJecAK8", &jetJecAK8, &b_jetJecAK8);
-   fChain->SetBranchAddress("jetEtaAK8", &jetEtaAK8, &b_jetEtaAK8);
-   fChain->SetBranchAddress("jetPhiAK8", &jetPhiAK8, &b_jetPhiAK8);
-   fChain->SetBranchAddress("jetMassAK8", &jetMassAK8, &b_jetMassAK8);
-   fChain->SetBranchAddress("jetEnergyAK8", &jetEnergyAK8, &b_jetEnergyAK8);
-   fChain->SetBranchAddress("jetAreaAK8", &jetAreaAK8, &b_jetAreaAK8);
-   fChain->SetBranchAddress("jetCSVAK8", &jetCSVAK8, &b_jetCSVAK8);
-   fChain->SetBranchAddress("jetChfAK8", &jetChfAK8, &b_jetChfAK8);
-   fChain->SetBranchAddress("jetNhfAK8", &jetNhfAK8, &b_jetNhfAK8);
-   fChain->SetBranchAddress("jetPhfAK8", &jetPhfAK8, &b_jetPhfAK8);
-   fChain->SetBranchAddress("jetMufAK8", &jetMufAK8, &b_jetMufAK8);
-   fChain->SetBranchAddress("jetElfAK8", &jetElfAK8, &b_jetElfAK8);
-   fChain->SetBranchAddress("jetNemfAK8", &jetNemfAK8, &b_jetNemfAK8);
-   fChain->SetBranchAddress("jetCemfAK8", &jetCemfAK8, &b_jetCemfAK8);
-   fChain->SetBranchAddress("jetHf_hfAK8", &jetHf_hfAK8, &b_jetHf_hfAK8);
-   fChain->SetBranchAddress("jetHf_emfAK8", &jetHf_emfAK8, &b_jetHf_emfAK8);
-   fChain->SetBranchAddress("jetHofAK8", &jetHofAK8, &b_jetHofAK8);
-   fChain->SetBranchAddress("idLAK8", &idLAK8, &b_idLAK8);
-   fChain->SetBranchAddress("idTAK8", &idTAK8, &b_idTAK8);
-   fChain->SetBranchAddress("jetMassPrunedAK8", &jetMassPrunedAK8, &b_jetMassPrunedAK8);
-   fChain->SetBranchAddress("jetMassSoftDropAK8", &jetMassSoftDropAK8, &b_jetMassSoftDropAK8);
-   fChain->SetBranchAddress("jetTau1AK8", &jetTau1AK8, &b_jetTau1AK8);
-   fChain->SetBranchAddress("jetTau2AK8", &jetTau2AK8, &b_jetTau2AK8);
-   fChain->SetBranchAddress("jetTau3AK8", &jetTau3AK8, &b_jetTau3AK8);
-   fChain->SetBranchAddress("chHadMultAK8", &chHadMultAK8, &b_chHadMultAK8);
-   fChain->SetBranchAddress("chMultAK8", &chMultAK8, &b_chMultAK8);
-   fChain->SetBranchAddress("neHadMultAK8", &neHadMultAK8, &b_neHadMultAK8);
-   fChain->SetBranchAddress("neMultAK8", &neMultAK8, &b_neMultAK8);
-   fChain->SetBranchAddress("phoMultAK8", &phoMultAK8, &b_phoMultAK8);
+   fChain->SetBranchAddress("hadronflavour", &hadronflavour, &b_hadronflavour);
+   fChain->SetBranchAddress("deepcsv_probb_AK4", &deepcsv_probb_AK4, &b_deepcsv_probb_AK4);
+   fChain->SetBranchAddress("deepcsv_probbb_AK4", &deepcsv_probbb_AK4, &b_deepcsv_probbb_AK4);
+   fChain->SetBranchAddress("deepcsv_probc_AK4", &deepcsv_probc_AK4, &b_deepcsv_probc_AK4);
+   fChain->SetBranchAddress("deepcsv_probcc_AK4", &deepcsv_probcc_AK4, &b_deepcsv_probcc_AK4);
+   fChain->SetBranchAddress("CvsB_taggerAK4", &CvsB_taggerAK4, &b_CvsB_taggerAK4);
+   fChain->SetBranchAddress("CvsL_taggerAK4", &CvsL_taggerAK4, &b_CvsL_taggerAK4);
    fChain->SetBranchAddress("triggerResult", &triggerResult, &b_triggerResult);
    fChain->SetBranchAddress("triggerPrescale", &triggerPrescale, &b_triggerPrescale);
    fChain->SetBranchAddress("triggerName", &triggerName, &b_triggerName);
@@ -1003,17 +802,6 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("jetMassGenAK4", &jetMassGenAK4, &b_jetMassGenAK4);
    fChain->SetBranchAddress("jetEnergyGenAK4", &jetEnergyGenAK4, &b_jetEnergyGenAK4);
    fChain->SetBranchAddress("jetpdgIDGenAK4", &jetpdgIDGenAK4, &b_jetpdgIDGenAK4);
-   fChain->SetBranchAddress("jetPtGenAK8", &jetPtGenAK8, &b_jetPtGenAK8);
-   fChain->SetBranchAddress("jetEtaGenAK8", &jetEtaGenAK8, &b_jetEtaGenAK8);
-   fChain->SetBranchAddress("jetPhiGenAK8", &jetPhiGenAK8, &b_jetPhiGenAK8);
-   fChain->SetBranchAddress("jetMassGenAK8", &jetMassGenAK8, &b_jetMassGenAK8);
-   fChain->SetBranchAddress("jetEnergyGenAK8", &jetEnergyGenAK8, &b_jetEnergyGenAK8);
-   fChain->SetBranchAddress("jetPtGenPUPPI", &jetPtGenPUPPI, &b_jetPtGenPUPPI);
-   fChain->SetBranchAddress("jetEtaGenPUPPI", &jetEtaGenPUPPI, &b_jetEtaGenPUPPI);
-   fChain->SetBranchAddress("jetPhiGenPUPPI", &jetPhiGenPUPPI, &b_jetPhiGenPUPPI);
-   fChain->SetBranchAddress("jetMassGenPUPPI", &jetMassGenPUPPI, &b_jetMassGenPUPPI);
-   fChain->SetBranchAddress("jetEnergyGenPUPPI", &jetEnergyGenPUPPI, &b_jetEnergyGenPUPPI);
-   fChain->SetBranchAddress("jetpdgIDGenPUPPI", &jetpdgIDGenPUPPI, &b_jetpdgIDGenPUPPI);
    Notify();
 }
 

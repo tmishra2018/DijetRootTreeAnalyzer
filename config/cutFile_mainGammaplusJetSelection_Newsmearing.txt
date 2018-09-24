@@ -31,16 +31,17 @@ pt0Cut				15		-		-		-		-1
 pt1Cut				10		-		-		-		-1
 ptCut				15		-		-		-		-1
 firstJetThreshold        	0.3		-		-		-		-1
-L1MC                            data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L1FastJet_AK4PFchs.txt		-		-		-		-1
-L2MC                            data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L2Relative_AK4PFchs.txt		-		-		-		-1
-L3MC                            data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L3Absolute_AK4PFchs.txt		-		-		-		-1
-L1Dat                           data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L1FastJet_AK4PFchs.txt		-		-		-		-1
-L2Dat                           data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L2Relative_AK4PFchs.txt		-		-		-		-1
-L3Dat                           data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L3Absolute_AK4PFchs.txt		-		-		-		-1
-L2L3Dat                         data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L2L3Residual_AK4PFchs.txt		-		-		-		-1
-L1RCDat                         data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_L1RC_AK4PFchs.txt		-		-		-		-1
-L1RCMC                          data/Summer16_07Aug2017_V4_MC/Summer16_07Aug2017_V4_MC_L1RC_AK4PFchs.txt		-		-		-		-1
-JECuncDat                       data/Summer16_03Feb2017H_V3_DATA/Summer16_03Feb2017H_V3_DATA_Uncertainty_AK4PFchs.txt		-		-		-		-1
+L1MC                            data/Summer16_07Aug2017_V15_MC/Summer16_07Aug2017_V15_MC_L1FastJet_AK4PFchs.txt		-		-		-		-1
+L2MC                            data/Summer16_07Aug2017_V15_MC/Summer16_07Aug2017_V15_MC_L2Relative_AK4PFchs.txt		-		-		-		-1
+L3MC                            data/Summer16_07Aug2017_V15_MC/Summer16_07Aug2017_V15_MC_L3Absolute_AK4PFchs.txt		-		-		-		-1
+L1Dat                           data/Summer16_07Aug2017BCD_V15_DATA/Summer16_07Aug2017BCD_V15_DATA_L1FastJet_AK4PFchs.txt		-		-		-		-1
+L2Dat                           data/Summer16_07Aug2017BCD_V15_DATA/Summer16_07Aug2017BCD_V15_DATA_L2Relative_AK4PFchs.txt		-		-		-		-1
+L3Dat                           data/Summer16_07Aug2017BCD_V15_DATA/Summer16_07Aug2017BCD_V15_DATA_L3Absolute_AK4PFchs.txt		-		-		-		-1
+L2L3Dat                         data/Summer16_07Aug2017BCD_V15_DATA/Summer16_07Aug2017BCD_V15_DATA_L2Residual_AK4PFchs.txt		-		-		-		-1
+L1RCDat                         data/Summer16_07Aug2017BCD_V15_DATA/Summer16_07Aug2017BCD_V15_DATA_L1RC_AK4PFchs.txt		-		-		-		-1
+L1RCMC                          data/Summer16_07Aug2017_V15_MC/Summer16_07Aug2017_V15_MC_L1RC_AK4PFchs.txt		-		-		-		-1
+JECuncDat                       data/Summer16_07Aug2017BCD_V15_DATA/Summer16_07Aug2017BCD_V15_DATA_Uncertainty_AK4PFchs.txt		-		-		-		-1
+JECuncMC                        data/Summer16_07Aug2017_V15_MC/Summer16_07Aug2017_V15_MC_Uncertainty_AK4PFchs.txt		-		-		-		-1
 JERreso                         data/JER_textfile/Spring16_25nsV6_MC/Spring16_25nsV6_MC_PtResolution_AK4PFchs.txt		-		-		-		-1
 JERSF                           data/JER_textfile/Spring16_25nsV6_MC/Spring16_25nsV6_MC_SF_AK4PFchs.txt		-		-		-		-1
 # turn on/off on-the-fly JECs (value1 0: off, 1: on)
@@ -205,3 +206,13 @@ Es_energy_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 E2_5_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 E1_3_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
 WorstChargedIsolation_photon         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+deepcsv_probb_AK4_j1         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+deepcsv_probbb_AK4_j1         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+deepcsv_probc_AK4_j1         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+deepcsv_probcc_AK4_j1         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+hadron_flavour_j1         -inf           +inf   		-		-		1	200 -1 1  	  SAVE
+deepcsv_probb_AK4_j2         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+deepcsv_probbb_AK4_j2         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+deepcsv_probc_AK4_j2         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+deepcsv_probcc_AK4_j2         -inf           +inf   		-		-		1	200 -1 1  	  SAVE 
+hadron_flavour_j2         -inf           +inf   		-		-		1	200 -1 1  	  SAVE  

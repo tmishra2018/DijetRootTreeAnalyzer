@@ -258,7 +258,7 @@ void analysisClass::Loop()
     int Is_PU = 0 ;
    /////////initialize variables
 
-   Long64_t nentries = fChain->GetEntriesFast();//10000;//10000;//1000000; //
+   Long64_t nentries = fChain->GetEntriesFast();//10000;//10000;//500000; //
    
    std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;      
    ////// The following ~7 lines have been taken from rootNtupleClass->Loop() /////
@@ -279,7 +279,7 @@ void analysisClass::Loop()
      if (ientry < 0) break;
      
      nb = fChain->GetEntry(jentry);   nbytes += nb;
-   /* if(jentry < 10 || jentry%100000 == 0) */std::cout << "analysisClass::Loop(): jentry = " << jentry << std::endl;   
+    if(jentry < 10 || jentry%100000 == 0) std::cout << "analysisClass::Loop(): jentry = " << jentry << std::endl;   
      // if (Cut(ientry) < 0) continue;
     
   // if(jentry - Vtxcut -   ncut_nophoton -  ncut_photon >= 300) break ;
@@ -547,9 +547,9 @@ void analysisClass::Loop()
        }
        int size_all = sortedJets.size();
        
-       if(nfakejet !=0 && !isData)
+       if(nfakejet !=0)
        {
-          if(jetPtGenAK4->at(fakejetIdx)< 0. ){
+          if(jetPtGenAK4->at(fakejetIdx)< 0.  && !isData){
            Is_PU++;
            continue ;
            }
@@ -922,7 +922,7 @@ void analysisClass::Loop()
      fillVariableWithValue("R9_photon", PhotonR9->at(0/*indexgoodpho*/));
      fillVariableWithValue("etawidth_photon", Photon_etawidth->at(0/*indexgoodpho*/));
      fillVariableWithValue("phiwidth_photon", Photon_phiwidth->at(0/*indexgoodpho*/));
-     fillVariableWithValue("Es_energy_photon",PhotonSCEnergy->at(0));
+     fillVariableWithValue("Es_energy_photon",Photon_ES_energy->at(0));
      fillVariableWithValue("E2_5_photon",Photonfull5x5E2x5->at(0));
      fillVariableWithValue("E1_3_photon",Photonfull5x5E1x3->at(0));
      fillVariableWithValue("WorstChargedIsolation_photon",PhotonWorstChargedIsolation->at(0));
@@ -964,6 +964,11 @@ void analysisClass::Loop()
        fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
        fillVariableWithValue( "jetCSVAK4_j1", jetCSVAK4->at(sortedJetIdx[0]) );
        fillVariableWithValue( "jetQGDAK4_j1", jetQGDAK4->at(sortedJetIdx[0]) );
+       fillVariableWithValue( "hadron_flavour_j1", hadronflavour->at(sortedJetIdx[0]) );
+       fillVariableWithValue( "deepcsv_probb_AK4_j1", deepcsv_probb_AK4->at(sortedJetIdx[0]) );
+       fillVariableWithValue( "deepcsv_probbb_AK4_j1", deepcsv_probbb_AK4->at(sortedJetIdx[0]) );
+       fillVariableWithValue( "deepcsv_probc_AK4_j1", deepcsv_probc_AK4->at(sortedJetIdx[0]) );
+       fillVariableWithValue( "deepcsv_probcc_AK4_j1", deepcsv_probcc_AK4->at(sortedJetIdx[0]) );       
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j1", jetNhfAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "chargedHadEnFrac_j1", jetChfAK4->at(sortedJetIdx[0]));
@@ -1000,6 +1005,11 @@ void analysisClass::Loop()
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[sndjetidx]] );
        fillVariableWithValue( "jetCSVAK4_j2", jetCSVAK4->at(sortedJetIdx[sndjetidx]) );
        fillVariableWithValue( "jetQGDAK4_j2", jetQGDAK4->at(sortedJetIdx[sndjetidx]) );
+       fillVariableWithValue( "hadron_flavour_j2", hadronflavour->at(sortedJetIdx[sndjetidx]) );
+       fillVariableWithValue( "deepcsv_probb_AK4_j2", deepcsv_probb_AK4->at(sortedJetIdx[sndjetidx]) );
+       fillVariableWithValue( "deepcsv_probbb_AK4_j2", deepcsv_probbb_AK4->at(sortedJetIdx[sndjetidx]) );
+       fillVariableWithValue( "deepcsv_probc_AK4_j2", deepcsv_probc_AK4->at(sortedJetIdx[sndjetidx]) );
+       fillVariableWithValue( "deepcsv_probcc_AK4_j2", deepcsv_probcc_AK4->at(sortedJetIdx[sndjetidx]) ); 
        //jetID
        fillVariableWithValue( "neutrHadEnFrac_j2", jetNhfAK4->at(sortedJetIdx[sndjetidx]));
        fillVariableWithValue( "chargedHadEnFrac_j2", jetChfAK4->at(sortedJetIdx[sndjetidx]));

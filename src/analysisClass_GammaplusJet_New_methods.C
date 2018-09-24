@@ -17,7 +17,7 @@
 #define MAKE_RED "\033[31m"
 #define MAKE_BLUE "\033[34m"
 
-
+/*
 
 bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float& neMult, const float& chMult, const float& nemf, const float& muF, const float& chf, const float& cemF, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet, const bool& isFirst)
 {
@@ -44,7 +44,7 @@ bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float
 
     
     
-}
+}*/
 
 /*bool IsTight_photon(const float& hadronicOverEm, const float& full5x5SigmaIEtaIEta, const float& Photon_pt, ){
 
@@ -73,7 +73,7 @@ return isValid;
 
 }*/
 
-/*
+// Jet selection Cut ID from this twiki : https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
 bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float& neMult, const float& chMult, const float& nemf, const float& muF, const float& chf, const float& cemF, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet, const bool& isFirst)
 {
    
@@ -101,7 +101,7 @@ bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float
       }
       
        if( fabs(Eta_ak4) < 2.4 ){
-  //  if(isFirst) std::cout<<" Jet ID "<< (nhf < 0.9 && nemf < 0.9  && neMult >1 && muF < 0.8 && chMult > 0 && chf > 0 && cemF < 0.8) <<"  nhf: "<<nhf<<" nemf "<<nemf<<" neMult "<<neMult<<" muF "<<muF<<" chMult " <<chMult<<" chf "<< chf<<" cemF "<<cemF<<std::endl; 
+  
   
           idL = (nhf < 0.9 && nemf < 0.9  && neMult >1 && muF < 0.8 && chMult > 0 && chf > 0 && cemF < 0.8) ;
       
@@ -114,7 +114,9 @@ bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float
     
 }
 
-*/
+
+
+
 analysisClass::analysisClass(string * inputList, string * cutFile, string * treeName, string * outputFileName, string * cutEfficFile)
   :baseClass(inputList, cutFile, treeName, outputFileName, cutEfficFile)
 {
@@ -124,24 +126,28 @@ analysisClass::analysisClass(string * inputList, string * cutFile, string * tree
   if( int(getPreCutValue1("useJECs"))==1 )
   {
     std::cout << "Reapplying JECs on the fly" << std::endl;
-
-    std::string L1Path =  getPreCutString1("L1MC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1FastJet_AK4PFchs.txt";
-    std::string L2Path = getPreCutString1("L2MC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L2Relative_AK4PFchs.txt";
-    std::string L3Path = getPreCutString1("L3MC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L3Absolute_AK4PFchs.txt";
-    std::string L1DATAPath = getPreCutString1("L1Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1FastJet_AK4PFchs.txt";
-    std::string L2DATAPath = getPreCutString1("L2Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Relative_AK4PFchs.txt"; 
-    std::string L3DATAPath = getPreCutString1("L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L3Absolute_AK4PFchs.txt";
-    std::string L2L3ResidualPath = getPreCutString1("L2L3Dat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L2Residual_AK4PFchs.txt"; 
+    // getting the JEC textfile from config file
+    std::string L1Path =  getPreCutString1("L1MC");
+    std::string L2Path = getPreCutString1("L2MC");
+    std::string L3Path = getPreCutString1("L3MC");
+    std::string L1DATAPath = getPreCutString1("L1Dat");
+    std::string L2DATAPath = getPreCutString1("L2Dat");
+    std::string L3DATAPath = getPreCutString1("L3Dat");
+    std::string L2L3ResidualPath = getPreCutString1("L2L3Dat");
 
     
-    std::string L1RCcorrDATAPath = getPreCutString1("L1RCDat");//"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_L1RC_AK4PFchs.txt";
-    std::string L1RCcorrMCPath = getPreCutString1("L1RCMC");//"data/Spring16_25nsV8BCD_MC/Spring16_25nsV8BCD_MC_L1RC_AK4PFchs.txt";
+    std::string L1RCcorrDATAPath = getPreCutString1("L1RCDat");
+    std::string L1RCcorrMCPath = getPreCutString1("L1RCMC");
     
     std::string JER_resopath = getPreCutString1("JERreso");
     std::string JER_SFpath = getPreCutString1("JERSF");
     //uncertainty
-    unc = new JetCorrectionUncertainty(getPreCutString1("JECuncDat")/*"data/Spring16_25nsV8BCD_DATA/Spring16_25nsV8BCD_DATA_Uncertainty_AK4PFchs.txt"*/);
-
+    unc = new JetCorrectionUncertainty(getPreCutString1("JECuncDat"));
+    unc_TI = new JetCorrectionUncertainty(getPreCutString1("JECuncDat"));
+    unc_RC = new JetCorrectionUncertainty(getPreCutString1("JECuncDat"));
+    unc_MC = new JetCorrectionUncertainty(getPreCutString1("JECuncMC"));
+    unc_MC_RC = new JetCorrectionUncertainty(getPreCutString1("JECuncMC"));
+    unc_MC_TI = new JetCorrectionUncertainty(getPreCutString1("JECuncMC"));    
     L1Par = new JetCorrectorParameters(L1Path);
 
     L2Par = new JetCorrectorParameters(L2Path);
@@ -226,16 +232,24 @@ void analysisClass::Loop()
     
    if (fChain == 0) return;
    
-   
+    
+    
     Double_t genweight = 0.;
     Float_t trueInteractionall =0;
     
     TTree *PUvariable = new TTree("puvariable","puvariable");
     PUvariable->Branch("Generatorweight", &genweight, "genweight/D");
-    PUvariable->Branch("TrueInteractionall", &trueInteractionall, "trueInteractionall/F");    
-     
+    PUvariable->Branch("TrueInteractionall", &trueInteractionall, "trueInteractionall/F");  
+    
+   
+    
+    
+    
+    
      
     TH2F *DeltaPhiAlpha = new TH2F("DeltaPhi_vs_alpha", "DeltaPhi_vs_alpha", 50, 0, 1. ,50, 0, 5  ) ;
+    TH2F *EtaPhiJet_beforehot = new TH2F("EtaPhioccupency_before", "EtaPhioccupency_before", 100, -5.2, 5.2 ,100, -3.5, 3.5  ) ;
+    TH2F *EtaPhiJet_afterhot = new TH2F("EtaPhioccupency_after", "EtaPhioccupency_after", 100, -5.2, 5.2 ,100, -3.5, 3.5  ) ;
       
     TH1F *SumWeight  = new TH1F("h_sumW", "h_sumW", 1, -0.5, 5.5) ;    
     SumWeight->Sumw2();
@@ -256,6 +270,7 @@ void analysisClass::Loop()
     int Vtxcut = 0 ;
     int testcount = 0 ;
     int Is_PU = 0 ;
+    int is_hot_area = 0 ;
    /////////initialize variables
 
    Long64_t nentries = fChain->GetEntriesFast();//10000;//10000;//1000000; //
@@ -279,10 +294,8 @@ void analysisClass::Loop()
      if (ientry < 0) break;
      
      nb = fChain->GetEntry(jentry);   nbytes += nb;
-   /* if(jentry < 10 || jentry%100000 == 0) */std::cout << "analysisClass::Loop(): jentry = " << jentry << std::endl;   
-     // if (Cut(ientry) < 0) continue;
+    if(jentry < 10 || jentry%100000 == 0) std::cout << "analysisClass::Loop(): jentry = " << jentry << std::endl;   
     
-  // if(jentry - Vtxcut -   ncut_nophoton -  ncut_photon >= 300) break ;
    
      ////////////////////// User's code starts here ///////////////////////
 
@@ -290,18 +303,18 @@ void analysisClass::Loop()
      int idx_InTimeBX=-1;
      for(size_t j=0; j<PileupOriginBX->size(); ++j)
        {
-	// cout << PileupOriginBX->at(j) << endl;	 
+
 	 if(PileupOriginBX->at(j)==0)
 	   {
 	     idx_InTimeBX = j;
-	     //cout << "idx_InTimeBX: " << idx_InTimeBX << endl; 
+
 	   }
        }
        bool isData = 0;
      if(idx_InTimeBX > -1 ) isData = 0;
      else isData = 1;
      
-     
+     //start selection workflow 
      if(!isData)
      {
          SumWeight->Fill(0.,weight);
@@ -316,7 +329,7 @@ void analysisClass::Loop()
           trueInteractionall = -999;   
           PUvariable->Fill();
      }
-  //  cout<<"good vtx "<<goodPVtx<<endl;
+
     if(!goodPVtx){
        
        Vtxcut++;
@@ -327,7 +340,7 @@ void analysisClass::Loop()
    
 
           if( nPhotonTight == 1){
-        //  if(jentry - Vtxcut -   ncut_nophoton -  ncut_photon < 200) continue;
+
           testcount ++; 
              size_t nb_photon =  PhotonLoosePt->size();
              int indexgoodpho = 0  ; 
@@ -338,7 +351,6 @@ void analysisClass::Loop()
                break ; 
               }
           }
-       //   cout<<"idx photon "<<indexgoodpho<<endl;
           
                if(!HaspixelSeed->at(indexgoodpho)){
                      if(PhotonLoosePt->at(indexgoodpho)>= 40.){
@@ -359,15 +371,12 @@ void analysisClass::Loop()
 
 
      size_t no_jets_ak4=jetPtAK4->size();
-    
+
 
      TLorentzVector gamma1     ;
      TLorentzVector gammaloose ;
      gammaloose.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
      gamma1.SetPtEtaPhiE(PhotonLoosePt->at(indexgoodpho),PhotonLooseEta->at(indexgoodpho),PhotonLoosePhi->at(indexgoodpho),PhotonLooseEnergy->at(indexgoodpho));
-    // gamma1.SetPtEtaPhiE(PhotonsmearPt->at(indexgoodpho),PhotonsmearEta->at(indexgoodpho),PhotonsmearPhi->at(indexgoodpho),PhotonsmearEnergy->at(indexgoodpho)); 
-       
-       
        
      size_t neletron =  electronPt->size();
      bool keepEvent = true;
@@ -392,10 +401,6 @@ void analysisClass::Loop()
      TLorentzVector MetTypeI;      
 
      resetCuts();
-
-     //find intime BX
-    
-
      std::vector<double> jecFactors;
      std::vector<double> jecUncertainty;
      std::vector<double> jerFactors;
@@ -440,10 +445,19 @@ void analysisClass::Loop()
 	     if (isData == 1) correction = JetCorrector_data->getCorrection();
 	     else correction = JetCorrector->getCorrection();
 	     
+	     
 	     //JEC uncertainties
+	     double uncertainty = 0 ;
+	     if(isData){
 	     unc->setJetEta(jetEtaAK4->at(j));
 	     unc->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
-	     double uncertainty = unc->getUncertainty(true);
+	     uncertainty = unc->getUncertainty(true);
+	     }else{
+	     unc_MC->setJetEta(jetEtaAK4->at(j));
+	     unc_MC->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
+	     uncertainty = unc_MC->getUncertainty(true);
+	     
+	     }
 	     jecUncertainty.push_back(uncertainty); 
 
 	     
@@ -452,7 +466,7 @@ void analysisClass::Loop()
 	       
 	       
 	       //shift of the corresponding unc
-	       correction = correction + getPreCutValue2("shiftJECs")*uncertainty*correction;
+	       correction = correction + getPreCutValue2("shiftJECs")*uncertainty;
 	       
 	       
 	   }
@@ -501,8 +515,7 @@ void analysisClass::Loop()
 	   }
 	   
 	 }
-         //if(std::hypot((jetEtaAK4->at(j)-gamma1.Eta()),(jetPhiAK4->at(j)-gamma1.Phi()))>=0.4)
-	 //     {
+         
 	         jecFactors.push_back(correction);
 	         jerFactors.push_back(correction_SF);
 	         if(!isData && int(getPreCutValue1("useJERs"))==1) {
@@ -510,8 +523,7 @@ void analysisClass::Loop()
 	         }else{
 	         CorrFactors.push_back(correction);
 	         }
-	  //    }
-	//  std::cout<<"  j["<<j<<"] "<<" Jer factor : "<<correction_SF<<std::endl;
+	  
 	  Tmpjet.SetPtEtaPhiM(jetPtAK4->at(j)/jetJecAK4->at(j)*correction, jetEtaAK4->at(j), jetPhiAK4->at(j), jetMassAK4->at(j)/jetJecAK4->at(j)*correction);
 	  
 	 sortedJets.insert(std::make_pair((jetPtAK4->at(j)/jetJecAK4->at(j))*correction*correction_SF, j));
@@ -527,20 +539,16 @@ void analysisClass::Loop()
 
        }
        int size_all = sortedJets.size();
-       
-       if(nfakejet !=0 && !isData)
+       // remove out tight  photon from jet collection
+       if(nfakejet !=0 )
        {
-          if(jetPtGenAK4->at(fakejetIdx)< 0. ){
-           Is_PU++;
-           continue ;
-           }
+          
           sortedJets.erase((jetPtAK4->at(fakejetIdx)/jetJecAK4->at(fakejetIdx))*fakecorrection*fakejer);
 
 
         }
         int size_true = sortedJets.size();
-       // int size_Jec = jecFactors.size();
-     //   std::cout<<"size jet vector "<< size_true << "size JEC vector "<< size_Jec << std::endl;
+      
         
        if(size_all - size_true > 1) std::cout<<"Warning : more than two jet removed because of photon misidentification"<<std::endl;
      // get jet indices in decreasing pT order
@@ -585,7 +593,6 @@ void analysisClass::Loop()
        {	 
 	  
 	 if(fabs(jetEtaAK4->at(sortedJetIdx[ijet])) < getPreCutValue1("jetFidRegion")
-	    /*&& idLAK4->at(sortedJetIdx[ijet]) == getPreCutValue1("tightJetID")*/
 	    && (CorrFactors[sortedJetIdx[ijet]]/jetJecAK4->at(sortedJetIdx[ijet]))*jetPtAK4->at(sortedJetIdx[ijet]) >= getPreCutValue1("ptCut"))
 	   {
 	     Nak4 += 1;
@@ -598,7 +605,7 @@ void analysisClass::Loop()
     int sndjetidx = -10 ;
     bool hasgen = false;
     bool hasgen2 = false;
-     //AK4 jets
+     //AK4 jets , Select the two first jet for Photon + Jets analysis
     if(no_jets_ak4-nfakejet>=1  ) 
       { 
      
@@ -634,8 +641,93 @@ void analysisClass::Loop()
    
      }else{ncut_jet++;
      continue;}
+     bool keep_event = true ; 
+     //2017 hot zone cleaning 
+     if(isData){
+         EtaPhiJet_beforehot->Fill(ak4j1.Eta(),ak4j1.Phi());
+         EtaPhiJet_beforehot->Fill(ak4j2.Eta(),ak4j2.Phi());
+     }
+     //cleaning needed for 2017, have to be removed for 2016 
+     if (isData && (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 || h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 )) keep_event=false; //
+     if(!keep_event){      
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
+        is_hot_area++;
+        continue;
+     }
      
+     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
+        is_hot_area++;
+        continue;
+     }
      
+     // jet2
+     
+     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
+        is_hot_area++;
+        continue;
+     }
+     
+     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
+        is_hot_area++;
+        continue;
+     }
+     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
+        is_hot_area++;
+        continue;
+     }
+     
+     if(isData){
+         EtaPhiJet_afterhot->Fill(ak4j1.Eta(),ak4j1.Phi());
+         EtaPhiJet_afterhot->Fill(ak4j2.Eta(),ak4j2.Phi());
+     }
+     //store all corrected jets of the events 
      for(int i = 0 ; i < no_jets_ak4-nfakejet; i++){
      
         if(!isData && jetPtGenAK4->at(sortedJetIdx[0]) > 0.){ hasgen = 1;}
@@ -658,11 +750,7 @@ void analysisClass::Loop()
 
 
  //----------------------TYPE I MET computation------------------
- // std::cout<<"rawMet: "<< rawMet.Pt() << " "<< rawMet.Eta() << " " << rawMet.Phi() << " " << rawMet.Et() <<std::endl; 
-  
-               
-
-  
+ 
   double deltaPx = 0., deltaPy = 0.;
   TLorentzVector  jetRC,corrJet; 
   
@@ -684,12 +772,46 @@ void analysisClass::Loop()
       JetCorrectortypI->setJetA(jetAreaAK4->at(it));
       JetCorrectortypI->setRho(rho);
       corrsForTypeI = JetCorrectortypI->getCorrection(); //only RC
+      
+      
+      //JEC uncertainties
+      unc_RC->setJetEta(jetEtaAK4->at(it));
+      unc_RC->setJetPt(jetPtAK4->at(it)/jetJecAK4->at(it)*corrsForTypeI);
+      double uncertainty = unc_RC->getUncertainty(true);
+
+	     
+      //use "shifted" JECs for study of systematic uncertainties 
+      if( int(getPreCutValue1("shiftJECs"))==1 ){
+	       
+	       
+        //shift of the corresponding unc
+        corrsForTypeI = corrsForTypeI + getPreCutValue2("shiftJECs")*uncertainty;
+	       
+	       
+     }
 
       JetCorrectortypIL123 ->setJetEta(jetEtaAK4->at(it));
       JetCorrectortypIL123 ->setJetPt(jetPtAK4->at(it)/jetJecAK4->at(it));
       JetCorrectortypIL123 ->setJetA(jetAreaAK4->at(it));
       JetCorrectortypIL123 ->setRho(rho);
       corrs = JetCorrectortypIL123->getCorrection(); // L1L2L3
+      
+      //JEC uncertainties
+      unc_TI->setJetEta(jetEtaAK4->at(it));
+      unc_TI->setJetPt(jetPtAK4->at(it)/jetJecAK4->at(it)*corrs);
+      double uncertainty_TI = unc_TI->getUncertainty(true);
+
+	     
+      //use "shifted" JECs for study of systematic uncertainties 
+      if( int(getPreCutValue1("shiftJECs"))==1 ){
+	       
+	       
+        //shift of the corresponding unc
+        corrs = corrs + getPreCutValue2("shiftJECs")*uncertainty_TI;
+	       
+	       
+     }
+      
       
       }else{
 
@@ -698,12 +820,44 @@ void analysisClass::Loop()
       JetCorrectortypIMC->setJetA(jetAreaAK4->at(it));
       JetCorrectortypIMC->setRho(rho);
       corrsForTypeI = JetCorrectortypIMC->getCorrection(); //only RC
+      
+      //JEC uncertainties
+      unc_MC_RC->setJetEta(jetEtaAK4->at(it));
+      unc_MC_RC->setJetPt(jetPtAK4->at(it)/jetJecAK4->at(it)*corrsForTypeI);
+      double uncertainty = unc_MC_RC->getUncertainty(true);
+
+	     
+      //use "shifted" JECs for study of systematic uncertainties 
+      if( int(getPreCutValue1("shiftJECs"))==1 ){
+	       
+	       
+        //shift of the corresponding unc
+        corrsForTypeI = corrsForTypeI + getPreCutValue2("shiftJECs")*uncertainty;
+	       
+	       
+     }
+      
+      
       JetCorrectortypIL123MC ->setJetEta(jetEtaAK4->at(it));
       JetCorrectortypIL123MC ->setJetPt(jetPtAK4->at(it)/jetJecAK4->at(it));
       JetCorrectortypIL123MC ->setJetA(jetAreaAK4->at(it));
       JetCorrectortypIL123MC ->setRho(rho);
       corrs = JetCorrectortypIL123MC->getCorrection(); // L1L2L3
-      
+      //JEC uncertainties
+      unc_MC_TI->setJetEta(jetEtaAK4->at(it));
+      unc_MC_TI->setJetPt(jetPtAK4->at(it)/jetJecAK4->at(it)*corrs);
+      double uncertainty_TI = unc_MC_TI->getUncertainty(true);
+
+	     
+      //use "shifted" JECs for study of systematic uncertainties 
+      if( int(getPreCutValue1("shiftJECs"))==1 ){
+	       
+	       
+        //shift of the corresponding unc
+        corrs = corrs + getPreCutValue2("shiftJECs")*uncertainty_TI;
+	       
+	       
+     }
       
       //Applying JER onto MC
 	  
@@ -752,20 +906,12 @@ void analysisClass::Loop()
      // only RC
       
     corrJet.SetPtEtaPhiE((jetPtAK4->at(it)/jetJecAK4->at(it))*corrs*correction_SF,jetEtaAK4->at(it),jetPhiAK4->at(it),(jetEnergyAK4->at(it)/jetJecAK4->at(it))*corrs*correction_SF);
-      
+     
+     //Type I modified MET for 2017
+     if(corrJet.Pt() < 75. && corrJet.Eta() > 2.605 && corrJet.Eta() < 3.139) continue ; 
+     
     double dR = gamma1.DeltaR(corrJet);
-   /* if(it < 5 ){
-    std::cout<<" delta R "<<dR<<std::endl;
-    }*/
-    /*
-    if(it < 6 ){
-    std::cout<<" delta R "<<dR<<std::endl;
-    std::cout<<"pt of ak4chsjets["<<it<<"]    raw       "<<jetPtAK4->at(it)/jetJecAK4->at(it)<<" eta "<<jetEtaAK4->at(it)<<" phi "<<jetPhiAK4->at(it)<<std::endl;
-    std::cout<<"pt of ak4chsjets["<<it<<"]    corrected "<<corrJet.Pt()<<" eta "<<corrJet.Eta()<<" phi "<<corrJet.Phi()<<std::endl;
-    std::cout<<"pt of ak4chsjets["<<it<<"] RC corrected "<<jetRC.Pt()<<" eta "<<jetRC.Eta()<<" phi "<<jetRC.Phi()<<std::endl;
-	
-	
-    }*/
+   
     
     if(corrJet.Pt() > 15. && dR > 0.25) {
 	
@@ -782,12 +928,6 @@ void analysisClass::Loop()
   double correctedMetPy = rawMet.Py() - deltaPy;
   
   
- // propagate the EG smearing of the photon into the MET
- // double deltasmearPx = gamma1.Px()- gammaloose.Px();
-  //double deltasmearPy = gamma1.Py()- gammaloose.Py();  
- // correctedMetPx += -1*deltasmearPx;
- // correctedMetPy += -1*deltasmearPy;
- // cout<<deltasmearPx<<endl;
   double correctedMetPt = sqrt(correctedMetPx * correctedMetPx + correctedMetPy * correctedMetPy);
   
   MetTypeI.SetPxPyPzE(correctedMetPx,correctedMetPy, rawMet.Pz(), std::hypot(correctedMetPx,correctedMetPy));
@@ -795,10 +935,7 @@ void analysisClass::Loop()
   MetTypeI.SetPxPyPzE(0,0,0,0);
   
   } 
-  /*std::cout<<"pt of photon               pt        "<<gamma1.Pt()<<" eta "<<gamma1.Eta()<<" phi "<<gamma1.Phi()<<std::endl;
-  std::cout<< "MET type I px : "<< MetTypeI.Px()<<" py : "<<MetTypeI.Py()<< " pT : "<<MetTypeI.Pt()<<std::endl;
-  std::cout<< "MET raw px : "<< rawMet.Px()<<" py : "<<rawMet.Py()<< " pT : "<<rawMet.Pt()<<std::endl;*/
- // MetTypeI.SetPxPyPzE(rawMet.Px(),rawMet.Py(),rawMet.Pz(),rawMet.E());
+ 
  
 
 //------------------------END met calculation------------------
@@ -825,10 +962,6 @@ void analysisClass::Loop()
      if(deltPHIgj>=2.8 )
      {
      
-      
-      
-
-     
      if( ak4j1.Pt()>0   )
      {
        
@@ -838,7 +971,7 @@ void analysisClass::Loop()
           AK4jets.push_back( ak4j2 );
        }
      }
-     
+
      
       //== Fill Variables ==
       bool hasgen = false;
@@ -854,7 +987,7 @@ void analysisClass::Loop()
       storelumi = lumi;
 
      
-     
+ //store everything variable needed for the final computation    
      
      fillVariableWithValue("N_photon", nPhoton);
      fillVariableWithValue("run",runNo);     
@@ -885,23 +1018,11 @@ void analysisClass::Loop()
      fillVariableWithValue("Phi_photonSC",PhotonSCPhi->at(indexgoodpho));
      fillVariableWithValue("Energy_photonSC",PhotonSCEnergy->at(indexgoodpho));
      fillVariableWithValue("hadTowOverEm",hadTowOverEm->at(indexgoodpho));
-  //   fillVariableWithValue("sigmaietaiphi_photon", Photonfull5x5SigmaIEtaIPhiMapToken->at(indexgoodpho));
-  //   fillVariableWithValue("E5_5_photon", Photonfull5x5E5x5MapToken->at(indexgoodpho));
- //    fillVariableWithValue("E2_2_photon", Photonfull5x5E2x2MapToken->at(indexgoodpho));
-  //   fillVariableWithValue("ES_Eff_photon", PhotonESEffSigmaRRMapToken->at(indexgoodpho));
-   //  fillVariableWithValue("R9_photon", PhotonR9->at(indexgoodpho));
-   //  fillVariableWithValue("etawidth_photon", Photon_etawidth->at(indexgoodpho));
-  //   fillVariableWithValue("phiwidth_photon", Photon_phiwidth->at(indexgoodpho));
-  //   fillVariableWithValue("Es_energy_photon",PhotonSCEnergy->at(indexgoodpho));
-   //  fillVariableWithValue("E2_5_photon",Photonfull5x5E2x5->at(indexgoodpho));
-  //   fillVariableWithValue("E1_3_photon",Photonfull5x5E1x3->at(indexgoodpho));
- //    fillVariableWithValue("WorstChargedIsolation_photon",PhotonWorstChargedIsolation->at(indexgoodpho));
 
      if(isData)
        {
           fillVariableWithValue("weight", 1);
           
-         //  SumWeight->Fill(0.,weight);
         }
        if(!isData)
        {
@@ -910,25 +1031,22 @@ void analysisClass::Loop()
 	 fillVariableWithValue("Phi_photonGEN",photonPhiGen->at(indexgoodpho));
 	 fillVariableWithValue("Energy_photonGEN",photonEnergyGen->at(indexgoodpho));
 	 fillVariableWithValue("PassGenmatching",isGenMatch->at(indexgoodpho));
-	 
-	 fillVariableWithValue( "Isfakephoton", isfakephoton->at(indexgoodpho)); 
 
 	 fillVariableWithValue("weight",weight);
-	// SumWeight->Fill(0.,weight);
 	 
        }//MC
      
 
      if( AK4jets.size() >=1 )
      {
-       //cout << "AK4jets.size() " <<  AK4jets.size() << endl;
-       //cout << "IdTight_j1 : " << idTAK4->at(sortedJetIdx[0]) << endl;
+
+
        fillVariableWithValue( "IdTight_j1",idLAK4->at(sortedJetIdx[0]));
        fillVariableWithValue( "pTAK4_j1", AK4jets[0].Pt());
        fillVariableWithValue( "etaAK4_j1", AK4jets[0].Eta());
        fillVariableWithValue( "phiAK4_j1", AK4jets[0].Phi());
        
-       //fillVariableWithValue( "jetPtAK4matchCaloJet_j1", jetPtAK4matchCaloJet->at(sortedJetIdx[0]));
+
        
        fillVariableWithValue( "jetJecAK4_j1", jecFactors[sortedJetIdx[0]] );
        fillVariableWithValue( "jetJecUncAK4_j1", jecUncertainty[sortedJetIdx[0]] );
@@ -965,7 +1083,7 @@ void analysisClass::Loop()
        fillVariableWithValue( "pTAK4_j2", AK4jets[1].Pt() );
        fillVariableWithValue( "etaAK4_j2", AK4jets[1].Eta());
        fillVariableWithValue( "phiAK4_j2", AK4jets[1].Phi());
-       //fillVariableWithValue( "jetPtAK4matchCaloJet_j2", jetPtAK4matchCaloJet->at(sortedJetIdx[1]));
+
        fillVariableWithValue( "jetJecAK4_j2", jecFactors[sortedJetIdx[sndjetidx]]); 
        fillVariableWithValue( "jetJecUncAK4_j2", jecUncertainty[sortedJetIdx[sndjetidx]] );
        fillVariableWithValue( "jetCSVAK4_j2", jetCSVAK4->at(sortedJetIdx[sndjetidx]) );
@@ -1015,66 +1133,50 @@ void analysisClass::Loop()
        fillVariableWithValue("METGEN_Phi",metPhiPUPPIGen);
      }
      
-     //double METoverHTAK4=double(met/htAK4);
+
      double METoverHTAK4=double(MetTypeI.Et()/HTak4);
      fillVariableWithValue("METoverHTAK4",METoverHTAK4);
-     //fillVariableWithValue("HTAK4",htAK4);
+
      fillVariableWithValue("HTAK4",HTak4);
      fillVariableWithValue("ptHat",ptHat);
 
      // Trigger
 
-//cout<<"sizes : "<< isMatch30->size()<<" "<<isMatch50->size()<<" "<<isMatch75->size()<<" "<<isMatch90->size()<<" "<<isMatch120->size()<<" "<<isMatch165->size()<<endl;
-     if( isMatch30->size() > 0 && 0 < isMatch30->size() )//&& isData)
+     if( isMatch30->size() > 0 && indexgoodpho < isMatch30->size() )//&& isData)
      {
-      // cout<<"test core 1"<<endl;
        fillVariableWithValue("phomatchHLT_Photon30",isMatch30->at(indexgoodpho));// 
-      // cout<<"test core 1 bis"<<endl;
        
      }
-    if( isMatch50->size() > 0 && 0 < isMatch50->size() )//&& isData)
+    if( isMatch50->size() > 0 && indexgoodpho < isMatch50->size() )//&& isData)
     {
-      // cout<<"test core 2"<<endl;
        fillVariableWithValue("phomatchHLT_Photon50",isMatch50->at(indexgoodpho));//
-     //  cout<<"test core 2 bis"<<endl;
 
      }
-     if( isMatch75->size() > 0 && 0 < isMatch75->size() )//&& isData)
+     if( isMatch75->size() > 0 && indexgoodpho < isMatch75->size() )//&& isData)
      { 
-     //  cout<<"test core 3"<<endl;
        fillVariableWithValue("phomatchHLT_Photon75",isMatch75->at(indexgoodpho));// 
-     //  cout<<"test core 3 bis"<<endl;
 
      }
-     if( isMatch90->size() > 0 && 0 < (isMatch90->size() )  )// && isData)
+     if( isMatch90->size() > 0 && indexgoodpho < (isMatch90->size() )  )// && isData)
      {
-      // cout<<"test core 4 index pho "<< indexgoodpho<< " size "<<(isMatch90->size() ) <<endl;
        fillVariableWithValue("phomatchHLT_Photon90",isMatch90->at(indexgoodpho));//
-      // cout<<"test core 4 bis"<<endl;
 
      }
-     if( isMatch120->size() > 0 && 0 < isMatch120->size() )//&& isData)
+     if( isMatch120->size() > 0 && indexgoodpho < isMatch120->size() )//&& isData)
      {
-     //  cout<<"test core 5"<<endl;
        fillVariableWithValue("phomatchHLT_Photon120",isMatch120->at(indexgoodpho));//
-     //  cout<<"test core 5 bis"<<endl;
 
      }
-     if( isMatch165->size() > 0 && 0 < isMatch165->size() )// && isData)
+     if( isMatch165->size() > 0 && indexgoodpho < isMatch165->size() )// && isData)
      {
-      // cout<<"test core 6"<<endl;
        fillVariableWithValue("phomatchHLT_Photon165",isMatch165->at(indexgoodpho));//
-      // cout<<"test core 6 bis"<<endl;
-
      }
-     //cout<<"test core end"<<endl;
+
      
           int NtriggerBits = triggerResult->size();
      if( NtriggerBits > 0 )//&& isData)
      {
        fillVariableWithValue("passHLT_Photon30",triggerResult->at(0));// 
-       //fillVariableWithValue("prescaletrigger_Photon30",triggerPrescale->at(0));// 
-	//std::cout<<"prescale size"<<  triggerPrescale->size()<<std::endl;
      }
     if( NtriggerBits > 1 )//&& isData)
     {
@@ -1143,13 +1245,15 @@ continue;}
 }//no photon 
    } // End loop over events
    
-   
+  // reduced_skim_file_->cd();
    totalluminosityP->SetVal(totalluminosity);
   
    SumWeight->Write();
    totalluminosityP->Write();
    PUvariable->Write();
    DeltaPhiAlpha->Write();
+   EtaPhiJet_beforehot->Write();
+   EtaPhiJet_afterhot->Write();
    
    
     std::cout << std::endl;
@@ -1166,6 +1270,7 @@ continue;}
   std::cout << "Nevent after α cut: " << MAKE_RED << testcount /*- (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon */ -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet - (double) ncut_deltaphi - (double) ncut_alpha  << RESET_COLOR << std::endl;  
   
   std::cout << "Event rejected because of PU: " << MAKE_RED << Is_PU << RESET_COLOR << std::endl;
+  std::cout << "Event rejected because of Hot tower: " << MAKE_RED << is_hot_area << RESET_COLOR << std::endl;
   std::cout << "Selection efficiency: " << MAKE_RED << (double) nselectedevent  << RESET_COLOR << std::endl;
   std::cout << std::endl;
    
@@ -1190,6 +1295,11 @@ continue;}
     delete IsID_jets_;
     delete DeltaPhiAlpha;
     delete SumWeight;
+    delete EtaPhiJet_beforehot;
+    delete EtaPhiJet_afterhot;
+    //delete h_hotjets;
+     
+    
      
 
    }

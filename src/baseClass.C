@@ -30,6 +30,10 @@ baseClass::baseClass(string * inputList, string * cutFile, string * treeName, st
   treeName_= treeName;
   outputFileName_ = outputFileName;
   cutEfficFile_ = cutEfficFile;
+  EtaPhiCleaning_File = TFile::Open("hotjets-17runBCDEF.root");
+  assert(EtaPhiCleaning_File && !EtaPhiCleaning_File->IsZombie());
+  h_hotjets =(*((TH2D*)EtaPhiCleaning_File->Get("h2hotfilter"))); 
+ // assert(h_hotjets);
   init();
   //STDOUT("ends");
 }
@@ -56,6 +60,7 @@ baseClass::~baseClass()
     {
       STDOUT("ERROR: writeReducedSkimTree did not complete successfully.");
     }
+  EtaPhiCleaning_File->Close(); 
   output_root_->Close();
   if(produceSkim_) skim_file_->Close();
   if(produceReducedSkim_) reduced_skim_file_->Close();

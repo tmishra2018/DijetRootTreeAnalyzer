@@ -205,6 +205,10 @@ class baseClass : public rootNtupleClass {
   TFile * output_root_;
   std::vector<double> *pt_jets_, *phi_jets_, *eta_jets_, *mass_jets_, *emF_jets_; 
   std::vector<bool> *IsID_jets_;
+  
+  TFile* EtaPhiCleaning_File;
+  TH2D h_hotjets;
+
   private :
   int nOptimizerCuts_;
   string * configFile_;
@@ -272,10 +276,11 @@ class baseClass : public rootNtupleClass {
   bool writeSkimTree();
 
   //Reduced Skim stuff
+  TFile *reduced_skim_file_;
   bool produceReducedSkim_;
   int NAfterReducedSkim_;
   double getReducedSkimPreCutValue(const string& s);
-  TFile *reduced_skim_file_;
+  
   TTree *reduced_skim_tree_;
   TH1I* hReducedCount_;
   bool writeReducedSkimTree();
