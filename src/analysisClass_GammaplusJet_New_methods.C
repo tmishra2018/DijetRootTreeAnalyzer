@@ -273,7 +273,7 @@ void analysisClass::Loop()
     int is_hot_area = 0 ;
    /////////initialize variables
 
-   Long64_t nentries = fChain->GetEntriesFast();//10000;//10000;//1000000; //
+   Long64_t nentries = fChain->GetEntriesFast();//10000;//fChain->GetEntriesFast();//10000;//10000;//1000000; //
    
    std::cout << "analysisClass::Loop(): nentries = " << nentries << std::endl;      
    ////// The following ~7 lines have been taken from rootNtupleClass->Loop() /////
