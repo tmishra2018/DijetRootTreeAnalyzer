@@ -648,7 +648,7 @@ void analysisClass::Loop()
          EtaPhiJet_beforehot->Fill(ak4j2.Eta(),ak4j2.Phi());
      }
      //cleaning needed for 2017, have to be removed for 2016 
-     if (isData && (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 || h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 )) keep_event=false; //
+     // if (isData && (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 || h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 )) keep_event=false; //
      if(!keep_event){      
         is_hot_area++;
         continue;

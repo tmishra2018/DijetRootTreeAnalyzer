@@ -207,7 +207,7 @@ class baseClass : public rootNtupleClass {
   std::vector<bool> *IsID_jets_;
   
   TFile* EtaPhiCleaning_File;
-  TH2D h_hotjets;
+  // TH2D h_hotjets;
 
   private :
   int nOptimizerCuts_;
