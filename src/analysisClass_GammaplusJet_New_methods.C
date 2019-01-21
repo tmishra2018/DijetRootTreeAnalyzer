@@ -270,7 +270,7 @@ void analysisClass::Loop()
     int Vtxcut = 0 ;
     int testcount = 0 ;
     int Is_PU = 0 ;
-    int is_hot_area = 0 ;
+    // int is_hot_area = 0 ;
    /////////initialize variables
 
    Long64_t nentries = fChain->GetEntriesFast();//10000;//fChain->GetEntriesFast();//10000;//10000;//1000000; //
@@ -649,79 +649,79 @@ void analysisClass::Loop()
      }
      //cleaning needed for 2017, have to be removed for 2016 
      // if (isData && (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 || h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 )) keep_event=false; //
-     if(!keep_event){      
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
-        is_hot_area++;
-        continue;
-     }
+     // if(!keep_event){      
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
+     //    is_hot_area++;
+     //    continue;
+     // }
      
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
-        is_hot_area++;
-        continue;
-     }
+     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
+     //    is_hot_area++;
+     //    continue;
+     // }
      
-     // jet2
+     // // jet2
      
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
-        is_hot_area++;
-        continue;
-     }
+     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
+     //    is_hot_area++;
+     //    continue;
+     // }
      
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
-        is_hot_area++;
-        continue;
-     }
+     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
+     //    is_hot_area++;
+     //    continue;
+     // }
+     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
+     //    is_hot_area++;
+     //    continue;
+     // }
      
      if(isData){
          EtaPhiJet_afterhot->Fill(ak4j1.Eta(),ak4j1.Phi());
@@ -1270,7 +1270,7 @@ continue;}
   std::cout << "Nevent after α cut: " << MAKE_RED << testcount /*- (double) Vtxcut - (double)  ncut_nophoton - (double) ncut_photon */ -(double) ncut_pixelseed  - (double) ncut_photonpt - (double) ncut_muons - (double) ncut_electron - (double) ncut_jet - (double)  ncut_ptjet - (double) ncut_deltaphi - (double) ncut_alpha  << RESET_COLOR << std::endl;  
   
   std::cout << "Event rejected because of PU: " << MAKE_RED << Is_PU << RESET_COLOR << std::endl;
-  std::cout << "Event rejected because of Hot tower: " << MAKE_RED << is_hot_area << RESET_COLOR << std::endl;
+  // std::cout << "Event rejected because of Hot tower: " << MAKE_RED << is_hot_area << RESET_COLOR << std::endl;
   std::cout << "Selection efficiency: " << MAKE_RED << (double) nselectedevent  << RESET_COLOR << std::endl;
   std::cout << std::endl;
    

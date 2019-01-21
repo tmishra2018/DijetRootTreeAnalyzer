@@ -60,7 +60,7 @@ baseClass::~baseClass()
     {
       STDOUT("ERROR: writeReducedSkimTree did not complete successfully.");
     }
-  EtaPhiCleaning_File->Close(); 
+  // EtaPhiCleaning_File->Close();  
   output_root_->Close();
   if(produceSkim_) skim_file_->Close();
   if(produceReducedSkim_) reduced_skim_file_->Close();
