@@ -5,6 +5,7 @@ import argparse, os, tempfile, shutil, sys,math,pickle,itertools
 from subprocess import call, PIPE, STDOUT, Popen
 import argparse
 import datetime
+import os
 
 
 parser = argparse.ArgumentParser(description='Submit jot to batch')
@@ -17,10 +18,9 @@ config_file = args.config_file #path to the processed lumi JSON file
 outputname = args.outputname # which run
 listtorun = args.list
 dirlist = args.dirlist
-outputdir = "/afs/cern.ch/work/h/hlattaud/private/results_final/"
+outputdir = "/afs/cern.ch/work/{}/{}/private/results_final/".format(os.environ["USER"][0], os.environ["USER"])
 cmd4="./main "+dirlist+listtorun+" "+config_file+" dijets/events "+outputdir+outputname+" "+outputdir+outputname
-cmd1="cd /afs/cern.ch/work/h/hlattaud/private/CMSSW_8_0_25/src/CMSDIJET/responsecomputing/DijetRootTreeAnalyzer/"
-#cmd2="source /afs/cern.ch/work/h/hlattaud/private/CMSSW_8_0_25/src/CMSDIJET/responsecomputing/DijetRootTreeAnalyzer/set_env.sh"
+cmd1="cd /afs/cern.ch/work/${USER:0:1}/$USER/private/CMSSW_8_0_25/src/CMSDIJET/responsecomputing/DijetRootTreeAnalyzer/"
 cmd2="export SCRAM_ARCH=slc6_amd64_gcc530"
 cmd3="eval `scramv1 runtime -sh`"
 call(cmd1+" && "+cmd2+" && "+cmd3+" && "+cmd4, shell=True )

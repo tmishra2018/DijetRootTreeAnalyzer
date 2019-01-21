@@ -1,6 +1,6 @@
 executable            = Run_Analyser_short.py
 arguments             =  --config_file $(config_File) --outputname $(output_name)_$(ProcId) --list $(name_list)$(ProcId) --dirlist $(dir_list)
-output                = /afs/cern.ch/work/h/hlattaud/private/CMSSW_8_0_25/src/CMSDIJET/responsecomputing/DijetRootTreeAnalyzer/output_txtfile/Output_$(output_name)_$(ProcId).txt
+output                = $(output_dir)/Output_$(output_name)_$(ProcId).txt
 log                   = log/job.$(ClusterId).$(ProcId).log
 transfer_output_files   = ""
 +JobFlavour            = "tomorrow"
