@@ -1,7 +1,11 @@
 # Instructions for producing Gamma + jet step 2 Analyse Nuples
 
+Step 1 is [here](https://github.com/lucastorterotot/DijetRootTreeMaker/blob/master/instructions/GammaJetTree_Instruction.md).
+
 **Target** CMS Gamma + Jet  - JEC calculation
+
 **Authors** Hugues Lattaud and Lucas Torterotot
+
 **Last update** 22 Jan 2019
 
 ## Introduction
@@ -40,8 +44,8 @@ Get the git repository
 git clone git@github.com:lucastorterotot/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
 ```
 and choose the branch:
-* For 2016:
-* For 2017:
+* For 2016: `JEC_JER_2016_master`
+* For 2017: `JEC_JER_2017_master`
 * For 2018: `JEC_JER_2018_CMSSW_8_0_31_master`
 
 Then compile:
@@ -59,7 +63,7 @@ cd CMSDIJET/DijetRootTreeAnalyzer
 ```
 ./scripts/make_rootNtupleClass.sh -f GammajetTree.root -t dijets/events
 ```
-where the rootfile has been produced by the DijetRootTreeMaker.
+where the rootfile has been produced at the [DijetRootTreeMaker step](https://github.com/lucastorterotot/DijetRootTreeMaker).
 Note that there could be minor glitches and then you can fix by hand.
 Type yes when asked to overwrite rootNtupleClass.h
 
