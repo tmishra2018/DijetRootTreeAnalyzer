@@ -14,12 +14,12 @@ config_file = args.config_file #path to the processed lumi JSON file
 outputname = args.outputname # which run
 listtorun = args.list
 dirlist = args.dirlist
-outputdir = "/eos/cms/store/group/phys_smp/hlattaud/Output_Batch/"#"/eos/user/h/hlattaud/GammaJet/2016/Output_lsfBatch/"
+outputdir = "/eos/user/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/"
 cmd4="./main "+dirlist+listtorun+" "+config_file+" dijets/events "+outputdir+outputname+" "+outputdir+outputname
-cmd1="cd /afs/cern.ch/work/l/ltortero/JEC-task/CMSSW_8_0_31/src/CMSDIJET/DijetRootTreeAnalyzer/"
+cmd1="cd /afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/CMSSW_8_0_31/src/CMSDIJET/DijetRootTreeAnalyzer/"
 cmd2="export SCRAM_ARCH=slc6_amd64_gcc530"
 cmd3="eval `scramv1 runtime -sh`"
-cmd5="export X509_USER_PROXY=/afs/cern.ch/user/h/hlattaud/.globus/gridproxy.cert" 
-call(cmd1+" && "+cmd5+" && "+cmd2+" && "+cmd3+" && "+cmd4, shell=True )
+cmd5="export X509_USER_PROXY=/afs/cern.ch/user/${USER:0:1}/$USER/.globus/gridproxy.cert" 
+call("mkdir -p "+outputdir+" && "+cmd1+" && "+cmd5+" && "+cmd2+" && "+cmd3+" && "+cmd4, shell=True )
 print(cmd4)
 
