@@ -8,7 +8,7 @@ import datetime
 import os
 
 
-parser = argparse.ArgumentParser(description='Submit jot to batch')
+parser = argparse.ArgumentParser(description='Submit job to batch')
 parser.add_argument('--config_file',type=str,dest="config_file",default=1, help=" config_file of the era")
 parser.add_argument('--outputname',type=str,dest="outputname",default=1, help="Run era")
 parser.add_argument('--list',type=str,dest="list",default=1, help="list of file to run")
@@ -18,9 +18,9 @@ config_file = args.config_file #path to the processed lumi JSON file
 outputname = args.outputname # which run
 listtorun = args.list
 dirlist = args.dirlist
-outputdir = "/afs/cern.ch/work/{}/{}/private/results_final/".format(os.environ["USER"][0], os.environ["USER"])
+outputdir = "/afs/cern.ch/work/{}/{}/private/JEC_results_final/".format(os.environ["USER"][0], os.environ["USER"])
 cmd4="./main "+dirlist+listtorun+" "+config_file+" dijets/events "+outputdir+outputname+" "+outputdir+outputname
-cmd1="cd /afs/cern.ch/work/${USER:0:1}/$USER/private/CMSSW_8_0_25/src/CMSDIJET/responsecomputing/DijetRootTreeAnalyzer/"
+cmd1="cd /afs/cern.ch/work/{}/{}/private/CMSSW_8_0_25/src/CMSDIJET/DijetRootTreeAnalyzer/".format(os.environ["USER"][0], os.environ["USER"])
 cmd2="export SCRAM_ARCH=slc6_amd64_gcc530"
 cmd3="eval `scramv1 runtime -sh`"
 call(cmd1+" && "+cmd2+" && "+cmd3+" && "+cmd4, shell=True )
@@ -28,11 +28,6 @@ call(cmd1+" && "+cmd2+" && "+cmd3+" && "+cmd4, shell=True )
 #os.system(cmd1)
 #os.system(cmd2)
 #os.system(cmd3)
-
-
-
-
-
 
 print(cmd4)
 #os.system(cmd4)
