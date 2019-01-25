@@ -48,11 +48,6 @@ and choose the branch:
 * For 2017: `JEC_JER_2017_master`
 * For 2018: `JEC_JER_2018_CMSSW_8_0_31_master`
 
-Then compile:
-```
-scram b -j 8
-```
-
 ## Instructions (local)
 * Go inside the right directory
 ```
