@@ -47,6 +47,7 @@ and choose the branch:
 * For 2016: `JEC_JER_2016_master`
 * For 2017: `JEC_JER_2017_master`
 * For 2018: `JEC_JER_2018_CMSSW_8_0_31_master`
+
 NB: for 2017 one must also get the hotjets `EtaPhiCleaning_File` with
 ```
 cp /afs/cern.ch/work/l/ltortero/public/EtaPhiCleaning_Files/* .
