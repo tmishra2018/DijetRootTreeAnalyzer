@@ -14,7 +14,7 @@ config_file = args.config_file #path to the processed lumi JSON file
 outputname = args.outputname # which run
 listtorun = args.list
 dirlist = args.dirlist
-outputdir = "/eos/user/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/"
+outputdir = "/eos/user/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/"+dirlist
 cmd4="./main "+dirlist+listtorun+" "+config_file+" dijets/events "+outputdir+outputname+" "+outputdir+outputname
 cmd1="cd /afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/CMSSW_8_0_31/src/CMSDIJET/DijetRootTreeAnalyzer/"
 cmd2="export SCRAM_ARCH=slc6_amd64_gcc530"
