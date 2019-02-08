@@ -50,7 +50,7 @@ and choose the branch:
 
 NB: for 2017 one must also get the hotjets `EtaPhiCleaning_File` with
 ```
-cp /afs/cern.ch/work/l/ltortero/public/EtaPhiCleaning_Files/* .
+cp /afs/cern.ch/work/l/ltortero/public/EtaPhiCleaning_Files/* $CMSSW_BASE/src/CMSDIJET/DijetRootTreeAnalyzer/.
 ```
 
 ## Instructions (local)
