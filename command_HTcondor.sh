@@ -6,7 +6,8 @@ dir_list=$1
 ### prefixe de la liste, voir avec la commande split -l10 -d long_list.txt
 name_list=x
 ### Nombre de listes
-Njob=$(ls -l $dir_list | wc -l)
+Njob=$(ls -l $dir_list/ | wc -l)
+N=$(($N - 1))
 
 config_File=config/cutFile_mainGammaplusJetSelection_Newsmearing.txt
 
