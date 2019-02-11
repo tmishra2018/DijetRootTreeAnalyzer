@@ -17,7 +17,7 @@ for arg in "$@"; do
     name_list=x
     ### Nombre de listes
     Njob=$(ls -l $dir_list/ | wc -l)
-    N=$(($N - 1))
+    Njob=$(($Njob - 1))
 
     config_File=config/cutFile_mainGammaplusJetSelection_Newsmearing.txt
 
