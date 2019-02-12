@@ -25,9 +25,9 @@ for arg in "$@"; do
     
     output_name=TEST_condor
 
-    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/output_txtfile/$dir_list
-    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/errors_txtfile/$dir_list
-    logs_dir=log
+    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/output_txtfile/
+    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/errors_txtfile/
+    logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/logs
 
     #_________________________________________________________________#
     ## Creating directories
