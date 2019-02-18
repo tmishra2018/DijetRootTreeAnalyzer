@@ -74,7 +74,7 @@ return isValid;
 }*/
 
 // Jet selection Cut ID from this twiki : https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
-bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float& neMult, const float& chMult, const float& nemf, const float& muf, const float& chf, const float& cemf, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet, const bool& isFirst)
+bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float& neMult, const float& chMult, const float& nemf, const float& muF, const float& chf, const float& cemF, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet, const bool& isFirst)
 {
    
     int idL = -999 ;     
