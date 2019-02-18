@@ -74,11 +74,10 @@ return isValid;
 }*/
 
 // Jet selection Cut ID from this twiki : https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
-bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float& neMult, const float& chMult, const float& nemf, const float& muF, const float& chf, const float& cemF, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet, const bool& isFirst)
+bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float& neMult, const float& chMult, const float& nemf, const float& muf, const float& chf, const float& cemf, const bool& isoldvalid, const bool& isDATA, const bool& hasgenjet, const bool& isFirst)
 {
    
-    int idL = -999 ;
-    
+    int idL = -999 ;     
   
   if(fabs(Eta_ak4) > 3.0){
     idL = ( neMult > 10 && nhf > 0.02 && nemf < 0.9 );
@@ -104,9 +103,9 @@ bool isNewonOldValidJetTight(const float& Eta_ak4, const float& nhf, const float
   
   
           idL = (nhf < 0.9 && nemf < 0.9  && neMult >1 && muF < 0.8 && chMult > 0 && chf > 0 && cemF < 0.8) ;
-      
+
       }
-     
+
     
  return idL;
 
