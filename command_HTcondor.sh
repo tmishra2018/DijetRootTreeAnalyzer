@@ -6,8 +6,8 @@ echo ''
 echo 'Setting VOMS:'
 echo ''
 
-#voms-proxy-init --voms cms --valid 100:00 -out ~/.globus/gridproxy.cert
-voms-proxy-init --voms cms --valid 168:00
+voms-proxy-init --voms cms --valid 168:00 -out ~/.globus/gridproxy.cert
+#voms-proxy-init --voms cms --valid 168:00
 
 for arg in "$@"; do
     ## Define inputs
