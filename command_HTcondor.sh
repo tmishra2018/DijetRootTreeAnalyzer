@@ -12,11 +12,11 @@ voms-proxy-init --voms cms --valid 168:00
 for arg in "$@"; do
     ## Define inputs
     ### repertoire contenant les listes
-    dir_list=$arg
+    dir_list=$arg/
     ### prefixe de la liste, voir avec la commande split -l10 -d long_list.txt
     name_list=x
     ### Nombre de listes
-    Njob=$(ls -l $dir_list/ | wc -l)
+    Njob=$(ls -l $dir_list | wc -l)
     Njob=$(($Njob - 1))
 
     config_File=config/cutFile_mainGammaplusJetSelection_Newsmearing.txt
