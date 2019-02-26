@@ -9,7 +9,13 @@ echo ''
 voms-proxy-init --voms cms --valid 168:00 -out ~/.globus/gridproxy.cert
 #voms-proxy-init --voms cms --valid 168:00
 
-for arg in "$@"; do
+
+config_File=$1
+#example: config/cutFile_mainGammaplusJetSelection_Newsmearing.txt
+dir_data=$2
+dir_mc=$3
+
+for arg in $dir_data, $dir_mc; do
     ## Define inputs
     ### repertoire contenant les listes
     dir_list=$arg/
@@ -19,16 +25,15 @@ for arg in "$@"; do
     Njob=$(ls -l $dir_list | wc -l)
     Njob=$(($Njob - 1))
 
-    config_File=config/cutFile_mainGammaplusJetSelection_Newsmearing.txt
-
     ## Define outputs
     
-    output_name=TEST_condor
+    if [ $dir_list == $dir_data ]; then output_name=DATA; fi
+    if [ $dir_list == $dir_mc ]; then output_name=MC; fi
 
     thedate=$(date +"%Y-%m-%d")
-    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/output_txtfile/
-    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/errors_txtfile/
-    logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/logs
+    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/output_txtfile/
+    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/errors_txtfile/
+    logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/logs
 
     #_________________________________________________________________#
     ## Creating directories
