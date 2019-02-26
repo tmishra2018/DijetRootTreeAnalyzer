@@ -15,7 +15,7 @@ config_File=$1
 dir_data=$2
 dir_mc=$3
 
-for arg in $dir_data, $dir_mc; do
+for arg in $dir_data $dir_mc; do
     ## Define inputs
     ### repertoire contenant les listes
     dir_list=$arg/
@@ -40,6 +40,7 @@ for arg in $dir_data, $dir_mc; do
 
     echo 'Submission to HTcondor:'
     echo '  Inputs in ' $dir_list
+    echo '  Config file is ' $config_File
     echo ' ' $Njob 'jobs.'
 
     echo 'Creating output directories...'
