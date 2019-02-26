@@ -15,22 +15,21 @@ config_File=$1
 dir_data=$2
 dir_mc=$3
 
-for arg in $dir_data $dir_mc; do
+thedate=$(date +"%Y-%m-%d_%H-%M-%S")
+for arg in $dir_data $dir_mc ; do
     ## Define inputs
     ### repertoire contenant les listes
-    dir_list=$arg/
+    dir_list=$arg
     ### prefixe de la liste, voir avec la commande split -l10 -d long_list.txt
     name_list=x
     ### Nombre de listes
-    Njob=$(ls -l $dir_list | wc -l)
+    Njob=$(ls -l $dir_list/ | wc -l)
     Njob=$(($Njob - 1))
 
     ## Define outputs
     
-    if [ $dir_list == $dir_data ]; then output_name=DATA; fi
-    if [ $dir_list == $dir_mc ]; then output_name=MC; fi
-
-    thedate=$(date +"%Y-%m-%d")
+    if [ $dir_list == $dir_data ]; then output_name=DATA_$(basename $dir_data); fi
+    if [ $dir_list == $dir_mc ]; then output_name=MC_for_$(basename $dir_data); fi
     output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/output_txtfile/
     errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/errors_txtfile/
     logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/logs
@@ -38,9 +37,12 @@ for arg in $dir_data $dir_mc; do
     #_________________________________________________________________#
     ## Creating directories
 
+    echo ''
+    echo ''
     echo 'Submission to HTcondor:'
-    echo '  Inputs in ' $dir_list
+    echo '  Submitting ' $output_name
     echo '  Config file is ' $config_File
+    echo '  Inputs in ' $dir_list
     echo ' ' $Njob 'jobs.'
 
     echo 'Creating output directories...'
@@ -50,7 +52,11 @@ for arg in $dir_data $dir_mc; do
 
     ## Submission
 
-    condor_submit output_dir=$output_dir errors_dir=$errors_dir logs_dir=$logs_dir config_File=$config_File output_name=$output_name name_list=$name_list dir_list=$dir_list Njob=$Njob  Submit_to_HTcondor.sub
+    condor_submit output_dir=$output_dir errors_dir=$errors_dir logs_dir=$logs_dir config_File=$config_File output_name=$output_name name_list=$name_list dir_list=$dir_list/ Njob=$Njob  Submit_to_HTcondor.sub
 done
 
+echo ''
+echo 'Done.'
+echo ''
+echo ''
 condor_q
