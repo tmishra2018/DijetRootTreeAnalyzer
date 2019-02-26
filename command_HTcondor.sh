@@ -9,17 +9,13 @@ echo ''
 voms-proxy-init --voms cms --valid 168:00 -out ~/.globus/gridproxy.cert
 #voms-proxy-init --voms cms --valid 168:00
 
-
-config_File=$1
-#example: config/cutFile_mainGammaplusJetSelection_Newsmearing.txt
-dir_data=$2
-dir_mc=$3
-
 thedate=$(date +"%Y-%m-%d_%H-%M-%S")
-for arg in $dir_data $dir_mc ; do
+args=($@)
+for ((i=0;i<${#@};i+=2)); do
     ## Define inputs
+    config_File=${args[$i]}
     ### repertoire contenant les listes
-    dir_list=$arg
+    dir_list=${args[$i+1]}
     ### prefixe de la liste, voir avec la commande split -l10 -d long_list.txt
     name_list=x
     ### Nombre de listes
@@ -28,19 +24,17 @@ for arg in $dir_data $dir_mc ; do
 
     ## Define outputs
     
-    if [ $dir_list == $dir_data ]; then output_name=DATA_$(basename $dir_data); fi
-    if [ $dir_list == $dir_mc ]; then output_name=MC_for_$(basename $dir_data); fi
-    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/output_txtfile/
-    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/errors_txtfile/
-    logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_data/$thedate/logs
+    output_name=$(basename $dir_list)
+    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/output_txtfile/
+    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/errors_txtfile/
+    logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/logs
 
     #_________________________________________________________________#
     ## Creating directories
 
     echo ''
     echo ''
-    echo 'Submission to HTcondor:'
-    echo '  Submitting ' $output_name
+    echo 'Submission to HTcondor: ' $output_name
     echo '  Config file is ' $config_File
     echo '  Inputs in ' $dir_list
     echo ' ' $Njob 'jobs.'
