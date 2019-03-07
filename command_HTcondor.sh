@@ -16,6 +16,8 @@ for ((i=0;i<${#@};i+=3)); do
     config_File=${args[$i]}
     ### repertoire contenant les listes
     dir_list=${args[$i+1]}
+    ### fine naming
+    specialname=${args[$i+2]}
     ### prefixe de la liste, voir avec la commande split -l10 -d long_list.txt
     name_list=x
     ### Nombre de listes
@@ -24,10 +26,10 @@ for ((i=0;i<${#@};i+=3)); do
 
     ## Define outputs
     
-    output_name=$3'/'$(basename $dir_list)'_'$3
-    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$3/$thedate/output_txtfile/
-    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$3/$thedate/errors_txtfile/
-    logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$3/$thedate/logs
+    output_name=$(basename $dir_list)'_'$specialname
+    output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$specialname/$thedate/output_txtfile/
+    errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$specialname/$thedate/errors_txtfile/
+    logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$specialname/$thedate/logs
 
     #_________________________________________________________________#
     ## Creating directories
