@@ -11,7 +11,7 @@ voms-proxy-init --voms cms --valid 168:00 -out ~/.globus/gridproxy.cert
 
 thedate=$(date +"%Y-%m-%d_%H-%M-%S")
 args=($@)
-for ((i=0;i<${#@};i+=2)); do
+for ((i=0;i<${#@};i+=3)); do
     ## Define inputs
     config_File=${args[$i]}
     ### repertoire contenant les listes
@@ -24,7 +24,7 @@ for ((i=0;i<${#@};i+=2)); do
 
     ## Define outputs
     
-    output_name=$(basename $dir_list)
+    output_name=$3'/'$(basename $dir_list)'_'$3
     output_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/output_txtfile/
     errors_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/errors_txtfile/
     logs_dir=/afs/cern.ch/work/${USER:0:1}/$USER/JEC-task/HT_Condor_output/DijetRootTreeAnalyzer/$dir_list/$thedate/logs
