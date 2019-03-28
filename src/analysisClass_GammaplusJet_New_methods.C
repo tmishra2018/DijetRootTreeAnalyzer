@@ -264,14 +264,7 @@ void analysisClass::Loop()
    ////// these lines may need to be updated.                                 /////    
   Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
-     if(jentry > 0){            
-             pt_jets_    ->clear();
-            phi_jets_   ->clear();
-            eta_jets_   ->clear();
-            mass_jets_  ->clear();
-            emF_jets_   ->clear();
-            IsID_jets_  ->clear();
-            }
+     
    //for (Long64_t jentry=0; jentry<2000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
      if (ientry < 0) break;
@@ -1202,6 +1195,12 @@ void analysisClass::Loop()
      if( passedCut("Pt_photon") ) 
        {
 	 fillReducedSkimTree();
+	 pt_jets_    ->clear();
+         phi_jets_   ->clear();
+         eta_jets_   ->clear();
+         mass_jets_  ->clear();
+         emF_jets_   ->clear();
+         IsID_jets_  ->clear();
 
        }
 }
