@@ -214,15 +214,6 @@ void analysisClass::Loop()
    std::cout << "analysisClass::Loop() begins" <<std::endl;   
     
    if (fChain == 0) return;
-   
-    
-    
-    Double_t genweight = 0.;
-    Float_t trueInteractionall =0;
-    
-    TTree *PUvariable = new TTree("puvariable","puvariable");
-    PUvariable->Branch("Generatorweight", &genweight, "genweight/D");
-    PUvariable->Branch("TrueInteractionall", &trueInteractionall, "trueInteractionall/F");  
     
    
     
@@ -296,14 +287,14 @@ void analysisClass::Loop()
          SumWeight->Fill(0.,weight);
          genweight = weight;
          trueInteractionall = npu->at(1)/*PileupInteractions->at(idx_InTimeBX)*/;
-         PUvariable->Fill();
+         fillPUvariableTree();
          
      }else
      {
           SumWeight->Fill(0.,1);
           weight = 1 ;  
           trueInteractionall = -999;   
-          PUvariable->Fill();
+          fillPUvariableTree();
      }
 
     if(!goodPVtx){
@@ -1232,7 +1223,6 @@ continue;}
   
    SumWeight->Write();
    totalluminosityP->Write();
-   PUvariable->Write();
    DeltaPhiAlpha->Write();
    EtaPhiJet_beforehot->Write();
    EtaPhiJet_afterhot->Write();
@@ -1268,7 +1258,6 @@ continue;}
    
    std::cout << "analysisClass::Loop() ends" <<std::endl; 
    
-    delete  PUvariable;
     delete pt_jets_;
     delete phi_jets_;
     delete eta_jets_;
