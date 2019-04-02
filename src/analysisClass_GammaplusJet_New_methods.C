@@ -285,16 +285,16 @@ void analysisClass::Loop()
      if(!isData)
      {
          SumWeight->Fill(0.,weight);
-         genweight = weight;
-         trueInteractionall = npu->at(1)/*PileupInteractions->at(idx_InTimeBX)*/;
-         fillPUvariableTree();
+         // genweight = weight;
+         // trueInteractionall = npu->at(1)/*PileupInteractions->at(idx_InTimeBX)*/;
+         // fillPUvariableTree();
          
      }else
      {
           SumWeight->Fill(0.,1);
-          weight = 1 ;  
-          trueInteractionall = -999;   
-          fillPUvariableTree();
+          // weight = 1 ;  
+          // trueInteractionall = -999;   
+          // fillPUvariableTree();
      }
 
     if(!goodPVtx){
@@ -1081,10 +1081,10 @@ void analysisClass::Loop()
        } 
      }
      //no cuts on these variables, just to store in output
-     if(!isData)
-       fillVariableWithValue("trueInteraction",npu->at(1)/*PileupInteractions->at(idx_InTimeBX)*/);
-     else if(isData)
-       fillVariableWithValue("trueInteraction",999);     
+     // if(!isData)
+     //   fillVariableWithValue("trueInteraction",npu->at(1)/*PileupInteractions->at(idx_InTimeBX)*/);
+     // else if(isData)
+     //   fillVariableWithValue("trueInteraction",999);     
 
      fillVariableWithValue("MET",MetTypeI.Et());
      fillVariableWithValue("MET_Pt",MetTypeI.Pt());
