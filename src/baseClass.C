@@ -147,8 +147,8 @@ void baseClass::init()
     
             Double_t genweight = 0.;
             Float_t trueInteractionall =0;
-            PUvariable->Branch("Generatorweight", "double", &genweight);
-            PUvariable->Branch("TrueInteractionall", "float", &trueInteractionall);  
+            PUvariable->Branch("Generatorweight", &genweight, "genweight/D");
+            PUvariable->Branch("TrueInteractionall", &trueInteractionall, "trueInteractionall/F");
 }
 }
 
