@@ -33,7 +33,7 @@ else
             echo 'Modify '$file_to_modify
             for frun in ABC D ; do
                 for dataMC in DATA MC ; do
-                    sed -i "s|data/JER_textfile/$period"_Run"$frun"_V"$old_JEC"_"$dataMC/$period"_Run"$frun"_V"$old_JEC"_"$dataMC|data/JER_textfile/$period"_Run"$frun"_V"$new_JEC"_"$dataMC/$period"_Run"$frun"_V"$new_JEC"_"$dataMC|g" $file_to_modify
+                    sed -i "s|data/JER_textfile/$period"_V"$old_JER"_"$dataMC/$period"_V"$old_JER"_"$dataMC|data/JER_textfile/$period"_V"$new_JER"_"$dataMC/$period"_V"$new_JER"_"$dataMC|g" $file_to_modify
                 done
             done
         done
