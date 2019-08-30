@@ -456,7 +456,7 @@ void analysisClass::Loop()
 	       float res = resolution->getResolution(parameters_1);
 	       
 	       
-	       JME::JetParameters parameters = {{JME::Binning::JetEta, jetEtaAK4->at(j)}, {JME::Binning::Rho, rho}};
+	       JME::JetParameters parameters = {{JME::Binning::JetPt, correction*jetPtAK4->at(j)/jetJecAK4->at(j)},{JME::Binning::JetEta, jetEtaAK4->at(j)}, {JME::Binning::Rho, rho}};
 	       
 	       
                float scalefactor = resolution_sf->getScaleFactor(parameters);;
@@ -843,7 +843,7 @@ void analysisClass::Loop()
 	       float res = resolution_TI->getResolution(parameters_1);
 	       
 	       
-	       JME::JetParameters parameters = {{JME::Binning::JetEta, jetEtaAK4->at(it)}, {JME::Binning::Rho, rho}};
+	       JME::JetParameters parameters = {{JME::Binning::JetPt, corrs*jetPtAK4->at(it)/jetJecAK4->at(it)},{JME::Binning::JetEta, jetEtaAK4->at(it)}, {JME::Binning::Rho, rho}};
 	       
 	       
                float scalefactor = resolution_sf_TI->getScaleFactor(parameters);;
