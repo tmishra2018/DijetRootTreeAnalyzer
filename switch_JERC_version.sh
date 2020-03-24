@@ -10,12 +10,12 @@ cd $CMSSW_BASE/src/CMSDIJET/DijetRootTreeAnalyzer/config
 if [ "$old_JEC" == "$new_JEC" ] ; then
     echo 'Not changing JEC version'
 else
-    for run in A B C D ; do
+    for run in B C D E F ; do
         for lvl in withoutL2Res onlyL2Res L2L3Res JER ; do
-            file_to_modify='cutFile_Run2018'$run'_'$lvl'.txt'
+            file_to_modify='cutFile_Run2017UL'$run'_'$lvl'.txt'
             touch $file_to_modify
             echo 'Modify '$file_to_modify
-            for frun in A B C D ; do
+            for frun in B C D E F ; do
                 sed -i "s|data/$period"_Run"$frun"_V"$old_JEC"_DATA"/$period"_Run"$frun"_V"$old_JEC"_DATA"|data/$period"_Run"$frun"_V"$new_JEC"_DATA"/$period"_Run"$frun"_V"$new_JEC"_DATA"|g" $file_to_modify
                 sed -i "s|data/$period"_V"$old_JEC"_MC"/$period"_V"$old_JEC"_MC"|data/$period"_V"$new_JEC"_MC"/$period"_V"$new_JEC"_MC"|g" $file_to_modify
             done
@@ -26,12 +26,12 @@ fi
 if [ "$old_JER" == "$new_JER" ] ; then
     echo 'Not changing JER version'
 else
-    for run in A B C D ; do
+    for run in B C D E F ; do
         for lvl in withoutL2Res onlyL2Res L2L3Res JER ; do
-            file_to_modify='cutFile_Run2018'$run'_'$lvl'.txt'
+            file_to_modify='cutFile_Run2017UL'$run'_'$lvl'.txt'
             touch $file_to_modify
             echo 'Modify '$file_to_modify
-            for frun in ABC D ; do
+            for frun in B C D E F ; do
                 for dataMC in DATA MC ; do
                     sed -i "s|data/JER_textfile/$period"_V"$old_JER"_"$dataMC/$period"_V"$old_JER"_"$dataMC|data/JER_textfile/$period"_V"$new_JER"_"$dataMC/$period"_V"$new_JER"_"$dataMC|g" $file_to_modify
                 done
