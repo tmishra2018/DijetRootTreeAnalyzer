@@ -34,7 +34,7 @@ for run in runs:
         if 'MC' in run:
             cutfiles[key] = cutfiles['_'.join(['B',JERC])]
         else:
-            cutfiles[key] = 'config/cutFile_Run2017UL{run}_{JERC}.txt'.format(
+            cutfiles[key] = 'config/cutFile_Run2017UL_{run}_{JERC}.txt'.format(
             run=run,
             JERC=JERC
         )
