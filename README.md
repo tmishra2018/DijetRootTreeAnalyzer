@@ -6,7 +6,7 @@ Step 1 is [here](https://github.com/lucastorterotot/DijetRootTreeMaker/blob/mast
 
 **Authors** Hugues Lattaud and Lucas Torterotot
 
-**Last update** 22 Jan 2019
+**Last update** 26 Mar 2020
 
 ## Introduction
 
@@ -39,18 +39,26 @@ cd CMSSW_8_0_31/src/
 cmsenv
 ```
 ### Get the Tree Analyzer code
-Get the git repository
+Get this git repository and choose the branch corresponding to your era of interest by doing
 ```
-git clone git@github.com:lucastorterotot/DijetRootTreeAnalyzer.git CMSDIJET/DijetRootTreeAnalyzer
+git clone -o lucas git@github.com:lucastorterotot/DijetRootTreeAnalyzer.git -b <BRANCH> CMSDIJET/DijetRootTreeAnalyzer
 ```
-and choose the branch:
-* For 2016: `JEC_JER_2016_master`
-* For 2017: `JEC_JER_2017_master`
-* For 2018: `JEC_JER_2018_CMSSW_8_0_31_master`
+where `<BRANCH>` is corresponding to your era of interest:
+* 2016: `JEC_JER_2016_master`
+* 2017: `JEC_JER_2017_master`
+* 2017UL: `JEC_JER_2017UL_CMSSW_8_0_31_master`
+* 2018: `JEC_JER_2018_CMSSW_8_0_31_master`
+* 2018UL : `JEC_JER_2018UL_CMSSW_8_0_31_master`
 
-NB: for 2017 one must also get the hotjets `EtaPhiCleaning_File` with
+### Hot zones maps
+Some era use a so-called `EtaPhiCleaning_File` you have to retreive:
+* 2017: 
 ```
 cp /afs/cern.ch/work/l/ltortero/public/EtaPhiCleaning_Files/* $CMSSW_BASE/src/CMSDIJET/DijetRootTreeAnalyzer/.
+```
+* 2017UL: use the one provided in the [JECDatabse repository](https://github.com/cms-jet/JECDatabase) you have cloned while installing the first step of this framework. The following commands, if you followed instructions, should work:
+```
+cd $CMSSW_BASE/../JECDatabase ; git pull ; cd - ; cp $CMSSW_BASE/../JECDatabase/hotzone_maps/Summer19UL17_V1/hotjets-UL17.root $CMSSW_BASE/src/CMSDIJET/DijetRootTreeAnalyzer/.
 ```
 
 ## Instructions (local)
