@@ -45,7 +45,7 @@ for run in runs:
             configs[key] = '{cutfile} {dirlist} {tag}'.format(
                 cutfile = cutfiles[key],
                 dirlist = 'lists_2017UL/'+samples[run],
-                tag = tags[JERC]
+                tag = '_'.join([L1Offset_approach,tags[JERC]])
             )
             command += ' '+configs[key]
 
