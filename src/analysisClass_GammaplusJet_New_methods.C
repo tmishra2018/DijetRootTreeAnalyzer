@@ -641,91 +641,21 @@ void analysisClass::Loop()
      }else{ncut_jet++;
      continue;}
      bool keep_event = true ; 
-     //2017 hot zone cleaning 
-     if(isData){
+     //2017 hot zone cleaning for both MC and Data
+
          EtaPhiJet_beforehot->Fill(ak4j1.Eta(),ak4j1.Phi());
          EtaPhiJet_beforehot->Fill(ak4j2.Eta(),ak4j2.Phi());
-     }
-     //cleaning needed for 2017, have to be removed for 2016 
-     if (isData && (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 || h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 )) keep_event=false; //
-     if(!keep_event){      
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
+
+     if (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) > 0) keep_event=false; //
+     if (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j2.Eta(), ak4j2.Phi())) > 0) keep_event=false; //
+     if(!keep_event){
         is_hot_area++;
         continue;
      }
      
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
-        is_hot_area++;
-        continue;
-     }
-     
-     // jet2
-     
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
-        is_hot_area++;
-        continue;
-     }
-     
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
-        is_hot_area++;
-        continue;
-     }
-     if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
-        is_hot_area++;
-        continue;
-     }
-     
-     if(isData){
          EtaPhiJet_afterhot->Fill(ak4j1.Eta(),ak4j1.Phi());
          EtaPhiJet_afterhot->Fill(ak4j2.Eta(),ak4j2.Phi());
-     }
+
      //store all corrected jets of the events 
      for(int i = 0 ; i < no_jets_ak4-nfakejet; i++){
      
