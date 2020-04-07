@@ -32,7 +32,7 @@ baseClass::baseClass(string * inputList, string * cutFile, string * treeName, st
   cutEfficFile_ = cutEfficFile;
   EtaPhiCleaning_File = TFile::Open("hotjets-UL17.root");
   assert(EtaPhiCleaning_File && !EtaPhiCleaning_File->IsZombie());
-  h_hotjets =(*((TH2D*)EtaPhiCleaning_File->Get("h2hot_ul17"))); 
+  h_hotjets =(*((TH2D*)EtaPhiCleaning_File->Get("h2hot_ul17_plus_hep17"))); 
  // assert(h_hotjets);
   init();
   //STDOUT("ends");
