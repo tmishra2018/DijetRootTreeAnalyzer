@@ -287,6 +287,13 @@ void analysisClass::Loop()
             mass_jets_  ->clear();
             emF_jets_   ->clear();
             IsID_jets_  ->clear();
+
+            Jet_btagDeepB_->clear();
+            Jet_btagDeepC_->clear();
+            Jet_qgl_->clear();
+            Jet_btagDeepFlavB_->clear();
+            Jet_btagDeepFlavC_->clear();
+
             }
    //for (Long64_t jentry=0; jentry<2000;jentry++) {
      Long64_t ientry = LoadTree(jentry);
@@ -670,6 +677,13 @@ void analysisClass::Loop()
                  bool isID = false;
                 if(isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[i]), jetNhfAK4->at(sortedJetIdx[i]), neMultAK4->at(sortedJetIdx[i]), chMultAK4->at(sortedJetIdx[i]), jetNemfAK4->at(sortedJetIdx[i]), jetMufAK4->at(sortedJetIdx[i]), jetChfAK4->at(sortedJetIdx[i]), jetCemfAK4->at(sortedJetIdx[i]),idLAK4->at(sortedJetIdx[i]), isData, hasgen,false)) isID = true; 
                  IsID_jets_ ->push_back(isID);
+
+                 Jet_btagDeepB_->push_back(Jet_btagDeepB->at(sortedJetIdx[i]));
+                 Jet_btagDeepC_->push_back(Jet_btagDeepC->at(sortedJetIdx[i]));
+                 Jet_qgl_->push_back(Jet_qgl->at(sortedJetIdx[i]));
+                 Jet_btagDeepFlavB_->push_back(Jet_btagDeepFlavB->at(sortedJetIdx[i]));
+                 Jet_btagDeepFlavC_->push_back(Jet_btagDeepFlavC->at(sortedJetIdx[i]));
+
            }
       }
      
@@ -1228,7 +1242,11 @@ continue;}
     delete EtaPhiJet_afterhot;
     //delete h_hotjets;
      
-    
+    delete Jet_btagDeepB_;
+    delete Jet_btagDeepC_;
+    delete Jet_qgl_;
+    delete Jet_btagDeepFlavB_;
+    delete Jet_btagDeepFlavC_;
      
 
    }

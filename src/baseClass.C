@@ -137,12 +137,25 @@ void baseClass::init()
 	    mass_jets_ = new std::vector<double>;
 	    emF_jets_ = new std::vector<double>;
 	    IsID_jets_ = new std::vector<bool>;  
+            // jet flavour tags
+            Jet_btagDeepB_ = new std::vector<float>;
+            Jet_btagDeepC_ = new std::vector<float>;
+            Jet_qgl_ = new std::vector<float>;
+            Jet_btagDeepFlavB_ = new std::vector<float>;
+            Jet_btagDeepFlavC_ = new std::vector<float>;
+
 	    reduced_skim_tree_->Branch("pT_jets"    ,"vector<double>",&pt_jets_);
 	    reduced_skim_tree_->Branch("Eta_jets"   ,"vector<double>",&eta_jets_ );
 	    reduced_skim_tree_->Branch("Phi_jets"   ,"vector<double>",&phi_jets_);
 	    reduced_skim_tree_->Branch("Mass_jets","vector<double>",&mass_jets_);
 	    reduced_skim_tree_->Branch("emF_jets","vector<double>",&emF_jets_);
 	    reduced_skim_tree_->Branch("IsID_jets","vector<bool>",&IsID_jets_);
+
+            reduced_skim_tree_->Branch("Jet_btagDeepB", "vector<float>", &Jet_btagDeepB_);
+            reduced_skim_tree_->Branch("Jet_btagDeepC", "vector<float>", &Jet_btagDeepC_);
+            reduced_skim_tree_->Branch("Jet_qgl", "vector<float>", &Jet_qgl_);
+            reduced_skim_tree_->Branch("Jet_btagDeepFlavB", "vector<float>", &Jet_btagDeepFlavB_);
+            reduced_skim_tree_->Branch("Jet_btagDeepFlavC", "vector<float>", &Jet_btagDeepFlavC_);
 }
 }
 
