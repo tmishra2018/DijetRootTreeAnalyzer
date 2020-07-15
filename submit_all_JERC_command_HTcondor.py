@@ -25,28 +25,24 @@ tags = {
     'JER' : 'JER'
 }
 
-L1Offset_approaches = ["ComplexL1", "SimpleL1"]
-
 JERCs = tags.keys()
 runs = [run for run in samples.keys() if 'MC' not in run] + [run for run in samples.keys() if 'MC' in run]
 
 for run in runs:
     for JERC in JERCs:
-        for L1Offset_approach in L1Offset_approaches:
-            key = '_'.join([run,L1Offset_approach,JERC])
-            if 'MC' in run:
-                cutfiles[key] = cutfiles['_'.join([runs[0],L1Offset_approach,JERC])]
-            else:
-                cutfiles[key] = 'config/cutFile_Run2017UL_{run}_{L1Offset_approach}_{JERC}.txt'.format(
-                    run=run,
-                    L1Offset_approach=L1Offset_approach,
-                    JERC=JERC
-                )
-            configs[key] = '{cutfile} {dirlist} {tag}'.format(
-                cutfile = cutfiles[key],
-                dirlist = 'lists_2017UL/'+samples[run],
-                tag = '_'.join([L1Offset_approach,tags[JERC]])
+        key = '_'.join([run,JERC])
+        if 'MC' in run:
+            cutfiles[key] = cutfiles['_'.join([runs[0],JERC])]
+        else:
+            cutfiles[key] = 'config/cutFile_Run2017UL_{run}_{JERC}.txt'.format(
+                run=run,
+                JERC=JERC
             )
-            command += ' '+configs[key]
+        configs[key] = '{cutfile} {dirlist} {tag}'.format(
+            cutfile = cutfiles[key],
+            dirlist = 'lists_2017UL/'+samples[run],
+            tag = tags[JERC]
+        )
+        command += ' '+configs[key]
 
 os.system(command)
