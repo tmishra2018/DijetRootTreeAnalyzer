@@ -253,7 +253,7 @@ void analysisClass::Loop()
     int Vtxcut = 0 ;
     int testcount = 0 ;
     int Is_PU = 0 ;
-    // int is_hot_area = 0 ;
+    int is_hot_area = 0 ;
    /////////initialize variables
 
    Long64_t nentries = fChain->GetEntriesFast();//10000;//fChain->GetEntriesFast();//10000;//10000;//1000000; //
@@ -424,7 +424,7 @@ void analysisClass::Loop()
 	     
 	     //JEC uncertainties
 	     double uncertainty = 0 ;
-	     if(isData){
+	    /* if(isData){
 	     unc->setJetEta(jetEtaAK4->at(j));
 	     unc->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
 	     uncertainty = unc->getUncertainty(true);
@@ -433,7 +433,7 @@ void analysisClass::Loop()
 	     unc_MC->setJetPt(jetPtAK4->at(j)/jetJecAK4->at(j)*correction);
 	     uncertainty = unc_MC->getUncertainty(true);
 	     
-	     }
+	     } */
 	     jecUncertainty.push_back(uncertainty); 
 
 	     
@@ -619,90 +619,19 @@ void analysisClass::Loop()
      continue;}
      bool keep_event = true ; 
      //2017 hot zone cleaning 
-     if(isData){
-         EtaPhiJet_beforehot->Fill(ak4j1.Eta(),ak4j1.Phi());
-         EtaPhiJet_beforehot->Fill(ak4j2.Eta(),ak4j2.Phi());
+     	EtaPhiJet_beforehot->Fill(ak4j1.Eta(),ak4j1.Phi());
+     	EtaPhiJet_beforehot->Fill(ak4j2.Eta(),ak4j2.Phi());
+
+     if (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) > 0) keep_event=false; //
+     if (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j2.Eta(), ak4j2.Phi())) > 0) keep_event=false; //
+     if(!keep_event){
+        is_hot_area++;
+        continue;
      }
-     //cleaning needed for 2017, have to be removed for 2016 
-     // if (isData && (h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 || h_hotjets.GetBinContent(h_hotjets.FindBin(ak4j1.Eta(), ak4j1.Phi())) >= 10 )) keep_event=false; //
-     // if(!keep_event){      
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j1.Eta() >= 2.853 &&  ak4j1.Eta() <= 2.964 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
-     //    is_hot_area++;
-     //    continue;
-     // }
      
-     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= -2.6 && ak4j1.Phi() <= -2.2)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 0.6 && ak4j1.Phi() <= 1.)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.2 && ak4j1.Phi() <= 2.6)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j1.Eta() >= -2.964 &&  ak4j1.Eta() <= -2.853 && ak4j1.Phi()>= 2.9 && ak4j1.Phi() <= 3.1)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     
-     // // jet2
-     
-     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j2.Eta() >= 2.853 &&  ak4j2.Eta() <= 2.964 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     
-     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= -2.6 && ak4j2.Phi() <= -2.2)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 0.6 && ak4j2.Phi() <= 1.)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.2 && ak4j2.Phi() <= 2.6)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     // if (isData && (ak4j2.Eta() >= -2.964 &&  ak4j2.Eta() <= -2.853 && ak4j2.Phi()>= 2.9 && ak4j2.Phi() <= 3.1)){
-     //    is_hot_area++;
-     //    continue;
-     // }
-     
-     if(isData){
          EtaPhiJet_afterhot->Fill(ak4j1.Eta(),ak4j1.Phi());
          EtaPhiJet_afterhot->Fill(ak4j2.Eta(),ak4j2.Phi());
-     }
+     
      //store all corrected jets of the events 
      for(int i = 0 ; i < no_jets_ak4-nfakejet; i++){
      
@@ -717,6 +646,13 @@ void analysisClass::Loop()
                  bool isID = false;
                 if(isNewonOldValidJetTight(jetEtaAK4->at(sortedJetIdx[i]), jetNhfAK4->at(sortedJetIdx[i]), neMultAK4->at(sortedJetIdx[i]), chMultAK4->at(sortedJetIdx[i]), jetNemfAK4->at(sortedJetIdx[i]), jetMufAK4->at(sortedJetIdx[i]), jetChfAK4->at(sortedJetIdx[i]), jetCemfAK4->at(sortedJetIdx[i]),idLAK4->at(sortedJetIdx[i]), isData, hasgen,false)) isID = true; 
                  IsID_jets_ ->push_back(isID);
+                 Jet_btagDeepB_->push_back(Jet_btagDeepB->at(sortedJetIdx[i]));
+                 Jet_btagDeepC_->push_back(Jet_btagDeepC->at(sortedJetIdx[i]));
+                 Jet_qgl_->push_back(Jet_qgl->at(sortedJetIdx[i]));
+                 Jet_btagDeepFlavB_->push_back(Jet_btagDeepFlavB->at(sortedJetIdx[i]));
+                 Jet_btagDeepFlavC_->push_back(Jet_btagDeepFlavC->at(sortedJetIdx[i]));
+
+
            }
       }
      
@@ -1201,6 +1137,12 @@ void analysisClass::Loop()
          mass_jets_  ->clear();
          emF_jets_   ->clear();
          IsID_jets_  ->clear();
+           
+         Jet_btagDeepB_->clear();
+         Jet_btagDeepC_->clear();
+         Jet_qgl_->clear();
+         Jet_btagDeepFlavB_->clear();
+         Jet_btagDeepFlavC_->clear();   
 
        }
 }
@@ -1275,6 +1217,11 @@ continue;}
     delete mass_jets_;
     delete emF_jets_;
     delete IsID_jets_;
+    delete Jet_btagDeepB_;
+    delete Jet_btagDeepC_;
+    delete Jet_qgl_;
+    delete Jet_btagDeepFlavB_;
+    delete Jet_btagDeepFlavC_;
     delete DeltaPhiAlpha;
     delete SumWeight;
     delete EtaPhiJet_beforehot;

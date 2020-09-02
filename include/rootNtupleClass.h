@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Fri May 18 13:59:29 2018 by ROOT version 6.06/09
+// Tue Sep  1 16:14:47 2020 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -46,6 +46,7 @@ public :
    const Int_t kMaxmetSig = 1;
    const Int_t kMaxmetcorrected = 1;
    const Int_t kMaxgoodPVtx = 1;
+   const Int_t kMaxNgoodPV = 1;
    const Int_t kMaxdeltaNHfootprintX = 1;
    const Int_t kMaxdeltaNHfootprintY = 1;
    const Int_t kMaxmetEnergyGen = 1;
@@ -59,8 +60,6 @@ public :
    const Int_t kMaxnJetsAK4 = 1;
    const Int_t kMaxnJetsPUPPI = 1;
    const Int_t kMaxhtAK4 = 1;
-   const Int_t kMaxnJetsAK8 = 1;
-   const Int_t kMaxhtAK8 = 1;
    const Int_t kMaxnPhotons = 1;
    const Int_t kMaxnPhotonsLoose = 1;
    const Int_t kMaxnPhotonsMedium = 1;
@@ -70,7 +69,6 @@ public :
    const Int_t kMaxprocessID = 1;
    const Int_t kMaxweight = 1;
    const Int_t kMaxnGenJetsAK4 = 1;
-   const Int_t kMaxnGenJetsAK8 = 1;
    const Int_t kMaxnGenPhotons = 1;
 
    // Declaration of leaf types
@@ -91,6 +89,7 @@ public :
    Float_t         metSig;
    Float_t         metTypeI;
    Char_t          goodPVtx;
+   Int_t           NgoodPV;
    Float_t         deltaNHfootprintX;
    Float_t         deltaNHfootprintY;
    Float_t         metEnergyGen;
@@ -120,8 +119,6 @@ public :
    Int_t           nJetsAK4;
    Int_t           nJetsPUPPI;
    Float_t         htAK4;
-   Int_t           nJetsAK8;
-   Float_t         htAK8;
    Int_t           nPhoton;
    Int_t           nPhotonLoose;
    Int_t           nPhotonMedium;
@@ -156,18 +153,19 @@ public :
    vector<bool>    *isPhotonLoose;
    vector<bool>    *isPhotonMedium;
    vector<bool>    *isPhotonTight;
-   vector<bool>    *isfakephoton;
-   vector<float>   *Photonfull5x5SigmaIEtaIPhiMapToken;
-   vector<float>   *Photonfull5x5E5x5MapToken;
-   vector<float>   *Photonfull5x5E2x2MapToken;
-   vector<float>   *PhotonESEffSigmaRRMapToken;
-   vector<float>   *PhotonR9;
-   vector<float>   *Photon_etawidth;
-   vector<float>   *Photon_phiwidth;
-   vector<float>   *Photon_ES_energy;
-   vector<float>   *Photonfull5x5E2x5;
-   vector<float>   *Photonfull5x5E1x3;
-   vector<float>   *PhotonWorstChargedIsolation;
+   vector<float>   *Photon_scaleUNC_gainup;
+   vector<float>   *Photon_scaleUNC_gaindown;
+   vector<float>   *Photon_scaleUNC_systup;
+   vector<float>   *Photon_scaleUNC_systdown;
+   vector<float>   *Photon_scaleUNC_statup;
+   vector<float>   *Photon_scaleUNC_statdown;
+   vector<float>   *Photon_scaleUNC_ETup;
+   vector<float>   *Photon_scaleUNC_ETdown;
+   vector<float>   *Photon_smearUNC_phiup;
+   vector<float>   *Photon_smearUNC_rhodown;
+   vector<float>   *Photon_smearUNC_rhoup;
+   vector<float>   *photon_scale_central;
+   vector<float>   *photon_smear_central;
    vector<float>   *electronPt;
    vector<float>   *electronEta;
    vector<float>   *electronPhi;
@@ -217,12 +215,42 @@ public :
    vector<int>     *neMultAK4;
    vector<int>     *phoMultAK4;
    vector<int>     *hadronflavour;
-   vector<float>   *deepcsv_probb_AK4;
-   vector<float>   *deepcsv_probbb_AK4;
-   vector<float>   *deepcsv_probc_AK4;
-   vector<float>   *deepcsv_probcc_AK4;
-   vector<float>   *CvsB_taggerAK4;
-   vector<float>   *CvsL_taggerAK4;
+   vector<float>   *Jet_btagDeepB;
+   vector<float>   *Jet_btagDeepC;
+   vector<float>   *Jet_qgl;
+   vector<float>   *Jet_btagDeepFlavB;
+   vector<float>   *Jet_btagDeepFlavC;
+   vector<float>   *jetPtPUPPI;
+   vector<float>   *jetJecPUPPI;
+   vector<float>   *jetEtaPUPPI;
+   vector<float>   *jetPhiPUPPI;
+   vector<float>   *jetMassPUPPI;
+   vector<float>   *jetEnergyPUPPI;
+   vector<float>   *jetPtPUPPIRC;
+   vector<float>   *jetEtaPUPPIRC;
+   vector<float>   *jetPhiPUPPIRC;
+   vector<float>   *jetMassPUPPIRC;
+   vector<float>   *jetEnergyPUPPIRC;
+   vector<float>   *jetAreaPUPPI;
+   vector<float>   *jetCSVPUPPI;
+   vector<float>   *jetQGDPUPPI;
+   vector<float>   *jetChfPUPPI;
+   vector<float>   *jetNhfPUPPI;
+   vector<float>   *jetPhfPUPPI;
+   vector<float>   *jetMufPUPPI;
+   vector<float>   *jetElfPUPPI;
+   vector<float>   *jetNemfPUPPI;
+   vector<float>   *jetCemfPUPPI;
+   vector<float>   *jetHf_hfPUPPI;
+   vector<float>   *jetHf_emfPUPPI;
+   vector<float>   *jetHofPUPPI;
+   vector<int>     *idLPUPPI;
+   vector<int>     *idTPUPPI;
+   vector<int>     *chHadMultPUPPI;
+   vector<int>     *chMultPUPPI;
+   vector<int>     *neHadMultPUPPI;
+   vector<int>     *neMultPUPPI;
+   vector<int>     *phoMultPUPPI;
    vector<bool>    *triggerResult;
    vector<int>     *triggerPrescale;
    vector<string>  *triggerName;
@@ -233,7 +261,6 @@ public :
    Int_t           processID;
    Float_t         weight;
    Int_t           nGenJetsAK4;
-   Int_t           nGenJetsAK8;
    Int_t           nGenPhoton;
    vector<float>   *photonPtGen;
    vector<float>   *photonEtaGen;
@@ -245,6 +272,12 @@ public :
    vector<float>   *jetMassGenAK4;
    vector<float>   *jetEnergyGenAK4;
    vector<int>     *jetpdgIDGenAK4;
+   vector<float>   *jetPtGenPUPPI;
+   vector<float>   *jetEtaGenPUPPI;
+   vector<float>   *jetPhiGenPUPPI;
+   vector<float>   *jetMassGenPUPPI;
+   vector<float>   *jetEnergyGenPUPPI;
+   vector<int>     *jetpdgIDGenPUPPI;
 
    // List of branches
    TBranch        *b_run_;   //!
@@ -264,6 +297,7 @@ public :
    TBranch        *b_metSig_;   //!
    TBranch        *b_metcorrected_;   //!
    TBranch        *b_goodPVtx_;   //!
+   TBranch        *b_NgoodPV_;   //!
    TBranch        *b_deltaNHfootprintX_;   //!
    TBranch        *b_deltaNHfootprintY_;   //!
    TBranch        *b_metEnergyGen_;   //!
@@ -293,8 +327,6 @@ public :
    TBranch        *b_nJetsAK4_;   //!
    TBranch        *b_nJetsPUPPI_;   //!
    TBranch        *b_htAK4_;   //!
-   TBranch        *b_nJetsAK8_;   //!
-   TBranch        *b_htAK8_;   //!
    TBranch        *b_nPhotons_;   //!
    TBranch        *b_nPhotonsLoose_;   //!
    TBranch        *b_nPhotonsMedium_;   //!
@@ -329,18 +361,19 @@ public :
    TBranch        *b_isPhotonLoose;   //!
    TBranch        *b_isPhotonMedium;   //!
    TBranch        *b_isPhotonTight;   //!
-   TBranch        *b_isfakephoton;   //!
-   TBranch        *b_Photonfull5x5SigmaIEtaIPhiMapToken;   //!
-   TBranch        *b_Photonfull5x5E5x5MapToken;   //!
-   TBranch        *b_Photonfull5x5E2x2MapToken;   //!
-   TBranch        *b_PhotonESEffSigmaRRMapToken;   //!
-   TBranch        *b_PhotonR9;   //!
-   TBranch        *b_Photon_etawidth;   //!
-   TBranch        *b_Photon_phiwidth;   //!
-   TBranch        *b_Photon_ES_energy;   //!
-   TBranch        *b_Photonfull5x5E2x5;   //!
-   TBranch        *b_Photonfull5x5E1x3;   //!
-   TBranch        *b_PhotonWorstChargedIsolation;   //!
+   TBranch        *b_Photon_scaleUNC_gainup;   //!
+   TBranch        *b_Photon_scaleUNC_gaindown;   //!
+   TBranch        *b_Photon_scaleUNC_systup;   //!
+   TBranch        *b_Photon_scaleUNC_systdown;   //!
+   TBranch        *b_Photon_scaleUNC_statup;   //!
+   TBranch        *b_Photon_scaleUNC_statdown;   //!
+   TBranch        *b_Photon_scaleUNC_ETup;   //!
+   TBranch        *b_Photon_scaleUNC_ETdown;   //!
+   TBranch        *b_Photon_smearUNC_phiup;   //!
+   TBranch        *b_Photon_smearUNC_rhodown;   //!
+   TBranch        *b_Photon_smearUNC_rhoup;   //!
+   TBranch        *b_photon_scale_central;   //!
+   TBranch        *b_photon_smear_central;   //!
    TBranch        *b_electronPt;   //!
    TBranch        *b_electronEta;   //!
    TBranch        *b_electronPhi;   //!
@@ -390,12 +423,42 @@ public :
    TBranch        *b_neMultAK4;   //!
    TBranch        *b_phoMultAK4;   //!
    TBranch        *b_hadronflavour;   //!
-   TBranch        *b_deepcsv_probb_AK4;   //!
-   TBranch        *b_deepcsv_probbb_AK4;   //!
-   TBranch        *b_deepcsv_probc_AK4;   //!
-   TBranch        *b_deepcsv_probcc_AK4;   //!
-   TBranch        *b_CvsB_taggerAK4;   //!
-   TBranch        *b_CvsL_taggerAK4;   //!
+   TBranch        *b_Jet_btagDeepB;   //!
+   TBranch        *b_Jet_btagDeepC;   //!
+   TBranch        *b_Jet_qgl;   //!
+   TBranch        *b_Jet_btagDeepFlavB;   //!
+   TBranch        *b_Jet_btagDeepFlavC;   //!
+   TBranch        *b_jetPtPUPPI;   //!
+   TBranch        *b_jetJecPUPPI;   //!
+   TBranch        *b_jetEtaPUPPI;   //!
+   TBranch        *b_jetPhiPUPPI;   //!
+   TBranch        *b_jetMassPUPPI;   //!
+   TBranch        *b_jetEnergyPUPPI;   //!
+   TBranch        *b_jetPtPUPPIRC;   //!
+   TBranch        *b_jetEtaPUPPIRC;   //!
+   TBranch        *b_jetPhiPUPPIRC;   //!
+   TBranch        *b_jetMassPUPPIRC;   //!
+   TBranch        *b_jetEnergyPUPPIRC;   //!
+   TBranch        *b_jetAreaPUPPI;   //!
+   TBranch        *b_jetCSVPUPPI;   //!
+   TBranch        *b_jetQGDPUPPI;   //!
+   TBranch        *b_jetChfPUPPI;   //!
+   TBranch        *b_jetNhfPUPPI;   //!
+   TBranch        *b_jetPhfPUPPI;   //!
+   TBranch        *b_jetMufPUPPI;   //!
+   TBranch        *b_jetElfPUPPI;   //!
+   TBranch        *b_jetNemfPUPPI;   //!
+   TBranch        *b_jetCemfPUPPI;   //!
+   TBranch        *b_jetHf_hfPUPPI;   //!
+   TBranch        *b_jetHf_emfPUPPI;   //!
+   TBranch        *b_jetHofPUPPI;   //!
+   TBranch        *b_idLPUPPI;   //!
+   TBranch        *b_idTPUPPI;   //!
+   TBranch        *b_chHadMultPUPPI;   //!
+   TBranch        *b_chMultPUPPI;   //!
+   TBranch        *b_neHadMultPUPPI;   //!
+   TBranch        *b_neMultPUPPI;   //!
+   TBranch        *b_phoMultPUPPI;   //!
    TBranch        *b_triggerResult;   //!
    TBranch        *b_triggerPrescale;   //!
    TBranch        *b_triggerName;   //!
@@ -406,7 +469,6 @@ public :
    TBranch        *b_processID_;   //!
    TBranch        *b_weight_;   //!
    TBranch        *b_nGenJetsAK4_;   //!
-   TBranch        *b_nGenJetsAK8_;   //!
    TBranch        *b_nGenPhotons_;   //!
    TBranch        *b_photonPtGen;   //!
    TBranch        *b_photonEtaGen;   //!
@@ -418,6 +480,12 @@ public :
    TBranch        *b_jetMassGenAK4;   //!
    TBranch        *b_jetEnergyGenAK4;   //!
    TBranch        *b_jetpdgIDGenAK4;   //!
+   TBranch        *b_jetPtGenPUPPI;   //!
+   TBranch        *b_jetEtaGenPUPPI;   //!
+   TBranch        *b_jetPhiGenPUPPI;   //!
+   TBranch        *b_jetMassGenPUPPI;   //!
+   TBranch        *b_jetEnergyGenPUPPI;   //!
+   TBranch        *b_jetpdgIDGenPUPPI;   //!
 
    rootNtupleClass(TTree *tree=0);
    virtual ~rootNtupleClass();
@@ -453,7 +521,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("/eos/cms/store/group/phys_smp/hlattaud/Gjets_HF/QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8/crab_QCD_Pt_170to300_ext_V6_MVA_deepCSV_lighttuple/180503_133027/0000/mylocaltest_Run2016B_10_10.root/dijets/events");
+      chain->Add("GammajetTree.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -543,18 +611,19 @@ void rootNtupleClass::Init(TTree *tree)
    isPhotonLoose = 0;
    isPhotonMedium = 0;
    isPhotonTight = 0;
-   isfakephoton = 0;
-   Photonfull5x5SigmaIEtaIPhiMapToken = 0;
-   Photonfull5x5E5x5MapToken = 0;
-   Photonfull5x5E2x2MapToken = 0;
-   PhotonESEffSigmaRRMapToken = 0;
-   PhotonR9 = 0;
-   Photon_etawidth = 0;
-   Photon_phiwidth = 0;
-   Photon_ES_energy = 0;
-   Photonfull5x5E2x5 = 0;
-   Photonfull5x5E1x3 = 0;
-   PhotonWorstChargedIsolation = 0;
+   Photon_scaleUNC_gainup = 0;
+   Photon_scaleUNC_gaindown = 0;
+   Photon_scaleUNC_systup = 0;
+   Photon_scaleUNC_systdown = 0;
+   Photon_scaleUNC_statup = 0;
+   Photon_scaleUNC_statdown = 0;
+   Photon_scaleUNC_ETup = 0;
+   Photon_scaleUNC_ETdown = 0;
+   Photon_smearUNC_phiup = 0;
+   Photon_smearUNC_rhodown = 0;
+   Photon_smearUNC_rhoup = 0;
+   photon_scale_central = 0;
+   photon_smear_central = 0;
    electronPt = 0;
    electronEta = 0;
    electronPhi = 0;
@@ -603,12 +672,42 @@ void rootNtupleClass::Init(TTree *tree)
    neMultAK4 = 0;
    phoMultAK4 = 0;
    hadronflavour = 0;
-   deepcsv_probb_AK4 = 0;
-   deepcsv_probbb_AK4 = 0;
-   deepcsv_probc_AK4 = 0;
-   deepcsv_probcc_AK4 = 0;
-   CvsB_taggerAK4 = 0;
-   CvsL_taggerAK4 = 0;
+   Jet_btagDeepB = 0;
+   Jet_btagDeepC = 0;
+   Jet_qgl = 0;
+   Jet_btagDeepFlavB = 0;
+   Jet_btagDeepFlavC = 0;
+   jetPtPUPPI = 0;
+   jetJecPUPPI = 0;
+   jetEtaPUPPI = 0;
+   jetPhiPUPPI = 0;
+   jetMassPUPPI = 0;
+   jetEnergyPUPPI = 0;
+   jetPtPUPPIRC = 0;
+   jetEtaPUPPIRC = 0;
+   jetPhiPUPPIRC = 0;
+   jetMassPUPPIRC = 0;
+   jetEnergyPUPPIRC = 0;
+   jetAreaPUPPI = 0;
+   jetCSVPUPPI = 0;
+   jetQGDPUPPI = 0;
+   jetChfPUPPI = 0;
+   jetNhfPUPPI = 0;
+   jetPhfPUPPI = 0;
+   jetMufPUPPI = 0;
+   jetElfPUPPI = 0;
+   jetNemfPUPPI = 0;
+   jetCemfPUPPI = 0;
+   jetHf_hfPUPPI = 0;
+   jetHf_emfPUPPI = 0;
+   jetHofPUPPI = 0;
+   idLPUPPI = 0;
+   idTPUPPI = 0;
+   chHadMultPUPPI = 0;
+   chMultPUPPI = 0;
+   neHadMultPUPPI = 0;
+   neMultPUPPI = 0;
+   phoMultPUPPI = 0;
    triggerResult = 0;
    triggerPrescale = 0;
    triggerName = 0;
@@ -625,6 +724,12 @@ void rootNtupleClass::Init(TTree *tree)
    jetMassGenAK4 = 0;
    jetEnergyGenAK4 = 0;
    jetpdgIDGenAK4 = 0;
+   jetPtGenPUPPI = 0;
+   jetEtaGenPUPPI = 0;
+   jetPhiGenPUPPI = 0;
+   jetMassGenPUPPI = 0;
+   jetEnergyGenPUPPI = 0;
+   jetpdgIDGenPUPPI = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -648,6 +753,7 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("metSig", &metSig, &b_metSig_);
    fChain->SetBranchAddress("metTypeI", &metTypeI, &b_metcorrected_);
    fChain->SetBranchAddress("goodPVtx", &goodPVtx, &b_goodPVtx_);
+   fChain->SetBranchAddress("NgoodPV", &NgoodPV, &b_NgoodPV_);
    fChain->SetBranchAddress("deltaNHfootprintX", &deltaNHfootprintX, &b_deltaNHfootprintX_);
    fChain->SetBranchAddress("deltaNHfootprintY", &deltaNHfootprintY, &b_deltaNHfootprintY_);
    fChain->SetBranchAddress("metEnergyGen", &metEnergyGen, &b_metEnergyGen_);
@@ -677,8 +783,6 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("nJetsAK4", &nJetsAK4, &b_nJetsAK4_);
    fChain->SetBranchAddress("nJetsPUPPI", &nJetsPUPPI, &b_nJetsPUPPI_);
    fChain->SetBranchAddress("htAK4", &htAK4, &b_htAK4_);
-   fChain->SetBranchAddress("nJetsAK8", &nJetsAK8, &b_nJetsAK8_);
-   fChain->SetBranchAddress("htAK8", &htAK8, &b_htAK8_);
    fChain->SetBranchAddress("nPhoton", &nPhoton, &b_nPhotons_);
    fChain->SetBranchAddress("nPhotonLoose", &nPhotonLoose, &b_nPhotonsLoose_);
    fChain->SetBranchAddress("nPhotonMedium", &nPhotonMedium, &b_nPhotonsMedium_);
@@ -713,18 +817,19 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("isPhotonLoose", &isPhotonLoose, &b_isPhotonLoose);
    fChain->SetBranchAddress("isPhotonMedium", &isPhotonMedium, &b_isPhotonMedium);
    fChain->SetBranchAddress("isPhotonTight", &isPhotonTight, &b_isPhotonTight);
-   fChain->SetBranchAddress("isfakephoton", &isfakephoton, &b_isfakephoton);
-   fChain->SetBranchAddress("Photonfull5x5SigmaIEtaIPhiMapToken", &Photonfull5x5SigmaIEtaIPhiMapToken, &b_Photonfull5x5SigmaIEtaIPhiMapToken);
-   fChain->SetBranchAddress("Photonfull5x5E5x5MapToken", &Photonfull5x5E5x5MapToken, &b_Photonfull5x5E5x5MapToken);
-   fChain->SetBranchAddress("Photonfull5x5E2x2MapToken", &Photonfull5x5E2x2MapToken, &b_Photonfull5x5E2x2MapToken);
-   fChain->SetBranchAddress("PhotonESEffSigmaRRMapToken", &PhotonESEffSigmaRRMapToken, &b_PhotonESEffSigmaRRMapToken);
-   fChain->SetBranchAddress("PhotonR9", &PhotonR9, &b_PhotonR9);
-   fChain->SetBranchAddress("Photon_etawidth", &Photon_etawidth, &b_Photon_etawidth);
-   fChain->SetBranchAddress("Photon_phiwidth", &Photon_phiwidth, &b_Photon_phiwidth);
-   fChain->SetBranchAddress("Photon_ES_energy", &Photon_ES_energy, &b_Photon_ES_energy);
-   fChain->SetBranchAddress("Photonfull5x5E2x5", &Photonfull5x5E2x5, &b_Photonfull5x5E2x5);
-   fChain->SetBranchAddress("Photonfull5x5E1x3", &Photonfull5x5E1x3, &b_Photonfull5x5E1x3);
-   fChain->SetBranchAddress("PhotonWorstChargedIsolation", &PhotonWorstChargedIsolation, &b_PhotonWorstChargedIsolation);
+   fChain->SetBranchAddress("Photon_scaleUNC_gainup", &Photon_scaleUNC_gainup, &b_Photon_scaleUNC_gainup);
+   fChain->SetBranchAddress("Photon_scaleUNC_gaindown", &Photon_scaleUNC_gaindown, &b_Photon_scaleUNC_gaindown);
+   fChain->SetBranchAddress("Photon_scaleUNC_systup", &Photon_scaleUNC_systup, &b_Photon_scaleUNC_systup);
+   fChain->SetBranchAddress("Photon_scaleUNC_systdown", &Photon_scaleUNC_systdown, &b_Photon_scaleUNC_systdown);
+   fChain->SetBranchAddress("Photon_scaleUNC_statup", &Photon_scaleUNC_statup, &b_Photon_scaleUNC_statup);
+   fChain->SetBranchAddress("Photon_scaleUNC_statdown", &Photon_scaleUNC_statdown, &b_Photon_scaleUNC_statdown);
+   fChain->SetBranchAddress("Photon_scaleUNC_ETup", &Photon_scaleUNC_ETup, &b_Photon_scaleUNC_ETup);
+   fChain->SetBranchAddress("Photon_scaleUNC_ETdown", &Photon_scaleUNC_ETdown, &b_Photon_scaleUNC_ETdown);
+   fChain->SetBranchAddress("Photon_smearUNC_phiup", &Photon_smearUNC_phiup, &b_Photon_smearUNC_phiup);
+   fChain->SetBranchAddress("Photon_smearUNC_rhodown", &Photon_smearUNC_rhodown, &b_Photon_smearUNC_rhodown);
+   fChain->SetBranchAddress("Photon_smearUNC_rhoup", &Photon_smearUNC_rhoup, &b_Photon_smearUNC_rhoup);
+   fChain->SetBranchAddress("photon_scale_central", &photon_scale_central, &b_photon_scale_central);
+   fChain->SetBranchAddress("photon_smear_central", &photon_smear_central, &b_photon_smear_central);
    fChain->SetBranchAddress("electronPt", &electronPt, &b_electronPt);
    fChain->SetBranchAddress("electronEta", &electronEta, &b_electronEta);
    fChain->SetBranchAddress("electronPhi", &electronPhi, &b_electronPhi);
@@ -774,12 +879,42 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("neMultAK4", &neMultAK4, &b_neMultAK4);
    fChain->SetBranchAddress("phoMultAK4", &phoMultAK4, &b_phoMultAK4);
    fChain->SetBranchAddress("hadronflavour", &hadronflavour, &b_hadronflavour);
-   fChain->SetBranchAddress("deepcsv_probb_AK4", &deepcsv_probb_AK4, &b_deepcsv_probb_AK4);
-   fChain->SetBranchAddress("deepcsv_probbb_AK4", &deepcsv_probbb_AK4, &b_deepcsv_probbb_AK4);
-   fChain->SetBranchAddress("deepcsv_probc_AK4", &deepcsv_probc_AK4, &b_deepcsv_probc_AK4);
-   fChain->SetBranchAddress("deepcsv_probcc_AK4", &deepcsv_probcc_AK4, &b_deepcsv_probcc_AK4);
-   fChain->SetBranchAddress("CvsB_taggerAK4", &CvsB_taggerAK4, &b_CvsB_taggerAK4);
-   fChain->SetBranchAddress("CvsL_taggerAK4", &CvsL_taggerAK4, &b_CvsL_taggerAK4);
+   fChain->SetBranchAddress("Jet_btagDeepB", &Jet_btagDeepB, &b_Jet_btagDeepB);
+   fChain->SetBranchAddress("Jet_btagDeepC", &Jet_btagDeepC, &b_Jet_btagDeepC);
+   fChain->SetBranchAddress("Jet_qgl", &Jet_qgl, &b_Jet_qgl);
+   fChain->SetBranchAddress("Jet_btagDeepFlavB", &Jet_btagDeepFlavB, &b_Jet_btagDeepFlavB);
+   fChain->SetBranchAddress("Jet_btagDeepFlavC", &Jet_btagDeepFlavC, &b_Jet_btagDeepFlavC);
+   fChain->SetBranchAddress("jetPtPUPPI", &jetPtPUPPI, &b_jetPtPUPPI);
+   fChain->SetBranchAddress("jetJecPUPPI", &jetJecPUPPI, &b_jetJecPUPPI);
+   fChain->SetBranchAddress("jetEtaPUPPI", &jetEtaPUPPI, &b_jetEtaPUPPI);
+   fChain->SetBranchAddress("jetPhiPUPPI", &jetPhiPUPPI, &b_jetPhiPUPPI);
+   fChain->SetBranchAddress("jetMassPUPPI", &jetMassPUPPI, &b_jetMassPUPPI);
+   fChain->SetBranchAddress("jetEnergyPUPPI", &jetEnergyPUPPI, &b_jetEnergyPUPPI);
+   fChain->SetBranchAddress("jetPtPUPPIRC", &jetPtPUPPIRC, &b_jetPtPUPPIRC);
+   fChain->SetBranchAddress("jetEtaPUPPIRC", &jetEtaPUPPIRC, &b_jetEtaPUPPIRC);
+   fChain->SetBranchAddress("jetPhiPUPPIRC", &jetPhiPUPPIRC, &b_jetPhiPUPPIRC);
+   fChain->SetBranchAddress("jetMassPUPPIRC", &jetMassPUPPIRC, &b_jetMassPUPPIRC);
+   fChain->SetBranchAddress("jetEnergyPUPPIRC", &jetEnergyPUPPIRC, &b_jetEnergyPUPPIRC);
+   fChain->SetBranchAddress("jetAreaPUPPI", &jetAreaPUPPI, &b_jetAreaPUPPI);
+   fChain->SetBranchAddress("jetCSVPUPPI", &jetCSVPUPPI, &b_jetCSVPUPPI);
+   fChain->SetBranchAddress("jetQGDPUPPI", &jetQGDPUPPI, &b_jetQGDPUPPI);
+   fChain->SetBranchAddress("jetChfPUPPI", &jetChfPUPPI, &b_jetChfPUPPI);
+   fChain->SetBranchAddress("jetNhfPUPPI", &jetNhfPUPPI, &b_jetNhfPUPPI);
+   fChain->SetBranchAddress("jetPhfPUPPI", &jetPhfPUPPI, &b_jetPhfPUPPI);
+   fChain->SetBranchAddress("jetMufPUPPI", &jetMufPUPPI, &b_jetMufPUPPI);
+   fChain->SetBranchAddress("jetElfPUPPI", &jetElfPUPPI, &b_jetElfPUPPI);
+   fChain->SetBranchAddress("jetNemfPUPPI", &jetNemfPUPPI, &b_jetNemfPUPPI);
+   fChain->SetBranchAddress("jetCemfPUPPI", &jetCemfPUPPI, &b_jetCemfPUPPI);
+   fChain->SetBranchAddress("jetHf_hfPUPPI", &jetHf_hfPUPPI, &b_jetHf_hfPUPPI);
+   fChain->SetBranchAddress("jetHf_emfPUPPI", &jetHf_emfPUPPI, &b_jetHf_emfPUPPI);
+   fChain->SetBranchAddress("jetHofPUPPI", &jetHofPUPPI, &b_jetHofPUPPI);
+   fChain->SetBranchAddress("idLPUPPI", &idLPUPPI, &b_idLPUPPI);
+   fChain->SetBranchAddress("idTPUPPI", &idTPUPPI, &b_idTPUPPI);
+   fChain->SetBranchAddress("chHadMultPUPPI", &chHadMultPUPPI, &b_chHadMultPUPPI);
+   fChain->SetBranchAddress("chMultPUPPI", &chMultPUPPI, &b_chMultPUPPI);
+   fChain->SetBranchAddress("neHadMultPUPPI", &neHadMultPUPPI, &b_neHadMultPUPPI);
+   fChain->SetBranchAddress("neMultPUPPI", &neMultPUPPI, &b_neMultPUPPI);
+   fChain->SetBranchAddress("phoMultPUPPI", &phoMultPUPPI, &b_phoMultPUPPI);
    fChain->SetBranchAddress("triggerResult", &triggerResult, &b_triggerResult);
    fChain->SetBranchAddress("triggerPrescale", &triggerPrescale, &b_triggerPrescale);
    fChain->SetBranchAddress("triggerName", &triggerName, &b_triggerName);
@@ -790,7 +925,6 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("processID", &processID, &b_processID_);
    fChain->SetBranchAddress("weight", &weight, &b_weight_);
    fChain->SetBranchAddress("nGenJetsAK4", &nGenJetsAK4, &b_nGenJetsAK4_);
-   fChain->SetBranchAddress("nGenJetsAK8", &nGenJetsAK8, &b_nGenJetsAK8_);
    fChain->SetBranchAddress("nGenPhoton", &nGenPhoton, &b_nGenPhotons_);
    fChain->SetBranchAddress("photonPtGen", &photonPtGen, &b_photonPtGen);
    fChain->SetBranchAddress("photonEtaGen", &photonEtaGen, &b_photonEtaGen);
@@ -802,6 +936,12 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("jetMassGenAK4", &jetMassGenAK4, &b_jetMassGenAK4);
    fChain->SetBranchAddress("jetEnergyGenAK4", &jetEnergyGenAK4, &b_jetEnergyGenAK4);
    fChain->SetBranchAddress("jetpdgIDGenAK4", &jetpdgIDGenAK4, &b_jetpdgIDGenAK4);
+   fChain->SetBranchAddress("jetPtGenPUPPI", &jetPtGenPUPPI, &b_jetPtGenPUPPI);
+   fChain->SetBranchAddress("jetEtaGenPUPPI", &jetEtaGenPUPPI, &b_jetEtaGenPUPPI);
+   fChain->SetBranchAddress("jetPhiGenPUPPI", &jetPhiGenPUPPI, &b_jetPhiGenPUPPI);
+   fChain->SetBranchAddress("jetMassGenPUPPI", &jetMassGenPUPPI, &b_jetMassGenPUPPI);
+   fChain->SetBranchAddress("jetEnergyGenPUPPI", &jetEnergyGenPUPPI, &b_jetEnergyGenPUPPI);
+   fChain->SetBranchAddress("jetpdgIDGenPUPPI", &jetpdgIDGenPUPPI, &b_jetpdgIDGenPUPPI);
    Notify();
 }
 

@@ -204,10 +204,11 @@ class baseClass : public rootNtupleClass {
 
   TFile * output_root_;
   std::vector<double> *pt_jets_, *phi_jets_, *eta_jets_, *mass_jets_, *emF_jets_; 
+  std::vector<float> *Jet_btagDeepB_,*Jet_btagDeepC_,*Jet_qgl_,*Jet_btagDeepFlavB_,*Jet_btagDeepFlavC_;
   std::vector<bool> *IsID_jets_;
   
   TFile* EtaPhiCleaning_File;
-  // TH2D h_hotjets;
+  TH2D h_hotjets;
 
   private :
   int nOptimizerCuts_;
