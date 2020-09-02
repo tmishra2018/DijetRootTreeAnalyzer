@@ -8,7 +8,7 @@
 #JSON data/json/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_22Jul16_ICHEP.txt #round8 topup
 #JSON data/json/Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt #fall16 round1 full
 #JSON  data/json/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
-JSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt
+JSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt 
 #
 #############################     Example of file with list of cuts
 #
@@ -52,7 +52,7 @@ noJECs                          0               -               -               
 # turn on/off on-the-fly JERs (value1 0: off, 1: on)
 useJERs				1               -               -               -               -1
 # turn on/off L2L3res (value1 0: off, 1: on)
-useResidual				1               -               -               -               -1
+useResidual				0               -               -               -               -1
 # turn on/off shift JECs (value1 0: off, 1: on, value2: sign of the shifting. The value is taken from a txt file with JEC uncertainties) 
 shiftJECs                       0               -1               -               -               -1		
 # turn on/off FastJet clustering of wide jets (0: off, 1: on)

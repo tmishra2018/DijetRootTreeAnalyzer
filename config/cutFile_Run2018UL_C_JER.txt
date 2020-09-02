@@ -8,7 +8,7 @@
 #JSON data/json/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON_22Jul16_ICHEP.txt #round8 topup
 #JSON data/json/Cert_271036-278808_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt #fall16 round1 full
 #JSON  data/json/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt
-JSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt
+JSON  /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/Legacy_2018/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt 
 #
 #############################     Example of file with list of cuts
 #
@@ -35,13 +35,13 @@ firstJetThreshold        	0.3		-		-		-		-1
 L1MC                            data/Summer19UL18_V2_MC/Summer19UL18_V2_MC_L1FastJet_AK4PFchs.txt		-		-		-		-1
 L2MC                            data/Summer19UL18_V2_MC/Summer19UL18_V2_MC_L2Relative_AK4PFchs.txt		-		-		-		-1
 L3MC                            data/Summer19UL18_V2_MC/Summer19UL18_V2_MC_L3Absolute_AK4PFchs.txt		-		-		-		-1
-L1Dat                           data/Summer19UL18_RunA_V3_DATA/Summer19UL18_RunA_V3_DATA_L1FastJet_AK4PFchs.txt		-		-		-		-1
-L2Dat                           data/Summer19UL18_RunA_V3_DATA/Summer19UL18_RunA_V3_DATA_L2Relative_AK4PFchs.txt		-		-		-		-1
-L3Dat                           data/Summer19UL18_RunA_V3_DATA/Summer19UL18_RunA_V3_DATA_L3Absolute_AK4PFchs.txt		-		-		-		-1
-L2L3Dat                         data/Summer19UL18_RunA_V3_DATA/Summer19UL18_RunA_V3_DATA_L2Residual_AK4PFchs.txt		-		-		-		-1
-L1RCDat                         data/Summer19UL18_RunA_V3_DATA/Summer19UL18_RunA_V3_DATA_L1RC_AK4PFchs.txt		-		-		-		-1
+L1Dat                           data/Summer19UL18_RunC_V3_DATA/Summer19UL18_RunC_V3_DATA_L1FastJet_AK4PFchs.txt		-		-		-		-1
+L2Dat                           data/Summer19UL18_RunC_V3_DATA/Summer19UL18_RunC_V3_DATA_L2Relative_AK4PFchs.txt		-		-		-		-1
+L3Dat                           data/Summer19UL18_RunC_V3_DATA/Summer19UL18_RunC_V3_DATA_L3Absolute_AK4PFchs.txt		-		-		-		-1
+L2L3Dat                         data/Autumn18_RunC_V19_DATA/Autumn18_RunC_V19_DATA_L2L3Residual_AK4PFchs.txt		-		-		-		-1
+L1RCDat                         data/Summer19UL18_RunC_V3_DATA/Summer19UL18_RunC_V3_DATA_L1RC_AK4PFchs.txt		-		-		-		-1
 L1RCMC                          data/Summer19UL18_V2_MC/Summer19UL18_V2_MC_L1RC_AK4PFchs.txt		-		-		-		-1
-JECuncDat                       data/Autumn18_RunA_V19_DATA/Autumn18_RunA_V19_DATA_Uncertainty_AK4PFchs.txt		-		-		-		-1
+JECuncDat                       data/Autumn18_RunC_V19_DATA/Autumn18_RunC_V19_DATA_Uncertainty_AK4PFchs.txt		-		-		-		-1
 JECuncMC                        data/Autumn18_V19_MC/Autumn18_V19_MC_Uncertainty_AK4PFchs.txt		-		-		-		-1
 JERreso                         data/JER_textfile/Autumn18_V7b_MC/Autumn18_V7b_MC_PtResolution_AK4PFchs.txt		-		-		-		-1
 JERSF                           data/JER_textfile/Autumn18_V7b_MC/Autumn18_V7b_MC_SF_AK4PFchs.txt		-		-		-		-1
@@ -50,7 +50,7 @@ useJECs				1               -               -               -               -1
 # turn on/off the removal of JEC 
 noJECs                          0               -               -               -               -1
 # turn on/off on-the-fly JERs (value1 0: off, 1: on)
-useJERs				1               -               -               -               -1
+useJERs				0               -               -               -               -1
 # turn on/off L2L3res (value1 0: off, 1: on)
 useResidual				1               -               -               -               -1
 # turn on/off shift JECs (value1 0: off, 1: on, value2: sign of the shifting. The value is taken from a txt file with JEC uncertainties) 
