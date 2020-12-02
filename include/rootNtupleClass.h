@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Sep  1 16:14:47 2020 by ROOT version 6.06/01
+// Fri Nov 20 15:52:33 2020 by ROOT version 6.06/01
 // from TChain dijets/events/
 //////////////////////////////////////////////////////////
 
@@ -60,6 +60,8 @@ public :
    const Int_t kMaxnJetsAK4 = 1;
    const Int_t kMaxnJetsPUPPI = 1;
    const Int_t kMaxhtAK4 = 1;
+   const Int_t kMaxnJetsAK8 = 1;
+   const Int_t kMaxhtAK8 = 1;
    const Int_t kMaxnPhotons = 1;
    const Int_t kMaxnPhotonsLoose = 1;
    const Int_t kMaxnPhotonsMedium = 1;
@@ -69,6 +71,7 @@ public :
    const Int_t kMaxprocessID = 1;
    const Int_t kMaxweight = 1;
    const Int_t kMaxnGenJetsAK4 = 1;
+   const Int_t kMaxnGenJetsAK8 = 1;
    const Int_t kMaxnGenPhotons = 1;
 
    // Declaration of leaf types
@@ -119,6 +122,8 @@ public :
    Int_t           nJetsAK4;
    Int_t           nJetsPUPPI;
    Float_t         htAK4;
+   Int_t           nJetsAK8;
+   Float_t         htAK8;
    Int_t           nPhoton;
    Int_t           nPhotonLoose;
    Int_t           nPhotonMedium;
@@ -144,6 +149,7 @@ public :
    vector<float>   *PhotonSCEnergy;
    vector<double>  *PhotonEcorrBump;
    vector<float>   *Photonfull5x5SigmaIEtaIEtaMapToken;
+   vector<float>   *PhotonR9;
    vector<float>   *PhotonphoChargedIsolationToken;
    vector<float>   *PhotonphoNeutralHadronIsolationToken;
    vector<float>   *PhotonphoPhotonIsolationToken;
@@ -215,11 +221,6 @@ public :
    vector<int>     *neMultAK4;
    vector<int>     *phoMultAK4;
    vector<int>     *hadronflavour;
-   vector<float>   *Jet_btagDeepB;
-   vector<float>   *Jet_btagDeepC;
-   vector<float>   *Jet_qgl;
-   vector<float>   *Jet_btagDeepFlavB;
-   vector<float>   *Jet_btagDeepFlavC;
    vector<float>   *jetPtPUPPI;
    vector<float>   *jetJecPUPPI;
    vector<float>   *jetEtaPUPPI;
@@ -251,6 +252,36 @@ public :
    vector<int>     *neHadMultPUPPI;
    vector<int>     *neMultPUPPI;
    vector<int>     *phoMultPUPPI;
+   vector<float>   *jetPtAK8;
+   vector<float>   *jetJecAK8;
+   vector<float>   *jetEtaAK8;
+   vector<float>   *jetPhiAK8;
+   vector<float>   *jetMassAK8;
+   vector<float>   *jetEnergyAK8;
+   vector<float>   *jetAreaAK8;
+   vector<float>   *jetCSVAK8;
+   vector<float>   *jetChfAK8;
+   vector<float>   *jetNhfAK8;
+   vector<float>   *jetPhfAK8;
+   vector<float>   *jetMufAK8;
+   vector<float>   *jetElfAK8;
+   vector<float>   *jetNemfAK8;
+   vector<float>   *jetCemfAK8;
+   vector<float>   *jetHf_hfAK8;
+   vector<float>   *jetHf_emfAK8;
+   vector<float>   *jetHofAK8;
+   vector<int>     *idLAK8;
+   vector<int>     *idTAK8;
+   vector<float>   *jetMassPrunedAK8;
+   vector<float>   *jetMassSoftDropAK8;
+   vector<float>   *jetTau1AK8;
+   vector<float>   *jetTau2AK8;
+   vector<float>   *jetTau3AK8;
+   vector<int>     *chHadMultAK8;
+   vector<int>     *chMultAK8;
+   vector<int>     *neHadMultAK8;
+   vector<int>     *neMultAK8;
+   vector<int>     *phoMultAK8;
    vector<bool>    *triggerResult;
    vector<int>     *triggerPrescale;
    vector<string>  *triggerName;
@@ -261,6 +292,7 @@ public :
    Int_t           processID;
    Float_t         weight;
    Int_t           nGenJetsAK4;
+   Int_t           nGenJetsAK8;
    Int_t           nGenPhoton;
    vector<float>   *photonPtGen;
    vector<float>   *photonEtaGen;
@@ -272,6 +304,11 @@ public :
    vector<float>   *jetMassGenAK4;
    vector<float>   *jetEnergyGenAK4;
    vector<int>     *jetpdgIDGenAK4;
+   vector<float>   *jetPtGenAK8;
+   vector<float>   *jetEtaGenAK8;
+   vector<float>   *jetPhiGenAK8;
+   vector<float>   *jetMassGenAK8;
+   vector<float>   *jetEnergyGenAK8;
    vector<float>   *jetPtGenPUPPI;
    vector<float>   *jetEtaGenPUPPI;
    vector<float>   *jetPhiGenPUPPI;
@@ -327,6 +364,8 @@ public :
    TBranch        *b_nJetsAK4_;   //!
    TBranch        *b_nJetsPUPPI_;   //!
    TBranch        *b_htAK4_;   //!
+   TBranch        *b_nJetsAK8_;   //!
+   TBranch        *b_htAK8_;   //!
    TBranch        *b_nPhotons_;   //!
    TBranch        *b_nPhotonsLoose_;   //!
    TBranch        *b_nPhotonsMedium_;   //!
@@ -352,6 +391,7 @@ public :
    TBranch        *b_PhotonSCEnergy;   //!
    TBranch        *b_PhotonEcorrBump;   //!
    TBranch        *b_Photonfull5x5SigmaIEtaIEtaMapToken;   //!
+   TBranch        *b_PhotonR9;   //!
    TBranch        *b_PhotonphoChargedIsolationToken;   //!
    TBranch        *b_PhotonphoNeutralHadronIsolationToken;   //!
    TBranch        *b_PhotonphoPhotonIsolationToken;   //!
@@ -423,11 +463,6 @@ public :
    TBranch        *b_neMultAK4;   //!
    TBranch        *b_phoMultAK4;   //!
    TBranch        *b_hadronflavour;   //!
-   TBranch        *b_Jet_btagDeepB;   //!
-   TBranch        *b_Jet_btagDeepC;   //!
-   TBranch        *b_Jet_qgl;   //!
-   TBranch        *b_Jet_btagDeepFlavB;   //!
-   TBranch        *b_Jet_btagDeepFlavC;   //!
    TBranch        *b_jetPtPUPPI;   //!
    TBranch        *b_jetJecPUPPI;   //!
    TBranch        *b_jetEtaPUPPI;   //!
@@ -459,6 +494,36 @@ public :
    TBranch        *b_neHadMultPUPPI;   //!
    TBranch        *b_neMultPUPPI;   //!
    TBranch        *b_phoMultPUPPI;   //!
+   TBranch        *b_jetPtAK8;   //!
+   TBranch        *b_jetJecAK8;   //!
+   TBranch        *b_jetEtaAK8;   //!
+   TBranch        *b_jetPhiAK8;   //!
+   TBranch        *b_jetMassAK8;   //!
+   TBranch        *b_jetEnergyAK8;   //!
+   TBranch        *b_jetAreaAK8;   //!
+   TBranch        *b_jetCSVAK8;   //!
+   TBranch        *b_jetChfAK8;   //!
+   TBranch        *b_jetNhfAK8;   //!
+   TBranch        *b_jetPhfAK8;   //!
+   TBranch        *b_jetMufAK8;   //!
+   TBranch        *b_jetElfAK8;   //!
+   TBranch        *b_jetNemfAK8;   //!
+   TBranch        *b_jetCemfAK8;   //!
+   TBranch        *b_jetHf_hfAK8;   //!
+   TBranch        *b_jetHf_emfAK8;   //!
+   TBranch        *b_jetHofAK8;   //!
+   TBranch        *b_idLAK8;   //!
+   TBranch        *b_idTAK8;   //!
+   TBranch        *b_jetMassPrunedAK8;   //!
+   TBranch        *b_jetMassSoftDropAK8;   //!
+   TBranch        *b_jetTau1AK8;   //!
+   TBranch        *b_jetTau2AK8;   //!
+   TBranch        *b_jetTau3AK8;   //!
+   TBranch        *b_chHadMultAK8;   //!
+   TBranch        *b_chMultAK8;   //!
+   TBranch        *b_neHadMultAK8;   //!
+   TBranch        *b_neMultAK8;   //!
+   TBranch        *b_phoMultAK8;   //!
    TBranch        *b_triggerResult;   //!
    TBranch        *b_triggerPrescale;   //!
    TBranch        *b_triggerName;   //!
@@ -469,6 +534,7 @@ public :
    TBranch        *b_processID_;   //!
    TBranch        *b_weight_;   //!
    TBranch        *b_nGenJetsAK4_;   //!
+   TBranch        *b_nGenJetsAK8_;   //!
    TBranch        *b_nGenPhotons_;   //!
    TBranch        *b_photonPtGen;   //!
    TBranch        *b_photonEtaGen;   //!
@@ -480,6 +546,11 @@ public :
    TBranch        *b_jetMassGenAK4;   //!
    TBranch        *b_jetEnergyGenAK4;   //!
    TBranch        *b_jetpdgIDGenAK4;   //!
+   TBranch        *b_jetPtGenAK8;   //!
+   TBranch        *b_jetEtaGenAK8;   //!
+   TBranch        *b_jetPhiGenAK8;   //!
+   TBranch        *b_jetMassGenAK8;   //!
+   TBranch        *b_jetEnergyGenAK8;   //!
    TBranch        *b_jetPtGenPUPPI;   //!
    TBranch        *b_jetEtaGenPUPPI;   //!
    TBranch        *b_jetPhiGenPUPPI;   //!
@@ -521,7 +592,7 @@ rootNtupleClass::rootNtupleClass(TTree *tree) : fChain(0)
       // The following code should be used if you want this class to access a chain
       // of trees.
       TChain * chain = new TChain("dijets/events","");
-      chain->Add("GammajetTree.root/dijets/events");
+      chain->Add("mylocaltest_Run2016B_10.root/dijets/events");
       tree = chain;
 #endif // SINGLE_TREE
 
@@ -602,6 +673,7 @@ void rootNtupleClass::Init(TTree *tree)
    PhotonSCEnergy = 0;
    PhotonEcorrBump = 0;
    Photonfull5x5SigmaIEtaIEtaMapToken = 0;
+   PhotonR9 = 0;
    PhotonphoChargedIsolationToken = 0;
    PhotonphoNeutralHadronIsolationToken = 0;
    PhotonphoPhotonIsolationToken = 0;
@@ -672,11 +744,6 @@ void rootNtupleClass::Init(TTree *tree)
    neMultAK4 = 0;
    phoMultAK4 = 0;
    hadronflavour = 0;
-   Jet_btagDeepB = 0;
-   Jet_btagDeepC = 0;
-   Jet_qgl = 0;
-   Jet_btagDeepFlavB = 0;
-   Jet_btagDeepFlavC = 0;
    jetPtPUPPI = 0;
    jetJecPUPPI = 0;
    jetEtaPUPPI = 0;
@@ -708,6 +775,36 @@ void rootNtupleClass::Init(TTree *tree)
    neHadMultPUPPI = 0;
    neMultPUPPI = 0;
    phoMultPUPPI = 0;
+   jetPtAK8 = 0;
+   jetJecAK8 = 0;
+   jetEtaAK8 = 0;
+   jetPhiAK8 = 0;
+   jetMassAK8 = 0;
+   jetEnergyAK8 = 0;
+   jetAreaAK8 = 0;
+   jetCSVAK8 = 0;
+   jetChfAK8 = 0;
+   jetNhfAK8 = 0;
+   jetPhfAK8 = 0;
+   jetMufAK8 = 0;
+   jetElfAK8 = 0;
+   jetNemfAK8 = 0;
+   jetCemfAK8 = 0;
+   jetHf_hfAK8 = 0;
+   jetHf_emfAK8 = 0;
+   jetHofAK8 = 0;
+   idLAK8 = 0;
+   idTAK8 = 0;
+   jetMassPrunedAK8 = 0;
+   jetMassSoftDropAK8 = 0;
+   jetTau1AK8 = 0;
+   jetTau2AK8 = 0;
+   jetTau3AK8 = 0;
+   chHadMultAK8 = 0;
+   chMultAK8 = 0;
+   neHadMultAK8 = 0;
+   neMultAK8 = 0;
+   phoMultAK8 = 0;
    triggerResult = 0;
    triggerPrescale = 0;
    triggerName = 0;
@@ -724,6 +821,11 @@ void rootNtupleClass::Init(TTree *tree)
    jetMassGenAK4 = 0;
    jetEnergyGenAK4 = 0;
    jetpdgIDGenAK4 = 0;
+   jetPtGenAK8 = 0;
+   jetEtaGenAK8 = 0;
+   jetPhiGenAK8 = 0;
+   jetMassGenAK8 = 0;
+   jetEnergyGenAK8 = 0;
    jetPtGenPUPPI = 0;
    jetEtaGenPUPPI = 0;
    jetPhiGenPUPPI = 0;
@@ -783,6 +885,8 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("nJetsAK4", &nJetsAK4, &b_nJetsAK4_);
    fChain->SetBranchAddress("nJetsPUPPI", &nJetsPUPPI, &b_nJetsPUPPI_);
    fChain->SetBranchAddress("htAK4", &htAK4, &b_htAK4_);
+   fChain->SetBranchAddress("nJetsAK8", &nJetsAK8, &b_nJetsAK8_);
+   fChain->SetBranchAddress("htAK8", &htAK8, &b_htAK8_);
    fChain->SetBranchAddress("nPhoton", &nPhoton, &b_nPhotons_);
    fChain->SetBranchAddress("nPhotonLoose", &nPhotonLoose, &b_nPhotonsLoose_);
    fChain->SetBranchAddress("nPhotonMedium", &nPhotonMedium, &b_nPhotonsMedium_);
@@ -808,6 +912,7 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("PhotonSCEnergy", &PhotonSCEnergy, &b_PhotonSCEnergy);
    fChain->SetBranchAddress("PhotonEcorrBump", &PhotonEcorrBump, &b_PhotonEcorrBump);
    fChain->SetBranchAddress("Photonfull5x5SigmaIEtaIEtaMapToken", &Photonfull5x5SigmaIEtaIEtaMapToken, &b_Photonfull5x5SigmaIEtaIEtaMapToken);
+   fChain->SetBranchAddress("PhotonR9", &PhotonR9, &b_PhotonR9);
    fChain->SetBranchAddress("PhotonphoChargedIsolationToken", &PhotonphoChargedIsolationToken, &b_PhotonphoChargedIsolationToken);
    fChain->SetBranchAddress("PhotonphoNeutralHadronIsolationToken", &PhotonphoNeutralHadronIsolationToken, &b_PhotonphoNeutralHadronIsolationToken);
    fChain->SetBranchAddress("PhotonphoPhotonIsolationToken", &PhotonphoPhotonIsolationToken, &b_PhotonphoPhotonIsolationToken);
@@ -879,11 +984,6 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("neMultAK4", &neMultAK4, &b_neMultAK4);
    fChain->SetBranchAddress("phoMultAK4", &phoMultAK4, &b_phoMultAK4);
    fChain->SetBranchAddress("hadronflavour", &hadronflavour, &b_hadronflavour);
-   fChain->SetBranchAddress("Jet_btagDeepB", &Jet_btagDeepB, &b_Jet_btagDeepB);
-   fChain->SetBranchAddress("Jet_btagDeepC", &Jet_btagDeepC, &b_Jet_btagDeepC);
-   fChain->SetBranchAddress("Jet_qgl", &Jet_qgl, &b_Jet_qgl);
-   fChain->SetBranchAddress("Jet_btagDeepFlavB", &Jet_btagDeepFlavB, &b_Jet_btagDeepFlavB);
-   fChain->SetBranchAddress("Jet_btagDeepFlavC", &Jet_btagDeepFlavC, &b_Jet_btagDeepFlavC);
    fChain->SetBranchAddress("jetPtPUPPI", &jetPtPUPPI, &b_jetPtPUPPI);
    fChain->SetBranchAddress("jetJecPUPPI", &jetJecPUPPI, &b_jetJecPUPPI);
    fChain->SetBranchAddress("jetEtaPUPPI", &jetEtaPUPPI, &b_jetEtaPUPPI);
@@ -915,6 +1015,36 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("neHadMultPUPPI", &neHadMultPUPPI, &b_neHadMultPUPPI);
    fChain->SetBranchAddress("neMultPUPPI", &neMultPUPPI, &b_neMultPUPPI);
    fChain->SetBranchAddress("phoMultPUPPI", &phoMultPUPPI, &b_phoMultPUPPI);
+   fChain->SetBranchAddress("jetPtAK8", &jetPtAK8, &b_jetPtAK8);
+   fChain->SetBranchAddress("jetJecAK8", &jetJecAK8, &b_jetJecAK8);
+   fChain->SetBranchAddress("jetEtaAK8", &jetEtaAK8, &b_jetEtaAK8);
+   fChain->SetBranchAddress("jetPhiAK8", &jetPhiAK8, &b_jetPhiAK8);
+   fChain->SetBranchAddress("jetMassAK8", &jetMassAK8, &b_jetMassAK8);
+   fChain->SetBranchAddress("jetEnergyAK8", &jetEnergyAK8, &b_jetEnergyAK8);
+   fChain->SetBranchAddress("jetAreaAK8", &jetAreaAK8, &b_jetAreaAK8);
+   fChain->SetBranchAddress("jetCSVAK8", &jetCSVAK8, &b_jetCSVAK8);
+   fChain->SetBranchAddress("jetChfAK8", &jetChfAK8, &b_jetChfAK8);
+   fChain->SetBranchAddress("jetNhfAK8", &jetNhfAK8, &b_jetNhfAK8);
+   fChain->SetBranchAddress("jetPhfAK8", &jetPhfAK8, &b_jetPhfAK8);
+   fChain->SetBranchAddress("jetMufAK8", &jetMufAK8, &b_jetMufAK8);
+   fChain->SetBranchAddress("jetElfAK8", &jetElfAK8, &b_jetElfAK8);
+   fChain->SetBranchAddress("jetNemfAK8", &jetNemfAK8, &b_jetNemfAK8);
+   fChain->SetBranchAddress("jetCemfAK8", &jetCemfAK8, &b_jetCemfAK8);
+   fChain->SetBranchAddress("jetHf_hfAK8", &jetHf_hfAK8, &b_jetHf_hfAK8);
+   fChain->SetBranchAddress("jetHf_emfAK8", &jetHf_emfAK8, &b_jetHf_emfAK8);
+   fChain->SetBranchAddress("jetHofAK8", &jetHofAK8, &b_jetHofAK8);
+   fChain->SetBranchAddress("idLAK8", &idLAK8, &b_idLAK8);
+   fChain->SetBranchAddress("idTAK8", &idTAK8, &b_idTAK8);
+   fChain->SetBranchAddress("jetMassPrunedAK8", &jetMassPrunedAK8, &b_jetMassPrunedAK8);
+   fChain->SetBranchAddress("jetMassSoftDropAK8", &jetMassSoftDropAK8, &b_jetMassSoftDropAK8);
+   fChain->SetBranchAddress("jetTau1AK8", &jetTau1AK8, &b_jetTau1AK8);
+   fChain->SetBranchAddress("jetTau2AK8", &jetTau2AK8, &b_jetTau2AK8);
+   fChain->SetBranchAddress("jetTau3AK8", &jetTau3AK8, &b_jetTau3AK8);
+   fChain->SetBranchAddress("chHadMultAK8", &chHadMultAK8, &b_chHadMultAK8);
+   fChain->SetBranchAddress("chMultAK8", &chMultAK8, &b_chMultAK8);
+   fChain->SetBranchAddress("neHadMultAK8", &neHadMultAK8, &b_neHadMultAK8);
+   fChain->SetBranchAddress("neMultAK8", &neMultAK8, &b_neMultAK8);
+   fChain->SetBranchAddress("phoMultAK8", &phoMultAK8, &b_phoMultAK8);
    fChain->SetBranchAddress("triggerResult", &triggerResult, &b_triggerResult);
    fChain->SetBranchAddress("triggerPrescale", &triggerPrescale, &b_triggerPrescale);
    fChain->SetBranchAddress("triggerName", &triggerName, &b_triggerName);
@@ -925,6 +1055,7 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("processID", &processID, &b_processID_);
    fChain->SetBranchAddress("weight", &weight, &b_weight_);
    fChain->SetBranchAddress("nGenJetsAK4", &nGenJetsAK4, &b_nGenJetsAK4_);
+   fChain->SetBranchAddress("nGenJetsAK8", &nGenJetsAK8, &b_nGenJetsAK8_);
    fChain->SetBranchAddress("nGenPhoton", &nGenPhoton, &b_nGenPhotons_);
    fChain->SetBranchAddress("photonPtGen", &photonPtGen, &b_photonPtGen);
    fChain->SetBranchAddress("photonEtaGen", &photonEtaGen, &b_photonEtaGen);
@@ -936,6 +1067,11 @@ void rootNtupleClass::Init(TTree *tree)
    fChain->SetBranchAddress("jetMassGenAK4", &jetMassGenAK4, &b_jetMassGenAK4);
    fChain->SetBranchAddress("jetEnergyGenAK4", &jetEnergyGenAK4, &b_jetEnergyGenAK4);
    fChain->SetBranchAddress("jetpdgIDGenAK4", &jetpdgIDGenAK4, &b_jetpdgIDGenAK4);
+   fChain->SetBranchAddress("jetPtGenAK8", &jetPtGenAK8, &b_jetPtGenAK8);
+   fChain->SetBranchAddress("jetEtaGenAK8", &jetEtaGenAK8, &b_jetEtaGenAK8);
+   fChain->SetBranchAddress("jetPhiGenAK8", &jetPhiGenAK8, &b_jetPhiGenAK8);
+   fChain->SetBranchAddress("jetMassGenAK8", &jetMassGenAK8, &b_jetMassGenAK8);
+   fChain->SetBranchAddress("jetEnergyGenAK8", &jetEnergyGenAK8, &b_jetEnergyGenAK8);
    fChain->SetBranchAddress("jetPtGenPUPPI", &jetPtGenPUPPI, &b_jetPtGenPUPPI);
    fChain->SetBranchAddress("jetEtaGenPUPPI", &jetEtaGenPUPPI, &b_jetEtaGenPUPPI);
    fChain->SetBranchAddress("jetPhiGenPUPPI", &jetPhiGenPUPPI, &b_jetPhiGenPUPPI);
